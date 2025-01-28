@@ -1,0 +1,34 @@
+@PORT = 3000
+
+### Felhasználók listázása
+GET http://localhost:{{PORT}}/users
+
+### Egy felhasználó lekérdezése ID alapján
+GET http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
+
+### Új felhasználó hozzáadása
+POST http://localhost:{{PORT}}/users
+Content-Type: application/json
+
+{
+  "name": "Teszt Felhasználó",
+  "email": "teszt@example.com",
+  "password": "Titkosjelszo123",
+  "role": "user",
+  "picture_id": 1
+}
+
+### Felhasználó frissítése ID alapján
+PUT http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
+Content-Type: application/json
+
+{
+  "name": "Frissített Felhasználó",
+  "email": "frissitett@example.com",
+  "password": "Titkosjelszo123",
+  "role": "admin",
+  "picture_id": 2
+}
+
+### Felhasználó törlése ID alapján
+DELETE http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
