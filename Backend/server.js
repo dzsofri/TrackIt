@@ -1,132 +1,178 @@
-// Importálások 
 require('dotenv').config();
-const cors = require('cors');
 const express = require('express');
-const { v4: uuidv4 } = require('uuid'); // UUID importálása
-const CryptoJS = require('crypto-js'); // CryptoJS importálása
 const mysql = require('mysql');
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');  // bcrypt könyvtár importálása
+
+const uuid = require('uuid');
+const { v4: uuidv4 } = require('uuid');  // UUID generálása
+
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const SECRET_KEY = process.env.JWT_SECRET;  // Korrekt környezeti változó használata
 
-// Adatbázis kapcsolat pool létrehozása
-const pool = mysql.createPool({
-  connectionLimit: 10,
+app.use(cors());
+app.use(express.json());
+
+const db = mysql.createConnection({
   host: process.env.DBHOST,
   user: process.env.DBUSER,
   password: process.env.DBPASS,
   database: process.env.DBNAME
 });
 
-// Middleware-k
-app.use(cors());
-app.use(express.json());
-
-// Jelszó validáló függvény
-const validatePassword = (password) => {
-  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  return regex.test(password);
-};
-
-// Felhasználók listázása
-app.get('/users', (req, res) => {
-  pool.query('SELECT * FROM users', (err, results) => {
+db.connect(err => {
     if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Adatbázis hiba' });
+        console.error('Database connection failed:', err);
+        return;
     }
-    res.json(results);
-  });
+    console.log('Connected to MySQL database');
 });
 
-// Egy felhasználó lekérdezése ID alapján
-app.get('/users/:id', (req, res) => {
-  const { id } = req.params;
-  pool.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Adatbázis hiba' });
-    }
-    if (results.length === 0) {
-      return res.status(404).json({ error: 'Felhasználó nem található' });
-    }
-    res.json(results[0]);
-  });
-});
+// Middleware a token ellenőrzéshez
+function tokencheck(req, res, next){
+  const authHeader = req.header('Authorization');
+  if (!authHeader) return res.status(400).send('Jelentkezz be!');
 
-// Új felhasználó hozzáadása
-app.post('/users', (req, res) => {
-  const { name, email, password, role, picture_id } = req.body;
+  const token = authHeader.split(' ')[1];
+  try{
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    next();  
+  }catch(error){
+    res.status(400).send('Hibás authentikáció!');
+  }
+}
 
-  // Jelszó validálása
-  if (!validatePassword(password)) {
-    return res.status(400).json({
-      error: 'A jelszónak legalább 8 karakter hosszúnak kell lennie, tartalmaznia kell kis- és nagybetűket, valamint legalább egy számot.',
+// Bejelentkezés (Token generálás)
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    
+    db.query('SELECT * FROM users WHERE email = ?', [email], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (result.length === 0) return res.status(401).json({ error: 'Invalid credentials' });
+
+        const user = result[0];
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) return res.status(500).json({ error: err.message });
+            if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
+
+            const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
+            res.json({ token });
+        });
     });
-  }
-
-  // Jelszó titkosítása SHA-1 algoritmussal
-  const hashedPassword = CryptoJS.SHA1(password).toString();
-
-  const id = uuidv4(); // UUID generálása
-  const sql = 'INSERT INTO users (id, name, email, password, role, picture_id) VALUES (?, ?, ?, ?, ?, ?)';
-  const values = [id, name, email, hashedPassword, role, picture_id];
-
-  pool.query(sql, values, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Adatbázis hiba' });
-    }
-    res.status(201).json({ message: 'Felhasználó sikeresen hozzáadva', id });
-  });
 });
 
-// Felhasználó frissítése ID alapján
-app.put('/users/:id', (req, res) => {
-  const { id } = req.params;
-  const { name, email, password, role, picture_id } = req.body;
 
-  // Jelszó validálása, ha meg van adva
-  let hashedPassword = null;
-  if (password) {
-    if (!validatePassword(password)) {
-      return res.status(400).json({
-        error: 'A jelszónak legalább 8 karakter hosszúnak kell lennie, tartalmaznia kell kis- és nagybetűket, valamint legalább egy számot.',
+
+
+// Új felhasználó regisztrációja
+app.post('/reg/users', (req, res) => {
+  console.log("Request body:", req.body);
+
+  const { name, email, password, confirm } = req.body;
+  console.log(req.body);
+
+  // Jelszó ellenőrzése: legalább 8 karakter, tartalmaz kis- és nagybetűt, valamint számot
+  const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  if (!passwordRegExp.test(password)) {
+      return res.status(400).json({ 
+          error: 'A jelszónak legalább 8 karakter hosszúnak kell lennie, tartalmaznia kell kis- és nagybetűket, valamint legalább egy számot.' 
       });
-    }
-    hashedPassword = CryptoJS.SHA1(password).toString();
   }
 
-  const sql = 'UPDATE users SET name = ?, email = ?, password = ?, role = ?, picture_id = ? WHERE id = ?';
-  const values = [name, email, hashedPassword || password, role, picture_id, id];
+  // Ellenőrizzük, hogy minden szükséges mező kitöltésre került-e
+  if (!name || !email || !password || !confirm) {
+      return res.status(400).json({ message: 'Hiányzó adatok!' });
+  }
 
-  pool.query(sql, values, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Adatbázis hiba' });
-    }
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ error: 'Felhasználó nem található' });
-    }
-    res.json({ message: 'Felhasználó sikeresen frissítve' });
+  // Ellenőrizzük, hogy a jelszavak egyeznek-e
+  if (password !== confirm) {
+      return res.status(400).json({ message: 'A megadott jelszavak nem egyeznek!' });
+  }
+
+  // Ellenőrizzük, hogy létezik-e már ilyen e-mail cím
+  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+
+      if (results.length > 0) {
+          return res.status(400).json({ message: 'Ez az e-mail cím már regisztrálva van!' });
+      }
+
+      // Titkosítjuk a jelszót bcrypt-tel
+      bcrypt.hash(password, 10, (err, hashedPassword) => {
+          if (err) {
+              return res.status(500).json({ error: err.message });
+          }
+
+          // UUID generálása és szerepkör hozzáadása
+          const id = uuidv4();  // UUID generálása a felhasználó számára
+          const role = 'user';   // Alapértelmezett szerepkör
+
+          // Generálunk egy egyedi JWT titkot (secret)
+          const secret = jwt.sign({ id, email }, SECRET_KEY, { expiresIn: '1h' });
+
+          // Új felhasználó beszúrása az adatbázisba
+          db.query(
+              'INSERT INTO users (id, name, email, password, role, secret) VALUES (?, ?, ?, ?, ?, ?)',
+              [id, name, email, hashedPassword, role, secret], // Titkos token a `secret` mezőben
+              (err, result) => {
+                  if (err) {
+                      return res.status(500).json({ error: err.message });
+                  }
+                  return res.status(200).json({ message: 'Sikeres regisztráció!' });
+              }
+          );
+      });
   });
 });
 
-// Felhasználó törlése ID alapján
-app.delete('/users/:id', (req, res) => {
-  const { id } = req.params;
-  pool.query('DELETE FROM users WHERE id = ?', [id], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Adatbázis hiba' });
-    }
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ error: 'Felhasználó nem található' });
-    }
-    res.json({ message: 'Felhasználó sikeresen törölve' });
-  });
+// Felhasználók lekérése (csak bejelentkezett felhasználóknak)
+app.get('/users', tokencheck, (req, res) => {
+    db.query('SELECT * FROM users', (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(result);
+    });
 });
 
-// Szerver indítása
-app.listen(process.env.PORT, () => {
-  console.log('Server: http://localhost:' + process.env.PORT);
+// Egy adott felhasználó lekérése
+app.get('/users/:id', tokencheck, (req, res) => {
+    const { id } = req.params;
+    
+    db.query('SELECT * FROM users WHERE id = ?', [id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(result[0]);
+    });
+});
+
+// Felhasználó adatainak módosítása
+app.put('/users/:id', tokencheck, (req, res) => {
+    const { id } = req.params;
+    const { name, email, password } = req.body;
+    
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        db.query('UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?', [name, email, hashedPassword, id], (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: 'User updated successfully' });
+        });
+    });
+});
+
+// Felhasználó törlése
+app.delete('/users/:id', tokencheck, (req, res) => {
+    const { id } = req.params;
+    
+    db.query('DELETE FROM users WHERE id = ?', [id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: 'User deleted successfully' });
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
