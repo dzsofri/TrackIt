@@ -1,0 +1,43 @@
+@PORT = 3000
+
+### Bejelentkezés és token szerzése
+POST http://localhost:{{PORT}}/login
+Content-Type: application/json
+
+{
+  "email": "teszt@example.com",
+  "password": "Titkosjelszo123"
+}
+
+
+### Felhasználók listázása
+GET http://localhost:{{PORT}}/users
+
+### Egy felhasználó lekérdezése ID alapján
+GET http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
+Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzenRAZXhhbXBsZS5jb20iLCJpYXQiOjE3Mzg2MDk3MjIsImV4cCI6MTczODYxMzMyMn0.5EdWDe46fSRLHz17DgqD-1c-AxXePO3jBztNvKTncyU"
+### Felhasználó frissítése ID alapján
+PUT http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
+Content-Type: application/json
+
+{
+  "name": "Frissített Felhasználó",
+  "email": "frissitett@example.com",
+  "password": "Titkosjelszo123",
+  "role": "admin",
+  "picture_id": 2
+}
+### Az új felhasználó hozzáadása (tokennel)
+POST http://localhost:{{PORT}}/reg/users
+Content-Type: application/json
+
+{
+  "name": "Teszt Felhasználó",
+  "email": "teszt1@example.com",
+  "password": "Titkosjelszo123",
+ "confirm": "Titkosjelszo123",
+  "picture_id": 1
+}
+
+### Felhasználó törlése ID alapján
+DELETE http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
