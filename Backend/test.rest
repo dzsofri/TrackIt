@@ -5,7 +5,9 @@ POST http://localhost:{{PORT}}/login
 Content-Type: application/json
 
 {
-  "email": "teszt@example.com",
+
+  "email": "teszt1@example.com",
+
   "password": "Titkosjelszo123"
 }
 
