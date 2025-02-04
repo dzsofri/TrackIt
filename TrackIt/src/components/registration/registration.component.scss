@@ -1,0 +1,86 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa; /* Háttérszín hozzáadása */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.row {
+    width: 120vh !important; /* Szélesebb konténer */
+    max-width: 95%; /* Maximalizálás, hogy ne legyen túl széles */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#heroimage {
+    background-color: #3498db;
+    width: 120vh !important; /* Szélesebb lett */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    height: 95vh;
+}
+
+.text-white {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.card {
+    width: 110vh !important; /* Szélesebb lett */
+    height: 95vh; /* Kissé csökkentett magasság */
+   
+    border: none;
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (min-width: 768px) {
+    .row {
+        flex-wrap: nowrap;
+    }
+    #heroimage, #registration-form {
+        width: 60%; /* Nagyobb szélesség */
+    }
+}
+
+@media (max-width: 767px) {
+    .row {
+        flex-direction: column;
+        align-items: center;
+    }
+    #heroimage {
+        display: none;
+    }
+    #registration-form {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 95%; /* Mobilon is nagyobb */
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .card {
+        width: 100%;
+        background-color: #3498db;
+    }
+}
