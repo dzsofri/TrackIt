@@ -2,8 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* Megakadályozza a görgetést */
-  
+  overflow: hidden; // Megakadályozza a görgetést
 }
 
 .welcome-wrapper {
@@ -12,26 +11,60 @@ html, body {
   align-items: center;
   min-height: 98.3vh;
   width: 99vw;
-  overflow: hidden; /* Esetleges túlcsordulás ke  zelése */
+  overflow: hidden; // Esetleges túlcsordulás kezelése
   background: #FFFFFF;
-  padding: 5rem; /* Ha ez túl nagy, érdemes csökkenteni */
+  padding: 5rem;
   border-radius: 30px;
-  box-sizing: border-box; /* A padding ne növelje meg a tényleges méretet */  
+  box-sizing: border-box;
   box-shadow: 2px 4px 10px rgba(0.5, 0.5, 0.5, 0.5);
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23627966' fill-opacity='1' d='M0,128L12,117.3C24,107,48,85,72,112C96,139,120,213,144,213.3C168,213,192,139,216,96C240,53,264,43,288,69.3C312,96,336,160,360,181.3C384,203,408,181,432,170.7C456,160,480,160,504,138.7C528,117,552,75,576,69.3C600,64,624,96,648,138.7C672,181,696,235,720,240C744,245,768,203,792,202.7C816,203,840,245,864,234.7C888,224,912,160,936,133.3C960,107,984,117,1008,149.3C1032,181,1056,235,1080,250.7C1104,267,1128,245,1152,202.7C1176,160,1200,96,1224,112C1248,128,1272,224,1296,224C1320,224,1344,128,1368,117.3C1392,107,1416,181,1428,218.7L1440,256L1440,320L1428,320C1416,320,1392,320,1368,320C1344,320,1320,320,1296,320C1272,320,1248,320,1224,320C1200,320,1176,320,1152,320C1128,320,1104,320,1080,320C1056,320,1032,320,1008,320C984,320,960,320,936,320C912,320,888,320,864,320C840,320,816,320,792,320C768,320,744,320,720,320C696,320,672,320,648,320C624,320,600,320,576,320C552,320,528,320,504,320C480,320,456,320,432,320C408,320,384,320,360,320C336,320,312,320,288,320C264,320,240,320,216,320C192,320,168,320,144,320C120,320,96,320,72,320C48,320,24,320,12,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
   background-size: cover;
+  position: relative;
+
+  // 🔥 SVG Blob változóba mentve (hogy ne ismételjük)
+  $blob-svg: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23627966" d="M22.3,-37.8C28.4,-26.3,32.6,-19.1,32.6,-12.2C32.6,-5.3,28.4,1.3,23.6,5C18.7,8.7,13,9.4,9,16.6C4.9,23.7,2.5,37.2,-8.3,48.6C-19,59.9,-38,69.2,-47.2,63.7C-56.4,58.3,-55.7,38.1,-54.7,22.3C-53.7,6.4,-52.2,-5,-47.5,-14.1C-42.7,-23.1,-34.5,-29.7,-26.1,-40.5C-17.6,-51.3,-8.8,-66.2,-0.4,-65.7C8.1,-65.2,16.2,-49.3,22.3,-37.8Z" transform="translate(100 100)"/></svg>');
+
+  // 🟢 Bal felső blob
+  &::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 800px;
+    background: $blob-svg;
+    background-size: cover;
+    z-index: 0;
+    opacity: 0.7;
+    top: -270px;
+    left: -260px;
+  }
+
+  // 🔵 Jobb alsó blob (JAVÍTVA: bottom + right)
+  &::after {
+    content: "";
+    position: absolute;
+    width: 700px;
+    height: 900px;
+    background: $blob-svg;
+    background-size: cover;
+    z-index: 0;
+    opacity: 0.7;
+    bottom: -270px;  // 🔥 Eddig hibás volt, most a helyére került
+    right: -260px;   // 🔥 Eddig hibás volt, most a helyére került
+  }
 }
 
+  // Jobb alsó blob
+  
 
 
+
+// Tartalom elrendezése
 .content {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  max-width: 100vw; /* Hogy ne nyúljon túl a képernyőn */
+  max-width: 100vw;
   box-sizing: border-box;
-  
 }
 
 .text {
@@ -46,7 +79,7 @@ h1 {
   margin-bottom: 1rem;
 
   .highlight {
-    color: #627966; // Módosított szín
+    color: #627966;
   }
 }
 
@@ -56,6 +89,7 @@ p {
   line-height: 1.5;
 }
 
+// Lépések tartó konténer
 .steps-container {
   flex: 1;
   display: flex;
@@ -69,27 +103,25 @@ p {
   gap: 1rem;
 }
 
-/* 🎯 Step-ek alapstílusa */
+// Lépések alapstílusa
 .step {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   padding: 0.75rem;
   border: 1px solid #ddd;
-  border-radius: 15px; /* Jobban lekerekített sarkok */
+  border-radius: 15px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
   background-color: #f9f9f9;
   width: 300px;
-  color: #333; /* Alapértelmezett szövegszín */
-
-  /* 🔥 Árnyék alul és az oldalakra */
+  color: #333;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background-color: #eef7ee;
-    box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15); /* Erősebb árnyék hoverre */
+    box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
   }
 
   .step-number {
@@ -100,31 +132,31 @@ p {
     justify-content: center;
     margin-right: 0.75rem;
     font-weight: bold;
-    background-color: #627966; /* Módosított szín */
+    background-color: #627966;
     color: white;
     border-radius: 50%;
   }
 }
 
-/* 🎯 Step 1 módosítása: teljesen zöld háttér, fehér szöveggel */
+// Az első lépés (kiemelt)
 .step:first-child {
-  background-color: #627966; // Kitöltés teljesen zöld
-  color: white; // Szöveg fehér
-  border: none; // Eltávolítja a szegélyt
+  background-color: #627966;
+  color: white;
+  border: none;
 }
 
-/* 🎯 "Get Started" gomb módosításai */
+// "Get Started" gomb stílusa
 .get-started-button {
   margin-top: 1.5rem;
   padding: 1rem 2rem;
   font-size: 1.1rem;
-  color: #627966; // Szöveg zöld
-  background-color: white; // Háttér fehér
-  border: 1px solid #627966; // Vékony zöld szegély
-  border-radius: 15px; // Jobban lekerekített
+  color: #627966;
+  background-color: white;
+  border: 1px solid #627966;
+  border-radius: 15px;
   cursor: pointer;
   transition: 0.3s;
-  align-self: center; // Középre igazítja a stepek alatt
+  align-self: center;
 
   &:hover {
     background-color: #627966;
