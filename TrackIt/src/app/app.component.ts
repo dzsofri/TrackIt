@@ -7,7 +7,7 @@ import { ProfileComponent } from '../components/profile/profile.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, WelcomeComponent, CommonModule, RegistrationComponent, ProfileComponent],
+  imports: [RouterOutlet, CommonModule, ProfileComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
