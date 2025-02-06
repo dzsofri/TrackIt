@@ -12,10 +12,11 @@ html, body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 200vh;
 }
 
 .row {
-    width: 120vh !important; /* Szélesebb konténer */
+    width: 200vh !important; /* Szélesebb konténer */
     max-width: 95%; /* Maximalizálás, hogy ne legyen túl széles */
     display: flex;
     justify-content: center;
@@ -23,16 +24,21 @@ html, body {
 }
 
 #heroimage {
-    background-color: #3498db;
-    width: 120vh !important; /* Szélesebb lett */
+    background: url('/assets/images/login.jpg') no-repeat center center;
+    background-size: 50% !important;
+    background-color: #FAF4F0; /* A háttérkép kisebb lesz, de nem tölti ki teljesen az elemet */
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 140vh !important;
+    height: 95vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
     border-radius: 15px;
     box-sizing: border-box;
-    height: 95vh;
 }
+
 
 .text-white {
     font-size: 2rem;
@@ -40,8 +46,8 @@ html, body {
 }
 
 .card {
-    width: 110vh !important; /* Szélesebb lett */
-    height: 95vh; /* Kissé csökkentett magasság */
+    width: 50vh !important; /* Szélesebb lett */
+    height: 30vh; /* Kissé csökkentett magasság */
    
     border: none;
     padding: 20px;
@@ -73,14 +79,28 @@ html, body {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 95%; /* Mobilon is nagyobb */
-        height: auto;
+        width: 100%; /* Mobilon is nagyobb */
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
+       
     }
     .card {
+      
+        background-color: #FAF4F0;
+        width: 100% !important;
+    }
+
+    .box{
+        width: 40vh;
+    }
+}
+
+@media (max-width: 470px) {
+    
+
+    .box{
         width: 100%;
-        background-color: #3498db;
     }
 }
