@@ -1,9 +1,14 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Users } from "./Users";
 
 @Entity()
 export class UserChallenges {
     @PrimaryColumn({ type: "varchar", length: 40 })
     id: string;
+
+    @ManyToOne(() => Users, (user) => user.challenges)
+    @JoinColumn({ name: "userId" })
+    user: Users;
 
     @Column({ type: "varchar", length: 40 })
     userId: string;

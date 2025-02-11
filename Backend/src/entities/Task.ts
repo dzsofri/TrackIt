@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Users } from "./Users";
 
 @Entity()
 export class Tasks {
@@ -16,6 +17,10 @@ export class Tasks {
 
     @Column({ type: "date", nullable: true })
     dueDate: Date;
+
+    @ManyToOne(() => Users, (user) => user.tasks)
+    @JoinColumn({ name: "userId" })
+    user: Users;
 
     @Column({ type: "varchar", length: 40, nullable: true })
     userId: string;
