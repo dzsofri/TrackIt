@@ -1,5 +1,6 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
-import { Users } from "./Users";
+import { Users } from "./User";
+
 
 @Entity()
 export class UserChallenges {
