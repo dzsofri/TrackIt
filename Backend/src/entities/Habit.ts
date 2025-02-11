@@ -1,12 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Users } from "./User";
+import { HabitTrackings } from "./HabitTracking";
 
 @Entity()
 export class Habits {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "varchar", length: 40, nullable: true })
-    userId: string;
+    @ManyToOne(() => Users, (user) => user.habits)
+    @JoinColumn({ name: "userId" })
+    user: Users;
 
     @Column({ type: "varchar", length: 255 })
     habitName: string;
@@ -22,4 +25,7 @@ export class Habits {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @OneToMany(() => HabitTrackings, (habitTrack) => habitTrack.habit)
+    habitTrackings: HabitTrackings[];
 }

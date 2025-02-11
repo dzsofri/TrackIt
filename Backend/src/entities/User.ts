@@ -1,12 +1,14 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
 import { Followes } from "./Follow";
 import { FriendRequests } from "./FriendRequest";
-import { Habits } from "./Habit";
+
 import { Pictures } from "./Picture";
 import { Posts } from "./Post";
 import { Tasks } from "./Task";
 import { UserChallenges } from "./UserChallenge";
-
+import { UserStatistics } from "./UserStatistic";
+import { Feedbacks } from "./Feedback";
+import { Habits } from "./Habit";
 
 export enum UserRole {
     ADMIN = "admin",
@@ -30,7 +32,7 @@ export class Users {
     @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
     role: UserRole;
 
-    @OneToOne(() => Pictures)
+    @OneToOne(() => Pictures, { onDelete: "CASCADE" })  
     @JoinColumn({ name: "pictureId" })
     picture: Pictures;
 
@@ -40,27 +42,35 @@ export class Users {
     @CreateDateColumn()
     createdAt: Date;
 
-    @OneToMany(() => FriendRequests, (friendRequest) => friendRequest.sender)
+    @OneToMany(() => FriendRequests, (friendRequest) => friendRequest.sender, { onDelete: "CASCADE" })
     sentFriendRequests: FriendRequests[];
 
-    @OneToMany(() => FriendRequests, (friendRequest) => friendRequest.receiver)
+    @OneToMany(() => FriendRequests, (friendRequest) => friendRequest.receiver, { onDelete: "CASCADE" })
     receivedFriendRequests: FriendRequests[];
 
-    @OneToMany(() => Followes, (follow) => follow.followingUser)
+    @OneToMany(() => Followes, (follow) => follow.followingUser, { onDelete: "CASCADE" })
     following: Followes[];
 
-    @OneToMany(() => Followes, (follow) => follow.followedUser)
+    @OneToMany(() => Followes, (follow) => follow.followedUser, { onDelete: "CASCADE" })
     followers: Followes[];
 
-    @OneToMany(() => Posts, (post) => post.user)
+    @OneToMany(() => Posts, (post) => post.user, { onDelete: "CASCADE" })
     posts: Posts[];
 
-    @OneToMany(() => Tasks, (task) => task.user)
+    @OneToMany(() => Tasks, (task) => task.user, { onDelete: "CASCADE" })
     tasks: Tasks[];
 
-    @OneToMany(() => UserChallenges, (challenge) => challenge.user)
+    @OneToMany(() => UserChallenges, (challenge) => challenge.user, { onDelete: "CASCADE" })
     challenges: UserChallenges[];
 
-    @OneToMany(() => Habits, (habit) => habit.user)
+    @OneToMany(() => UserStatistics, (statistic) => statistic.user, { onDelete: "CASCADE" })
+    statistics: UserStatistics[];
+
+    @OneToMany(() => Habits, (habit) => habit.user, { onDelete: "CASCADE" })
     habits: Habits[];
+    
+
+
+    @OneToMany(() => Feedbacks, (feedback) => feedback.user, { onDelete: "CASCADE" })
+    feedbacks: Feedbacks[];
 }

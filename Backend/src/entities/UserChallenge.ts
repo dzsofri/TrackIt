@@ -1,5 +1,6 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { Users } from "./User";
+import { UserStatistics } from "./UserStatistic";
 
 
 @Entity()
@@ -10,7 +11,7 @@ export class UserChallenges {
     @ManyToOne(() => Users, (user) => user.challenges)
     @JoinColumn({ name: "userId" })
     user: Users;
-
+    
     @Column({ type: "varchar", length: 40 })
     userId: string;
 
@@ -34,4 +35,7 @@ export class UserChallenges {
 
     @Column({ type: "timestamp", nullable: true })
     finalDate: Date;
+
+    @OneToMany(() => UserStatistics, (statistic) => statistic.activeChallenge)
+    statistics: UserStatistics[];  // Statikus statisztikák, amelyek a kihíváshoz tartoznak
 }

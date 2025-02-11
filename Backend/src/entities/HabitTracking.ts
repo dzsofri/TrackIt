@@ -1,9 +1,14 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne } from "typeorm";
+import { Habits } from "./Habit";
 
 @Entity()
 export class HabitTrackings {
-    @PrimaryColumn()
-    habitId: number;
+    @PrimaryGeneratedColumn() // EZ AZ AUTOMATIKUS ID GENERÁLÁS
+    id: number;
+
+    @ManyToOne(() => Habits, (habit) => habit.habitTrackings, { onDelete: "SET NULL" })
+    @JoinColumn({ name: "habitId" })
+    habit: Habits;
 
     @CreateDateColumn()
     date: Date;
