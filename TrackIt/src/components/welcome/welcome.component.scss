@@ -21,12 +21,38 @@ html, body {
   position: relative;
 }
 
+/* Blobok külön kezelése */
+.blob {
+  position: absolute;
+  width: 45vw;
+  height: 45vw;
+  min-width: 200px;
+  min-height: 200px;
+  background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23627966" d="M45.7,-47C60.6,-30.9,74.8,-15.4,74.5,-0.3C74.2,14.8,59.4,29.7,44.5,44.9C29.7,60.1,14.8,75.7,-2.4,78.1C-19.7,80.6,-39.4,69.9,-55.6,54.6C-71.8,39.4,-84.4,19.7,-80.6,3.8C-76.8,-12.1,-56.5,-24.2,-40.4,-40.3C-24.2,-56.3,-12.1,-76.4,1.7,-78C15.4,-79.7,30.9,-63,45.7,-47Z" transform="translate(100 100)"/></svg>');
+  background-size: cover;
+  pointer-events: none;
+  opacity: 0.7;
+  animation: circular-motion 15s linear infinite;
+}
+
+/* Bal felső blob */
+.blob-left {
+  top: -20vh;
+  left: -20vw;
+}
+
+/* Jobb alsó blob */
+.blob-right {
+  bottom: -20vh;
+  right: -20vw;
+}
+
 /* SVG Blob változó */
 @keyframes circular-motion {
   0% {
-     transform: rotate(0deg) scale(1) translate(5px, 5px);
-   }
-   25% {
+    transform: rotate(0deg) scale(1) translate(5px, 5px);
+  }
+  25% {
     transform: rotate(90deg) scale(1.05) translate(-5px, -5px);
   }
   50% {
@@ -40,42 +66,10 @@ html, body {
   }
 }
 
-/* Bal felső blob */
-.welcome-wrapper::before {
-  content: "";
-  position: absolute;
-  width: 700px;
-  height: 750px;
-  background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23627966" d="M45.7,-47C60.6,-30.9,74.8,-15.4,74.5,-0.3C74.2,14.8,59.4,29.7,44.5,44.9C29.7,60.1,14.8,75.7,-2.4,78.1C-19.7,80.6,-39.4,69.9,-55.6,54.6C-71.8,39.4,-84.4,19.7,-80.6,3.8C-76.8,-12.1,-56.5,-24.2,-40.4,-40.3C-24.2,-56.3,-12.1,-76.4,1.7,-78C15.4,-79.7,30.9,-63,45.7,-47Z" transform="translate(100 100)"/></svg>');
-  background-size: cover;
-  pointer-events: none;
-  opacity: 0.7;
-  top: -310px;
-  left: -260px;
-  animation: circular-motion 15s linear infinite;
-}
-
-/* Jobb alsó blob */
-.welcome-wrapper::after {
-  content: "";
-  position: absolute;
-  width: 700px;
-  height: 800px;
-  background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23627966" d="M45.7,-47C60.6,-30.9,74.8,-15.4,74.5,-0.3C74.2,14.8,59.4,29.7,44.5,44.9C29.7,60.1,14.8,75.7,-2.4,78.1C-19.7,80.6,-39.4,69.9,-55.6,54.6C-71.8,39.4,-84.4,19.7,-80.6,3.8C-76.8,-12.1,-56.5,-24.2,-40.4,-40.3C-24.2,-56.3,-12.1,-76.4,1.7,-78C15.4,-79.7,30.9,-63,45.7,-47Z" transform="translate(100 100)"/></svg>');
-  background-size: cover;
-  opacity: 0.7;
-  bottom: -310px;
-  right: -260px;
-  animation: circular-motion 15s linear infinite;
-}
-
-
-
-
 /* Tartalom elrendezése */
 .content {
   display: flex;
-  flex-wrap: wrap; /* Új sorba törhet */
+  flex-wrap: wrap; 
   justify-content: center;
   align-items: center;
   max-width: 100vw;
@@ -116,7 +110,7 @@ p {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 500px; /* vagy más, ami jól néz ki */
+  max-width: 500px; 
   margin: 0 auto;
   padding: 1rem;
 }
@@ -125,10 +119,10 @@ p {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  //width: 100%;
+  width: 100%;
 }
 
-/* Lépések */
+
 /* Lépések */
 .step {
   display: flex;
@@ -157,8 +151,6 @@ p {
   background-color: #627966; /* A kívánt háttérszín */
   color: white; /* Fehér szöveg szín */
 }
-
-
 
 
 /* Lépés számozás */
