@@ -3,27 +3,27 @@
         <h1>"Felhasználó neve"</h1>
     </header>
 </div>
-<div class="col-5 col-sm-5 col-md-5.5 col-lg-12">
+<div class="col-4 col-sm-10 col-md-8 col-lg-12">
     <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Statisztika</a>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="statisztika-tab" data-bs-toggle="tab" data-bs-target="#statisztika-tab-pane" type="button" role="tab" aria-controls="statisztika-tab-pane" aria-selected="true">Statisztika</button>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Jelvények</a>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="jelveny-tab" data-bs-toggle="tab" data-bs-target="#jelveny-tab-pane" type="button" role="tab" aria-controls="jelveny-tab-pane" aria-selected="false">Jelvények</button>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Barátok</a>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="barat-tab" data-bs-toggle="tab" data-bs-target="#barat-tab-pane" type="button" role="tab" aria-controls="barat-tab-pane" aria-selected="false">Barátok</button>
         </li>
-        <li class="nav-item-tab">
-            <a class="nav-link" href="#">Profil módosítása</a>
+        <li class="nav-item-tab" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profil módosítása</button>
         </li>
     </ul>
 </div>
 
 <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="statisztika-tab-pane" role="tabpanel">
+    <div class="tab-pane fade show active" id="statisztika-tab-pane" role="tabpanel" aria-labelledby="statisztika-tab" tabindex="0">
         <div class="row">
-            <div class="col-12 col-sm-6 col-md-4 mb-4">
+            <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Teljesítményeim</h3>
                 <div class="box">
                     <div class="teljes_content">
@@ -34,29 +34,31 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-4 mb-4">
+            <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Eredményeim</h3>
                 <div class="box">
                     <div class="eredmeny_content">
-                        <p>30 napos produktivitási kihívás: <br> 25 nap teljesítve</p>
-                        <p>Heti 3 új feladat kihívás teljesítése: <br> 90%</p>
+                        <p>30 napos produktivitási kihívás: <br> <b class="folyamat">25 nap teljesítve</b></p>
+                        <p>Heti 3 új feladat kihívás teljesítése: <br> <b class="folyamat">90%</b></p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-4 mb-4">
+            <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Szokásaim</h3>
                 <div class="box">
                     <div class="szokas_content">
                         <p>Edzés: <b class="folyamat"> Heti átlag 4 alkalom</b></p>
-                        <p>Vízfogyasztás: <strong class="folyamat">Napi 2 liter átlag</strong></p>
-                        <p>Meditáció: <strong class="folyamat">15 perc naponta, 90%-os teljesítettség</strong></p>
+                        <p>Vízfogyasztás: <b class="folyamat">Napi 2 liter átlag</b></p>
+                        <p>Meditáció: <b class="folyamat">15 perc naponta, 90%-os teljesítettség</b></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="tab-pane fade" id="jelveny-tab-pane" role="tabpanel"></div>
-    <div class="tab-pane fade" id="barat-tab-pane" role="tabpanel"></div>
-    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel"></div>
+    <div class="tab-pane fade" id="jelveny-tab-pane" role="tabpanel" aria-labelledby="jelveny-tab" tabindex="0"></div>
+    <div class="tab-pane fade" id="barat-tab-pane" role="tabpanel" aria-labelledby="barat-tab" tabindex="0">
+        <h1>efvwevw</h1>
+    </div>
+    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0"></div>
 </div>
