@@ -1,9 +1,7 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="row w-100">
-        <div id="heroimage">
-           
-           
-            <div class="text-white">Regisztráció</div>
+        <div id="heroimage" class="welcome-wrapper">
+            
         </div>
         
         <div class="col-md-6 d-flex justify-content-center align-items-center">
@@ -11,15 +9,15 @@
                 <h2 class="text-center mb-2">Hozd létre a fiókodat!</h2>
                 <p class="text-center">Adja meg személyes adatait a fiók létrehozásához.</p>
                 <form>
-                    <div class="mb-3">
+                    <div class="mb-3 box">
                         <label for="name" class="form-label">Név</label>
                         <input type="text" class="form-control" id="name" placeholder="pl. Somodi Konrád" required>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 box">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="pl. somodikonrad@turr.hu" required>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 box">
                         <label for="password" class="form-label">Jelszó</label>
                         <div class="input-group">
                             <input [type]="isPasswordVisible ? 'text' : 'password'" class="form-control" id="password" placeholder="Írja be a jelszavát!" required>

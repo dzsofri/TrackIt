@@ -4,7 +4,8 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f8f9fa; /* Háttérszín hozzáadása */
+    background-color: #f8f9fa;
+    max-width: 70% !important;
 }
 
 .container {
@@ -12,27 +13,61 @@ html, body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 90%;
 }
 
 .row {
-    width: 120vh !important; /* Szélesebb konténer */
-    max-width: 95%; /* Maximalizálás, hogy ne legyen túl széles */
+    width: 85% !important;
+    max-width: 95%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 #heroimage {
-    background-color: #3498db;
-    width: 120vh !important; /* Szélesebb lett */
+    background: url('/assets/images/login.jpg') no-repeat center center;
+    background-size: cover;
+    background-color: #FAF4F0;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 80% !important;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 2%;
     border-radius: 15px;
     box-sizing: border-box;
-    height: 95vh;
+    position: relative;
+    animation: moveBackground 30s linear infinite, floatEffect 3s ease-in-out infinite;
 }
+
+/* Háttér mozgatás animációja */
+@keyframes moveBackground {
+    0% {
+        background-position: center;
+    }
+    50% {
+        background-position: right;
+    }
+    100% {
+        background-position: center;
+    }
+}
+
+/* Lebegő animáció */
+@keyframes floatEffect {
+    0% {
+        transform: translateY(0); /* Alaphelyzet */
+    }
+    50% {
+        transform: translateY(-5px); /* Fölfele mozgatás */
+    }
+    100% {
+        transform: translateY(0); /* Vissza alaphelyzetbe */
+    }
+}
+
 
 .text-white {
     font-size: 2rem;
@@ -40,23 +75,28 @@ html, body {
 }
 
 .card {
-    width: 110vh !important; /* Szélesebb lett */
-    height: 95vh; /* Kissé csökkentett magasság */
-   
+    width: 20%;
+    height: 30%;
     border: none;
-    padding: 20px;
+    padding: 3%;
     background-color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
+button, input{
+    height: 5vh !important;
+}
+
+
+
 @media (min-width: 768px) {
     .row {
         flex-wrap: nowrap;
     }
     #heroimage, #registration-form {
-        width: 60%; /* Nagyobb szélesség */
+        width: 60%;
     }
 }
 
@@ -73,14 +113,80 @@ html, body {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 95%; /* Mobilon is nagyobb */
-        height: auto;
+        width: 100%;
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
     }
     .card {
-        width: 100%;
-        background-color: #3498db;
+        background-color: #FAF4F0;
+        
+    }
+    .box {
+        width: 40vh;
+    }
+    input{
+        height: 4vh !important;
     }
 }
+
+@media (max-width: 470px) {
+    .box {
+        width: 100%;
+        
+    }
+    button, input{
+        height: 8vh !important;
+    }
+
+   
+}
+
+
+
+.welcome-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 98.3vh;
+    width: 99vw;
+    overflow: hidden;
+    background: #FFFFFF;
+    padding: 5vw;
+    border-radius: 30px;
+    box-sizing: border-box;
+    box-shadow: 2px 4px 10px rgba(0.5, 0.5, 0.5, 0.5);
+    background-size: cover;
+    position: relative;
+  }
+   
+
+  /* Bal felső blob */
+  .welcome-wrapper::before {
+    content: "";
+    position: absolute;
+    width: 550px;
+    height: 600px;
+    background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23627966" d="M45.7,-47C60.6,-30.9,74.8,-15.4,74.5,-0.3C74.2,14.8,59.4,29.7,44.5,44.9C29.7,60.1,14.8,75.7,-2.4,78.1C-19.7,80.6,-39.4,69.9,-55.6,54.6C-71.8,39.4,-84.4,19.7,-80.6,3.8C-76.8,-12.1,-56.5,-24.2,-40.4,-40.3C-24.2,-56.3,-12.1,-76.4,1.7,-78C15.4,-79.7,30.9,-63,45.7,-47Z" transform="translate(100 100)"/></svg>');
+    background-size: cover;
+    pointer-events: none;
+    opacity: 0.7;
+    top: -310px;
+    left: -260px;
+    
+  }
+   
+  /* Jobb alsó blob */
+  .welcome-wrapper::after {
+    content: "";
+    position: absolute;
+    width: 550px;
+    height: 600px;
+    background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23627966" d="M45.7,-47C60.6,-30.9,74.8,-15.4,74.5,-0.3C74.2,14.8,59.4,29.7,44.5,44.9C29.7,60.1,14.8,75.7,-2.4,78.1C-19.7,80.6,-39.4,69.9,-55.6,54.6C-71.8,39.4,-84.4,19.7,-80.6,3.8C-76.8,-12.1,-56.5,-24.2,-40.4,-40.3C-24.2,-56.3,-12.1,-76.4,1.7,-78C15.4,-79.7,30.9,-63,45.7,-47Z" transform="translate(100 100)"/></svg>');
+    background-size: cover;
+    opacity: 0.7;
+    bottom: -310px;
+    right: -260px;
+    animation: circular-motion 15s linear infinite;
+  }
