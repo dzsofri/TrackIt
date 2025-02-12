@@ -5,188 +5,89 @@ html, body {
     justify-content: center;
     align-items: center;
     background-color: #f8f9fa;
-    max-width: 70% !important;
+    width: 100vw;
 }
 
-.container {
+/* Ensure the container stretches full width */
+.container-fluid {
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
-    width: 90%;
+    width: 100vw;
+    padding: 0;
 }
 
+/* Ensure the row spans the full width and height */
 .row {
-    width: 85% !important;
-    max-width: 95%;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100vw;
+    height: 100vh;
 }
 
+/* Hero image takes up half of the width */
 #heroimage {
     background: url('/assets/images/login.jpg') no-repeat center center;
     background-size: cover;
-    background-color: #FAF4F0;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 80% !important;
+    width: 50%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2%;
-    border-radius: 15px;
-    box-sizing: border-box;
+    border-radius: 0;
+    
     position: relative;
-    animation: moveBackground 30s linear infinite, floatEffect 3s ease-in-out infinite;
+    //animation: moveBackground 30s linear infinite, floatEffect 3s ease-in-out infinite;
 }
 
-/* Háttér mozgatás animációja */
-@keyframes moveBackground {
-    0% {
-        background-position: center;
-    }
-    50% {
-        background-position: right;
-    }
-    100% {
-        background-position: center;
-    }
-}
+/* Registration form takes up the other half */
 
-/* Lebegő animáció */
-@keyframes floatEffect {
-    0% {
-        transform: translateY(0); /* Alaphelyzet */
-    }
-    50% {
-        transform: translateY(-5px); /* Fölfele mozgatás */
-    }
-    100% {
-        transform: translateY(0); /* Vissza alaphelyzetbe */
-    }
-}
-
-
-.text-white {
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.card {
-    width: 20%;
-    height: 30%;
-    border: none;
-    padding: 3%;
-    background-color: rgb(255, 255, 255);
+#registration-form {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: column;      /* A form elemei egy oszlopban lesznek */
+    justify-content: center;     /* Az összes elem függőlegesen középre lesz igazítva */
+    align-items: center;         /* Vízszintesen középre igazítja a form elemeit */
+    width: 50%;
+    height: 100vh;
+    border: none;
+    font-size: 150%;
+    padding: 20px;
 }
 
-button, input{
-    height: 5vh !important;
+#registration-form form button:nth-child(4) {
+    width: 10vw !important;
+    height: 5vh;
+    font-size: 85%;
+    margin: auto !important;
+    align-self: center !important;
+    
 }
 
 
 
-@media (min-width: 768px) {
-    .row {
-        flex-wrap: nowrap;
-    }
-    #heroimage, #registration-form {
-        width: 60%;
-    }
-}
 
+/* Reszponzív módosítások */
 @media (max-width: 767px) {
     .row {
         flex-direction: column;
-        align-items: center;
     }
     #heroimage {
-        display: none;
+        width: 100%;
+        height: 50vh;
     }
     #registration-form {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
         width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .card {
-        background-color: #FAF4F0;
-        
-    }
-    .box {
-        width: 40vh;
-    }
-    input{
-        height: 4vh !important;
+        height: 50vh;
     }
 }
 
 @media (max-width: 470px) {
-    .box {
+    #heroimage {
+        display: none;
+    }
+    #registration-form {
         width: 100%;
-        
+        height: 100vh;
     }
-    button, input{
-        height: 8vh !important;
-    }
-
-   
 }
-
-
-
-.welcome-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 98.3vh;
-    width: 99vw;
-    overflow: hidden;
-    background: #FFFFFF;
-    padding: 5vw;
-    border-radius: 30px;
-    box-sizing: border-box;
-    box-shadow: 2px 4px 10px rgba(0.5, 0.5, 0.5, 0.5);
-    background-size: cover;
-    position: relative;
-  }
-   
-
-  /* Bal felső blob */
-  .welcome-wrapper::before {
-    content: "";
-    position: absolute;
-    width: 550px;
-    height: 600px;
-    background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23627966" d="M45.7,-47C60.6,-30.9,74.8,-15.4,74.5,-0.3C74.2,14.8,59.4,29.7,44.5,44.9C29.7,60.1,14.8,75.7,-2.4,78.1C-19.7,80.6,-39.4,69.9,-55.6,54.6C-71.8,39.4,-84.4,19.7,-80.6,3.8C-76.8,-12.1,-56.5,-24.2,-40.4,-40.3C-24.2,-56.3,-12.1,-76.4,1.7,-78C15.4,-79.7,30.9,-63,45.7,-47Z" transform="translate(100 100)"/></svg>');
-    background-size: cover;
-    pointer-events: none;
-    opacity: 0.7;
-    top: -310px;
-    left: -260px;
-    
-  }
-   
-  /* Jobb alsó blob */
-  .welcome-wrapper::after {
-    content: "";
-    position: absolute;
-    width: 550px;
-    height: 600px;
-    background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%23627966" d="M45.7,-47C60.6,-30.9,74.8,-15.4,74.5,-0.3C74.2,14.8,59.4,29.7,44.5,44.9C29.7,60.1,14.8,75.7,-2.4,78.1C-19.7,80.6,-39.4,69.9,-55.6,54.6C-71.8,39.4,-84.4,19.7,-80.6,3.8C-76.8,-12.1,-56.5,-24.2,-40.4,-40.3C-24.2,-56.3,-12.1,-76.4,1.7,-78C15.4,-79.7,30.9,-63,45.7,-47Z" transform="translate(100 100)"/></svg>');
-    background-size: cover;
-    opacity: 0.7;
-    bottom: -310px;
-    right: -260px;
-    animation: circular-motion 15s linear infinite;
-  }
