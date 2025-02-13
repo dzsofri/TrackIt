@@ -42,10 +42,10 @@
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Teljesítményeim</h3>
                 <div class="box">
-                    <div class="teljes_content">
-                        <p><img id="elvegzett">120 <span class="folyamat">Elvégzett</span></p>
-                        <p><img id="elmaradt">120 <span class="folyamat">Elmaradt</span></p>
-                        <p><img id="teljesitve">120 <span class="folyamat">Teljesítve</span></p>
+                    <div class="content">
+                        <p><img id="elvegzett">120 <b class="folyamat">Elvégzett</b></p>
+                        <p><img id="elmaradt">120 <b class="folyamat">Elmaradt</b></p>
+                        <p><img id="teljesitve">120 <b class="folyamat">Teljesítve</b></p>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Eredményeim</h3>
                 <div class="box">
-                    <div class="eredmeny_content">
+                    <div class="content">
                         <p>30 napos produktivitási kihívás: <br> <b class="folyamat">25 nap teljesítve</b></p>
                         <p>Heti 3 új feladat kihívás teljesítése: <br> <b class="folyamat">90%</b></p>
                     </div>
@@ -63,7 +63,7 @@
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Szokásaim</h3>
                 <div class="box">
-                    <div class="szokas_content">
+                    <div class="content">
                         <p>Edzés: <b class="folyamat"> Heti átlag 4 alkalom</b></p>
                         <p>Vízfogyasztás: <b class="folyamat">Napi 2 liter átlag</b></p>
                         <p>Meditáció: <b class="folyamat">15 perc naponta, 90%-os teljesítettség</b></p>
@@ -74,7 +74,22 @@
     </div>
     <div class="tab-pane" [class.d-none]="activeTab !== 'jelveny'" id="jelveny-tab-pane" role="tabpanel" aria-labelledby="jelveny-tab" tabindex="0"></div>
     <div class="tab-pane" [class.d-none]="activeTab !== 'barat'" id="barat-tab-pane" role="tabpanel" aria-labelledby="barat-tab" tabindex="0">
-        <h1>Barátok</h1>
+        <div>
+            <h3>Barátok kezelése</h3>
+            <div class="barat_box">
+                <div class="barat_content">
+                    <p><img id="elmaradt"><span>"Felhasználó neve"</span> <button class="del">Barát törlése</button></p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h3>Követési kérelmek kezelése</h3>
+            <div class="barat_box">
+                <div class="barat_content">
+                    <p><img id="profile"><span>"Felhasználó neve"</span> <button class="add">Megerősítés</button> <button class="del">Elutasítás</button></p>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="tab-pane" [class.d-none]="activeTab !== 'profile'" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0"></div>
 </div>
