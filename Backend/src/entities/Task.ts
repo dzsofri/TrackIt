@@ -1,4 +1,7 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { Users } from "./User";
+import { TaskStatuses } from "./TaskStatus";
+import { UserStatistics } from "./UserStatistic";
 
 @Entity()
 export class Tasks {
@@ -17,9 +20,20 @@ export class Tasks {
     @Column({ type: "date", nullable: true })
     dueDate: Date;
 
+    @ManyToOne(() => Users, (user) => user.tasks)
+    @JoinColumn({ name: "userId" })
+    user: Users;
+
     @Column({ type: "varchar", length: 40, nullable: true })
     userId: string;
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @OneToMany(() => TaskStatuses, (taskStatus) => taskStatus.task)
+    taskStatuses: TaskStatuses[];
+
+    // Hozzáadjuk ezt a kapcsolatot a statisztikákhoz
+    @OneToMany(() => UserStatistics, (statistics) => statistics.activeTask)
+    statistics: UserStatistics[];  // Statikus statisztikák a feladathoz
 }

@@ -1,13 +1,16 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { FeedbackQuestions } from "./FeedbackQuestion";
+import { Users } from "./User";
 
 @Entity()
 export class Feedbacks {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "varchar", length: 40 })
-    userId: string;
+     @ManyToOne(() => Users, (user) => user.feedbacks)
+           @JoinColumn({ name: "userId" })
+           user: Users;
+           
 
     @ManyToOne(() => FeedbackQuestions)
     @JoinColumn({ name: "questionId" })

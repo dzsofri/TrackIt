@@ -1,12 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne } from "typeorm";
+import { Users } from "./User";
+import { UserChallenges } from "./UserChallenge";
+import { Tasks } from "./Task";
 
 @Entity()
 export class UserStatistics {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "varchar", length: 40, nullable: true })
-    userId: string;
+    @ManyToOne(() => Users, (user) => user.statistics)
+    @JoinColumn({ name: "userId" })
+    user: Users;
 
     @Column({ type: "int", default: 0 })
     completedTasks: number;
@@ -20,9 +24,11 @@ export class UserStatistics {
     @CreateDateColumn()
     createdAt: Date;
 
-    @Column({ type: "varchar", length: 40 })
-    activeChallengeId: string;
+    @ManyToOne(() => UserChallenges, (challenge) => challenge.statistics, { nullable: true })
+    @JoinColumn({ name: "activeChallengeId" })
+    activeChallenge: UserChallenges;
 
-    @Column({ type: "varchar", length: 40 })
-    activeTaskId: string;
+    @ManyToOne(() => Tasks, (task) => task.statistics, { nullable: true })
+    @JoinColumn({ name: "activeTaskId" })
+    activeTask: Tasks;
 }

@@ -1,12 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Tasks } from "./Task";
 
 @Entity()
 export class TaskStatuses {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "varchar", length: 40 })
-    taskId: string;
+    @ManyToOne(() => Tasks, (task) => task.taskStatuses, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "taskId" })
+    task: Tasks;
 
     @Column({ type: "varchar", length: 100 })
     priority: string;
