@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
+  activeTab: string = 'statisztika';
 
+  setActiveTab(tabName: string) {
+    this.activeTab = tabName;
+  }
 }

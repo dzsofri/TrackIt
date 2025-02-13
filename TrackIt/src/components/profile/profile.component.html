@@ -6,22 +6,38 @@
 <div class="col-4 col-sm-10 col-md-8 col-lg-12">
     <ul class="nav nav-tabs">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="statisztika-tab" data-bs-toggle="tab" data-bs-target="#statisztika-tab-pane" type="button" role="tab" aria-controls="statisztika-tab-pane" aria-selected="true">Statisztika</button>
+            <button 
+            class="nav-link" 
+            [class.active]="activeTab === 'statisztika'"
+            (click)="setActiveTab('statisztika')"
+          >Statisztika</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="jelveny-tab" data-bs-toggle="tab" data-bs-target="#jelveny-tab-pane" type="button" role="tab" aria-controls="jelveny-tab-pane" aria-selected="false">Jelvények</button>
+            <button 
+            class="nav-link" 
+            [class.active]="activeTab === 'jelveny'"
+            (click)="setActiveTab('jelveny')"
+          >Jelvények</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="barat-tab" data-bs-toggle="tab" data-bs-target="#barat-tab-pane" type="button" role="tab" aria-controls="barat-tab-pane" aria-selected="false">Barátok</button>
+            <button 
+            class="nav-link" 
+            [class.active]="activeTab === 'barat'"
+            (click)="setActiveTab('barat')"
+          >Barátok</button>
         </li>
         <li class="nav-item-tab" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profil módosítása</button>
+            <button 
+        class="nav-link" 
+        [class.active]="activeTab === 'profile'"
+        (click)="setActiveTab('profile')"
+      >Profil módosítása</button>
         </li>
     </ul>
 </div>
 
 <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="statisztika-tab-pane" role="tabpanel" aria-labelledby="statisztika-tab" tabindex="0">
+    <div class="tab-pane show active" [class.d-none]="activeTab !== 'statisztika'" id="statisztika-tab-pane" role="tabpanel" aria-labelledby="statisztika-tab" tabindex="0">
         <div class="row">
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Teljesítményeim</h3>
@@ -56,9 +72,9 @@
             </div>
         </div>
     </div>
-    <div class="tab-pane fade" id="jelveny-tab-pane" role="tabpanel" aria-labelledby="jelveny-tab" tabindex="0"></div>
-    <div class="tab-pane fade" id="barat-tab-pane" role="tabpanel" aria-labelledby="barat-tab" tabindex="0">
-        <h1>efvwevw</h1>
+    <div class="tab-pane" [class.d-none]="activeTab !== 'jelveny'" id="jelveny-tab-pane" role="tabpanel" aria-labelledby="jelveny-tab" tabindex="0"></div>
+    <div class="tab-pane" [class.d-none]="activeTab !== 'barat'" id="barat-tab-pane" role="tabpanel" aria-labelledby="barat-tab" tabindex="0">
+        <h1>Barátok</h1>
     </div>
-    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0"></div>
+    <div class="tab-pane" [class.d-none]="activeTab !== 'profile'" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0"></div>
 </div>
