@@ -12,4 +12,10 @@ export class ProfileComponent {
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
   }
+
+  isPasswordVisible = false;
+  
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
 }

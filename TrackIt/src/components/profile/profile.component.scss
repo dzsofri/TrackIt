@@ -2,6 +2,23 @@
     text-align: center;
 }
 
+#felhasznalo{
+    background-image: url(img/profileKep.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    max-width: 150px;
+    height: 50vw;
+    max-height: 150px; 
+    padding: 0.3px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+}
+
 //Linkek
 
 .nav-link.active {
@@ -316,9 +333,8 @@ span{
 }
 
 #profile {
-    background-image: url(img/random_guy.png);
+    background-image: url(img/profileKep.png);
     background-repeat: no-repeat;
-    background-position: center;
     background-size: cover;
     display: flex;
     justify-content: flex-start;
@@ -502,5 +518,177 @@ span{
     .del .add{
         width: 10%;
         padding: 12px;
+    }
+}
+
+
+// Profil módosítás
+
+#profile-tab-pane {
+    display: flex;
+    background-color: #F5F5F7;
+    padding: 5vh;
+    flex-grow: 1;
+    align-content: flex-start;
+    justify-content: space-between;
+    gap: 20%;
+    width: 100%;
+    min-width: 500px;
+}
+
+.profile_box2 {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    width: 45vw;
+}
+
+.profile_box1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 35vw;
+    margin-top: 15%;
+}
+
+.profile_content1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    margin: auto;
+}
+
+.profile_content2 {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+input{
+    background-color: #F8F8F8;
+    border-radius: 25px;
+    width: 100%;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
+    height: 60px;
+}
+
+.mentes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #488853;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    width: 200px;
+    float: right;
+}
+
+.profilekep_modositas{
+    border-radius: 100px;
+    color: #98B09C;
+    border: 5px solid;
+    margin: 20px auto;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#profilekep{
+    background-image: url(img/profileKep.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    max-width: 200px;
+    height: 100vw;
+    max-height: 200px;
+    padding: 0.3px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .profile_box2 {
+        width: 90vw;
+    }
+
+    .profile_box1 {
+        width: 100%;
+        max-width: 100%;
+        margin: 20px;
+    }
+
+    .profile_content1 {
+        flex-direction: row;
+        gap: 20px;
+    }
+
+    .profilekep_modositas{
+        border-radius: 100px;
+        color: #98B09C;
+        border: 5px solid;
+        margin: 20px auto;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px;
+        display: flex;
+        width: 250px;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media (max-width: 600px) {
+    #profile-tab-pane {
+        width: 100%;
+        flex-direction: column;
+        padding: 3vh;
+    }
+
+    .profile_box2 {
+        width: 105%;
+        max-width: 105%;
+        flex-direction: column;
+        padding: 10px;
+        box-shadow: none;
+        background-color: transparent;
+    }
+
+    .profile_box1 {
+        width: 100%;
+        max-width: 100%;
+        margin: 20px;
+    }
+
+    .profile_content1 {
+        flex-direction: row;
+        gap: 20px;
+    }
+
+    .profilekep_modositas{
+        border-radius: 100px;
+        color: #98B09C;
+        border: 5px solid;
+        margin: 20px auto;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px;
+        display: flex;
+        width: 250px;
+        justify-content: center;
+        align-items: center;
     }
 }
