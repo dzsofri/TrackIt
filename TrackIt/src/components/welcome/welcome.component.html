@@ -1,7 +1,6 @@
 <div class="welcome-wrapper">
   <div class="content">
-    <!-- Üdvözlő szöveg -->
-    <div class="text" [@moveLeft]="stepState">
+    <div class="text">
       <h1>Üdvözlünk a <span class="highlight">TrackIt</span> világában!</h1>
       <p><strong>Kezdjük el együtt megtervezni a sikereidet!</strong></p>
       <p>
@@ -9,32 +8,19 @@
         pillanattól hatékonyan használhasd. – <strong>indulhatunk?</strong>
       </p>
     </div>
-
-    <!-- Stepek és gomb (nem tűnik el) -->
-    <div class="steps-container" [@moveRight]="stepState">
+    <div class="steps-container">
       <div class="steps">
-        <div class="step" [ngClass]="{'active': steps[0].active, 'completed': steps[0].completed}">
+        <div class="step active">
           <span class="step-number">1</span> Üdvözlünk!
         </div>
-        <div class="step" [ngClass]="{'active': steps[1].active, 'completed': steps[1].completed}">
+        <div class="step">
           <span class="step-number">2</span> ToDo lista és Kanban tábla létrehozása
         </div>
-        <div class="step" [ngClass]="{'active': steps[2].active, 'completed': steps[2].completed}">
+        <div class="step">
           <span class="step-number">3</span> TrackIt funkciók felfedezése
         </div>
       </div>
-      
-      <button class="get-started-button" (click)="startApp()">Get Started</button>
-      
-    </div>
-
-    <!-- Kanban (becsúszik) -->
-    <div class="kanban-container" *ngIf="isKanbanVisible" [@slideIn]>
-      <app-kanban></app-kanban>
+      <button class="get-started-button">Get Started</button>
     </div>
   </div>
-
-  <!-- Különálló blobok -->
-  <div class="blob blob-left"></div>
-  <div class="blob blob-right"></div>
 </div>
