@@ -1,14 +1,23 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Compiled output
-/dist
+
+/vite
+deps
+deps_ssr
+
 /tmp
 /out-tsc
 /bazel-out
 
+
+
+
 # Node
 # Node
 **/node_modules
+*.tsbuildinfo
+_metadata.json
 npm-debug.log
 yarn-error.log
 
@@ -30,7 +39,9 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-**/.angular/cache
+/.angular/cache
+@angular_animations.js
+
 .sass-cache/
 /connect.lock
 /coverage
