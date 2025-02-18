@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import  NextFunction from "express";
+import express, { Request, Response, NextFunction, Router } from "express";
 const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";  // Ensure you set this in your .env
 
 // Function to generate JWT

@@ -1,21 +1,19 @@
 import express, { Request, Response, NextFunction, Router } from "express";
-const router = Router();
 import bcrypt from "bcrypt";
 import { db } from "../server";
 import { isAdmin } from "../utiles/adminUtils";
-const jwt = require('jsonwebtoken');
 import { v4 as uuidv4 } from 'uuid';
 import { generateToken, tokencheck } from "../utiles/tokenUtils";
 import { getRepository } from "typeorm";
 import { Users } from "../entities/User";
 
-const SECRET_KEY = process.env.JWT_SECRET;  
+const router = Router();
 
 // Bejelentkezés (Token generálás)
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
     
-    db.query('SELECT * FROM users WHERE email = ?', [email], (err, result) => {
+    db.query('SELECT * FROM users WHERE email = ?', [email], (err, result: any) => {
         if (err) return res.status(500).json({ error: 'Hiba történt a bejelentkezés során.' });
         if (result.length === 0) return res.status(401).json({ error: 'Érvénytelen belépési adatok' });
 
@@ -28,13 +26,13 @@ router.post('/login', (req, res) => {
             res.status(200).json({
                 message: "Sikeres bejelentkezés!",
                 token: generateToken(user)
-              });;
+              });
         });
     });
 });
 
 // Új felhasználó regisztrációja
-router.post('/registration', (req, res) => {
+router.post('/registration', (req:any, res:any) => {
   const { name, email, password, confirm } = req.body;
 
   // Jelszó ellenőrzése: legalább 8 karakter, tartalmaz kis- és nagybetűt, valamint számot
@@ -51,7 +49,7 @@ router.post('/registration', (req, res) => {
       return res.status(400).json({ message: 'A megadott jelszavak nem egyeznek!' });
   }
 
-  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results: any) => {
       if (err) {
           return res.status(500).json({ error: 'Hiba történt az e-mail cím ellenőrzésekor.' });
       }
@@ -83,24 +81,24 @@ router.post('/registration', (req, res) => {
 
 // Felhasználók lekérése
 router.get('/', tokencheck, (req, res) => {
-    db.query('SELECT * FROM users', (err, result) => {
+    db.query('SELECT * FROM users', (err, result: any) => {
         if (err) return res.status(500).json({ error: 'Hiba történt a felhasználók lekérése közben.' });
         res.json({ users: result, message: 'Felhasználók lekérdezése sikeresen megtörtént.' });
     });
 });
 
 // Egy adott felhasználó lekérése
-router.get('/:id',tokencheck, (req, res) => {
+router.get('/:id', tokencheck, (req, res) => {
     const { id } = req.params;
     
-    db.query('SELECT * FROM users WHERE id = ?', [id], (err, result) => {
+    db.query('SELECT * FROM users WHERE id = ?', [id], (err, result: any) => {
         if (err) return res.status(500).json({ error: 'Hiba történt a felhasználó lekérése közben.' });
         res.json({ user: result[0], message: 'Felhasználó sikeresen lekérdezve.' });
     });
 });
 
 // Felhasználó adatainak módosítása
-router.put('/:id', tokencheck, async (req, res) => {
+router.put('/:id', tokencheck, async (req:any, res:any) => {
     const { id } = req.params;
     const { name, email, password, pictureId } = req.body;
     const userId = req.user.id;  // A tokenből származó felhasználó azonosítója
@@ -138,9 +136,8 @@ router.put('/:id', tokencheck, async (req, res) => {
     }
 });
 
-
 // Felhasználó törlése
-router.delete('/:id', tokencheck, (req, res) => {
+router.delete('/:id', tokencheck, (req:any, res:any) => {
     const { id } = req.params;
     const userId = req.user.id;  // A tokenből származó felhasználó azonosítója
 
@@ -149,7 +146,7 @@ router.delete('/:id', tokencheck, (req, res) => {
         return res.status(403).json({ error: 'Nincs jogosultságod törölni ezt a felhasználót.' });
     }
 
-    db.query('DELETE FROM users WHERE id = ?', [id], (err, result) => {
+    db.query('DELETE FROM users WHERE id = ?', [id], (err, result: any) => {
         if (err) return res.status(500).json({ error: 'Hiba történt a felhasználó törlése közben.' });
         res.json({ message: 'Felhasználó sikeresen törölve.' });
     });

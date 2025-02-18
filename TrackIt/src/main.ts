@@ -5,6 +5,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 
+
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter([
