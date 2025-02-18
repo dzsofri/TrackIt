@@ -25,7 +25,6 @@
       </div>
       
       <button class="get-started-button" (click)="startApp()">Get Started</button>
-      
     </div>
 
     <!-- Kanban (becsúszik) -->
@@ -34,7 +33,9 @@
     </div>
   </div>
 
-  <!-- Különálló blobok -->
-  <div class="blob blob-left"></div>
-  <div class="blob blob-right"></div>
+  <!-- Különálló blobok (csak akkor, amikor a Kanban még nem látszik) -->
+  <div *ngIf="!isKanbanVisible">
+    <div class="blob blob-left"></div>
+    <div class="blob blob-right"></div>
+  </div>
 </div>
