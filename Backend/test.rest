@@ -1,50 +1,43 @@
 @PORT = 3000
 
 ### Bejelentkezés és token szerzése
-POST http://localhost:{{PORT}}/users/login
+POST http://localhost:{{PORT}}/login
 Content-Type: application/json
 
 {
-
-  "email": "user@example.com",
-
+  "email": "teszt@example.com",
   "password": "Titkosjelszo123"
 }
 
-### Az új felhasználó hozzáadása
-POST http://localhost:{{PORT}}/users/registration
-Content-Type: application/json
 
-{
-  "name": "Teszt Felhasználó",
-  "email": "user@example.com",
-  "password": "Titkosjelszo123",
- "confirm": "Titkosjelszo123",
-  "picture_id": 1
-}
 ### Felhasználók listázása
 GET http://localhost:{{PORT}}/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxOTFhNzFmLTcyZmMtNDk3MC04Yzc1LTEzNWRmZWJlNzkwMCIsImVtYWlsIjoidGVzenQxQGV4YW1wbGUuY29tIiwiaWF0IjoxNzM5MDI3ODg4LCJleHAiOjE3MzkxMTQyODh9.qU06DkbAMXIfDETJZwl144pKN_9f8JyQ3DqUj9XdYJI
-
-Content-Type: application/json
 
 ### Egy felhasználó lekérdezése ID alapján
-GET http://localhost:{{PORT}}/users/7191a71f-72fc-4970-8c75-135dfebe7900
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjkyODllLWUwOWEtNDc5Ny05ZTNhLTk4OGM3YTFlYmJlOSIsImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsImlhdCI6MTczOTAyODAwMiwiZXhwIjoxNzM5MTE0NDAyfQ.8NrBJugvlJFXvkfNGXItSeAfTj_pK1dHY28BMh-G77g
-
-Content-Type: application/json
-
-
+GET http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
+Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzenRAZXhhbXBsZS5jb20iLCJpYXQiOjE3Mzg2MDk3MjIsImV4cCI6MTczODYxMzMyMn0.5EdWDe46fSRLHz17DgqD-1c-AxXePO3jBztNvKTncyU"
 ### Felhasználó frissítése ID alapján
-PUT http://localhost:{{PORT}}/users/7191a71f-72fc-4970-8c75-135dfebe7900
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjkyODllLWUwOWEtNDc5Ny05ZTNhLTk4OGM3YTFlYmJlOSIsImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsImlhdCI6MTczOTAyODM5OSwiZXhwIjoxNzM5MTE0Nzk5fQ.ewAhTV0k5d-lo3sMRkGFjgUqG9sDwt_hLCMFZ-pykrw
+PUT http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
 Content-Type: application/json
 
 {
   "name": "Frissített Felhasználó",
-  "email": "frissitett@example.com"
+  "email": "frissitett@example.com",
+  "password": "Titkosjelszo123",
+  "role": "admin",
+  "picture_id": 2
 }
+### Az új felhasználó hozzáadása (tokennel)
+POST http://localhost:{{PORT}}/reg/users
+Content-Type: application/json
 
+{
+  "name": "Teszt Felhasználó",
+  "email": "teszt1@example.com",
+  "password": "Titkosjelszo123",
+ "confirm": "Titkosjelszo123",
+  "picture_id": 1
+}
 
 ### Felhasználó törlése ID alapján
 DELETE http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
