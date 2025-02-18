@@ -60,6 +60,6 @@ export class WelcomeComponent {
     setTimeout(() => {
       this.isKanbanVisible = true;
     }, 1000); // Az animáció teljes időtartama
-  }
-  
+}
+
 }

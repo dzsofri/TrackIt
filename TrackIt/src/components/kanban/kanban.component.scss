@@ -1,23 +1,30 @@
+/* Teljes elrendezés beállítása */
 .layout-container {
     display: flex;
-    align-items: stretch;
-    justify-content: space-between;
-    height: 100vh;
-    padding: 20px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 90vh;
+    padding: 10px;
+    gap: 20px;
+    flex-wrap: wrap; // Ha kisebb a kijelző, törik az elrendezés
 }
 
-/* ToDo lista teljesen bal oldalon */
+
+/* ToDo lista stílusai */
+
 .todo-creator {
     width: 20%;
+    height: 99%;
     background: #f8f9fa;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    position: absolute;
-    left: 20px;
+    gap: 15px;
+    position: relative;
+    min-width: 250px; // Ne legyen túl keskeny kis kijelzőn
+    order: -1; // Mindig a Kanban tábla előtt marad
 }
 
 .priority-buttons {
@@ -49,42 +56,45 @@
     cursor: pointer;
 }
 
-/* Kanban tábla középen */
-.kanban-wrapper {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
 
-.kanban-container {
-    width: 55%;
+
+#kanbanTitle {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .kanban-board {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
     align-items: stretch;
+    flex-grow: 1;
+    flex-wrap: wrap; // Ha nincs elég hely, törjön új sorba
 }
 
+/* Kanban oszlop beállítása */
 .kanban-column {
-    width: 30%;
-    background: #fff;
-    padding: 10px;
+    width: 16%;
+    background: #ffffff;
+    padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    min-height: 80vh;
+    height: 100%;
+    overflow-y: auto;
+    min-width: 200px; // Kisebb képernyőn ne legyen túl keskeny
 }
 
+/* Kanban feladatok */
 .kanban-task {
     background: #e3e3e3;
-    padding: 10px;
+    padding: 12px;
     border-radius: 5px;
     margin-top: 10px;
     cursor: grab;
+    flex-shrink: 0; /* A feladatok ne zsugorodjanak össze */
 }
 
 /* Stepes rész kisebb mérettel */
@@ -107,4 +117,58 @@
     border-radius: 5px;
     width: 100%;
     text-align: center;
+}
+
+/* Általános gombstílus */
+.get-started-button {
+    margin: 1.5rem auto;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    color: #627966;
+    background-color: white;
+    border: 2px solid #627966;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.get-started-button:hover {
+    background-color: #627966;
+    color: white;
+}
+
+
+/* Reszponzív dizájn - kisebb képernyőkre */
+@media (max-width: 1024px) {
+    .layout-container {
+        flex-direction: column; // Kisebb kijelzőn egymás alá kerül minden
+        align-items: center;
+    }
+
+    .todo-creator {
+        width: 90%;
+        order: -1; // A ToDo lista mindig legfelül marad
+    }
+
+    .kanban-board {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .kanban-column {
+        width: 70%;
+    }
+}
+
+@media (max-width: 768px) {
+    .todo-creator {
+        width: 100%;
+    }
+
+    .kanban-column {
+        width: 100%;
+    }
 }

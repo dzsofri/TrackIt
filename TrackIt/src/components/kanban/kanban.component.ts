@@ -25,7 +25,7 @@ export class KanbanComponent {
   ];
 
  // Stepes rész tartalma
- 
+  
 
   draggedTask: Task | null = null;
   draggedFrom: Column | null = null;

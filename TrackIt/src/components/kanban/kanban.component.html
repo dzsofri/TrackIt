@@ -1,15 +1,15 @@
 <div class="layout-container">
-    <!-- ToDo lista teljesen bal oldalon -->
+    <!-- ToDo lista bal oldalon -->
     <div class="todo-creator">
         <h2>ToDo</h2>
         <label>Feladat:</label>
-        <input type="text" placeholder="Feladat címe">
+        <input type="text" placeholder="Feladat címe" style="border-radius: 10px;">
         
         <label>Leírás:</label>
-        <textarea placeholder="Feladat leírása"></textarea>
+        <textarea placeholder="Feladat leírása" style="border-radius: 10px; resize: vertical;"></textarea>
 
         <label>Határidő:</label>
-        <input type="datetime-local">
+        <input type="datetime-local" style="border-radius: 10px;">
 
         <label>Prioritás:</label>
         <div class="priority-buttons">
@@ -18,30 +18,22 @@
             <button class="high">Magas</button>
         </div>
 
-        <button class="add-task">Hozzáadás</button>
+        <button class="get-started-button">Hozzáadás</button>
     </div>
 
-    <!-- Kanban tábla középen -->
-    <div class="kanban-wrapper">
-        <div class="kanban-container">
-            <h2>Kanban Tábla</h2>
-            <div class="kanban-board">
-                <div class="kanban-column" *ngFor="let column of columns">
-                    <h3>{{ column.name }}</h3>
-                    <div 
-                        class="kanban-task" 
-                        *ngFor="let task of column.tasks"
-                        [draggable]="true"
-                        (dragstart)="onDragStart($event, task, column)"
-                        (dragover)="onDragOver($event)"
-                        (drop)="onDrop($event, column)"
-                    >
-                        <h4>{{ task.title }}</h4>
-                        <p>{{ task.description }}</p>
-                    </div>
-                </div>
-            </div>
+    <!-- Kanban oszlopok közvetlenül a layout-container-ben -->
+    <div class="kanban-column" *ngFor="let column of columns">
+        <h3>{{ column.name }}</h3>
+        <div 
+            class="kanban-task" 
+            *ngFor="let task of column.tasks"
+            [draggable]="true"
+            (dragstart)="onDragStart($event, task, column)"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event, column)"
+        >
+            <h4>{{ task.title }}</h4>
+            <p>{{ task.description }}</p>
         </div>
     </div>
-    
 </div>
