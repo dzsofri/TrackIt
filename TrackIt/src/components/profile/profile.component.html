@@ -4,7 +4,7 @@
         <h1>"Felhasználó neve"</h1>
     </header>
 </div>
-<div class="col-4 col-sm-10 col-md-8 col-lg-12">
+<div class="col-4 col-sm-8 col-md-10 col-lg-12">
     <ul class="nav nav-tabs">
         <li class="nav-item" role="presentation">
             <button 
@@ -26,6 +26,13 @@
             [class.active]="activeTab === 'barat'"
             (click)="setActiveTab('barat')"
           >Barátok</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button 
+        class="nav-link" 
+        [class.active]="activeTab === 'bejegyzes'"
+        (click)="setActiveTab('bejegyzes')"
+      >Bejegyzéseim</button>
         </li>
         <li class="nav-item-tab" role="presentation">
             <button 
@@ -73,13 +80,47 @@
             </div>
         </div>
     </div>
-    <div class="tab-pane" [class.d-none]="activeTab !== 'jelveny'" id="jelveny-tab-pane" role="tabpanel" aria-labelledby="jelveny-tab" tabindex="0"></div>
+
+
+    <div class="tab-pane" [class.d-none]="activeTab !== 'jelveny'" id="jelveny-tab-pane" role="tabpanel" aria-labelledby="jelveny-tab" tabindex="0">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 mb-4">
+                <h3>Rangom</h3>
+                <div class="jelveny_box1">
+                    <div class="jelveny_content1">
+                        <div class="achievement-box">
+                            <h3>Super Achiever <p class="max_point">2000 pont</p></h3>
+                            <div class="progress-bar">
+                                <div class="progress"><img id="star"><p class="current_point">2000/2000</p></div>
+                            </div>
+                        </div>
+                        <p class="jelveny_text">Legjobb heti teljesítmény:<b class="folyamat">100%-os célmegvalósítás</b></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 mb-4">
+                <h3>Jelvényeim</h3>
+                <div class="jelveny_box2">
+                    <div class="jelveny_content2">
+                        <div class="jelvenyeim">
+                            <p class="jelveny_text"><img id="erem"> "Kihívás neve" <span class="point">x pont</span> </p>
+                        </div>
+                        <div  class="jelvenyeim">
+                            <p class="jelveny_text"><img id="erem"> "Kihívás neve" <span class="point">x pont</span> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="tab-pane" [class.d-none]="activeTab !== 'barat'" id="barat-tab-pane" role="tabpanel" aria-labelledby="barat-tab" tabindex="0">
         <div class="row">
             <div class="col-12 col-sm-12 col-md-6 mb-4">
                 <h3>Barátok kezelése</h3>
                 <div class="barat_box1">
-                    <div class="barat_content">
+                    <div class="barat_content1">
                         <p class="barat_text"><img id="profile">
                             <span class="username">"Felhasználó neve"</span>
                             <button class="del">Barát törlése</button>
@@ -90,7 +131,7 @@
             <div class="col-12 col-sm-12 col-md-6 mb-4">
                 <h3>Követési kérelmek kezelése</h3>
                 <div class="barat_box2">
-                    <div class="barat_content">
+                    <div class="barat_content2">
                         <p class="barat_text"><img id="profile">
                             <span class="username">"Felhasználó neve"</span>
                             <span class="buttons">
@@ -103,6 +144,11 @@
             </div>
         </div>
     </div>
+
+
+    <div class="tab-pane" [class.d-none]="activeTab !== 'bejegyzes'" id="bejegyzes-tab-pane" role="tabpanel" aria-labelledby="bejegyzes-tab" tabindex="0"></div>
+
+
     <div class="tab-pane" [class.d-none]="activeTab !== 'profile'" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
         <div class="row">
             <div class="col-12 col-sm-12 col-md-6 mb-4">
