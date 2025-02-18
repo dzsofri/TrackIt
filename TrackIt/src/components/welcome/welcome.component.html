@@ -20,7 +20,19 @@
           <span class="step-number">3</span> TrackIt funkciók felfedezése
         </div>
       </div>
-      <button class="get-started-button">Get Started</button>
+      
+      <button class="get-started-button" (click)="startApp()">Get Started</button>
     </div>
+
+    <!-- Kanban (becsúszik) -->
+    <div class="kanban-container" *ngIf="isKanbanVisible" [@slideIn]>
+      <app-kanban></app-kanban>
+    </div>
+  </div>
+
+  <!-- Különálló blobok (csak akkor, amikor a Kanban még nem látszik) -->
+  <div *ngIf="!isKanbanVisible">
+    <div class="blob blob-left"></div>
+    <div class="blob blob-right"></div>
   </div>
 </div>

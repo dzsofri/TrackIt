@@ -14,3 +14,15 @@ bootstrapApplication(AppComponent, {
     provideAnimations() // 🔹 Animációk engedélyezése
   ]
 }).catch(err => console.error(err));
+
+
+
+ 
+
+
+
+
+
+
+
+
