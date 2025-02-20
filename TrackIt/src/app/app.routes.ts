@@ -8,7 +8,7 @@ export const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent, data: { animation: 'WelcomePage' } },
   { path: 'kanban', component: KanbanComponent, data: { animation: 'KanbanPage' } },
   { path: 'login', component: LoginComponent },
-  { path: 'registartion', component: RegistrationComponent },
+  { path: 'registration', component: RegistrationComponent },
   {
     path: '', redirectTo: 'login', pathMatch: 'full' // Redirect to login when the path is empty
   },
