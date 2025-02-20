@@ -173,6 +173,23 @@ app.delete('/users/:id', tokencheck, (req, res) => {
     });
 });
 
+// Új task hozzáadás    
+app.post('/tasks', async (req, res) => {
+    const { title, description, priority, due_date, user_id } = req.body;
+    const created_at = new Date().toISOString();
+
+    try {
+        const result = await db.query(
+            `INSERT INTO tasks (title, description, priority, due_date, user_id, created_at)
+             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+            [title, description, priority, due_date, user_id, created_at]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'Adatbázis hiba' });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
