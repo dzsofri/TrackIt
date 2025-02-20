@@ -1,0 +1,8 @@
+/* Alap konténer: Flexbox használat */
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Megakadályozza a túlnyúlást */
+    width: 100vw; /* Az oldal teljes szélessége */
+  }
+  
