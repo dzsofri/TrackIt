@@ -6,7 +6,6 @@
     height: 90vh;
     padding: 10px;
     gap: 20px;
-    flex-wrap: wrap; // Ha kisebb a kijelző, törik az elrendezés
 }
 
 
@@ -14,6 +13,7 @@
 
 .todo-creator {
     width: 20%;
+    min-width: 250px; /* Ne legyen túl keskeny kis kijelzőn */
     height: 99%;
     background: #f8f9fa;
     padding: 20px;
@@ -23,9 +23,10 @@
     flex-direction: column;
     gap: 15px;
     position: relative;
-    min-width: 250px; // Ne legyen túl keskeny kis kijelzőn
-    order: -1; // Mindig a Kanban tábla előtt marad
+    order: -1; /* Kanban tábla előtt marad */
 }
+
+
 
 .priority-buttons {
     display: flex;
@@ -70,12 +71,14 @@
     justify-content: center;
     align-items: stretch;
     flex-grow: 1;
-    flex-wrap: wrap; // Ha nincs elég hely, törjön új sorba
+    flex-wrap: wrap; /* Törjön új sorba, ha nincs hely */
+    width: 100%;
 }
 
 /* Kanban oszlop beállítása */
 .kanban-column {
     width: 16%;
+    min-width: 200px; /* Kisebb képernyőn ne legyen túl keskeny */
     background: #ffffff;
     padding: 15px;
     border-radius: 8px;
@@ -84,7 +87,6 @@
     flex-direction: column;
     height: 100%;
     overflow-y: auto;
-    min-width: 200px; // Kisebb képernyőn ne legyen túl keskeny
 }
 
 /* Kanban feladatok */
@@ -97,27 +99,9 @@
     flex-shrink: 0; /* A feladatok ne zsugorodjanak össze */
 }
 
-/* Stepes rész kisebb mérettel */
-.steps-container {
-    width: 15%;
-    background: #4b5d4b;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-}
 
-.step {
-    background: #3b4c3b;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-    text-align: center;
-}
+
+
 
 /* Általános gombstílus */
 .get-started-button {
@@ -141,34 +125,56 @@
 }
 
 
-/* Reszponzív dizájn - kisebb képernyőkre */
-@media (max-width: 1024px) {
+
+@media (max-width: 1076px) {
     .layout-container {
-        flex-direction: column; // Kisebb kijelzőn egymás alá kerül minden
+        flex-direction: column; /* Minden egymás alá kerül */
         align-items: center;
-    }
-
-    .todo-creator {
-        width: 90%;
-        order: -1; // A ToDo lista mindig legfelül marad
-    }
-
-    .kanban-board {
-        flex-direction: column;
         width: 100%;
     }
 
+    .todo-creator {
+        width: 80%;
+        max-width: 600px; /* Ne legyen túl széles */
+        margin-bottom: 20px;
+    }
+
+    .kanban-board {
+        flex-direction: row; /* Vízszintesen legyenek az oszlopok */
+        flex-wrap: wrap; /* Ha nem férnek el, törjenek új sorba */
+        justify-content: center;
+        gap: 20px;
+        width: 90%;
+    }
+
     .kanban-column {
-        width: 70%;
+        width: 80%; /* Két oszlop egy sorban */
+        max-width: 70%;
+        min-height: 30%;
+        padding: 15px;
+        overflow: visible;
     }
 }
 
 @media (max-width: 768px) {
-    .todo-creator {
+    .kanban-board {
+        flex-direction: column; /* Oszlopok egymás alá kerülnek */
+        align-items: center;
+        gap: 15px;
         width: 100%;
+        overflow-x:hidden;
     }
 
     .kanban-column {
+        width: 90%;
+        max-width: 500px;
+        padding: 20px;
+        min-height: auto;
+        overflow: visible;
+    }
+
+    .kanban-task {
         width: 100%;
+        word-wrap: break-word;
     }
 }
