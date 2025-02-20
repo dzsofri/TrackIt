@@ -4,8 +4,8 @@
 
         <div class="col-md-6 d-flex justify-content-center align-items-center">
             <div class="card p-4 w-100" id="registration-form">
-                <h2 class="text-center mb-2">Hozd létre a fiókodat!</h2>
-                <p class="text-center">Adja meg személyes adatait a fiók létrehozásához.</p>
+                <h2 class="text-center mb-2">Jelentkezz be a fiókodba!</h2>
+                <p class="text-center">Adja meg személyes adatait a bejelentkezéshez!</p>
                 
                 <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
                    
@@ -40,7 +40,7 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-dark w-100" [disabled]="!registrationForm.form.valid">Regisztráció</button>
+                    <button type="submit" class="btn btn-dark w-100" >Regisztráció</button>
                     <p class="text-center mt-3">Még nincs fiókod? <a href="#">Regisztrálj!</a></p>
                 </form>
             </div>

@@ -3,8 +3,9 @@ import { ApiService } from '../../services/api.service';
 import { User } from '../../interfaces/user';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule instead of HttpClient
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -14,34 +15,64 @@ import { HttpClientModule } from '@angular/common/http'; // Import HttpClientMod
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  constructor(private api: ApiService) {}
-
   isPasswordVisible = false;
+  isConfirmPasswordVisible = false;
+
+  
+
+
+  constructor(
+    private api: ApiService,
+    private auth: AuthService,
+    private router: Router
+  ){}
+
   invalidFields: string[] = [];
   
   user: User = {
-    name: '',
     email: '',
     password: '',
-    confirm: ''
+
   };
-  
-  errorMessage: string = '';
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
+  isAdmin: boolean = false; 
+   // Új változó, ami az admin státuszt tárolja
   onSubmit() {
-    this.api.registration(this.user).subscribe({
+    this.api.login(this.user.email, this.user.password).subscribe({
       next: (res: any) => {
-        console.log(res.message);
-        this.errorMessage = ''; 
+        console.log('API válasz:', res);  // Debugging log
+  
+        this.invalidFields = res.invalid || [];
+  
+        if (this.invalidFields.length === 0) {
+          console.log('Sikeres bejelentkezés:', res.message);
+  
+          if (res.token) {
+            this.auth.login(res.token);  // Csak a tokent adjuk át az AuthService-nek
+            this.router.navigateByUrl('/welcome');
+          } else {
+            console.error('HIBA: A token hiányzik a válaszból');
+          }
+        } else {
+          console.log('HIBA:', res.message, 'danger');
+        }
       },
-      error: (error: any) => {
-        console.log('Hiba történt:', error.error.error);
-        this.errorMessage = error.error.error || 'Hiba történt a regisztráció során.';
+      error: (err) => {
+        console.error('Login API hiba:', err);
+        console.log('HIBA:', err.message || 'Ismeretlen hiba történt', 'danger');
       }
     });
+  }
+  
+  
+  
+
+  isInvalid(field: string) {
+    console.log('dfrsrd',this.invalidFields)
+    return this.invalidFields.includes(field);
   }
 }

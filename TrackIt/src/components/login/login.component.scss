@@ -28,7 +28,7 @@ html, body {
   /* Hero image alapértelmezett stílusai */
   #heroimage {
     background: url('/assets/images/login.jpg') no-repeat center center;
-    background-size: contain;
+    background-size: 50%;
     background-color: #f9f4f0;
     width: 50%;
     height: 100vh;
@@ -63,6 +63,13 @@ html, body {
     @include welcome-styles;
   }
   
+  #registration-form form button:nth-child(3) {
+    width: 30vw !important;
+    height: 6vh !important;
+    font-size: 100%;
+   margin-top: 1vw;}
+  
+
   /* Registration form alapértelmezett stílusai */
   #registration-form {
     display: flex;
@@ -98,7 +105,7 @@ html, body {
   
   #registration-form form button:nth-child(5) {
     width: 30vw !important;
-    height: 6vh !important;
+    height: 10vh !important;
     font-size: 100%;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.486);
     align-self: center !important;
