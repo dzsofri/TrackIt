@@ -16,7 +16,7 @@
     padding: 0.3px;
     border-radius: 50%;
     overflow: hidden;
-    margin: auto;
+    margin: 0 auto;
 }
 
 //Linkek
@@ -75,7 +75,6 @@ span{
     text-align: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
     background-color: #F5F5F7;
     padding: 5vh 5vw;
     flex-grow: 1;
@@ -289,10 +288,13 @@ span{
 .jelveny_box2 {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     background-color: #FFFFFF;
     box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
-    padding: 20px;
+    padding: 10px;
+    width: 100%;
+    gap: 15px;
 }
 
 .jelveny_box1{
@@ -319,11 +321,9 @@ span{
 .jelveny_content2 {
     display: flex;
     flex-direction: row;
-    background-color: #F8F8F8;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 25px;
-    padding: 20px 20px 40px 20px;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
 }
 
 .achievement-box {
@@ -404,7 +404,7 @@ span{
     border-radius: 25px;
     text-align: start;
     width: 100%;
-    padding: 20px;
+    padding: 15px;
     font-weight: bold;
     font-size: 20px;
 }
@@ -413,8 +413,14 @@ span{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    background-color: #F8F8F8;
+    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    padding: 20px 20px 70px 20px;
     font-weight: bold;
     color: #3E3F40;
+    width: 100%;
 }
 
 #erem {
@@ -433,6 +439,34 @@ span{
 .point{
     color: #9298A0;
     font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+    .jelveny_box1, .jelveny_box2 {
+        width: 100%;
+    }
+
+    .jelveny_content2 {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .progress-bar {
+        height: 25px;
+    }
+
+    .progress {
+        height: 20px;
+        line-height: 20px;
+    }
+
+    #star, #erem {
+        width: 15vw;
+        height: 15vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
 }
 
 //Barát tab-pane
