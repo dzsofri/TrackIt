@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 interface Task {
+  id?: string;
   title: string;
   description: string;
   deadline: string;
@@ -21,9 +23,9 @@ interface Column {
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.scss']
 })
-export class KanbanComponent {
+export class KanbanComponent implements OnInit {
   columns: Column[] = [
-    { name: 'Teendők', tasks: [{ title: 'Feladat 1', description: 'Leírás', deadline: '2025-02-21T12:00', priority: 'Közepes' }] },
+    { name: 'Teendők', tasks: [] },
     { name: 'Folyamatban', tasks: [] },
     { name: 'Kész', tasks: [] }
   ];
@@ -31,14 +33,48 @@ export class KanbanComponent {
   draggedTask: Task | null = null;
   draggedFrom: Column | null = null;
 
-  // Új feladat adatai
   newTask: Task = { title: '', description: '', deadline: '', priority: 'Közepes' };
 
-  // Új feladat hozzáadása a "Teendők" oszlophoz
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.loadTasks();
+  }
+
+  // **Feladatok betöltése az adatbázisból**
+  loadTasks() {
+    this.http.get<Task[]>('http://localhost:3000/tasks').subscribe(tasks => {
+      this.columns[0].tasks = tasks;
+    });
+  }
+
+  // **Új feladat hozzáadása**
   addTask() {
     if (this.newTask.title.trim()) {
-      this.columns[0].tasks.push({ ...this.newTask });
-      this.newTask = { title: '', description: '', deadline: '', priority: 'Közepes' }; // Mezők ürítése
+      this.http.post('http://localhost:3000/tasks', this.newTask).subscribe(() => {
+        this.loadTasks();
+        this.newTask = { title: '', description: '', deadline: '', priority: 'Közepes' };
+      });
+    }
+  }
+
+  // **Feladat áthelyezése másik oszlopba**
+  onDrop(event: DragEvent, targetColumn: Column) {
+    event.preventDefault();
+    if (this.draggedTask && this.draggedFrom && this.draggedFrom !== targetColumn) {
+      this.draggedFrom.tasks = this.draggedFrom.tasks.filter(t => t !== this.draggedTask);
+      targetColumn.tasks.push(this.draggedTask);
+
+      // Backend frissítés
+      this.http.put(`http://localhost:3000/tasks/${this.draggedTask.id}`, { 
+        title: this.draggedTask.title, 
+        description: this.draggedTask.description, 
+        deadline: this.draggedTask.deadline, 
+        priority: this.draggedTask.priority 
+      }).subscribe();
+
+      this.draggedTask = null;
+      this.draggedFrom = null;
     }
   }
 
@@ -50,17 +86,6 @@ export class KanbanComponent {
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
-    event.dataTransfer!.dropEffect = "move";
-  }
-
-  onDrop(event: DragEvent, targetColumn: Column) {
-    event.preventDefault();
-    if (this.draggedTask && this.draggedFrom && this.draggedFrom !== targetColumn) {
-      this.draggedFrom.tasks = this.draggedFrom.tasks.filter(t => t !== this.draggedTask);
-      targetColumn.tasks.push(this.draggedTask);
-      this.draggedTask = null;
-      this.draggedFrom = null;
-    }
   }
 
   onDragEnter(event: DragEvent) {
@@ -69,7 +94,7 @@ export class KanbanComponent {
 
   onDragLeave(event: DragEvent) {}
 
-  // Prioritás beállítása
+  // **Prioritás beállítása**
   setPriority(priority: 'Alacsony' | 'Közepes' | 'Magas') {
     this.newTask.priority = priority;
   }

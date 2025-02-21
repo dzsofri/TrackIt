@@ -26,26 +26,48 @@
 }
 
 
-
 .priority-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    gap: 15px;
+
+    button {
+        padding: 10px 13px; /* Gomb méretének beállítása */
+        font-size: 16px; /* Betűméret */
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: 0.3s;
+        color: white; /* Szöveg színe fehér */
+
+        &.low {
+            background-color: #4caf50; /* Zöld */
+
+            &.active {
+                box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.8); /* Neon zöld keret */
+            }
+        }
+
+        &.medium {
+            background-color: #ff9800; /* Narancs */
+
+            &.active {
+                box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.8); /* Neon narancs keret */
+            }
+        }
+
+        &.high {
+            background-color: #f44336; /* Piros */
+
+            &.active {
+                box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.8); /* Neon piros keret */
+            }
+        }
+    }
 }
 
-.priority-buttons button {
-    flex: 1;
-    margin: 0 5px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-}
-
-.priority-buttons .active {
-    border: 2px solid black;
-}
-
+/* Kanban feladat színek */
 .low { background-color: green; }
 .medium { background-color: gold; }
 .high { background-color: red; }
@@ -53,6 +75,9 @@
 .kanban-task .low { color: green; }
 .kanban-task .medium { color: gold; }
 .kanban-task .high { color: red; }
+
+
+
 
 .add-task {
     margin-top: 10px;
@@ -170,3 +195,43 @@
 
 
 }
+
+
+/* Általános input és textarea stílusok */
+input, textarea {
+    width: 92%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 12px; /* Lekerekített sarkok */
+    background: #f9f9f9;
+    outline: none;
+    transition: border 0.3s, box-shadow 0.3s;
+  }
+  
+  /* Fókusz effekt (kijelöléskor) */
+  input:focus, textarea:focus {
+    border-color: #007bff;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+  }
+  
+  /* Placeholder stílus */
+  input::placeholder, textarea::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
+  
+  /* Külön beállítás a textarea-hoz */
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  /* Külön beállítás a feladat címének */
+  input[type="text"] {
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  
+  

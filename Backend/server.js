@@ -173,22 +173,51 @@ app.delete('/users/:id', tokencheck, (req, res) => {
     });
 });
 
-// Új task hozzáadás    
-app.post('/tasks', async (req, res) => {
-    const { title, description, priority, due_date, user_id } = req.body;
-    const created_at = new Date().toISOString();
 
-    try {
-        const result = await db.query(
-            `INSERT INTO tasks (title, description, priority, due_date, user_id, created_at)
-             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-            [title, description, priority, due_date, user_id, created_at]
-        );
-        res.status(201).json(result.rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: 'Adatbázis hiba' });
-    }
+// **Új feladat hozzáadása**
+app.post('/tasks', (req, res) => {
+    const { title, description, due_date, priority, user_id } = req.body;
+    db.query(
+        'INSERT INTO tasks (id, title, description, due_date, priority, user_id, created_at) VALUES (UUID(), ?, ?, ?, ?, ?, NOW())',
+        [title, description, due_date, priority, user_id],
+        (err, results) => {
+            if (err) return res.status(500).json(err);
+            res.json({ message: 'Feladat hozzáadva!', taskId: results.insertId });
+        }
+    );
 });
+
+// **Feladatok lekérdezése**
+app.get('/tasks', (req, res) => {
+    db.query('SELECT * FROM tasks', (err, results) => {
+        if (err) return res.status(500).json(err);
+        res.json(results);
+    });
+});
+
+// **Feladatok frissítése**
+app.put('/tasks/:id', (req, res) => {
+    const { id } = req.params;
+    const { title, description, due_date, priority } = req.body;
+    db.query(
+        'UPDATE tasks SET title=?, description=?, due_date=?, priority=? WHERE id=?',
+        [title, description, due_date, priority, id],
+        (err, results) => {
+            if (err) return res.status(500).json(err);
+            res.json({ message: 'Feladat frissítve!' });
+        }
+    );
+});
+
+// **Feladatok törlése**
+app.delete('/tasks/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('DELETE FROM tasks WHERE id=?', [id], (err, results) => {
+        if (err) return res.status(500).json(err);
+        res.json({ message: 'Feladat törölve!' });
+    });
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
