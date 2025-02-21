@@ -17,9 +17,9 @@ const addInvalidField = (fields: string[], fieldName: string) => {
 // Regisztráció
 router.post("/register", async (req: any, res: any) => {
     const invalidFields: string[] = [];
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!username) addInvalidField(invalidFields, 'username');
+    if (!name) addInvalidField(invalidFields, 'name');
     if (!email) addInvalidField(invalidFields, 'email');
     if (!password) addInvalidField(invalidFields, 'password');
 
@@ -42,7 +42,7 @@ router.post("/register", async (req: any, res: any) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new Users();
-    user.name = username;
+    user.name = name;
     user.email = email;
     user.password = hashedPassword;
 
@@ -84,7 +84,7 @@ router.post("/login", async (req: any, res: any) => {
         user: {
             id: user.id,
             email: user.email,
-            username: user.name,
+            name: user.name,
             role: user.role
         }
     });
