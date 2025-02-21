@@ -1,5 +1,6 @@
 .header {
     text-align: center;
+    width: 100%;
 }
 
 #felhasznalo{
@@ -17,6 +18,17 @@
     border-radius: 50%;
     overflow: hidden;
     margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+    .header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 0 auto;
+        margin: 0 auto;
+        text-align: center;
+    }
 }
 
 //Linkek
@@ -293,7 +305,7 @@ span{
     box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
     padding: 10px;
-    width: 100%;
+    width: 45vw;
     gap: 15px;
 }
 
@@ -433,6 +445,7 @@ span{
     height: 25vw;
     max-height: 70px;
     margin:  0 auto;
+    padding: 35px;
     margin-bottom: 20px;
 }
 
@@ -441,32 +454,65 @@ span{
     font-weight: bold;
 }
 
+.jelveny_grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    justify-content: center;
+}
+
 @media screen and (max-width: 768px) {
     .jelveny_box1, .jelveny_box2 {
         width: 100%;
     }
 
-    .jelveny_content2 {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
+    .jelveny_grid {
+        grid-template-columns: repeat(3, 1fr) !important;
     }
 
     .progress-bar {
-        height: 25px;
+        height: 35px;
     }
 
     .progress {
-        height: 20px;
-        line-height: 20px;
+        height: 30px;
+        line-height: 30px;
     }
 
-    #star, #erem {
-        width: 15vw;
-        height: 15vw;
-        max-width: 50px;
-        max-height: 50px;
+    #star {
+        width: 5vw;
+        height: 5vw;
+        max-width: 10px;
+        max-height: 10px;
     }
+}
+
+@media screen and (max-width: 600px) {
+    .jelveny_grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    .jelveny_box1, .jelveny_box2{
+        box-shadow: none;
+        background-color: transparent;
+    }
+}
+
+@media (max-width: 1024px) {
+    .jelveny_box1, .jelveny_box2 {
+        width: 100%;
+    }
+
+    .jelveny_grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1200px) {
+    
+.jelveny_content2 .jelveny_text{
+    font-size: 14px;
+}
 }
 
 //Barát tab-pane
