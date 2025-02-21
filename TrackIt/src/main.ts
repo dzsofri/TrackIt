@@ -2,28 +2,13 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { WelcomeComponent } from './components/welcome/welcome.component';
-import { KanbanComponent } from './components/kanban/kanban.component';
-
+import { provideHttpClient } from '@angular/common/http';
+import { routes } from './app/app.routes';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRouter([
-      { path: '', component: WelcomeComponent, data: { animation: 'WelcomePage' } },
-      { path: 'kanban', component: KanbanComponent, data: { animation: 'KanbanPage' } }
-    ]),
-    provideAnimations() // 🔹 Animációk engedélyezése
+    provideRouter(routes),
+    provideAnimations(),
+    provideHttpClient() // Ezt hozzá kell adni!
   ]
 }).catch(err => console.error(err));
-
-
-
- 
-
-
-
-
-
-
-
-

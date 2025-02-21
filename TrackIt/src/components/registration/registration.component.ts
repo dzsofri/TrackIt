@@ -45,8 +45,8 @@ export class RegistrationComponent {
         this.errorMessage = ''; // Töröljük a hibát a sikeres regisztráció után
       },
       error: (error: any) => {
-        console.log('Hiba történt:', error.error.error);
-        this.errorMessage = error.error.error || 'Hiba történt a regisztráció során.';
+        console.log('Hiba történt:', error);
+        this.errorMessage = error.message || 'Hiba történt a regisztráció során.';
       }
     });
   }

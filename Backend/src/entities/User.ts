@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Followes } from "./Follow";
 import { FriendRequests } from "./FriendRequest";
 
@@ -17,7 +17,7 @@ export enum UserRole {
 
 @Entity()
 export class Users {
-    @PrimaryColumn({ type: "varchar", length: 40 })
+    @PrimaryGeneratedColumn("uuid")
     id: string;
 
     @Column({ type: "varchar", length: 255 })

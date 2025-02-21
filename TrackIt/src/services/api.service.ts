@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
+import { catchError, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +27,18 @@ export class ApiService {
   }
 
   registration(data:object){
-    return this.http.post(this.server + '/users/registration', data);
+    return this.http.post(this.server + '/users/register', data);
   }
 
+
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.server}/users/login`, { email, password }).pipe(
+      catchError(error => {
+        console.error('Login failed', error);
+        return of(error);
+      })
+    );
+  }
   
 
 }
