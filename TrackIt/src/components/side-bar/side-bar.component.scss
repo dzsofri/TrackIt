@@ -1,0 +1,45 @@
+.sidebar-content {
+    position: fixed; /* Sidebar pozicionálása az oldal bal szélén */
+    top: 0;
+    left: 0;
+    width: 250px; /* A sidebar szélessége */
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    display: none; /* Alapból rejtve van */
+    transition: 0.3s; /* Animáció a megnyitásra */
+
+  }
+  
+  .sidebar-content.open {
+    display: block; /* Ha az 'open' osztály van, megjelenik */
+  }
+  
+  .toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+  }
+
+  main {
+    margin-left: 0;
+    transition: margin-left 0.3s;
+  }
+  
+  .sidebar-content.open + main {
+    margin-left: 250px; /* Ha a sidebar nyitva van, a tartalom eltolódik */
+  }
+  
+  /* Példa: app-side-bar komponens stíluslapja */
+:host {
+    position:sticky;
+    top: 0;
+    left: 0;
+    width: 5%;
+    height: 100%;
+    background-color: #f8f9fa;
+
+  }
+  

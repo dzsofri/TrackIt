@@ -1,7 +1,7 @@
 @PORT = 3000
 
 ### Bejelentkezés és token szerzése
-POST http://localhost:{{PORT}}/login
+POST http://localhost:{{PORT}}/users/login
 Content-Type: application/json
 
 {
@@ -28,7 +28,7 @@ Content-Type: application/json
   "picture_id": 2
 }
 ### Az új felhasználó hozzáadása (tokennel)
-POST http://localhost:{{PORT}}/reg/users
+POST http://localhost:{{PORT}}/users/registration
 Content-Type: application/json
 
 {
