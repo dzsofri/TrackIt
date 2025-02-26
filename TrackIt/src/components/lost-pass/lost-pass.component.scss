@@ -16,10 +16,10 @@ html, body {
     
 }
 
-
+.email{margin-bottom: 15vh !important; }
 
   form{
-    margin-top: 10vh !important;
+    margin-top: 5vh !important;
   }
   /* A container-fluid elem teljes szélességű és magasságú */
   .container-fluid {
@@ -76,7 +76,7 @@ html, body {
     @include welcome-styles;
   }
   
-  #registration-form form button:nth-child(3) {
+  #registration-form form button:nth-child(2) {
     width: 30vw !important;
     height: 6vh !important;
     font-size: 100%;
@@ -184,7 +184,7 @@ html, body {
     }
   
     #registration-form {
-      width: 100%;
+      width: 100vw !important;
       height: 100vh;
       background-color: #f9f4f0;
     }
@@ -194,18 +194,17 @@ html, body {
     }
   
     #registration-form input {
-      width: 60vw !important;
+      width: 70vw !important;
       height: 5vh;
     }
   
-    #registration-form form button:nth-child(5) {
+    #registration-form form button:nth-child(2) {
       width: 70vw !important;
       height: 5vh !important;
     }
+ 
   
-    #registration-form form button:nth-child(2) {
-      background-color: #F5F5F5;
-    }
+    
 
     
   }

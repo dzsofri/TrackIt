@@ -13,7 +13,7 @@
                 <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
                    
                     <!-- Email mező -->
-                    <div class="mb-3 box">
+                    <div class="mb-3 box email" >
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="pl. somodikonrad@turr.hu" required [(ngModel)]="user.email">
                     </div>

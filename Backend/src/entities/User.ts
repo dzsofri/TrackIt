@@ -1,7 +1,6 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
 import { Followes } from "./Follow";
 import { FriendRequests } from "./FriendRequest";
-
 import { Pictures } from "./Picture";
 import { Posts } from "./Post";
 import { Tasks } from "./Task";
@@ -28,7 +27,7 @@ export class Users {
 
     @Column({ type: "varchar", length: 255 })
     password: string;
-    
+
     @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
     role: UserRole;
 
@@ -41,6 +40,12 @@ export class Users {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @Column({ type: "varchar", nullable: true })
+    resetPasswordToken: string | null;
+
+    @Column({ type: "timestamp", nullable: true })
+    resetPasswordExpires: Date | null;
 
     @OneToMany(() => FriendRequests, (friendRequest) => friendRequest.sender, { onDelete: "CASCADE" })
     sentFriendRequests: FriendRequests[];
@@ -68,8 +73,6 @@ export class Users {
 
     @OneToMany(() => Habits, (habit) => habit.user, { onDelete: "CASCADE" })
     habits: Habits[];
-    
-
 
     @OneToMany(() => Feedbacks, (feedback) => feedback.user, { onDelete: "CASCADE" })
     feedbacks: Feedbacks[];

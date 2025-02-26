@@ -41,3 +41,22 @@ Content-Type: application/json
 
 ### Felhasználó törlése ID alapján
 DELETE http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
+
+
+### Jelszó elfelejtése - Token generálás és e-mail küldés
+POST http://localhost:{{PORT}}/users/forgot-password
+Content-Type: application/json
+
+{
+  "email": "beretizsofia310@gmail.com"
+}
+
+### Jelszó visszaállítása
+POST http://localhost:{{PORT}}/users/reset-password
+Content-Type: application/json
+
+{
+  "email": "beretizsofia310@gmail.com",
+  "token": "b09270e3ab7d494a20356f66072ebfcb69ffc7d308937ae7c656e24ba84985858",
+  "newPassword": "KonradTheBest22"
+}
