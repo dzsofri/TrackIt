@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
+import feedbackRoutes from "./routes/feedbackRoutes";
 import { AppDataSource } from "./data-source";
 import { seedDatabase } from "./utiles/DatabaseSeedUtils";
 import dotenv from 'dotenv'; // dotenv importálása
@@ -13,9 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/users", userRoutes);
+app.use("/feedbacks", feedbackRoutes);
 
 const PORT = process.env.PORT || 3000;
-const SECRET_KEY = process.env.JWT_SECRET; // Korrekt környezeti változó használata
+
 
 const db = mysql.createConnection({
   host: process.env.DBHOST,
