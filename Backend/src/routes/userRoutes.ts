@@ -240,8 +240,18 @@ const mailOptions = {
 router.post("/reset-password", async (req: any, res: any) => {
     const { email, token, newPassword } = req.body;
 
-    if (!email || !token || !newPassword) {
-        return res.status(400).json({ message: "Hiányzó adatok!" });
+    const invalidFields: string[] = []; // Hibás mezők tömbje
+
+    // Ellenőrizzük, hogy az új jelszó meg van-e adva
+    if (!newPassword || newPassword.trim() === '') {
+        invalidFields.push('newPassword'); // Hozzáadjuk a hibás mezőt
+    }
+
+    if (invalidFields.length > 0) {
+        return res.status(400).json({ 
+            message: "A jelszó nem felel meg a követelményeknek!", 
+            invalid: invalidFields 
+        });
     }
 
     const user = await AppDataSource.getRepository(Users).findOne({ where: { email } });
@@ -249,22 +259,10 @@ router.post("/reset-password", async (req: any, res: any) => {
         return res.status(400).json({ message: "Érvénytelen vagy lejárt token!" });
     }
 
-    // Debug üzenetek
-    console.log("Ellenőrzés előtt: ", { email, token, newPassword });
-    console.log("Felhasználó: ", user);
-    console.log("Hashelt token: ", user.resetPasswordToken);
-    console.log("Token: ", token);
-    console.log("Lejárati idő: ", user.resetPasswordExpires);
-    console.log("Aktuális idő: ", new Date());
-
     // Token ellenőrzése
     const isTokenValid = await bcrypt.compare(token, user.resetPasswordToken);
     if (!isTokenValid || user.resetPasswordExpires < new Date()) {
         return res.status(400).json({ message: "Érvénytelen vagy lejárt token!" });
-    }
-
-    if (!validatePassword(newPassword)) {
-        return res.status(400).json({ message: "A jelszó nem felel meg az erősségi követelményeknek!" });
     }
 
     // Jelszó frissítése
@@ -276,6 +274,7 @@ router.post("/reset-password", async (req: any, res: any) => {
 
     res.status(200).json({ message: "Jelszó sikeresen frissítve!" });
 });
+
 
 
 

@@ -23,37 +23,25 @@ export class LostPassComponent {
 
   invalidFields: string[] = [];
   
-  user: User = {
-    email: '',
-    password: '',
-
+  user: Partial<User> = {
+    email: ''
   };
 
 
   isAdmin: boolean = false; 
-   // Új változó, ami az admin státuszt tárolja
   onSubmit() {
-    this.api.login(this.user.email, this.user.password).subscribe({
+    if (!this.user.email) {
+      console.error('HIBA: Az email mező üres!');
+      return;
+    }
+  
+    this.api.forgotPassword(this.user.email).subscribe({
       next: (res: any) => {
-        console.log('API válasz:', res);  // Debugging log
-  
-        this.invalidFields = res.invalid || [];
-  
-        if (this.invalidFields.length === 0) {
-          console.log('Sikeres bejelentkezés:', res.message);
-  
-          if (res.token) {
-            this.auth.login(res.token);  // Csak a tokent adjuk át az AuthService-nek
-            this.router.navigateByUrl('/welcome');
-          } else {
-            console.error('HIBA: A token hiányzik a válaszból');
-          }
-        } else {
-          console.log('HIBA:', res.message, 'danger');
-        }
+        console.log('Sikeresen elküldve:', res.message);
+        console.log('Ellenőrizd az emailjeidet a visszaállítási linkért.');
       },
       error: (err) => {
-        console.error('Login API hiba:', err);
+        console.error('Forgot password API hiba:', err);
         console.log('HIBA:', err.message || 'Ismeretlen hiba történt', 'danger');
       }
     });

@@ -40,5 +40,23 @@ export class ApiService {
     );
   }
   
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post<any>(`${this.server}/users/forgot-password`, { email }).pipe(
+      catchError(error => {
+        console.error('Forgot password failed', error);
+        return of(error);
+      })
+    );
+  }
+
+
+  resetPassword(email: string, token: string, newPassword: any): Observable<any> {
+    return this.http.post<any>(`${this.server}/users/reset-password`, { email, token, newPassword }).pipe(
+        catchError(error => {
+            console.error('Jelszócsere sikertelen', error);
+            return of(error);
+        })
+    );
+}
 
 }
