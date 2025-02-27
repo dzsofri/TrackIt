@@ -4,6 +4,13 @@ import { AppDataSource } from "../data-source";
 import { Users } from "../entities/User";
 import { generateToken, tokencheck } from "../utiles/tokenUtils";
 import { validatePassword } from "../utiles/passwordUtils";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
+import dotenv from 'dotenv'; // dotenv importálása
+const ejs = require("ejs");
+const path = require("path");
+
+dotenv.config(); 
 
 const router = Router();
 
@@ -13,6 +20,20 @@ const addInvalidField = (fields: string[], fieldName: string) => {
         fields.push(fieldName);
     }
 };
+
+
+// SMTP beállítások
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+
+    
+  });
 
 // Regisztráció
 router.post("/register", async (req: any, res: any) => {
@@ -175,5 +196,87 @@ router.delete('/:id', tokencheck, async (req: any, res: any) => {
         res.status(500).json({ error: 'Hiba történt a felhasználó törlése közben.', invalid: invalidFields });
     }
 });
+
+// Jelszó elfelejtése - Token generálás és e-mail küldés
+router.post("/forgot-password", async (req: any, res: any) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ message: "E-mail megadása kötelező!" });
+    }
+
+    const user = await AppDataSource.getRepository(Users).findOne({ where: { email } });
+    if (!user) {
+        return res.status(400).json({ message: "Ezzel az e-mail címmel nem található felhasználó!" });
+    }
+
+    // Token generálása
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = await bcrypt.hash(resetToken, 10);
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 óra lejárati idő
+
+    await AppDataSource.getRepository(Users).save(user);
+
+    // E-mail küldése
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${email}`;
+const mailOptions = {
+    from: `"TrackIt" <${process.env.SMTP_USER}>`,
+    to: user.email,
+    subject: "Jelszó visszaállítási kérelem",
+    html: await ejs.renderFile(path.join(__dirname, '../../views/reset-password.ejs'), { user, resetUrl }),
+};
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: "Jelszó visszaállítási e-mail elküldve!" });
+    } catch (error) {
+        console.error("E-mail küldési hiba:", error);
+        res.status(500).json({ message: "Hiba történt az e-mail küldésekor." });
+    }
+});
+
+// Jelszó visszaállítása
+router.post("/reset-password", async (req: any, res: any) => {
+    const { email, token, newPassword } = req.body;
+
+    const invalidFields: string[] = []; // Hibás mezők tömbje
+
+    // Ellenőrizzük, hogy az új jelszó meg van-e adva
+    if (!newPassword || newPassword.trim() === '') {
+        invalidFields.push('newPassword'); // Hozzáadjuk a hibás mezőt
+    }
+
+    if (invalidFields.length > 0) {
+        return res.status(400).json({ 
+            message: "A jelszó nem felel meg a követelményeknek!", 
+            invalid: invalidFields 
+        });
+    }
+
+    const user = await AppDataSource.getRepository(Users).findOne({ where: { email } });
+    if (!user || !user.resetPasswordToken || !user.resetPasswordExpires) {
+        return res.status(400).json({ message: "Érvénytelen vagy lejárt token!" });
+    }
+
+    // Token ellenőrzése
+    const isTokenValid = await bcrypt.compare(token, user.resetPasswordToken);
+    if (!isTokenValid || user.resetPasswordExpires < new Date()) {
+        return res.status(400).json({ message: "Érvénytelen vagy lejárt token!" });
+    }
+
+    // Jelszó frissítése
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await AppDataSource.getRepository(Users).save(user);
+
+    res.status(200).json({ message: "Jelszó sikeresen frissítve!" });
+});
+
+
+
+
 
 export default router;
