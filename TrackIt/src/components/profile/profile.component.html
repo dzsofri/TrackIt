@@ -147,7 +147,47 @@
     </div>
 
 
-    <div class="tab-pane" [class.d-none]="activeTab !== 'bejegyzes'" id="bejegyzes-tab-pane" role="tabpanel" aria-labelledby="bejegyzes-tab" tabindex="0"></div>
+    <div class="tab-pane" [class.d-none]="activeTab !== 'bejegyzes'" id="bejegyzes-tab-pane" role="tabpanel" aria-labelledby="bejegyzes-tab" tabindex="0">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 mb-4">
+                <div class="bejegyzes_box">
+                    <div class="bejegyzes_content">
+                        <header class="bejegyzes_fejlec">
+                            <img id="bejegyzes_profile">
+                            <b class="leiras">"Felhasználó neve" <p>"A képhez egy kis leírás"</p></b>
+                            <p>
+                                <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">...</button>
+                            </p>
+                            <div class="collapse collapse-left" id="collapseExample">
+                                <div class="card">
+                                  <button><i class="bi bi-pencil"></i>Bejegyzés módosítása</button>
+                                  <hr>
+                                  <button><i class="bi bi-trash"></i>Bejegyzés törlése</button>
+                                </div>
+                            </div>
+                        </header>
+                        <div class="bejegyzes">
+                            <img id="bejegyzes_kep">
+                        </div>
+                        <header class="bejegyzes_fejlec">
+                            <img id="bejegyzes_profile">
+                            <b class="leiras">"Felhasználó neve" <p>"Comment?"</p></b>
+                            <p>
+                                <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">...</button>
+                            </p>
+                            <div class="collapse collapse-left" id="collapseExample">
+                                <div class="card">
+                                  <button><i class="bi bi-pencil"></i>Comment módosítása</button>
+                                  <hr>
+                                  <button><i class="bi bi-trash"></i>Comment törlése</button>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="tab-pane" [class.d-none]="activeTab !== 'profile'" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
