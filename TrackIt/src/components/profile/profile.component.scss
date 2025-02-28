@@ -932,6 +932,7 @@ input{
     flex-direction: row;
     width: 100%;
     padding: 10px;
+    position: relative;
 }
  
 .leiras {
@@ -987,8 +988,10 @@ i{
 
 .collapse-left {
     position: absolute;
-    margin-left: 20%;
-    margin-top: 8%;
+    right: 40px;
+    z-index: 10;
+    border-radius: 10px;
+    padding: 5px;
 }
 
 #bejegyzes_kep{
@@ -1004,4 +1007,127 @@ i{
     border-radius: 5%;
     padding: 40%;
     margin: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .bejegyzes_box {
+        width: 70vw;
+    }
+
+    .card button {
+        border: none;
+        display: flex;
+        background-color: transparent;
+        justify-content: flex-start;
+    }
+    
+    .card {
+        border-radius: 20px;
+        background: #F5F5F7;
+        font-size: 10px;
+    }
+
+    .leiras {
+        flex-grow: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0 0 10px;
+        gap: 10px;
+        font-size: 13px;
+    }
+    
+    .leiras p{
+        font-weight: normal;
+        font-size: 13px;
+    }
+
+    #bejegyzes_profile {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+}
+
+@media (max-width: 600px) {
+    .bejegyzes_box {
+        width: 70vw;
+    }
+
+    #bejegyzes_profile {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .leiras {
+        flex-grow: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0 0 10px;
+        gap: 10px;
+        font-size: 15px !important;
+    }
+    
+    .leiras p{
+        font-weight: normal;
+        font-size: 15px !important;
+    }
+    
+    .card {
+        border-radius: 20px;
+        background: #F5F5F7;
+        font-size: 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .bejegyzes_box {
+        width: 70vw !important;
+    }
+
+    #bejegyzes_profile {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .leiras {
+        flex-grow: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0 0 10px;
+        gap: 10px;
+        font-size: 15px;
+    }
+    
+    .leiras p{
+        font-weight: normal;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1200px){
+    .collapse-left {
+        position: absolute;
+        margin-left: 20%;
+        margin-top: 12%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .bejegyzes_box {
+        width: 70vw;
+    }
+    
+    .card {
+        border-radius: 20px;
+        background: #F5F5F7;
+        font-size: 13px;
+    }
 }
