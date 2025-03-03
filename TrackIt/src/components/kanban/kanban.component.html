@@ -9,7 +9,7 @@
     <textarea id="descriptionArea" [(ngModel)]="newTask.description"  style="resize: vertical; min-height: 10%;" placeholder="Feladat leírása"></textarea>
     
     <label>Határidő:</label>
-    <input type="datetime-local" [(ngModel)]="newTask.dueDate" (change)="onDateChange($event)">
+    <input type="date" [(ngModel)]="newTask.dueDate" (change)="onDateChange($event)">
 
     
     <label>Prioritás:</label>

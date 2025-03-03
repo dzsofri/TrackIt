@@ -48,20 +48,45 @@ export class KanbanComponent implements OnInit {
 
   // **Új feladat hozzáadása**
   addTask() {
+    console.log('newTask:', this.newTask); // Debugging céljából
+  
     if (!this.newTask.title.trim() || !this.newTask.dueDate) {
       console.warn('A cím és a határidő megadása kötelező!');
       return;
     }
-
+  
     const taskToSend: Task = {
-      ...this.newTask,
-      userId: '1' // Cseréld ki az aktuális userId-ra
+      ...this.newTask
     };
-
-    // Helyi tárolás a feladatokhoz, a backend frissítése helyett
-    this.columns[0].tasks.push(taskToSend);
-    this.newTask = this.createEmptyTask();
+  
+    // **Token lekérése a localStorage-ból**
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Nincs bejelentkezett felhasználó!");
+      return;
+    }
+  
+    // **Autentikációs fejlécek beállítása**
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    };
+  
+    // **Feladat elküldése a szerverre**
+    this.http.post<Task>("http://localhost:3000/tasks", taskToSend, { headers }).subscribe({
+      next: (response) => {
+        console.log("Feladat sikeresen mentve:", response);
+        this.columns[0].tasks.push(response); // A szerver által generált ID-val adjuk hozzá
+        this.newTask = this.createEmptyTask();
+      },
+      error: (error) => {
+        console.error("Hiba történt a mentés során:", error);
+      }
+    });
   }
+  
+
+
 
   // **Feladat áthelyezése másik oszlopba**
   onDrop(event: DragEvent, targetColumn: Column) {
