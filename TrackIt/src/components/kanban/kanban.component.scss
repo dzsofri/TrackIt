@@ -13,7 +13,7 @@
 .todo-creator {
     width: 30%;
     min-width: 250px; /* Ne legyen túl keskeny kis kijelzőn */
-    height: 99%;
+    height: 99.9%;
     background: #f8f9fa;
     padding: 20px;
     border-radius: 15px;
@@ -32,7 +32,7 @@
     gap: 15px;
 
     button {
-        padding: 10px 13px; /* Gomb méretének beállítása */
+        padding: 1% 3%; /* Gomb méretének beállítása */
         font-size: 16px; /* Betűméret */
         border: none;
         cursor: pointer;
@@ -100,7 +100,7 @@
 .kanban-board {
     display: flex;
     gap: 15px;
-    justify-content: center;
+    justify-content:flex-start;
     align-items: stretch;
     flex-grow: 1;
     flex-wrap: wrap; /* Törjön új sorba, ha nincs hely */
@@ -110,7 +110,7 @@
 
 /* Kanban oszlop beállítása */
 .kanban-column {
-    width: 16%;
+    width: 23%;
     min-width: 200px; /* Kisebb képernyőn ne legyen túl keskeny */
     background: #ffffff;
     padding: 15px;
@@ -118,7 +118,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column; 
-    overflow-y: auto;
+
 }
 
 /* Kanban feladatok */
@@ -157,44 +157,50 @@
 }
 
 
-
+/* Reszponzív beállítások */
 @media (max-width: 1076px) {
     .layout-container {
-        flex-direction: column; /* Minden egymás alá kerül */
+        flex-direction: column;
         align-items: center;
-        width: 100%;
     }
 
     .todo-creator {
         width: 80%;
-        max-width: 600px; /* Ne legyen túl széles */
+        max-width: 600px;
         margin-bottom: 20px;
     }
 
-    
+    .kanban-board {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+    }
 
     .kanban-column {
-        width: 90%; /* Két oszlop egy sorban */
-        max-width: 70%;
-        min-height: 30%;
-        padding: 15px;
-        overflow: visible;
+        width: 100%; /* A szélesség 100%-ra állítása */
+        max-width: 600px; /* Azonos maximális szélesség, mint a todo-creator */
+        margin-bottom: 20px; /* Térköz, hogy a kártyák ne érjenek össze */
     }
 }
 
 @media (max-width: 768px) {
-
-
     .kanban-column {
-        width: 90%;
+        width: 90%; /* Egy oszlop per sor mobilon */
         max-width: 500px;
-        padding: 20px;
-        min-height: auto;
-        overflow: visible;
     }
 
+    .priority-buttons { 
+        justify-content: space-evenly;
+    }
+
+    .priority-buttons button {
+        width: 30%; /* A gombok szélessége kisebb képernyőn */
+        padding: 8px 12px; /* A gombok belső margója is kisebb legyen */
+    }
 
 }
+
+/* Gombok és inputok */
 
 
 /* Általános input és textarea stílusok */
@@ -233,5 +239,3 @@ input, textarea {
     font-weight: bold;
     text-transform: capitalize;
   }
-  
-  
