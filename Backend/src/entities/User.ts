@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
-import { Followes } from "./Follow";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn, Index } from "typeorm";
+import { Follows } from "./Follow";
 import { FriendRequests } from "./FriendRequest";
 import { Pictures } from "./Picture";
 import { Posts } from "./Post";
@@ -22,6 +22,7 @@ export class Users {
     @Column({ type: "varchar", length: 255 })
     name: string;
 
+    @Index() // 🔹 Gyorsabb keresés az email alapján
     @Column({ type: "varchar", length: 255, unique: true })
     email: string;
 
@@ -31,20 +32,15 @@ export class Users {
     @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
     role: UserRole;
 
-    @OneToOne(() => Pictures, { onDelete: "CASCADE" })  
-    @JoinColumn({ name: "pictureId" })
-    picture: Pictures;
-
     @Column({ type: "varchar", length: 40, nullable: true })
     pictureId: string;
-
     @CreateDateColumn()
     createdAt: Date;
 
-    @Column({ type: "varchar", nullable: true })
+    @Column({ type: "varchar", nullable: true, default: null })
     resetPasswordToken: string | null;
 
-    @Column({ type: "timestamp", nullable: true })
+    @Column({ type: "timestamp", nullable: true, default: null })
     resetPasswordExpires: Date | null;
 
     @OneToMany(() => FriendRequests, (friendRequest) => friendRequest.sender, { onDelete: "CASCADE" })
@@ -53,11 +49,11 @@ export class Users {
     @OneToMany(() => FriendRequests, (friendRequest) => friendRequest.receiver, { onDelete: "CASCADE" })
     receivedFriendRequests: FriendRequests[];
 
-    @OneToMany(() => Followes, (follow) => follow.followingUser, { onDelete: "CASCADE" })
-    following: Followes[];
+    @OneToMany(() => Follows, (follow) => follow.followerUser, { onDelete: "CASCADE" })
+    following: Follows[];
 
-    @OneToMany(() => Followes, (follow) => follow.followedUser, { onDelete: "CASCADE" })
-    followers: Followes[];
+    @OneToMany(() => Follows, (follow) => follow.followedUser, { onDelete: "CASCADE" })
+    followers: Follows[];
 
     @OneToMany(() => Posts, (post) => post.user, { onDelete: "CASCADE" })
     posts: Posts[];

@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import { Users } from "./entities/User";
 import { Feedbacks } from "./entities/Feedback";
-import { Followes } from "./entities/Follow";
+import { Follows } from "./entities/Follow";
 import { FriendRequests } from "./entities/FriendRequest";
 import { Habits } from "./entities/Habit";
 import { HabitTrackings } from "./entities/HabitTracking";
@@ -23,7 +23,7 @@ export const AppDataSource = new DataSource({
   database: "trackit", 
   synchronize: true, 
   logging: false, 
-  entities: [Feedbacks, Followes, FriendRequests, Habits, HabitTrackings, Pictures, Posts, Tasks, TaskStatuses, Users, UserChallenges, UserStatistics, FeedbackQuestions], 
+  entities: [Feedbacks, Follows, FriendRequests, Habits, HabitTrackings, Pictures, Posts, Tasks, TaskStatuses, Users, UserChallenges, UserStatistics, FeedbackQuestions], 
   migrations: [],
   subscribers: [],
 });

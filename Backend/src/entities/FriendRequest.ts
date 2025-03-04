@@ -21,7 +21,7 @@ export class FriendRequests {
     @Column({ type: "varchar", length: 40 })
     receiverId: string;
 
-    @Column({ type: "enum", enum: ["pending", "accepted", "rejected"], default: "pending" })
+    @Column({ type: "enum", enum: ["pending", "accepted"], default: "pending" })
     status: string;
 
     @CreateDateColumn()
