@@ -4,30 +4,20 @@ import { Tasks } from "../entities/Task";
 import { Users } from "../entities/User";
 import { tokencheck } from "../utiles/tokenUtils";
 import { v4 as uuidv4 } from "uuid";
+import cors from "cors";
+
 
 const router = Router();
 
 
 // Új feladat létrehozása (Token ellenőrzéssel)
-router.post("/", tokencheck, async (req: any, res: any) => {
+router.post("/", async (req: any, res: any) => {
     try {
         const { title, description, priority, dueDate } = req.body;
-        const userId = req.user?.id; // A tokenből kivett user ID
-
-        if (!userId) {
-            return res.status(401).json({ message: "Nincs jogosultság!" });
-        }
 
         // Hiányzó adatok ellenőrzése
         if (!title || !priority || !dueDate) {
             return res.status(400).json({ message: "Hiányzó adatok!", invalidFields: { title, priority, dueDate } });
-        }
-
-        // Felhasználó ellenőrzése
-        const user = await AppDataSource.getRepository(Users).findOne({ where: { id: userId } });
-
-        if (!user) {
-            return res.status(404).json({ message: "Felhasználó nem található." });
         }
 
         // Új feladat mentése
@@ -37,8 +27,6 @@ router.post("/", tokencheck, async (req: any, res: any) => {
         task.description = description || null;
         task.priority = priority;
         task.dueDate = new Date(dueDate);
-        task.user = user;
-        task.userId = userId;
         task.createdAt = new Date();
 
         await AppDataSource.getRepository(Tasks).save(task);
@@ -51,5 +39,20 @@ router.post("/", tokencheck, async (req: any, res: any) => {
     }
 });
 
+router.get("/tasks", async (req: any, res: any) => {
+    try {
+        const tasks = await AppDataSource.getRepository(Tasks).find();
+
+        if (tasks.length === 0) {
+            return res.status(404).json({ message: "Nincsenek feladatok az adatbázisban!" });
+        }
+
+        return res.status(200).json({ tasks });
+
+    } catch (error) {
+        console.error("Hiba történt a feladatok lekérdezésekor:", error);
+        return res.status(500).json({ message: "Szerverhiba történt." });
+    }
+});
 
 export default router;

@@ -38,8 +38,19 @@ export class KanbanComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    // Itt nem töltünk be feladatokat
+    this.http.get<{ tasks: Task[] }>("http://localhost:3000/tasks")
+      .subscribe({
+        next: (response) => {
+          console.log("Feladatok betöltve:", response.tasks);
+          this.columns[0].tasks = response.tasks; // Beállítjuk a Kanban táblába
+        },
+        error: (error) => {
+          console.error("Hiba történt a feladatok lekérdezésekor:", error);
+        }
+      });
   }
+  
+  
 
   // **Új feladat inicializálása**
   private createEmptyTask(): Task {
@@ -48,42 +59,42 @@ export class KanbanComponent implements OnInit {
 
   // **Új feladat hozzáadása**
   addTask() {
-    console.log('newTask:', this.newTask); // Debugging céljából
-  
     if (!this.newTask.title.trim() || !this.newTask.dueDate) {
       console.warn('A cím és a határidő megadása kötelező!');
       return;
     }
   
     const taskToSend: Task = {
-      ...this.newTask
+      title: this.newTask.title.trim(),
+      description: this.newTask.description.trim() || "",
+      dueDate: this.newTask.dueDate,
+      priority: this.newTask.priority || "Közepes"
     };
   
-    // **Token lekérése a localStorage-ból**
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.error("Nincs bejelentkezett felhasználó!");
-      return;
-    }
+    this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend)
+      .subscribe({
+        next: (response) => {
+          console.log("Feladat sikeresen mentve:", response);
   
-    // **Autentikációs fejlécek beállítása**
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
-    };
+          // **Helyesen hozzáadjuk a task-ot a Kanban táblához**
+          this.columns[0].tasks.push({
+            id: response.task.id,
+            title: response.task.title,
+            description: response.task.description || "Nincs leírás",
+            dueDate: response.task.dueDate || "Nincs határidő",
+            priority: response.task.priority || "Közepes"
+          });
   
-    // **Feladat elküldése a szerverre**
-    this.http.post<Task>("http://localhost:3000/tasks", taskToSend, { headers }).subscribe({
-      next: (response) => {
-        console.log("Feladat sikeresen mentve:", response);
-        this.columns[0].tasks.push(response); // A szerver által generált ID-val adjuk hozzá
-        this.newTask = this.createEmptyTask();
-      },
-      error: (error) => {
-        console.error("Hiba történt a mentés során:", error);
-      }
-    });
+          // **Űrlap ürítése új feladat után**
+          this.newTask = this.createEmptyTask();
+        },
+        error: (error) => {
+          console.error("Hiba történt a mentés során:", error);
+        }
+      });
   }
+  
+  
   
 
 
