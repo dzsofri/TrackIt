@@ -50,6 +50,8 @@ export class ApiService {
   }
 
 
+  
+
   resetPassword(email: string, token: string, newPassword: any): Observable<any> {
     return this.http.post<any>(`${this.server}/users/reset-password`, { email, token, newPassword }).pipe(
         catchError(error => {

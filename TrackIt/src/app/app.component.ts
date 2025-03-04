@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SideBarComponent } from '../components/side-bar/side-bar.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
