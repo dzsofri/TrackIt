@@ -71,10 +71,10 @@ router.post("/friendrequests/accept/:requestId", tokencheck, async (req: any, re
         await AppDataSource.getRepository(FriendRequests).save(friendRequest);
 
         const followRelation = new Follows();
-        followRelation.followerUser = friendRequest.receiver; // Aki követ (a címzett)
-        followRelation.followedUser = friendRequest.sender; // Akit követ (a küldő)
-        followRelation.followerUserId = friendRequest.receiverId; // Aki követ (a címzett)
-        followRelation.followedUserId = friendRequest.senderId; // Akit követ (a küldő)
+        followRelation.followerUser = friendRequest.sender; 
+        followRelation.followedUser = friendRequest.receiver; 
+        followRelation.followerUserId = friendRequest.senderId; 
+        followRelation.followedUserId = friendRequest.receiverId; 
 
         await AppDataSource.getRepository(Follows).save(followRelation);
 
@@ -91,11 +91,17 @@ router.post("/friendrequests/accept/:requestId", tokencheck, async (req: any, re
 // Barátkérés elutasítása
 router.post("/friendrequests/reject/:requestId", tokencheck, async (req: any, res: any) => {
     const { requestId } = req.params;
+    const userId = req.user.id; // Bejelentkezett felhasználó ID-ja
 
     try {
-        const friendRequest = await AppDataSource.getRepository(FriendRequests).findOneOrFail({ where: { id: requestId } });
+        const friendRequest = await AppDataSource.getRepository(FriendRequests).findOneOrFail({ 
+            where: { id: requestId }
+        });
 
-        // Barátkérés törlése
+        if (friendRequest.receiverId !== userId) {
+            return res.status(403).json({ error: "Csak a címzett utasíthatja el a barátkérést." });
+        }
+
         await AppDataSource.getRepository(FriendRequests).remove(friendRequest);
         
         res.json({ message: "A barátkérés elutasítva és törölve lett!" });
@@ -103,6 +109,7 @@ router.post("/friendrequests/reject/:requestId", tokencheck, async (req: any, re
         res.status(404).json({ error: "A barátkérés nem található." });
     }
 });
+
 
 // Barátkérések lekérése
 router.get("/friendrequests", tokencheck, async (req: any, res: any) => {
