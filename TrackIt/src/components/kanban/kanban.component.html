@@ -36,7 +36,8 @@
                
               <h4>Cím: {{ task.title }}</h4>
               <p> Leírás {{ task.description }}</p>
-              <p><strong>Határidő:</strong> {{ task.dueDate }}</p>
+              <p><strong>Határidő:</strong> {{ task.dueDate | date:'yyyy. MM. dd.' }}</p>
+
               <p *ngIf="task.priority"><strong>Prioritás:</strong> <span [class]="task.priority.toLowerCase()">{{ task.priority }}</span></p>
 
           </div>

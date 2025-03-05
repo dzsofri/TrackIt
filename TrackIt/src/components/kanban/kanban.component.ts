@@ -134,9 +134,11 @@ export class KanbanComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.value) {
       const date = new Date(input.value);
-      this.newTask.dueDate = date.toISOString().split("T")[0]; // Csak YYYY-MM-DD
+      const formattedDate = date.toLocaleDateString('hu-HU', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      this.newTask.dueDate = formattedDate; // YYYY. MM. DD.
     } else {
       this.newTask.dueDate = '';
     }
   }
+  
 }
