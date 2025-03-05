@@ -10,6 +10,7 @@ interface Task {
   dueDate: string; // A határidő, pl. 'YYYY-MM-DD' formátumban
   priority: 'Alacsony' | 'Közepes' | 'Magas'; // A prioritás típusa
   userId?: string; // Az opcionális felhasználói azonosító
+  status: 'todo' | 'in-progress' | 'done'; // Ezt add hozzá!
 }
 
 interface Column {
@@ -42,7 +43,20 @@ export class KanbanComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log("Feladatok betöltve:", response.tasks);
-          this.columns[0].tasks = response.tasks; // Beállítjuk a Kanban táblába
+  
+          // Az oszlopok tisztítása
+          this.columns.forEach(column => column.tasks = []);
+  
+          // A megfelelő oszlopokba helyezzük a feladatokat
+          response.tasks.forEach(task => {
+            if (task.status === 'todo') {
+              this.columns[0].tasks.push(task); // Teendők oszlop
+            } else if (task.status === 'in-progress') {
+              this.columns[1].tasks.push(task); // Folyamatban oszlop
+            } else if (task.status === 'done') {
+              this.columns[2].tasks.push(task); // Kész oszlop
+            }
+          });
         },
         error: (error) => {
           console.error("Hiba történt a feladatok lekérdezésekor:", error);
@@ -51,11 +65,14 @@ export class KanbanComponent implements OnInit {
   }
   
   
+  
+  
 
   // **Új feladat inicializálása**
   private createEmptyTask(): Task {
-    return { title: '', description: '', dueDate: '', priority: 'Közepes' };
+    return { title: '', description: '', dueDate: '', priority: 'Közepes', status: 'todo' };
   }
+  
 
   // **Új feladat hozzáadása**
   addTask() {
@@ -68,8 +85,11 @@ export class KanbanComponent implements OnInit {
       title: this.newTask.title.trim(),
       description: this.newTask.description.trim() || "",
       dueDate: this.newTask.dueDate,
-      priority: this.newTask.priority || "Közepes"
+      priority: this.newTask.priority || "Közepes",
+      status: "todo" // Ez kell!
     };
+    
+    
   
     this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend)
       .subscribe({
@@ -82,7 +102,8 @@ export class KanbanComponent implements OnInit {
             title: response.task.title,
             description: response.task.description || "Nincs leírás",
             dueDate: response.task.dueDate || "Nincs határidő",
-            priority: response.task.priority || "Közepes"
+            priority: response.task.priority || "Közepes",
+            status: 'todo'
           });
   
           // **Űrlap ürítése új feladat után**
@@ -93,10 +114,6 @@ export class KanbanComponent implements OnInit {
         }
       });
   }
-  
-  
-  
-
 
 
   // **Feladat áthelyezése másik oszlopba**
