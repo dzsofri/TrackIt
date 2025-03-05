@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, OneToOne, JoinColumn, Index } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, Index } from "typeorm";
 import { Follows } from "./Follow";
 import { FriendRequests } from "./FriendRequest";
 import { Pictures } from "./Picture";
@@ -22,7 +22,6 @@ export class Users {
     @Column({ type: "varchar", length: 255 })
     name: string;
 
-    @Index() // 🔹 Gyorsabb keresés az email alapján
     @Column({ type: "varchar", length: 255, unique: true })
     email: string;
 
@@ -34,6 +33,7 @@ export class Users {
 
     @Column({ type: "varchar", length: 40, nullable: true })
     pictureId: string;
+
     @CreateDateColumn()
     createdAt: Date;
 
