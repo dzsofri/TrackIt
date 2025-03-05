@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
+
 interface Task {
   id?: string; // Az azonosító opcionális
   title: string; // A feladat címe
@@ -25,8 +26,10 @@ interface Column {
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.scss']
 })
+
 export class KanbanComponent implements OnInit {
   columns: Column[] = [
+    { name: 'Teendők', tasks: [] },
     { name: 'Teendők', tasks: [] },
     { name: 'Folyamatban', tasks: [] },
     { name: 'Kész', tasks: [] }
@@ -131,11 +134,13 @@ export class KanbanComponent implements OnInit {
     this.draggedTask = task;
     this.draggedFrom = column;
     event.dataTransfer?.setData('task', JSON.stringify(task));
+    event.dataTransfer?.setData('task', JSON.stringify(task));
   }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
   }
+
 
   onDragEnter(event: DragEvent) {
     event.preventDefault();
@@ -165,4 +170,4 @@ export class KanbanComponent implements OnInit {
   }
   
   
-}
+  }

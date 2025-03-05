@@ -64,9 +64,7 @@ export class WelcomeComponent {
     // Kanban konténer megjelenítése késleltetéssel
     setTimeout(() => {
       this.isKanbanVisible = true;
-      this.kanbanState = 'visible';
-    }, 800);
-  }
-  
-  
+    }, 1000); // Az animáció teljes időtartama
+}
+
 }
