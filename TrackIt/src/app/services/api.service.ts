@@ -61,4 +61,8 @@ export class ApiService {
     );
 }
 
+  read_Stat(table: string, field: string, op: string, value: string) {
+    return this.http.get(`${this.server}/public/${table}/${field}/${op}/${value}`);
+  }
+
 }

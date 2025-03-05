@@ -8,7 +8,7 @@ header {
 }
 
 #felhasznalo{
-    background-image: url(img/profileKep.png);
+    background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -114,7 +114,7 @@ span{
 
 #elvegzett {
     background-color: #173622;
-    background-image: url(img/pipa.png);
+    background-image: url('/assets/images/pipa.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -132,7 +132,7 @@ span{
 
 #elmaradt {
     background-color: rgba(255, 0, 0, 0.2);
-    background-image: url(img/kereszt.png);
+    background-image: url('/assets/images/kereszt.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -149,7 +149,7 @@ span{
 
 #teljesitve {
     background-color: #000000;
-    background-image: url(img/stat.png);
+    background-image: url('/assets/images/stat.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -322,7 +322,7 @@ span{
 }
 
 #star {
-    background-image: url(img/star.png);
+    background-image: url('/assets/images/star.png');
     background-repeat: no-repeat;
     background-size: contain;
     display: flex;
@@ -404,7 +404,7 @@ span{
 }
 
 #erem {
-    background-image: url(img/erem.png);
+    background-image: url('/assets/images/erem.png');
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -463,6 +463,10 @@ span{
     .jelveny_box1, .jelveny_box2{
         box-shadow: none;
         background-color: transparent;
+    }
+
+    .jelveny_content2 .jelveny_text{
+        font-size: 13px !important;
     }
 }
 
@@ -538,7 +542,11 @@ span{
 
 .buttons {
     display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
 }
+
 
 .username {
     margin-right: 10px;
@@ -546,7 +554,7 @@ span{
 }
 
 #profile {
-    background-image: url(img/profileKep.png);
+    background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -570,9 +578,10 @@ span{
     border: none;
     border-radius: 50px;
     padding: 10px;
+    width: 80%;
 }
 
-.del{
+.del2{
     display: flex;
     background-color: #FA0202;
     justify-content: center;
@@ -581,6 +590,19 @@ span{
     border-radius: 50px;
     padding: 10px;
     border: none;
+    width: 80%;
+}
+
+.del1{
+    display: flex;
+    background-color: #FA0202;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 50px;
+    padding: 10px;
+    border: none;
+    margin-left: auto;
 }
 
 @media (max-width: 1200px){
@@ -616,7 +638,11 @@ span{
         max-height: 50px;
     }
 
-    .del{
+    .del1{
+        font-size: 12px;
+    }
+
+    .del2{
         font-size: 12px;
     }
 
@@ -631,6 +657,9 @@ span{
     }
 
     .buttons{
+        display: flex;
+        justify-content: center;
+        align-items: center;
         flex-direction: column;
         gap: 5px;
     }
@@ -671,6 +700,10 @@ span{
         max-width: 60px;
         max-height: 60px;
     }
+
+    .buttons {
+        flex-direction: row;
+    }
 }
 
 @media (max-width: 600px) {
@@ -696,7 +729,11 @@ span{
         max-height: 50px;
     }
 
-    .del{
+    .del1{
+        font-size: 12px;
+    }
+
+    .del2{
         font-size: 12px;
     }
 
@@ -734,7 +771,7 @@ span{
         max-height: 50px;
     }
 
-    .del .add{
+    .del1 .del2 .add{
         width: 10%;
         padding: 12px;
     }
@@ -802,8 +839,9 @@ input{
     border: none;
     border-radius: 20px;
     padding: 10px 20px;
-    width: 200px;
     float: right;
+    color: white;
+    font-size: 17px;
 }
 
 .profilekep_modositas{
@@ -819,7 +857,7 @@ input{
 }
 
 #profilekep{
-    background-image: url(img/profileKep.png);
+    background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -971,7 +1009,7 @@ i{
 }
  
 #bejegyzes_profile{
-    background-image: url(img/profileKep.png);
+    background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -995,7 +1033,7 @@ i{
 }
 
 #bejegyzes_kep{
-    background-image: url(img/SB-Standees-Spong-3_1200x\ 1.png);
+    background-image: url('/assets/images/bejegyzeskep.png');
     background-repeat: no-repeat;
     background-size: contain;
     display: flex;

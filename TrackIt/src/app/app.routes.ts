@@ -6,6 +6,7 @@ import { PassChangeComponent } from './components/pass-change/pass-change.compon
 import { RegistrationComponent } from './components/registration/registration.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { authGuard } from './guards/auth.guard';
+import { ProfileComponent } from './components/profile/profile.component';
 
 export const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent,canActivate: [authGuard], data: { animation: 'WelcomePage' } },
@@ -17,6 +18,8 @@ export const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
   { path: 'lostpass', component: LostPassComponent },
   { path: 'reset-password', component: PassChangeComponent },
+
+  { path: 'profile', component: ProfileComponent },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
