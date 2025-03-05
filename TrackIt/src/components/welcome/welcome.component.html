@@ -1,6 +1,6 @@
 <div class="welcome-wrapper">
   <div class="content">
-    <div class="text">
+    <div class="text" [@fadeOut]="textState">
       <h1>Üdvözlünk a <span class="highlight">TrackIt</span> világában!</h1>
       <p><strong>Kezdjük el együtt megtervezni a sikereidet!</strong></p>
       <p>
@@ -8,12 +8,12 @@
         pillanattól hatékonyan használhasd. – <strong>indulhatunk?</strong>
       </p>
     </div>
-    <div class="steps-container">
+    <div class="steps-container" [@moveRight]="stepState">
       <div class="steps">
         <div class="step active">
           <span class="step-number">1</span> Üdvözlünk!
         </div>
-        <div class="step">
+        <div class="step">  
           <span class="step-number">2</span> ToDo lista és Kanban tábla létrehozása
         </div>
         <div class="step">
@@ -25,7 +25,8 @@
     </div>
 
     <!-- Kanban (becsúszik) -->
-    <div class="kanban-container" *ngIf="isKanbanVisible" [@slideIn]>
+    <div class="kanban-container" *ngIf="isKanbanVisible" [@slideIn]="kanbanState">
+
       <app-kanban></app-kanban>
     </div>
   </div>

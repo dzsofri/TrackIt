@@ -12,14 +12,12 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.scss'],
   animations: [
-    trigger('slideIn', [
-      transition(':enter', [ // Az elem belépésekor
-        style({ transform: 'translateX(-100%)', opacity: 0 }),
-        animate('0.8s ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
+    trigger('moveLeft', [
+      state('default', style({ transform: 'translateX(0)', opacity: 1 })),
+      state('moved', style({ transform: 'translateX(-100%)', opacity: 0 })),
+      transition('default => moved', [
+        animate('1s cubic-bezier(0.25, 0.8, 0.25, 1)')
       ]),
-      transition(':leave', [ // Ha szükséges kilépő animáció
-        animate('0.5s ease-in', style({ transform: 'translateX(-100%)', opacity: 0 }))
-      ])
     ]),
     trigger('moveRight', [
       state('default', style({ transform: 'translateX(0)' })),
@@ -46,27 +44,22 @@ export class WelcomeComponent {
 
   isKanbanVisible = false;
   stepState = 'default';
-  kanbanState: any;
-  textState = 'visible';
-
 
   startApp() {
+    // Az első lépés befejezetté tétele és háttérszín visszaállítása
     this.steps[0].completed = true;
     this.steps[0].active = false;
+  
+    // A második lépés aktívvá tétele és zöld háttér
     this.steps[1].active = true;
   
-    // Szöveg eltűnik
-    this.textState = 'hidden';
-  
-    // Steps-container jobbra csúszik
+    // A szöveg eltűnik balra
     this.stepState = 'moved';
   
-    // Kanban konténer megjelenítése késleltetéssel
+    // Az animáció után a Kanban konténer megjelenítése
     setTimeout(() => {
       this.isKanbanVisible = true;
-      this.kanbanState = 'visible';
-    }, 800);
+    }, 1000); // Az animáció teljes időtartama
   }
-  
   
 }
