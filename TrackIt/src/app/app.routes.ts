@@ -6,10 +6,13 @@ import { PassChangeComponent } from './components/pass-change/pass-change.compon
 import { RegistrationComponent } from './components/registration/registration.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
+import { AdminComponent } from './components/admin/admin.component';
 
 export const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent,canActivate: [authGuard], data: { animation: 'WelcomePage' } },
   { path: 'kanban', component: KanbanComponent, canActivate: [authGuard], data: { animation: 'KanbanPage' } }, // Csak bejelentkezett felhasználóknak
+  { path: 'admin', component: AdminComponent}, // Csak bejelentkezett felhasználóknak
  
 
 

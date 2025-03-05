@@ -1,0 +1,202 @@
+@use "sass:color";
+
+$primary-color: #f8f9fa;
+$card-bg: #ffffff;
+$btn-danger-color: #dc3545;
+$border-radius-sm: 8px;
+$font-size-lg: 1.25rem;
+$font-size-sm: 1rem;
+$chart-bg: #d6f7ff;
+
+.chart-container {
+    position: relative;
+    width: 90%;
+    height: 400px;  // Megnövelt magasság
+    margin: auto;
+  }
+  
+
+  .form-group {
+    margin-bottom: 15px;
+    text-align: right;  // A legördülő menüt jobbra igazítjuk
+  }
+  
+.container {
+  margin-top: 50px;
+
+  .card {
+    background-color: $card-bg;
+    border-radius: $border-radius-sm;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    overflow: hidden;
+  }
+
+  .card-title {
+    font-weight: bold;
+    font-size: $font-size-lg;
+  }
+
+  .card-text {
+    font-size: $font-size-sm;
+  }
+
+  .fs-3 {
+    font-size: 2rem;
+  }
+
+  .input-group {
+    margin-bottom: 20px;
+  }
+
+  .search-bar {
+    display: flex;
+    gap: 10px;
+
+    input {
+      border-radius: $border-radius-sm;
+    }
+
+    button {
+      border-radius: $border-radius-sm;
+    }
+  }
+
+  .btn-outline-secondary {
+    border-radius: $border-radius-sm;
+    font-size: $font-size-sm;
+  }
+
+  .list-group {
+    border-radius: $border-radius-sm;
+    background-color: #fff;
+    padding: 10px;
+  }
+
+  .list-group-item {
+    border-radius: $border-radius-sm;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #e9ecef;
+    }
+
+    .btn-danger {
+      background-color: $btn-danger-color;
+      border: none;
+      color: #fff;
+      font-size: $font-size-sm;
+      border-radius: $border-radius-sm;
+      padding: 6px 12px;
+
+      &:hover {
+        background-color: color.adjust($btn-danger-color, $lightness: -5%);
+      }
+    }
+  }
+
+  .img-fluid {
+    max-width: 100%;
+    height: auto;
+    border-radius: $border-radius-sm;
+  }
+
+  .text-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .row {
+    margin-bottom: 20px;
+  }
+
+  .col-md-3 {
+    margin-bottom: 10px;
+  }
+
+  .btn-danger {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    border-radius: $border-radius-sm;
+  }
+
+  .btn-outline-secondary {
+    padding: 8px 20px;
+    font-size: 1rem;
+    border-radius: $border-radius-sm;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
+  .card-footer {
+    background-color: #f1f1f1;
+    border-top-left-radius: $border-radius-sm;
+    border-top-right-radius: $border-radius-sm;
+  }
+
+  /* Adjust icon size and position */
+  .icon-svg {
+    width: 50px;  /* Increase icon size */
+    height: 50px; /* Increase icon size */
+    margin-left: 15px; /* Space between text and icon */
+    margin-bottom: 0; /* Remove space between icon and text */
+    align-self: center; /* Center the icon vertically */
+  }
+
+  .card .card-body {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Vertically align items */
+    justify-content: space-between; /* Space between text and icon */
+  }
+}
+
+@media (max-width: 767px) {
+  .col-md-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    width: 100%;
+
+    input {
+      width: 100%;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  /* Make sure icons are still on the right for small screens */
+  .card .card-body {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+    align-items: center;
+  }
+
+  .icon-svg {
+    margin-left: 0;
+    margin-top: 10px; /* Add some space above the icon when stacked */
+  }
+
+ 
+  
+}
+.row .col-md-3 .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
