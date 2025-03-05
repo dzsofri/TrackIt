@@ -17,6 +17,7 @@
       <button class="low" (click)="setPriority('Alacsony')" [class.active]="newTask.priority === 'Alacsony'">Alacsony</button>
       <button class="medium" (click)="setPriority('Közepes')" [class.active]="newTask.priority === 'Közepes'">Közepes</button>
       <button class="high" (click)="setPriority('Magas')" [class.active]="newTask.priority === 'Magas'">Magas</button>
+
     </div>
     
     <button class="get-started-button" (click)="addTask()">Feladat hozzáadása</button>
@@ -34,11 +35,18 @@
                [draggable]="true"
                (dragstart)="onDragStart($event, task, column)">
                
-              <h4>Cím: {{ task.title }}</h4>
-              <p> Leírás {{ task.description }}</p>
+              <h4><strong>Cím</strong> {{ task.title }}</h4>
+              <p>{{ task.description }}</p>
               <p><strong>Határidő:</strong> {{ task.dueDate | date:'yyyy. MM. dd.' }}</p>
 
-              <p *ngIf="task.priority"><strong>Prioritás:</strong> <span [class]="task.priority.toLowerCase()">{{ task.priority }}</span></p>
+              <p *ngIf="task.priority">
+                
+                <span class="priority-box" [ngClass]="getPriorityClass(task.priority)"></span>
+              </p>
+              
+            
+            
+            
 
           </div>
       </div>

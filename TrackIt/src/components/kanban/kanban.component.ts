@@ -64,9 +64,6 @@ export class KanbanComponent implements OnInit {
       });
   }
   
-  
-  
-  
 
   // **Új feladat inicializálása**
   private createEmptyTask(): Task {
@@ -89,6 +86,8 @@ export class KanbanComponent implements OnInit {
       status: "todo" // Ez kell!
     };
     
+    
+
     
   
     this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend)
@@ -150,12 +149,20 @@ export class KanbanComponent implements OnInit {
   onDateChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.value) {
-      const date = new Date(input.value);
-      const formattedDate = date.toLocaleDateString('hu-HU', { year: 'numeric', month: '2-digit', day: '2-digit' });
-      this.newTask.dueDate = formattedDate; // YYYY. MM. DD.
+      this.newTask.dueDate = input.value; // Hagyjuk az eredeti YYYY-MM-DD formátumot
     } else {
       this.newTask.dueDate = '';
     }
   }
+  
+  getPriorityClass(priority: string): string {
+    switch (priority) {
+      case 'Alacsony': return 'low';
+      case 'Közepes': return 'medium';
+      case 'Magas': return 'high';
+      default: return '';
+    }
+  }
+  
   
 }
