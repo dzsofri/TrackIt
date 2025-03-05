@@ -30,7 +30,6 @@ interface Column {
 export class KanbanComponent implements OnInit {
   columns: Column[] = [
     { name: 'Teendők', tasks: [] },
-    { name: 'Teendők', tasks: [] },
     { name: 'Folyamatban', tasks: [] },
     { name: 'Kész', tasks: [] }
   ];

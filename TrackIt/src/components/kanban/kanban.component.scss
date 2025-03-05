@@ -239,3 +239,15 @@ input, textarea {
     font-weight: bold;
     text-transform: capitalize;
   }
+
+  .priority-box {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-left: 5px; 
+}  
+
+.low { background-color: green; } 
+.medium { background-color: gold; } 
+.high { background-color: red; } 
