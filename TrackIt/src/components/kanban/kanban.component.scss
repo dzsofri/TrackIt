@@ -123,13 +123,31 @@
 
 /* Kanban feladatok */
 .kanban-task {
-    background: #e3e3e3;
-    padding: 12px;
-    border-radius: 5px;
-    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.25); /* Áttetsző fehér háttér */
+    backdrop-filter: blur(10px); /* Üveghatás */
+    -webkit-backdrop-filter: blur(10px); /* Safari támogatás */
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 12px;
     cursor: grab;
-    flex-shrink: 0; /* A feladatok ne zsugorodjanak össze */
+    flex-shrink: 0;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Mélyebb árnyék */
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Finom fehér keret */
+    transition: all 0.3s ease-in-out;
+
+    /* Lebegéskor kicsit kiemelkedik */
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Aktív húzáskor */
+    &:active {
+        cursor: grabbing;
+        transform: scale(1.03);
+    }
 }
+
 
 
 
@@ -242,12 +260,33 @@ input, textarea {
 
   .priority-box {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin-left: 5px; 
+    width: 12px; /* Kis pötty */
+    height: 12px; /* Kis pötty */
+    border-radius: 50%; /* Kör alakú */
+    margin-right: 8px; /* Kis távolság a cím és a prioritás között */
+    vertical-align: middle; /* Középre igazítás */
+  
 }  
 
 .low { background-color: green; } 
 .medium { background-color: gold; } 
 .high { background-color: red; } 
+
+
+.kanban-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+  }
+  
+  .task-count {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    padding: 5px 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  

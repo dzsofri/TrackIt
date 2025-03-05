@@ -85,12 +85,8 @@ export class KanbanComponent implements OnInit {
       description: this.newTask.description.trim() || "",
       dueDate: this.newTask.dueDate,
       priority: this.newTask.priority || "Közepes",
-      status: "todo" // Ez kell!
+      status: "todo" // Kezdetben a "todo" oszlopban lesz
     };
-    
-    
-
-    
   
     this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend)
       .subscribe({
@@ -107,6 +103,9 @@ export class KanbanComponent implements OnInit {
             status: 'todo'
           });
   
+          // **Számláló frissítése**
+          this.updateTaskCount();
+  
           // **Űrlap ürítése új feladat után**
           this.newTask = this.createEmptyTask();
         },
@@ -121,9 +120,13 @@ export class KanbanComponent implements OnInit {
   onDrop(event: DragEvent, targetColumn: Column) {
     event.preventDefault();
     if (this.draggedTask && this.draggedFrom && this.draggedFrom !== targetColumn) {
+      // Feladat áthelyezése az új oszlopba
       this.draggedFrom.tasks = this.draggedFrom.tasks.filter(t => t !== this.draggedTask);
       targetColumn.tasks.push(this.draggedTask);
-
+  
+      // **Számláló frissítése minden oszlopnál**
+      this.updateTaskCount();
+  
       this.draggedTask = null;
       this.draggedFrom = null;
     }
@@ -168,5 +171,11 @@ export class KanbanComponent implements OnInit {
     }
   }
   
-  
+  updateTaskCount() {
+    this.columns.forEach(column => {
+      // Ha szükséges, az oszlopok tömbjének frissítéséhez hozzáadhatunk további logikát
+      console.log(`${column.name}: ${column.tasks.length} feladat`);
+    });
+
   }
+}
