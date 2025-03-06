@@ -1,20 +1,29 @@
 header {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    align-items: center; /* Vízszintesen középre igazítás */
+    justify-content: center; /* Függőleges középre igazítás */
     text-align: center;
-    margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+    header {
+        display: block;
+        flex-direction: column;
+        align-items: center; /* Vízszintesen középre igazítás */
+        justify-content: center; /* Függőleges középre igazítás */
+        text-align: center;
+    }
 }
 
 #felhasznalo{
     background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
-    width: 50vw;
+    width: 70vw;
     max-width: 150px;
     height: 50vw;
     max-height: 150px; 
@@ -34,15 +43,17 @@ header {
 }
 
 .nav-item-tab {
+    display: flex;
     background-color: #F5F5F7;
     border-radius: 0px 30px 0px 0px;
-    min-width: 130px;
+    justify-content: center;
 }
 
 .nav-item {
+    display: flex;
     background-color: #F5F5F7;
-    width: 120px;
-    min-width: 100px;
+    width: 100px;
+    justify-content: center;
 }
   
 .d-none {
@@ -542,18 +553,17 @@ span{
 
 .buttons {
     display: flex;
-    align-items: center;
     gap: 5px;
     margin-left: auto;
 }
 
 
-.username {
+.username, .username2 {
     margin-right: 10px;
     font-weight: bold;
 }
 
-#profile {
+#profile, #profile2 {
     background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
@@ -561,16 +571,15 @@ span{
     justify-content: flex-start;
     align-items: flex-start;
     width: 25vw;
-    max-width: 70px;
+    max-width: 60px;
     height: 25vw;
-    max-height: 70px; 
+    max-height: 60px; 
     padding: 0.3px;
     border-radius: 50%;
 }
 
 .add{
     display: flex;
-    margin-right: 5px;
     justify-content: center;
     align-items: center;
     background-color: #488853;
@@ -606,14 +615,14 @@ span{
 }
 
 @media (max-width: 1200px){
-    #profile {
+    #profile, #profile2 {
         width: 10vw;
         height: 10vw;
         max-width: 60px;
         max-height: 60px;
     }
 
-    .username{
+    .username, .username2{
         font-size: 15px;
     }
 
@@ -622,7 +631,7 @@ span{
     }
 
     .add{
-        font-size: 12px;
+        font-size: 15px;
     }
 }
 
@@ -631,7 +640,7 @@ span{
         padding: 5vh;
     }
 
-    #profile {
+    #profile, #profile2 {
         width: 15vw;
         height: 15vw;
         max-width: 50px;
@@ -650,7 +659,7 @@ span{
         font-size: 12px;
     }
 
-    .username {
+    .username, .username2 {
         font-size: 15px;
         font-weight: bold;
         flex-grow: 1;
@@ -661,7 +670,6 @@ span{
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        gap: 5px;
     }
 
     .barat_box1{
@@ -694,7 +702,7 @@ span{
         font-size: 20px;
     }
 
-    #profile {
+    #profile, #profile2 {
         width: 15vw;
         height: 15vw;
         max-width: 60px;
@@ -722,7 +730,7 @@ span{
         background-color: transparent;
     }
 
-    #profile {
+    #profile, #profile2 {
         width: 12vw;
         height: 12vw;
         max-width: 50px;
@@ -730,15 +738,15 @@ span{
     }
 
     .del1{
-        font-size: 12px;
+        font-size: 15px;
     }
 
     .del2{
-        font-size: 12px;
+        font-size: 15px;
     }
 
     .add{
-        font-size: 12px;
+        font-size: 15px;
     }
 
     .username {
@@ -756,23 +764,23 @@ span{
     }
 
     .barat_box1, .barat_box2 {
-        width: 100%;
-        max-width: 100%;
+        width: 120%;
+        max-width: 105%;
         flex-direction: column;
         padding: 10px;
         box-shadow: none;
         background-color: transparent;
     }
 
-    #profile {
+    #profile2 {
         width: 12vw;
         height: 12vw;
-        max-width: 50px;
-        max-height: 50px;
+        max-width: 40px;
+        max-height: 40px;
     }
 
     .del1 .del2 .add{
-        width: 10%;
+        width: 12%;
         padding: 12px;
     }
 }
@@ -848,7 +856,7 @@ input{
     border-radius: 100px;
     color: #98B09C;
     border: 5px solid;
-    margin: 20px auto;
+    margin: 10px auto;
     font-size: 20px;
     font-weight: bold;
     padding: 10px;
@@ -941,6 +949,22 @@ input{
         width: 250px;
         justify-content: center;
         align-items: center;
+    }
+
+    #profilekep{
+        background-image: url('/assets/images/profileKep.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        max-width: 150px;
+        height: 100vw;
+        max-height: 150px;
+        padding: 0.3px;
+        border-radius: 50%;
+        margin: auto;
     }
 }
  
@@ -1167,5 +1191,33 @@ i{
         border-radius: 20px;
         background: #F5F5F7;
         font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .bejegyzes_box {
+        width: 100vw !important;
+    }
+
+    #bejegyzes_profile {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .leiras {
+        flex-grow: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0 0 10px;
+        gap: 10px;
+        font-size: 15px;
+    }
+    
+    .leiras p{
+        font-weight: normal;
+        font-size: 15px;
     }
 }
