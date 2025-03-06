@@ -1,47 +1,57 @@
 <div class="layout-container">
-    <!-- ToDo lista teljesen bal oldalon -->
-    <div class="todo-creator">
-        <h2>ToDo</h2>
-        <label>Feladat:</label>
-        <input type="text" placeholder="Feladat címe">
-        
-        <label>Leírás:</label>
-        <textarea placeholder="Feladat leírása"></textarea>
+  <!-- Feladat hozzáadására szolgáló űrlap -->
+  <div class="todo-creator">
+    <h2>ToDo</h2>
 
-        <label>Határidő:</label>
-        <input type="datetime-local">
+    <label>Feladat:</label>
+    <input type="text" [(ngModel)]="newTask.title" placeholder="Feladat címe">
 
-        <label>Prioritás:</label>
-        <div class="priority-buttons">
-            <button class="low">Alacsony</button>
-            <button class="medium">Közepes</button>
-            <button class="high">Magas</button>
-        </div>
+    <label>Leírás:</label>
+    <textarea id="descriptionArea" [(ngModel)]="newTask.description" style="resize: vertical; min-height: 10%;" placeholder="Feladat leírása"></textarea>
 
-        <button class="add-task">Hozzáadás</button>
+    <label>Határidő:</label>
+    <input type="date" [(ngModel)]="newTask.dueDate" (change)="onDateChange($event)">
+
+    <label>Prioritás:</label>
+    <div class="priority-buttons">
+      <button class="low" (click)="setPriority('Alacsony')" [class.active]="newTask.priority === 'Alacsony'">Alacsony</button>
+      <button class="medium" (click)="setPriority('Közepes')" [class.active]="newTask.priority === 'Közepes'">Közepes</button>
+      <button class="high" (click)="setPriority('Magas')" [class.active]="newTask.priority === 'Magas'">Magas</button>
     </div>
 
-    <!-- Kanban tábla középen -->
-    <div class="kanban-wrapper">
-        <div class="kanban-container">
-            <h2>Kanban Tábla</h2>
-            <div class="kanban-board">
-                <div class="kanban-column" *ngFor="let column of columns">
-                    <h3>{{ column.name }}</h3>
-                    <div 
-                        class="kanban-task" 
-                        *ngFor="let task of column.tasks"
-                        [draggable]="true"
-                        (dragstart)="onDragStart($event, task, column)"
-                        (dragover)="onDragOver($event)"
-                        (drop)="onDrop($event, column)"
-                    >
-                        <h4>{{ task.title }}</h4>
-                        <p>{{ task.description }}</p>
-                    </div>
-                </div>
-            </div>
+    <button class="get-started-button" (click)="addTask()">Feladat hozzáadása</button>
+  </div>
+
+  <!-- Kanban tábla -->
+  <div class="kanban-board">
+    <div class="kanban-column" *ngFor="let column of columns" (dragover)="onDragOver($event)" (drop)="onDrop($event, column)">
+      
+      <div class="kanban-column-header">
+        <h3>{{ column.name }}</h3>
+        <!-- Feladatok száma -->
+        <div class="task-count">{{ column.tasks.length }} feladat</div>
+      </div>
+
+      <div class="kanban-tasks" 
+           (drop)="onDrop($event, column)" 
+           (dragover)="onDragOver($event)" 
+           (dragenter)="onDragEnter($event)">
+        <div *ngFor="let task of column.tasks" 
+             class="kanban-task" 
+             draggable="true" 
+             (dragstart)="onDragStart($event, task, column)">
+          
+          <h4><strong>Cím:</strong> {{ task.title }}</h4>
+          <p>{{ task.description }}</p>
+          <p><strong>Határidő:</strong> {{ task.dueDate | date:'yyyy. MM. dd.' }}</p>
+
+          <!-- Prioritás szín megjelenítése csak a kis pöttyön -->
+          <p *ngIf="task.priority">
+            <span class="priority-box" [ngClass]="getPriorityClass(task.priority)"></span>
+          </p>
+          
         </div>
+      </div>
     </div>
-    
+  </div>
 </div>

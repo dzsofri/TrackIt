@@ -8,15 +8,18 @@ import dotenv from 'dotenv'; // dotenv importálása
 import mysql from 'mysql2'; // mysql2 importálása ESM-ben
 import friendRoutes from "./routes/friendRoutes";
 import userStatisticsRoutes from "./routes/userStatisticsRoutes";
+import taskRoutes from "./routes/taskRoutes";
 
 dotenv.config(); // Környezeti változók betöltése
 
 const app = express();
 
 app.use(cors());
+app.options("*", cors()); // Az összes útvonalra engedélyezi az OPTIONS metódust
 app.use(express.json());
 app.use("/users", userRoutes);
 app.use("/feedbacks", feedbackRoutes);
+app.use("/tasks", taskRoutes);
 app.use("/friends", friendRoutes);
 app.use("/user_statsitics", userStatisticsRoutes);
 
