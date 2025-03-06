@@ -46,33 +46,25 @@
 
         <!-- Line Chart (Placeholder) -->
         <div class="mb-4">
-            <h5 class="card-title">Postok</h5>
-            <div class="card">
-              <div class="card-body">
-              
-                <!-- Legördülő menü a hónapok kiválasztásához -->
-                <div class="form-group">
-                    <select class="form-control" id="monthSelect" (change)="onMonthChange($event)">
-                        <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
-                      </select>
-                      
-                      
-                </div>
-          
-                <div class="chart-container">
-                  <canvas id="postsChart"></canvas>
-                </div>
-              </div>
-            </div>
+          <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title mb-0">Postok</h5>
+              <select class="form-control w-auto" id="monthSelect" (change)="onMonthChange($event)">
+                  <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
+              </select>
           </div>
-
-          
-          
-        
+          <div class="card mt-2">
+              <div class="card-body">
+                  <div class="chart-container">
+                      <canvas id="postsChart"></canvas>
+                  </div>
+              </div>
+          </div>
+      </div>
 
         <!-- Search Bar -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5>Felhasználók</h5>
+        <div class=" mb-3 searchgroup">
+          <div class="usersText"> <h5>Felhasználók</h5></div>
+           
             <div class="search-bar">
                 <input type="text" class="form-control" placeholder="Keresés" aria-label="Keresés">
                 <button class="btn btn-outline-secondary">Keresés</button>

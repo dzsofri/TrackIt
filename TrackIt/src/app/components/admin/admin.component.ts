@@ -45,25 +45,35 @@ export class AdminComponent implements OnInit {
   }
 
   loadChart(): void {
-    const ctx = document.getElementById('postsChart') as HTMLCanvasElement;
+    const canvas = document.getElementById('postsChart') as HTMLCanvasElement;
+    if (!canvas) return;
+  
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    // Ha már van meglévő grafikon, azt töröljük
+  
+    // Tüskés vonal gradient háttérrel
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, 'rgba(40, 167, 69, 0.6)');
+    gradient.addColorStop(1, 'rgba(40, 167, 69, 0)');
+  
     if (this.chart) {
       this.chart.destroy();
     }
-
+  
     this.chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.daysInSelectedMonth,  // A hónap napjai
+        labels: this.daysInSelectedMonth,
         datasets: [{
-          label: 'Bejegyzések száma',
-          data: this.selectedMonthData,  // A hónap adatai
-          borderColor: '#007bff',
-          backgroundColor: 'rgba(0, 123, 255, 0.2)',
+          label: 'Postok',
+          data: this.selectedMonthData,
+          borderColor: '#28a745', // Tüskés zöld vonal
           borderWidth: 2,
-          tension: 0.4
+          backgroundColor: gradient,
+          fill: true, 
+          tension: 0,  // Ez teszi tüskéssé a vonalat
+          pointRadius: 2, // Láthatóbb pontok
+          pointBackgroundColor: '#28a745', // Pontok színe
         }]
       },
       options: {
@@ -82,6 +92,10 @@ export class AdminComponent implements OnInit {
       }
     });
   }
+  
+  
+  
+  
 
   // A hónap napjait generáló függvény
   generateMonthDays(monthIndex: number): string[] {

@@ -3,24 +3,23 @@
 $primary-color: #f8f9fa;
 $card-bg: #ffffff;
 $btn-danger-color: #dc3545;
-$border-radius-sm: 8px;
+$border-radius-sm: 10px;
 $font-size-lg: 1.25rem;
 $font-size-sm: 1rem;
 $chart-bg: #d6f7ff;
 
 .chart-container {
-    position: relative;
-    width: 90%;
-    height: 400px;  // Megnövelt magasság
-    margin: auto;
-  }
-  
+  position: relative;
+  width: 90%;
+  height: 400px;  
+  margin: auto;
+}
 
-  .form-group {
-    margin-bottom: 15px;
-    text-align: right;  // A legördülő menüt jobbra igazítjuk
-  }
-  
+.form-group {
+  margin-bottom: 15px;
+  text-align: right; 
+}
+
 .container {
   margin-top: 50px;
 
@@ -48,9 +47,16 @@ $chart-bg: #d6f7ff;
     margin-bottom: 20px;
   }
 
+.searchgroup{
+  display: flex;
+  flex-direction: row; 
+  justify-content: space-between;
+}
+
+
   .search-bar {
     display: flex;
-    gap: 10px;
+   
 
     input {
       border-radius: $border-radius-sm;
@@ -141,22 +147,23 @@ $chart-bg: #d6f7ff;
     border-top-right-radius: $border-radius-sm;
   }
 
-  /* Adjust icon size and position */
+ 
   .icon-svg {
-    width: 50px;  /* Increase icon size */
-    height: 50px; /* Increase icon size */
-    margin-left: 15px; /* Space between text and icon */
-    margin-bottom: 0; /* Remove space between icon and text */
-    align-self: center; /* Center the icon vertically */
+    width: 50px; 
+    height: 50px;
+    margin-left: 15px; 
+    margin-bottom: 0; 
+    align-self: center; 
   }
 
   .card .card-body {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Vertically align items */
-    justify-content: space-between; /* Space between text and icon */
+    align-items: center; 
+    justify-content: space-between;
   }
 }
+
 
 @media (max-width: 767px) {
   .col-md-3 {
@@ -164,39 +171,55 @@ $chart-bg: #d6f7ff;
     max-width: 100%;
   }
 
-  .search-bar {
-    flex-direction: column;
+  .searchgroup {
+    display: flex;
+    flex-direction: column !important;
+    gap: 10px;
     width: 100%;
 
-    input {
-      width: 100%;
+    input  {
+        width: 100%; 
     }
-
-    button {
-      width: 100%;
+    button{
+      width: 30%;
     }
   }
 
-  /* Make sure icons are still on the right for small screens */
+  
   .card .card-body {
-    flex-direction: column; /* Stack elements vertically on smaller screens */
+    flex-direction: row !important; 
     align-items: center;
   }
 
   .icon-svg {
     margin-left: 0;
-    margin-top: 10px; /* Add some space above the icon when stacked */
+    margin-top: 10px; 
+  }
+}
+
+
+@media (max-width: 991px) {
+  
+  
+  .card .card-body {
+    flex-direction: column !important; 
+    align-items: center;
   }
 
- 
-  
-}
-.row .col-md-3 .card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
+  .icon-svg {
+    margin-left: 0;
+    margin-top: 10px; 
   }
+}
+
+
+
+
+.row .col-md-3 .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}
