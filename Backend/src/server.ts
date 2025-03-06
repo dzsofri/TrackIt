@@ -7,6 +7,7 @@ import { seedDatabase } from "./utiles/DatabaseSeedUtils";
 import dotenv from 'dotenv'; // dotenv importálása
 import mysql from 'mysql2'; // mysql2 importálása ESM-ben
 import friendRoutes from "./routes/friendRoutes";
+import userStatisticsRoutes from "./routes/userStatisticsRoutes";
 
 dotenv.config(); // Környezeti változók betöltése
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/users", userRoutes);
 app.use("/feedbacks", feedbackRoutes);
 app.use("/friends", friendRoutes);
+app.use("/user_statsitics", userStatisticsRoutes);
 
 const PORT = process.env.PORT || 3000;
 

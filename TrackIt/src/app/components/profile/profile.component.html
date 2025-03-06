@@ -49,11 +49,11 @@
         <div class="row">
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Teljesítményeim</h3>
-                <div class="teljesitmeny_box1">
+                <div class="teljesitmeny_box1" *ngFor="let user_stat of user_statistics">
                     <div class="teljesitmeny_content1">
-                        <p class="teljesitmeny_text"><img id="elvegzett">120 <b class="folyamat">Elvégzett</b></p>
-                        <p class="teljesitmeny_text"><img id="elmaradt">120 <b class="folyamat">Elmaradt</b></p>
-                        <p class="teljesitmeny_text"><img id="teljesitve">120 <b class="folyamat">Teljesítve</b></p>
+                        <p class="teljesitmeny_text"><img id="elvegzett">{{user_stat.completed_tasks}} <b class="folyamat">Elvégzett</b></p>
+                        <p class="teljesitmeny_text"><img id="elmaradt">{{user_stat.missed_tasks}} <b class="folyamat">Elmaradt</b></p>
+                        <p class="teljesitmeny_text"><img id="teljesitve">{{user_stat.completion_rate}} %<b class="folyamat">Teljesítve</b></p>
                     </div>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                     <div class="barat_content1">
                         <p class="barat_text"><img id="profile">
                             <span class="username">"Felhasználó neve"</span>
-                            <button class="del">Barát törlése</button>
+                            <button class="del1">Barát törlése</button>
                         </p>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
                             <span class="username">"Felhasználó neve"</span>
                             <span class="buttons">
                                 <button class="add">Megerősítés</button>
-                                <button class="del">Elutasítás</button>
+                                <button class="del2">Elutasítás</button>
                             </span>
                         </p>
                     </div>
@@ -223,7 +223,7 @@
                                 <label for="date" class="form-label">Értesítés beállítása</label>
                                 <input type="date" class="form-control" id="date" required>
                             </div>
-                            <button type="submit" class="mentes btn btn-dark">Mentés</button>
+                            <button type="submit" class="mentes">Mentés</button>
                         </form>
                     </div>
                 </div>
