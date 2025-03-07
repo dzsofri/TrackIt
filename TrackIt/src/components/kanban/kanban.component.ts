@@ -12,6 +12,7 @@ interface Task {
   priority: 'Alacsony' | 'Közepes' | 'Magas'; // A prioritás típusa
   userId?: string; // Az opcionális felhasználói azonosító
   status: 'todo' | 'in-progress' | 'done'; // Ezt add hozzá!
+  showMenu?: boolean;
 }
 
 interface Column {
@@ -178,4 +179,21 @@ export class KanbanComponent implements OnInit {
     });
 
   }
+
+  toggleTaskMenu(task: any) {
+    task.showMenu = !task.showMenu;
+  }
+  
+  editTask(task: any) {
+    console.log("Bejegyzés módosítása:", task);
+    // Itt lehet megnyitni egy szerkesztő modált vagy beállítani az aktuális szerkesztendő taskot
+  }
+  
+  deleteTask(task: any, column: any) {
+    const index = column.tasks.indexOf(task);
+    if (index > -1) {
+      column.tasks.splice(index, 1);
+    }
+  }
+  
 }
