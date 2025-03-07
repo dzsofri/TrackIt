@@ -1,10 +1,10 @@
-<div class="header mt-3 mb-5 col-12 col-sm-12 col-md-12 col-lg-12">
+<div class="mt-3 mb-5">
     <header>
         <img id="felhasznalo">
         <h1>"Felhasználó neve"</h1>
     </header>
 </div>
-<div class="col-4 col-sm-8 col-md-10 col-lg-12">
+<div class="col-12 col-xs-12 col-sm-12 col-md-10 col-lg-12">
     <ul class="nav nav-tabs">
         <li class="nav-item" role="presentation">
             <button 
@@ -53,7 +53,7 @@
                     <div class="teljesitmeny_content1">
                         <p class="teljesitmeny_text"><img id="elvegzett">120 <b class="folyamat">Elvégzett</b></p>
                         <p class="teljesitmeny_text"><img id="elmaradt">120 <b class="folyamat">Elmaradt</b></p>
-                        <p class="teljesitmeny_text"><img id="teljesitve">120 <b class="folyamat">Teljesítve</b></p>
+                        <p class="teljesitmeny_text"><img id="teljesitve">120 %<b class="folyamat">Teljesítve</b></p>
                     </div>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                     <div class="barat_content1">
                         <p class="barat_text"><img id="profile">
                             <span class="username">"Felhasználó neve"</span>
-                            <button class="del">Barát törlése</button>
+                            <button class="del1">Barát törlése</button>
                         </p>
                     </div>
                 </div>
@@ -133,11 +133,11 @@
                 <h3>Követési kérelmek kezelése</h3>
                 <div class="barat_box2">
                     <div class="barat_content2">
-                        <p class="barat_text"><img id="profile">
-                            <span class="username">"Felhasználó neve"</span>
+                        <p class="barat_text"><img id="profile2">
+                            <span class="username2">"Felhasználó neve"</span>
                             <span class="buttons">
                                 <button class="add">Megerősítés</button>
-                                <button class="del">Elutasítás</button>
+                                <button class="del2">Elutasítás</button>
                             </span>
                         </p>
                     </div>
@@ -147,7 +147,47 @@
     </div>
 
 
-    <div class="tab-pane" [class.d-none]="activeTab !== 'bejegyzes'" id="bejegyzes-tab-pane" role="tabpanel" aria-labelledby="bejegyzes-tab" tabindex="0"></div>
+    <div class="tab-pane" [class.d-none]="activeTab !== 'bejegyzes'" id="bejegyzes-tab-pane" role="tabpanel" aria-labelledby="bejegyzes-tab" tabindex="0">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 mb-4">
+                <div class="bejegyzes_box">
+                    <div class="bejegyzes_content">
+                        <header class="bejegyzes_fejlec">
+                            <img id="bejegyzes_profile">
+                            <b class="leiras">"Felhasználó neve" <p>"Bejegyzés képpel"</p></b>
+                            <p>
+                                <button class="btn toggle-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">...</button>
+                            </p>
+                            <div class="collapse collapse-left" id="collapse1">
+                                <div class="card">
+                                    <button><i class="bi bi-pencil"></i>Bejegyzés módosítása</button>
+                                    <hr>
+                                    <button><i class="bi bi-trash"></i>Bejegyzés törlése</button>
+                                </div>
+                            </div>
+                        </header>
+                        <div class="bejegyzes">
+                            <img id="bejegyzes_kep">
+                        </div>
+                        <header class="bejegyzes_fejlec">
+                            <img id="bejegyzes_profile">
+                            <b class="leiras">"Felhasználó neve" <p>"Kép nélküli bejegyzés"</p></b>
+                            <p>
+                                <button class="btn toggle-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">...</button>
+                            </p>
+                            <div class="collapse collapse-left" id="collapse2">
+                                <div class="card">
+                                    <button><i class="bi bi-pencil"></i>Bejegyzés módosítása</button>
+                                    <hr>
+                                    <button><i class="bi bi-trash"></i>Bejegyzés törlése</button>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
 
 
     <div class="tab-pane" [class.d-none]="activeTab !== 'profile'" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
@@ -183,7 +223,7 @@
                                 <label for="date" class="form-label">Értesítés beállítása</label>
                                 <input type="date" class="form-control" id="date" required>
                             </div>
-                            <button type="submit" class="mentes btn btn-dark">Mentés</button>
+                            <button type="submit" class="mentes">Mentés</button>
                         </form>
                     </div>
                 </div>

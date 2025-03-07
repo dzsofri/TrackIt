@@ -1,38 +1,38 @@
-.header {
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Vízszintesen középre igazítás */
+    justify-content: center; /* Függőleges középre igazítás */
     text-align: center;
-    width: 100%;
+}
+
+@media (max-width: 480px) {
+    header {
+        display: block;
+        flex-direction: column;
+        align-items: center; /* Vízszintesen középre igazítás */
+        justify-content: center; /* Függőleges középre igazítás */
+        text-align: center;
+    }
 }
 
 #felhasznalo{
-    background-image: url(img/profileKep.png);
+    background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
-    width: 50vw;
+    width: 70vw;
     max-width: 150px;
     height: 50vw;
     max-height: 150px; 
     padding: 0.3px;
     border-radius: 50%;
-    overflow: hidden;
     margin: 0 auto;
 }
 
-@media (max-width: 480px) {
-    .header{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 0 auto;
-        margin: 0 auto;
-        text-align: center;
-    }
-}
-
 //Linkek
-
 .nav-link.active {
     color: #627966;
     background-color: #F5F5F7;
@@ -43,15 +43,17 @@
 }
 
 .nav-item-tab {
+    display: flex;
     background-color: #F5F5F7;
     border-radius: 0px 30px 0px 0px;
-    min-width: 130px;
+    justify-content: center;
 }
 
 .nav-item {
+    display: flex;
     background-color: #F5F5F7;
-    width: 120px;
-    min-width: 100px;
+    width: 100px;
+    justify-content: center;
 }
   
 .d-none {
@@ -60,8 +62,8 @@
 
 html, body {
     height: 0 auto;
-    margin: 0;
-    padding: 0;
+    margin: 0 auto;
+    padding: 0 auto;
 }
 
 .tab-content{
@@ -82,14 +84,10 @@ span{
 }
 
 //Statisztika tab-pane
-
 #statisztika-tab-pane {
     text-align: center;
-    display: flex;
-    flex-direction: column;
     background-color: #F5F5F7;
     padding: 5vh 5vw;
-    flex-grow: 1;
     min-width: 500px;
 }
 
@@ -97,7 +95,6 @@ span{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     border-radius: 20px;
     width: 100%;
     padding: 20px;
@@ -105,7 +102,6 @@ span{
 
 .teljesitmeny_box1, .teljesitmeny_box2, .teljesitmeny_box3 {
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
@@ -129,7 +125,7 @@ span{
 
 #elvegzett {
     background-color: #173622;
-    background-image: url(img/pipa.png);
+    background-image: url('/assets/images/pipa.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -142,14 +138,12 @@ span{
     max-height: 70px; 
     padding: 0.3px;
     border-radius: 50%;
-    overflow: hidden;
     opacity: 0.8;
 }
 
-
 #elmaradt {
     background-color: rgba(255, 0, 0, 0.2);
-    background-image: url(img/kereszt.png);
+    background-image: url('/assets/images/kereszt.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -160,15 +154,13 @@ span{
     max-width: 70px;
     height: 25vw;
     max-height: 70px; 
-    
     padding: 0.3px;
     border-radius: 50%;
-    overflow: hidden;
 }
 
 #teljesitve {
     background-color: #000000;
-    background-image: url(img/stat.png);
+    background-image: url('/assets/images/stat.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -179,10 +171,8 @@ span{
     max-width: 70px;
     height: 25vw;
     max-height: 70px; 
-    
     padding: 0.3px;
     border-radius: 50%;
-    overflow: hidden;
 }
 
 .folyamat{
@@ -285,14 +275,12 @@ span{
 }
 
 //Jelvény tab-pane
-
 #jelveny-tab-pane {
     text-align: start;
     display: flex;
     flex-direction: column;
     background-color: #F5F5F7;
     padding: 5vh 5vw;
-    flex-grow: 1;
     min-width: 500px;
     height: 100%;
 }
@@ -300,13 +288,11 @@ span{
 .jelveny_box2 {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     background-color: #FFFFFF;
     box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
     padding: 10px;
     width: 45vw;
-    gap: 15px;
 }
 
 .jelveny_box1{
@@ -334,7 +320,6 @@ span{
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 15px;
     width: 100%;
 }
 
@@ -348,7 +333,7 @@ span{
 }
 
 #star {
-    background-image: url(img/star.png);
+    background-image: url('/assets/images/star.png');
     background-repeat: no-repeat;
     background-size: contain;
     display: flex;
@@ -387,9 +372,6 @@ span{
     background: linear-gradient(90deg, rgba(243, 177, 78, 0.4), rgba(255, 206, 81, 0.4));
     border-radius: 50px;
     height: 35px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
     padding: 2.5px;
 }
 
@@ -405,16 +387,13 @@ span{
     padding-right: 10px;
 }
 
-
 .jelveny_content1 .jelveny_text{
     display: flex;
     flex-direction: column;
     text-align: start;
-    justify-content: flex-start;
     background-color: #F8F8F8;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
     border-radius: 25px;
-    text-align: start;
     width: 100%;
     padding: 15px;
     font-weight: bold;
@@ -436,7 +415,7 @@ span{
 }
 
 #erem {
-    background-image: url(img/erem.png);
+    background-image: url('/assets/images/erem.png');
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -496,6 +475,10 @@ span{
         box-shadow: none;
         background-color: transparent;
     }
+
+    .jelveny_content2 .jelveny_text{
+        font-size: 13px !important;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -516,12 +499,10 @@ span{
 }
 
 //Barát tab-pane
-
 #barat-tab-pane {
     display: flex;
     background-color: #F5F5F7;
     padding: 5vh;
-    flex-grow: 1;
     align-content: flex-start;
     justify-content: flex-start;
     width: 100%;
@@ -572,34 +553,33 @@ span{
 
 .buttons {
     display: flex;
+    gap: 5px;
+    margin-left: auto;
 }
 
-.username {
+
+.username, .username2 {
     margin-right: 10px;
     font-weight: bold;
-    flex-grow: 1;
 }
 
-#profile {
-    background-image: url(img/profileKep.png);
+#profile, #profile2 {
+    background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     width: 25vw;
-    max-width: 70px;
+    max-width: 60px;
     height: 25vw;
-    max-height: 70px; 
-    
+    max-height: 60px; 
     padding: 0.3px;
     border-radius: 50%;
-    overflow: hidden;
 }
 
 .add{
     display: flex;
-    margin-right: 5px;
     justify-content: center;
     align-items: center;
     background-color: #488853;
@@ -607,9 +587,10 @@ span{
     border: none;
     border-radius: 50px;
     padding: 10px;
+    width: 80%;
 }
 
-.del{
+.del2{
     display: flex;
     background-color: #FA0202;
     justify-content: center;
@@ -618,17 +599,30 @@ span{
     border-radius: 50px;
     padding: 10px;
     border: none;
+    width: 80%;
+}
+
+.del1{
+    display: flex;
+    background-color: #FA0202;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 50px;
+    padding: 10px;
+    border: none;
+    margin-left: auto;
 }
 
 @media (max-width: 1200px){
-    #profile {
+    #profile, #profile2 {
         width: 10vw;
         height: 10vw;
         max-width: 60px;
         max-height: 60px;
     }
 
-    .username{
+    .username, .username2{
         font-size: 15px;
     }
 
@@ -637,7 +631,7 @@ span{
     }
 
     .add{
-        font-size: 12px;
+        font-size: 15px;
     }
 }
 
@@ -646,14 +640,18 @@ span{
         padding: 5vh;
     }
 
-    #profile {
+    #profile, #profile2 {
         width: 15vw;
         height: 15vw;
-        max-width: 60px;
-        max-height: 60px;
+        max-width: 50px;
+        max-height: 50px;
     }
 
-    .del{
+    .del1{
+        font-size: 12px;
+    }
+
+    .del2{
         font-size: 12px;
     }
 
@@ -661,15 +659,17 @@ span{
         font-size: 12px;
     }
 
-    .username {
+    .username, .username2 {
         font-size: 15px;
         font-weight: bold;
         flex-grow: 1;
     }
 
     .buttons{
+        display: flex;
+        justify-content: center;
+        align-items: center;
         flex-direction: column;
-        gap: 5px;
     }
 
     .barat_box1{
@@ -677,7 +677,7 @@ span{
     }
 
     .barat_box2{
-        width: 50vw;
+        width: 47vw;
     }
 }
 
@@ -702,11 +702,15 @@ span{
         font-size: 20px;
     }
 
-    #profile {
+    #profile, #profile2 {
         width: 15vw;
         height: 15vw;
         max-width: 60px;
         max-height: 60px;
+    }
+
+    .buttons {
+        flex-direction: row;
     }
 }
 
@@ -726,19 +730,23 @@ span{
         background-color: transparent;
     }
 
-    #profile {
+    #profile, #profile2 {
         width: 12vw;
         height: 12vw;
         max-width: 50px;
         max-height: 50px;
     }
 
-    .del{
-        font-size: 12px;
+    .del1{
+        font-size: 15px;
+    }
+
+    .del2{
+        font-size: 15px;
     }
 
     .add{
-        font-size: 12px;
+        font-size: 15px;
     }
 
     .username {
@@ -756,38 +764,35 @@ span{
     }
 
     .barat_box1, .barat_box2 {
-        width: 100%;
-        max-width: 100%;
+        width: 120%;
+        max-width: 105%;
         flex-direction: column;
         padding: 10px;
         box-shadow: none;
         background-color: transparent;
     }
 
-    #profile {
+    #profile2 {
         width: 12vw;
         height: 12vw;
-        max-width: 50px;
-        max-height: 50px;
+        max-width: 40px;
+        max-height: 40px;
     }
 
-    .del .add{
-        width: 10%;
+    .del1 .del2 .add{
+        width: 12%;
         padding: 12px;
     }
 }
 
 
 // Profil módosítás
-
 #profile-tab-pane {
     display: flex;
     background-color: #F5F5F7;
     padding: 5vh;
-    flex-grow: 1;
     align-content: flex-start;
     justify-content: space-between;
-    gap: 20%;
     width: 100%;
     min-width: 500px;
     height: 100%;
@@ -816,8 +821,7 @@ span{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    text-align: center;
-    margin: auto;
+    margin: 0 auto;
 }
 
 .profile_content2 {
@@ -843,25 +847,25 @@ input{
     border: none;
     border-radius: 20px;
     padding: 10px 20px;
-    width: 200px;
     float: right;
+    color: white;
+    font-size: 17px;
 }
 
 .profilekep_modositas{
     border-radius: 100px;
     color: #98B09C;
     border: 5px solid;
-    margin: 20px auto;
+    margin: 10px auto;
     font-size: 20px;
     font-weight: bold;
     padding: 10px;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
 
 #profilekep{
-    background-image: url(img/profileKep.png);
+    background-image: url('/assets/images/profileKep.png');
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -873,7 +877,6 @@ input{
     max-height: 200px;
     padding: 0.3px;
     border-radius: 50%;
-    overflow: hidden;
     margin: auto;
 }
 
@@ -901,7 +904,6 @@ input{
         font-size: 20px;
         font-weight: bold;
         padding: 10px;
-        display: flex;
         width: 250px;
         justify-content: center;
         align-items: center;
@@ -947,5 +949,275 @@ input{
         width: 250px;
         justify-content: center;
         align-items: center;
+    }
+
+    #profilekep{
+        background-image: url('/assets/images/profileKep.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        max-width: 150px;
+        height: 100vw;
+        max-height: 150px;
+        padding: 0.3px;
+        border-radius: 50%;
+        margin: auto;
+    }
+}
+ 
+//Bejegyzés
+#bejegyzes-tab-pane {
+    display: flex;
+    background-color: #F5F5F7;
+    padding: 5vh;
+    align-content: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 500px;
+    height: 100%;
+}
+ 
+.bejegyzes_box {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    width: 45vw;
+}
+ 
+.bejegyzes_fejlec {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 10px;
+    position: relative;
+}
+ 
+.leiras {
+    flex-grow: 1;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0 0 10px;
+    gap: 10px;
+}
+
+.leiras p{
+    font-weight: normal;
+}
+ 
+.card button {
+    border: none;
+    display: flex;
+    background-color: transparent;
+    justify-content: flex-start;
+}
+
+.card {
+    border-radius: 20px;
+    background: #F5F5F7;
+    padding: 10px;
+}
+ 
+i{
+    margin-right: 5px;
+}
+ 
+.btn{
+    font-size: 25px;
+    font-weight: bolder;
+}
+ 
+#bejegyzes_profile{
+    background-image: url('/assets/images/profileKep.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30vw;
+    max-width: 60px;
+    height: 30vw;
+    max-height: 60px;
+    padding: 0.3px;
+    border-radius: 50%;
+    margin: auto;
+}
+
+.collapse-left {
+    position: absolute;
+    right: 40px;
+    z-index: 10;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#bejegyzes_kep{
+    background-image: url('/assets/images/bejegyzeskep.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: flex;
+    align-items: center;
+    width: 20vw;
+    max-width: 250px;
+    height: 20vw;
+    max-height: 250px;
+    border-radius: 5%;
+    padding: 40%;
+    margin: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .bejegyzes_box {
+        width: 70vw;
+    }
+
+    .card button {
+        border: none;
+        display: flex;
+        background-color: transparent;
+        justify-content: flex-start;
+    }
+    
+    .card {
+        border-radius: 20px;
+        background: #F5F5F7;
+        font-size: 10px;
+    }
+
+    .leiras {
+        flex-grow: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0 0 10px;
+        gap: 10px;
+        font-size: 13px;
+    }
+    
+    .leiras p{
+        font-weight: normal;
+        font-size: 13px;
+    }
+
+    #bejegyzes_profile {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+}
+
+@media (max-width: 600px) {
+    .bejegyzes_box {
+        width: 70vw;
+    }
+
+    #bejegyzes_profile {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .leiras {
+        flex-grow: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0 0 10px;
+        gap: 10px;
+        font-size: 15px !important;
+    }
+    
+    .leiras p{
+        font-weight: normal;
+        font-size: 15px !important;
+    }
+    
+    .card {
+        border-radius: 20px;
+        background: #F5F5F7;
+        font-size: 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .bejegyzes_box {
+        width: 70vw !important;
+    }
+
+    #bejegyzes_profile {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .leiras {
+        flex-grow: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0 0 10px;
+        gap: 10px;
+        font-size: 15px;
+    }
+    
+    .leiras p{
+        font-weight: normal;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1200px){
+    .collapse-left {
+        position: absolute;
+        margin-left: 20%;
+        margin-top: 12%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .bejegyzes_box {
+        width: 70vw;
+    }
+    
+    .card {
+        border-radius: 20px;
+        background: #F5F5F7;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .bejegyzes_box {
+        width: 100vw !important;
+    }
+
+    #bejegyzes_profile {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .leiras {
+        flex-grow: 1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0 0 10px;
+        gap: 10px;
+        font-size: 15px;
+    }
+    
+    .leiras p{
+        font-weight: normal;
+        font-size: 15px;
     }
 }

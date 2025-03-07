@@ -50,6 +50,8 @@ export class ApiService {
   }
 
 
+  
+
   resetPassword(email: string, token: string, newPassword: any): Observable<any> {
     return this.http.post<any>(`${this.server}/users/reset-password`, { email, token, newPassword }).pipe(
         catchError(error => {
@@ -58,5 +60,9 @@ export class ApiService {
         })
     );
 }
+
+  read_Stat(table: string, field: string, op: string, value: string) {
+    return this.http.get(`${this.server}/public/${table}/${field}/${op}/${value}`);
+  }
 
 }

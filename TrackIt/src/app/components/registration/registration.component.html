@@ -4,16 +4,24 @@
 
         <div class="col-md-6 d-flex justify-content-center align-items-center">
             <div class="card p-4 w-100" id="registration-form">
-                <h2 class="text-center mb-2">Jelszócsere</h2>
-                <p class="text-center">Adjon meg egy új jelszót, majd erősítse meg.
-                </p>
+                <h2 class="text-center mb-2">Hozd létre a fiókodat!</h2>
+                <p class="text-center">Adja meg személyes adatait a fiók létrehozásához.</p>
                 
-                <div class="top-stripe"></div>
-
                 <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
-                   
-                      <!-- Jelszó mező -->
-                      <div class="mb-3 box">
+                    <!-- Név mező -->
+                    <div class="mb-3 box">
+                        <label for="name" class="form-label">Név</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="pl. Somodi Konrád" required [(ngModel)]="user.name">
+                    </div>
+
+                    <!-- Email mező -->
+                    <div class="mb-3 box">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="pl. somodikonrad@turr.hu" required [(ngModel)]="user.email">
+                    </div>
+
+                    <!-- Jelszó mező -->
+                    <div class="mb-3 box">
                         <label for="password" class="form-label">Jelszó</label>
                         <div class="input-group">
                             <input [type]="isPasswordVisible ? 'text' : 'password'" class="form-control" id="password" name="password" placeholder="Írja be a jelszavát!" required [(ngModel)]="user.password">
@@ -40,7 +48,7 @@
                     <div class="mb-3 box">
                         <label for="confirm" class="form-label">Jelszó megerősítés</label>
                         <div class="input-group">
-                            <input [type]="isConfirmPasswordVisible ? 'text' : 'password'" class="form-control" id="confirm" name="confirm" placeholder="Írja be a jelszavát!" required [(ngModel)]="user.confirmPassword">
+                            <input [type]="isConfirmPasswordVisible ? 'text' : 'password'" class="form-control" id="confirm" name="confirm" placeholder="Írja be a jelszavát!" required [(ngModel)]="user.confirm">
                             <button class="btn btn-outline-secondary" type="button" (click)="toggleConfirmPasswordVisibility()">
                                 <ng-container *ngIf="isConfirmPasswordVisible; else hiddenConfirmEye">
                                      <!-- Nyitott szem ikon -->
@@ -59,9 +67,8 @@
                         </div>
                     </div>
 
-
-                    <button type="submit" class="btn btn-dark w-100" >Jelszó visszaálltása</button>
-                    <p class="text-center mt-3">Vissza a  <a href="#">bejelentkezéshez</a></p>
+                    <button type="submit" class="btn btn-dark w-100" >Regisztráció</button>
+                    <p class="text-center mt-3">Van már fiókod? <a href="/login">Jelentkezz be!</a></p>
                 </form>
             </div>
         </div>

@@ -4,16 +4,11 @@
 
         <div class="col-md-6 d-flex justify-content-center align-items-center">
             <div class="card p-4 w-100" id="registration-form">
-                <h2 class="text-center mb-2">Hozd létre a fiókodat!</h2>
-                <p class="text-center">Adja meg személyes adatait a fiók létrehozásához.</p>
+                <h2 class="text-center mb-2">Jelentkezz be a fiókodba!</h2>
+                <p class="text-center">Adja meg személyes adatait a bejelentkezéshez!</p>
                 
                 <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
-                    <!-- Név mező -->
-                    <div class="mb-3 box">
-                        <label for="name" class="form-label">Név</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="pl. Somodi Konrád" required [(ngModel)]="user.name">
-                    </div>
-
+                   
                     <!-- Email mező -->
                     <div class="mb-3 box">
                         <label for="email" class="form-label">Email</label>
@@ -44,31 +39,9 @@
                         </div>
                     </div>
 
-                    <!-- Jelszó megerősítés mező -->
-                    <div class="mb-3 box">
-                        <label for="confirm" class="form-label">Jelszó megerősítés</label>
-                        <div class="input-group">
-                            <input [type]="isConfirmPasswordVisible ? 'text' : 'password'" class="form-control" id="confirm" name="confirm" placeholder="Írja be a jelszavát!" required [(ngModel)]="user.confirm">
-                            <button class="btn btn-outline-secondary" type="button" (click)="toggleConfirmPasswordVisibility()">
-                                <ng-container *ngIf="isConfirmPasswordVisible; else hiddenConfirmEye">
-                                     <!-- Nyitott szem ikon -->
-                                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
-                                        <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                                    </svg>
-                                </ng-container>
-                                <ng-template #hiddenConfirmEye>
-                                       <!-- Zárt szem ikon -->
-                                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M4 15.6l3.055-3.056A4.913 4.913 0 0 1 7 12.012a5.006 5.006 0 0 1 5-5"/>
-                                    </svg>
-                                </ng-template>
-                            </button>
-                        </div>
-                    </div>
 
                     <button type="submit" class="btn btn-dark w-100" >Regisztráció</button>
-                    <p class="text-center mt-3">Van már fiókod? <a href="#">Jelentkezz be!</a></p>
+                    <p class="text-center mt-3">Még nincs fiókod? <a href="/registration">Regisztrálj!</a></p>
                 </form>
             </div>
         </div>

@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "email": "beretizsofia310@gmail.com",
-  "password": "Nyuszika310"
+  "password": "Titkosjelszo123"
 }
 
 
@@ -32,8 +32,8 @@ POST http://localhost:{{PORT}}/users/register
 Content-Type: application/json
 
 {
-  "name": "Teszt Felhasználó",
-  "email": "teszt1@example.com",
+  "name": "Teszt Felhasználó3",
+  "email": "teszt3@example.com",
   "password": "Titkosjelszo123",
  "confirm": "Titkosjelszo123",
   "picture_id": 1
@@ -64,39 +64,73 @@ Content-Type: application/json
 
 ### Az új feedback hozzáadása (tokennel)
 POST http://localhost:{{PORT}}/feedbacks/
- Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0
-
+ Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
 Content-Type: application/json
 
 {
-  "questionId":1,
-    "rating":2
+  "questionId": 2,
+  "rating": 3
 }
+
 
 
 ### lekérdezések listázása (tokennel)
 GET http://localhost:{{PORT}}/feedbacks
-Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
 
 ### visszajelzések listázása userId alapján(tokennel)
-GET http://localhost:{{PORT}}/feedbacks/user/88f98290-c338-4b8b-8cce-31ab382c0156
-Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0
+GET http://localhost:{{PORT}}/feedbacks/user/3bae486c-7ff3-4d47-bcc2-cd6b6bd08584
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
 
 
 
 ### Visszajelzések lekérdezése kérdés ID alapján
-GET http://localhost:3000/feedbacks/question/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0
+GET http://localhost:3000/feedbacks/question/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
 
 ###  Visszajelzések átlagos értékelésének lekérése
 GET http://localhost:3000/feedbacks/average-rating
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
 
 ### Visszajelzések átlagos értékelésének lekérése kérdésenként
 GET http://localhost:3000/feedbacks/average-rating/per-question
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
 
 ### lekérdezévisszajelzések átlagos értékelése questionId alapján(tokennel)
-GET http://localhost:{{PORT}}/feedbacks/user/88f98290-c338-4b8b-8cce-31ab382c0156
-Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0
+GET http://localhost:{{PORT}}/feedbacks/average-rating/question/1
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
 
+
+
+### Barátkérés küldése
+POST http://localhost:3000/friends/send-friendrequest
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+Content-Type: application/json
+
+{
+    "receiverId": "d52808cf-dff3-4ae4-9045-c9c22952cb9f"
+}
+
+### Barátkérés elfogadása
+POST http://localhost:3000/friends/friendrequests/accept/2
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+
+
+### Barátkérés elutasítása
+POST http://localhost:3000/friends/friendrequests/reject/3
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+
+### Barátkérések lekérése
+GET http://localhost:3000/friends/friendrequests
+Authorization: Bearear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+
+### Követők lekérése
+GET http://localhost:3000/friends/followers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+### Követők számának lekérése
+GET http://localhost:3000/friends/followers/count
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+
+### Barát törlése (follower eltávolítása)
+DELETE http://localhost:3000/friendrequests/followers/d52808cf-dff3-4ae4-9045-c9c22952cb9f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0

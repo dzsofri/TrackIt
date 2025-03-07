@@ -3,13 +3,13 @@ import { Users } from "./User";
 
 
 @Entity()
-export class Followes {
+export class Follows {
     @ManyToOne(() => Users, (user) => user.following)
     @JoinColumn({ name: "followingUserId" })
-    followingUser: Users;
+    followerUser: Users;
 
     @Column({ type: "varchar", length: 40, primary: true })
-    followingUserId: string;
+    followerUserId: string;
 
     @ManyToOne(() => Users, (user) => user.followers)
     @JoinColumn({ name: "followedUserId" })
