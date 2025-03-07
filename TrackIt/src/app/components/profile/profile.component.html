@@ -50,10 +50,10 @@
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Teljesítményeim</h3>
                 <div class="teljesitmeny_box1">
-                    <div class="teljesitmeny_content1">
-                        <p class="teljesitmeny_text"><img id="elvegzett">120 <b class="folyamat">Elvégzett</b></p>
-                        <p class="teljesitmeny_text"><img id="elmaradt">120 <b class="folyamat">Elmaradt</b></p>
-                        <p class="teljesitmeny_text"><img id="teljesitve">120 %<b class="folyamat">Teljesítve</b></p>
+                    <div class="teljesitmeny_content1" *ngFor="let statistics of user_statistics">
+                        <p class="teljesitmeny_text"><img id="elvegzett">{{statistics.completedTasks}} <b class="folyamat">Elvégzett</b></p>
+                        <p class="teljesitmeny_text"><img id="elmaradt">{{statistics.missedTasks}} <b class="folyamat">Elmaradt</b></p>
+                        <p class="teljesitmeny_text"><img id="teljesitve">{{statistics.completionRate}} %<b class="folyamat">Teljesítve</b></p>
                     </div>
                 </div>
             </div>

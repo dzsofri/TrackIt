@@ -65,4 +65,7 @@ export class ApiService {
     return this.http.get(`${this.server}/public/${table}/${field}/${op}/${value}`);
   }
 
+  readAll(table: string){
+    return this.http.get(this.server + '/public/' + table);
+  }
 }
