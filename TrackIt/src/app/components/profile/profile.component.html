@@ -1,10 +1,10 @@
-<div class="header mt-3 mb-5 col-12 col-sm-12 col-md-12 col-lg-12">
+<div class="mt-3 mb-5">
     <header>
         <img id="felhasznalo">
         <h1>"Felhasználó neve"</h1>
     </header>
 </div>
-<div class="col-4 col-sm-8 col-md-10 col-lg-12">
+<div class="col-12 col-xs-12 col-sm-12 col-md-10 col-lg-12">
     <ul class="nav nav-tabs">
         <li class="nav-item" role="presentation">
             <button 
@@ -49,11 +49,11 @@
         <div class="row">
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Teljesítményeim</h3>
-                <div class="teljesitmeny_box1" *ngFor="let user_stat of user_statistics">
+                <div class="teljesitmeny_box1">
                     <div class="teljesitmeny_content1">
-                        <p class="teljesitmeny_text"><img id="elvegzett">{{user_stat.completed_tasks}} <b class="folyamat">Elvégzett</b></p>
-                        <p class="teljesitmeny_text"><img id="elmaradt">{{user_stat.missed_tasks}} <b class="folyamat">Elmaradt</b></p>
-                        <p class="teljesitmeny_text"><img id="teljesitve">{{user_stat.completion_rate}} %<b class="folyamat">Teljesítve</b></p>
+                        <p class="teljesitmeny_text"><img id="elvegzett">120 <b class="folyamat">Elvégzett</b></p>
+                        <p class="teljesitmeny_text"><img id="elmaradt">120 <b class="folyamat">Elmaradt</b></p>
+                        <p class="teljesitmeny_text"><img id="teljesitve">120 %<b class="folyamat">Teljesítve</b></p>
                     </div>
                 </div>
             </div>
@@ -133,8 +133,8 @@
                 <h3>Követési kérelmek kezelése</h3>
                 <div class="barat_box2">
                     <div class="barat_content2">
-                        <p class="barat_text"><img id="profile">
-                            <span class="username">"Felhasználó neve"</span>
+                        <p class="barat_text"><img id="profile2">
+                            <span class="username2">"Felhasználó neve"</span>
                             <span class="buttons">
                                 <button class="add">Megerősítés</button>
                                 <button class="del2">Elutasítás</button>
