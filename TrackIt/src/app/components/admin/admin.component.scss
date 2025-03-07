@@ -20,6 +20,11 @@ $chart-bg: #d6f7ff;
   text-align: right; 
 }
 
+.card-text {
+  display: flex;
+  flex-direction: row;
+}
+
 .container {
   margin-top: 50px;
 
@@ -47,19 +52,16 @@ $chart-bg: #d6f7ff;
     margin-bottom: 20px;
   }
 
-.searchgroup{
-  display: flex;
-  flex-direction: row; 
-  justify-content: space-between;
-}
-
-
-  .search-bar {
+  .searchgroup {
     display: flex;
-   
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Wrap, ha nem fér el egy sorban */
 
     input {
       border-radius: $border-radius-sm;
+      flex-grow: 1; /* Az input kitölti a rendelkezésre álló helyet */
+      margin-right: 10px;
     }
 
     button {
@@ -147,7 +149,6 @@ $chart-bg: #d6f7ff;
     border-top-right-radius: $border-radius-sm;
   }
 
- 
   .icon-svg {
     width: 50px; 
     height: 50px;
@@ -164,7 +165,6 @@ $chart-bg: #d6f7ff;
   }
 }
 
-
 @media (max-width: 767px) {
   .col-md-3 {
     flex: 0 0 100%;
@@ -172,48 +172,76 @@ $chart-bg: #d6f7ff;
   }
 
   .searchgroup {
-    display: flex;
     flex-direction: column !important;
-    gap: 10px;
     width: 100%;
+    gap: 10px; /* Adjunk távolságot a elemek között */
 
-    input  {
-        width: 100%; 
+    input {
+      width: 100%;
+      margin-right: 0;
     }
-    button{
-      width: 30%;
-    }
-  }
 
-  
-  .card .card-body {
-    flex-direction: row !important; 
-    align-items: center;
+    button {
+      width: 100%;
+    }
   }
 
   .icon-svg {
     margin-left: 0;
-    margin-top: 10px; 
+    margin-top: 10px;
+  }
+
+  .btn-outline-secondary {
+    width: 100%;
+  }
+
+  /* A stat-card helyett alkalmazz más osztályokat */
+  .stat-card {
+    display: flex;
+    flex-direction: row;
   }
 }
-
 
 @media (max-width: 991px) {
-  
-  
   .card .card-body {
-    flex-direction: column !important; 
+    flex-direction: column !important;
     align-items: center;
+  }
+
+  .card-text {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
+    width: 100%; /* biztosítja, hogy a szöveg is teljes szélességben jelenjen meg */
   }
 
   .icon-svg {
     margin-left: 0;
-    margin-top: 10px; 
+    margin-top: 10px;
+  }
+
+  .btn-outline-secondary {
+    padding: 8px 20px;
   }
 }
 
 
 
+@media (max-width: 1200px) {
+  .card .card-body {
+    flex-direction: column !important;
+    align-items: center;
+  }
+
+  .icon-svg {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .btn-outline-secondary {
+    padding: 8px 20px;
+  }
+}
 
 .row .col-md-3 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
