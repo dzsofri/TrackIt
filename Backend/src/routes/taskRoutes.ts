@@ -12,8 +12,10 @@ const router = Router();
 
 
 
+
+
 // Új feladat létrehozása (Token ellenőrzéssel)
-router.post("/", async (req: any, res: any) => {
+router.post("/", tokencheck, async (req: any, res: any) => {
     try {
         const { title, description, priority, dueDate } = req.body;
 
@@ -24,12 +26,17 @@ router.post("/", async (req: any, res: any) => {
 
         // Új feladat mentése
         const task = new Tasks();
-        task.id = uuidv4();
+        task.id = uuidv4(); // Új egyedi ID generálása
         task.title = title;
         task.description = description || null;
         task.priority = priority;
         task.dueDate = new Date(dueDate);
         task.createdAt = new Date();
+        task.status = 'todo'; // Kezdeti státusz
+
+        // A felhasználó azonosítója a tokenből
+        task.userId = req.user.id; // Az autentikált felhasználó ID-ja
+        task.user = await AppDataSource.getRepository(Users).findOneBy({ id: req.user.id });
 
         await AppDataSource.getRepository(Tasks).save(task);
 
@@ -40,6 +47,8 @@ router.post("/", async (req: any, res: any) => {
         return res.status(500).json({ message: "Szerverhiba történt." });
     }
 });
+
+
 
 router.get("/", async (req: any, res: any) => {
     try {

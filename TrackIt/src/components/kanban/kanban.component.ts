@@ -77,44 +77,35 @@ export class KanbanComponent implements OnInit {
   // **Új feladat hozzáadása**
   addTask() {
     if (!this.newTask.title.trim() || !this.newTask.dueDate) {
-      console.warn('A cím és a határidő megadása kötelező!');
-      return;
+        console.warn('A cím és a határidő megadása kötelező!');
+        return;
     }
-  
+
     const taskToSend: Task = {
-      title: this.newTask.title.trim(),
-      description: this.newTask.description.trim() || "",
-      dueDate: this.newTask.dueDate,
-      priority: this.newTask.priority || "Közepes",
-      status: "todo" // Kezdetben a "todo" oszlopban lesz
+        title: this.newTask.title.trim(),
+        description: this.newTask.description.trim() || "",
+        dueDate: this.newTask.dueDate,
+        priority: this.newTask.priority || "Közepes",
+        status: "todo" // Kezdetben a "todo" oszlopban lesz
     };
-  
+
     this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend)
-      .subscribe({
-        next: (response) => {
-          console.log("Feladat sikeresen mentve:", response);
-  
-          // **Helyesen hozzáadjuk a task-ot a Kanban táblához**
-          this.columns[0].tasks.push({
-            id: response.task.id,
-            title: response.task.title,
-            description: response.task.description || "Nincs leírás",
-            dueDate: response.task.dueDate || "Nincs határidő",
-            priority: response.task.priority || "Közepes",
-            status: 'todo'
-          });
-  
-          // **Számláló frissítése**
-          this.updateTaskCount();
-  
-          // **Űrlap ürítése új feladat után**
-          this.newTask = this.createEmptyTask();
-        },
-        error: (error) => {
-          console.error("Hiba történt a mentés során:", error);
-        }
-      });
-  }
+        .subscribe({
+            next: (response) => {
+                console.log("Feladat sikeresen mentve:", response);
+                // Helyesen hozzáadjuk a task-ot a Kanban táblához
+                this.columns[0].tasks.push(response.task);
+                // Számláló frissítése
+                this.updateTaskCount();
+                // Űrlap ürítése új feladat után
+                this.newTask = this.createEmptyTask();
+            },
+            error: (error) => {
+                console.error("Hiba történt a mentés során:", error);
+            }
+        });
+}
+
 
 
   // **Feladat áthelyezése másik oszlopba**
