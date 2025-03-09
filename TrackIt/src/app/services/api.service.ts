@@ -61,11 +61,11 @@ export class ApiService {
     );
 }
 
-  read_Stat(table: string, field: string, op: string, value: string) {
-    return this.http.get(`${this.server}/public/${table}/${field}/${op}/${value}`);
+  readUserStatistics(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/statistics/${userId}`, this.tokenHeader());
   }
 
-  readAll(table: string){
-    return this.http.get(this.server + '/public/' + table);
+  readUserHabits(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/habit/${userId}`, this.tokenHeader());
   }
 }

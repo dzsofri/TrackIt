@@ -8,7 +8,7 @@
     <ul class="nav nav-tabs">
         <li class="nav-item" role="presentation">
             <button 
-            class="nav-link" 
+            class="nav-link active" 
             [class.active]="activeTab === 'statisztika'"
             (click)="setActiveTab('statisztika')"
           >Statisztika</button>
@@ -50,11 +50,11 @@
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Teljesítményeim</h3>
                 <div class="teljesitmeny_box1">
-                    <div class="teljesitmeny_content1" *ngFor="let statistics of user_statistics">
-                        <p class="teljesitmeny_text"><img id="elvegzett">{{statistics.completedTasks}} <b class="folyamat">Elvégzett</b></p>
-                        <p class="teljesitmeny_text"><img id="elmaradt">{{statistics.missedTasks}} <b class="folyamat">Elmaradt</b></p>
-                        <p class="teljesitmeny_text"><img id="teljesitve">{{statistics.completionRate}} %<b class="folyamat">Teljesítve</b></p>
-                    </div>
+                  <div class="teljesitmeny_content1" *ngIf="user_statistics">
+                    <p class="teljesitmeny_text"><img id="elvegzett">{{user_statistics.completedTasks}} <b class="folyamat">Elvégzett</b></p>
+                    <p class="teljesitmeny_text"><img id="elmaradt">{{user_statistics.missedTasks}} <b class="folyamat">Elmaradt</b></p>
+                    <p class="teljesitmeny_text"><img id="teljesitve">{{user_statistics.completionRate}}%<b class="folyamat">Teljesítve</b></p>
+                  </div>
                 </div>
             </div>
 
@@ -71,10 +71,12 @@
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Szokásaim</h3>
                 <div class="teljesitmeny_box3">
-                    <div class="teljesitmeny_content3">
-                        <p class="teljesitmeny_text">Edzés: <b class="folyamat"> Heti átlag 4 alkalom</b></p>
-                        <p class="teljesitmeny_text">Vízfogyasztás: <b class="folyamat">Napi 2 liter átlag</b></p>
-                        <p class="teljesitmeny_text">Meditáció: <b class="folyamat">15 perc naponta, 90%-os teljesítettség</b></p>
+                    <div class="teljesitmeny_content3" *ngIf="habits">
+                        <p *ngFor="let habit of habits" class="teljesitmeny_text">{{habit.habitName}}: <b class="folyamat"> Heti {{habit.frequency}} alkalom</b></p>
+                        <!--
+                            <p class="teljesitmeny_text">{{habits.habitName}}: <b class="folyamat">Napi 2 liter átlag</b></p>
+                            <p class="teljesitmeny_text">{{habits.habitName}}: <b class="folyamat">15 perc naponta, 90%-os teljesítettség</b></p>
+                        -->
                     </div>
                 </div>
             </div>

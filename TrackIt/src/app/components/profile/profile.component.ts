@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { User_statistics } from '../../interfaces/user_statistics';
+import { Habit } from '../../interfaces/habits';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
@@ -9,57 +10,83 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-profile',
   imports: [CommonModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit{
+export class ProfileComponent implements OnInit {
   constructor(
     private api: ApiService,
     private auth: AuthService,
     private activatedRoute: ActivatedRoute
-  ){}
+  ) {}
 
-  user_id: string = "";
-  //isLoggedIn:boolean = false;
-  user_statistics:User_statistics[] = [];
+  userID: string = "";
+  user_statistics: User_statistics | null = null;
+  habits: Habit[] = [];
+  activeTab: string = 'statisztika';
 
   ngOnInit(): void {
-    /*
-    this.auth.isLoggedIn$.subscribe(res => {
-      this.isLoggedIn = res;
-    });
+    this.userID = this.activatedRoute.snapshot.params['userID'];
 
-    this.user_id = this.activatedRoute.snapshot.params['id'];
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.userID = user.id;
+        this.api.readUserStatistics('user_statistics', this.userID).subscribe({
+          next: (res: any) => {
+            if (!res || res.length === 0) {
+              console.warn('No user statistics found.');
+              return;
+            }
+            this.user_statistics = this.sumUserStatistics(res);
+          },
+          error: (err) => {
+            console.error('Error fetching user statistics:', err);
+          }
+        });
 
-    this.api.read_Stat('user_statistics', 'id', 'eq', this.user_id).subscribe((res: any) => {
-      if (res) {
-        this.user_statistics = res as User_statistics[];
-      }
-    });
-    */
-
-    this.api.readAll('user_statsitics').subscribe({
-      next: (res: any) => {
-        if (!res || !res.statistics || res.statistics.length === 0) {
-          console.warn('Nincsenek felhasználói statisztikák.');
-          return;
-        }
-        this.user_statistics = res.statistics as User_statistics[];
-      },
-      error: (err) => {
-        console.error('Hiba történt az adatok lekérésekor:', err);
+        this.api.readUserHabits('user_statistics', this.userID).subscribe({
+          next: (res: any) => {
+            if (!res || res.length === 0) {
+              console.warn('No user habits found.');
+              return;
+            }
+            this.habits = res;
+          },
+          error: (err) => {
+            console.error('Error fetching user habits:', err);
+          }
+        });
       }
     });
   }
-
-  activeTab: string = 'statisztika';
 
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
   }
 
   isPasswordVisible = false;
-  
+
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  private sumUserStatistics(statistics: User_statistics[]): User_statistics {
+    const summedStatistics = statistics.reduce((acc, curr) => {
+      acc.completedTasks += curr.completedTasks;
+      acc.missedTasks += curr.missedTasks;
+      return acc;
+    }, {
+      id: '',
+      userId: 0,
+      completedTasks: 0,
+      missedTasks: 0,
+      completionRate: 0,
+      activeChallengeId: '',
+      activeTaskId: ''
+    });
+
+    const totalTasks = summedStatistics.completedTasks + summedStatistics.missedTasks;
+    summedStatistics.completionRate = totalTasks > 0 ? Math.ceil((summedStatistics.completedTasks / totalTasks) * 100) : 0;
+
+    return summedStatistics;
   }
 }
