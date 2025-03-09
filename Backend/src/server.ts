@@ -18,7 +18,7 @@ app.use(express.json());
 app.use("/users", userRoutes);
 app.use("/feedbacks", feedbackRoutes);
 app.use("/friends", friendRoutes);
-app.use("/user_statsitics", userStatisticsRoutes);
+app.use("/user_statistics", userStatisticsRoutes);
 
 const PORT = process.env.PORT || 3000;
 
