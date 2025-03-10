@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,14 @@ export class ApiService {
   }
 
 
+  getAllUsers(): Observable<{ users: User[], message: string }> {
+    return this.http.get<{ users: User[], message: string }>(this.server + '/users', this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Error fetching users:', error);
+        return of({ users: [], message: 'Error occurred while fetching users' });  // Return a fallback response
+      })
+    );
+  }
   
 
   resetPassword(email: string, token: string, newPassword: any): Observable<any> {
