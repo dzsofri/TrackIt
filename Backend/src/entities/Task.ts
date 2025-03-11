@@ -28,14 +28,19 @@ export class Tasks {
     userId: string;
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt: Date;    
 
     @OneToMany(() => TaskStatuses, (taskStatus) => taskStatus.task)
     taskStatuses: TaskStatuses[];
 
-    // Hozzáadjuk ezt a kapcsolatot a statisztikákhoz
     @OneToMany(() => UserStatistics, (statistics) => statistics.activeTask)
-    statistics: UserStatistics[];  // Statikus statisztikák a feladathoz
+    statistics: UserStatistics[];
 
-    status: 'todo' | 'in-progress' | 'done'; // Itt is érdemes ezt a típusdefiníciót alkalmazni
+    // **Hozzáadjuk a status mezőt**
+    @Column({
+        type: "enum",
+        enum: ['todo', 'in-progress', 'done'],
+        default: 'todo', // Alapértelmezett státusz
+    })
+    status: 'todo' | 'in-progress' | 'done';
 }
