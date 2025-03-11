@@ -20,6 +20,27 @@ router.get('/', tokencheck, isAdmin, async (req: any, res: any) => {
 });
 
 
+router.get('/questions', tokencheck, isAdmin, async (req: any, res: any) => {
+    try {
+        const questions = await AppDataSource.getRepository(FeedbackQuestions).find();
+        res.json({ questions, message: 'A visszajelzések lekérése sikeres.' });
+    } catch (error) {
+        res.status(500).json({ error: 'Hiba történt a visszajelzések lekérése közben.' });
+    }
+});
+
+router.get('/data', tokencheck, isAdmin, async (req: any, res: any) => {
+    try {
+        const feedbacks = await AppDataSource.getRepository(Feedbacks).find({
+            relations: ['question']
+        });
+        res.json({ feedbacks, message: 'A visszajelzések lekérése sikeres.' });
+    } catch (error) {
+        res.status(500).json({ error: 'Hiba történt a visszajelzések lekérése közben.' });
+    }
+});
+
+
 // Egy adott visszajelzés lekérése **kérdés ID alapján**
 router.get('/question/:questionId', tokencheck, isAdmin, async (req: any, res: any) => {
     const { questionId } = req.params;

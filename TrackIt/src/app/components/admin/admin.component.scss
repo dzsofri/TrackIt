@@ -33,10 +33,7 @@ $chart-bg: #d6f7ff;
     font-size: $font-size-sm;
   }
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
+  
 }
 
 // Stat card styles for equal size
@@ -68,6 +65,11 @@ $chart-bg: #d6f7ff;
     width: 40px; // Adjusted icon size for stat cards
     height: 40px;
     margin-top: 10px;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
 }
 
