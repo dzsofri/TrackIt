@@ -57,8 +57,6 @@ router.get("/", async (req: any, res: any) => {
     }
 });
 
-
-
 // Task frissítéséhez szükséges kérés típusának meghatározása
 interface UpdateTaskRequest {
     status: 'todo' | 'in-progress' | 'done'; // Az elfogadott státuszok

@@ -341,15 +341,19 @@ input, textarea {
     gap: 10px;
     transition: background 0.3s ease-in-out, color 0.2s;
     font-weight: 500;
-  }
+    white-space: nowrap; /* Megakadályozza a szöveg törését */
+    overflow: hidden; /* Ha túl hosszú a szöveg, ne törje meg */
+    text-overflow: ellipsis; /* Három ponttal jelezze, ha túl hosszú */
+}
+
   
   .menu-item.edit:hover {
-    background: #007bff;
+    background: #627966;
     color: white;
   }
   
   .menu-item.edit {
-    color: #007bff;
+    color: #627966;
   }
   
   .menu-item.delete {

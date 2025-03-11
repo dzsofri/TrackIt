@@ -5,19 +5,19 @@ import { HttpClient } from '@angular/common/http';
 
 
 interface Task {
-  id?: string; // Az azonosító opcionális
-  title: string; // A feladat címe
-  description: string; // A feladat leírása
-  dueDate: string; // A határidő, pl. 'YYYY-MM-DD' formátumban
-  priority: 'Alacsony' | 'Közepes' | 'Magas'; // A prioritás típusa
-  userId?: string; // Az opcionális felhasználói azonosító
-  status: 'todo' | 'in-progress' | 'done'; // Ezt add hozzá!
+  id?: string; 
+  title: string; 
+  description: string; 
+  dueDate: string; 
+  priority: 'Alacsony' | 'Közepes' | 'Magas'; 
+  userId?: string; 
+  status: 'todo' | 'in-progress' | 'done'; 
   showMenu?: boolean;
 }
 
 interface Column {
-  name: string; // Az oszlop neve
-  tasks: Task[]; // A benne lévő feladatok
+  name: string; 
+  tasks: Task[]; 
 }
 
 @Component({
@@ -46,12 +46,14 @@ export class KanbanComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log("Feladatok betöltve:", response.tasks);
-  
-          // Az oszlopok tisztítása
+          
+          // Az oszlopok kiürítése az új betöltéshez
           this.columns.forEach(column => column.tasks = []);
   
-          // A megfelelő oszlopokba helyezzük a feladatokat
+          // A feladatok hozzáadása a megfelelő oszlopokhoz
           response.tasks.forEach(task => {
+            console.log('Task:', task); // Nyomtasd ki a feladatokat
+  
             if (task.status === 'todo') {
               this.columns[0].tasks.push(task); // Teendők oszlop
             } else if (task.status === 'in-progress') {
@@ -60,12 +62,20 @@ export class KanbanComponent implements OnInit {
               this.columns[2].tasks.push(task); // Kész oszlop
             }
           });
+  
+          // Az oszlopok kiírása a konzolra ellenőrzéshez
+          console.log('Updated columns:', this.columns);
         },
         error: (error) => {
           console.error("Hiba történt a feladatok lekérdezésekor:", error);
         }
       });
   }
+  
+  
+  
+  
+  
   
 
   // **Új feladat inicializálása**

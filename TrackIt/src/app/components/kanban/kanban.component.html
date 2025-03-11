@@ -42,13 +42,13 @@
             <div class="task-menu-container">
               <button class="menu-button" (click)="toggleTaskMenu(task)">&#8942;</button>
               <div class="menu-options" *ngIf="task.showMenu">
-                <button class="menu-item edit">✏️ Bejegyzés módosítása</button>
-                <button class="menu-item delete">🗑️ Bejegyzés törlése</button>
+                <button class="menu-item edit" (click)="editTask(task)">✏️ Bejegyzés módosítása</button>
+                <button class="menu-item delete" (click)="deleteTask(task, column)">🗑️ Bejegyzés törlése</button>
               </div>
             </div>
           </div>
           
-          <p>{{ task.description }}</p>
+          <p><strong>Leírás:</strong> {{ task.description }}</p>
           <p><strong>Határidő:</strong> {{ task.dueDate | date:'yyyy. MM. dd.' }}</p>
           
           <p *ngIf="task.priority">
@@ -58,3 +58,4 @@
       </div>
     </div>
   </div>
+</div>
