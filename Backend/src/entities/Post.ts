@@ -1,7 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { 
+    Entity, 
+    PrimaryGeneratedColumn, 
+    Column, 
+    CreateDateColumn, 
+    ManyToOne, 
+    JoinColumn 
+} from "typeorm";
 import { Pictures } from "./Picture";
 import { Users } from "./User";
 
+export enum PostStatus {
+    
+    PUBLISHED = "published",
+    ARCHIVED = "archived"
+}
 
 @Entity()
 export class Posts {
@@ -21,16 +33,20 @@ export class Posts {
     @Column({ type: "varchar", length: 40, nullable: true })
     userId: string;
 
-    @Column({ type: "varchar", length: 50, nullable: true })
-    status: string;
+    @Column({ 
+        type: "enum", 
+        enum: PostStatus, 
+        default: PostStatus.PUBLISHED
+    })
+    status: PostStatus;
 
     @CreateDateColumn()
     createdAt: Date;
 
-    @ManyToOne(() => Pictures)
+    @ManyToOne(() => Pictures, { nullable: true })
     @JoinColumn({ name: "pictureId" })
     picture: Pictures;
 
-    @Column({ type: "varchar", length: 40 })
+    @Column({ type: "varchar", length: 40, nullable: true })
     pictureId: string;
 }

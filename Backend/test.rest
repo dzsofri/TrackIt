@@ -85,6 +85,10 @@ GET http://localhost:{{PORT}}/posts
 
 
 
+### challengek listázása (tokennel)
+GET http://localhost:{{PORT}}/challenges
+
+
 ### visszajelzések listázása userId alapján(tokennel)
 GET http://localhost:{{PORT}}/feedbacks/user/3bae486c-7ff3-4d47-bcc2-cd6b6bd08584
 Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
