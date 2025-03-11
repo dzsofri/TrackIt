@@ -4,6 +4,7 @@ import { tokencheck } from "../utiles/tokenUtils";
 import dotenv from 'dotenv';
 import { UserStatistics } from "../entities/UserStatistic";
 import { Habits } from "../entities/Habit";
+import { UserChallenges } from "../entities/UserChallenge";
 
 dotenv.config();
 const router = express.Router();
@@ -51,6 +52,29 @@ router.get("/habit/:userId", tokencheck, async (req: any, res: any) => {
   } catch (error) {
     console.error("Error fetching habits:", error);
     res.status(500).json({ error: "Error fetching habits." });
+  }
+});
+
+router.get("/challenges/:userId", tokencheck, async (req: any, res: any) => {
+  try {
+    const { userId } = req.params;
+    if (!req.user || req.user.id !== userId) {
+      return res.status(401).json({ error: "Unauthorized access." });
+    }
+
+    const challenges = await AppDataSource.getRepository(UserChallenges).find({
+      where: { user: { id: userId } },
+      relations: ["user"]
+    });
+
+    if (!challenges || challenges.length === 0) {
+      return res.status(404).json({ error: "No challenges available for the user." });
+    }
+
+    res.json(challenges);
+  } catch (error) {
+    console.error("Error fetching habits:", error);
+    res.status(500).json({ error: "Error fetching challenges." });
   }
 });
 

@@ -68,4 +68,8 @@ export class ApiService {
   readUserHabits(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/habit/${userId}`, this.tokenHeader());
   }
+
+  readUserChallenges(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/challenges/${userId}`, this.tokenHeader());
+  }
 }
