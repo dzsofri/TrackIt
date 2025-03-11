@@ -19,6 +19,7 @@ router.get('/', tokencheck, isAdmin, async (req: any, res: any) => {
     }
 });
 
+
 // Egy adott visszajelzés lekérése **kérdés ID alapján**
 router.get('/question/:questionId', tokencheck, isAdmin, async (req: any, res: any) => {
     const { questionId } = req.params;

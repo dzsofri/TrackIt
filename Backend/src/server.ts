@@ -9,6 +9,7 @@ import mysql from 'mysql2'; // mysql2 importálása ESM-ben
 import friendRoutes from "./routes/friendRoutes";
 import userStatisticsRoutes from "./routes/userStatisticsRoutes";
 import taskRoutes from "./routes/taskRoutes";
+import postRoutes from "./routes/postRoutes";
 
 dotenv.config(); // Környezeti változók betöltése
 
@@ -22,6 +23,7 @@ app.use("/feedbacks", feedbackRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/friends", friendRoutes);
 app.use("/user_statsitics", userStatisticsRoutes);
+app.use("/posts", postRoutes);
 
 const PORT = process.env.PORT || 3000;
 
