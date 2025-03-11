@@ -15,6 +15,12 @@ export class UserChallenges {
     @Column({ type: "varchar", length: 40 })
     userId: string;
 
+    @Column({ type: "varchar", length: 255 })
+    challengeName: string;
+
+    @Column({ type: "text" })
+    challengeDescription: string;
+
     @Column({ type: "float", default: 0 })
     progressPercentage: number;
 
