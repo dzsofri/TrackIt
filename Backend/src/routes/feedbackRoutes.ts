@@ -28,17 +28,28 @@ router.get('/questions', tokencheck, isAdmin, async (req: any, res: any) => {
         res.status(500).json({ error: 'Hiba történt a visszajelzések lekérése közben.' });
     }
 });
-
-router.get('/data', tokencheck, isAdmin, async (req: any, res: any) => {
+router.get('/data/:id', tokencheck, isAdmin, async (req: any, res: any) => {
     try {
+        const questionId = req.params.id;
         const feedbacks = await AppDataSource.getRepository(Feedbacks).find({
-            relations: ['question']
+            relations: ['question'],
+            where: { question: { id: questionId } }
         });
-        res.json({ feedbacks, message: 'A visszajelzések lekérése sikeres.' });
+
+        // Csoportosítás és számlálás
+        const feedbackCount = feedbacks.reduce((acc, feedback) => {
+            const rating = feedback.rating; // Feltételezve, hogy van "rating" mező
+            acc[rating] = (acc[rating] || 0) + 1;
+            return acc;
+        }, {});
+
+        res.json({ questionId, feedbackCount, message: 'A visszajelzések összesítése sikeres.' });
     } catch (error) {
-        res.status(500).json({ error: 'Hiba történt a visszajelzések lekérése közben.' });
+        res.status(500).json({ error: 'Hiba történt a visszajelzések összesítése közben.' });
     }
 });
+
+
 
 
 // Egy adott visszajelzés lekérése **kérdés ID alapján**

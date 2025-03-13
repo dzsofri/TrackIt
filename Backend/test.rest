@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "email": "beretizsofia310@gmail.com",
-  "password": "Nyuszika310"
+  "password": "Titkosjelszo123"
 }
 
 
@@ -78,6 +78,10 @@ Content-Type: application/json
 GET http://localhost:{{PORT}}/feedbacks/questions
 Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTcxMDk4NywiZXhwIjoxNzQxNzk3Mzg3fQ.2XWTuepybgROHRs5zQ1DeQnExoBEU9tD9rrf5ArOyQE
 
+
+### lekérdezések listázása (tokennel)
+GET http://localhost:{{PORT}}/feedbacks/data/1
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmMzcwMzc5LTcxNjAtNDkzYi1iNTE3LWY2YzllYzRhZjEzMiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTg1Njg3MSwiZXhwIjoxNzQxOTQzMjcxfQ.KCH3wsTkYFKr6K3DEalRMGljdmtfT2jfduj5bB_HK1o
 
 
 ### posztok listázása (tokennel)

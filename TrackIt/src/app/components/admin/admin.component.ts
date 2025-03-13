@@ -52,25 +52,54 @@ export class AdminComponent implements OnInit {
   loadFeedbackQuestions(): void {
     this.api.getFeedbackQuestions().subscribe({
       next: (response) => {
+        // Ellenőrizzük, hogy az ID-ket külön kell kérni
         this.feedbackQuestions = response.questions.map(f => f.question);
+        console.log('Kérdések betöltve:', this.feedbackQuestions);
+        console.log('Kérdés ID-k:', response.questions.map((q, index) => index + 1)); // Az ID-kat megjelenítjük, hogy az index alapján lekérhessük
       },
-      error: () => {
+      error: (err) => {
+        console.log('Hiba a kérdések betöltése során:', err);
         this.feedbackQuestions = [];
       }
     });
   }
-
+  
+  
   loadFeedbackData(): void {
-    this.api.getFeedbackData().subscribe({
+    if (this.feedbackQuestions.length === 0) {
+      console.log('Nincsenek kérdések, nem tölthető be az adat!');
+      return;
+    }
+  
+    const questionId = this.selectedQuestionIndex + 1;  // A kiválasztott kérdés ID-ja
+    console.log('Kérdés ID:', questionId);  // Ellenőrizzük, hogy az ID helyes-e
+  
+    this.api.getFeedbackData(questionId).subscribe({
       next: (response) => {
-        this.feedbackData = response.data;
-        this.loadFeedbackChart();
+        console.log('Válasz érkezett:', response);
+        if (response.feedbackCount) {
+          const feedbackCount: Record<string, number> = response.feedbackCount;
+          const ratings = ['1', '2', '3', '4', '5'];  // Az értékelési skála
+          this.feedbackData[this.selectedQuestionIndex] = ratings.map(rating => feedbackCount[rating] ?? 0);
+        } else {
+          this.feedbackData[this.selectedQuestionIndex] = [0, 0, 0, 0, 0];
+        }
+  
+        console.log('Frissített feedbackData:', this.feedbackData);
+        this.loadFeedbackChart();  // Frissítjük a grafikont
       },
-      error: () => {
-        this.feedbackData = [];
+      error: (error) => {
+        console.log('Hiba a válasz betöltésében:', error);
+        this.feedbackData[this.selectedQuestionIndex] = [0, 0, 0, 0, 0];
+        this.loadFeedbackChart();
       }
     });
   }
+  
+  
+  
+  
+  
 
   fetchCounts(): void {
     this.api.getUsers().subscribe((response) => {
@@ -143,35 +172,33 @@ export class AdminComponent implements OnInit {
   loadFeedbackChart(): void {
     const canvas = document.getElementById('feedbackChart') as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d');
+  
     if (ctx) {
-        if (this.feedbackChart) {
-            this.feedbackChart.destroy();
+      if (this.feedbackChart) {
+        this.feedbackChart.destroy();
+      }
+  
+      this.feedbackChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1', '2', '3', '4', '5'],
+          datasets: [{
+            label: 'Felhasználói értékelések',
+            data: this.feedbackData[this.selectedQuestionIndex] || [0, 0, 0, 0, 0],
+            backgroundColor: ['#28a745']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true }, x: { beginAtZero: true } }
         }
-
-        // Ellenőrizzük, hogy a feedbackData definiálva van és van-e benne adat
-        if (this.feedbackData && this.feedbackData.length > 0) {
-            this.feedbackChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['1', '2', '3', '4', '5'],
-                    datasets: [{
-                        label: 'Felhasználói értékelések',
-                        data: this.feedbackData[this.selectedQuestionIndex],
-                        backgroundColor: ['#28a745']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true }, x: { beginAtZero: true } }
-                }
-            });
-        } else {
-            console.error("Nincsenek visszajelzési adatok a kiválasztott kérdéshez.");
-        }
+      });
     }
-}
+  }
+  
+  
 
 
   generateMonthDays(monthIndex: number): string[] {

@@ -113,17 +113,18 @@ export class ApiService {
     );
   }
 
-  getFeedbackData(): Observable<{ data: number[][], message?: string }> {
-    return this.http.get<{ data: number[][], message?: string }>(
-      `${this.server}/feedbacks/data`,
+  getFeedbackData(questionId: number): Observable<{ questionId: number, feedbackCount: Record<number, number>, message?: string }> {
+    return this.http.get<{ questionId: number, feedbackCount: Record<number, number>, message?: string }>(
+      `${this.server}/feedbacks/data/${questionId}`,
       this.tokenHeader()
     ).pipe(
       catchError(error => {
         console.error('Error fetching feedback data:', error);
-        return of({ data: [], message: 'Error occurred while fetching feedback data' });
+        return of({ questionId, feedbackCount: {}, message: 'Error occurred while fetching feedback data' });
       })
     );
   }
+  
 
   read_Stat(table: string, field: string, op: string, value: string) {
     return this.http.get(`${this.server}/public/${table}/${field}/${op}/${value}`);
