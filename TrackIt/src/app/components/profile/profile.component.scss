@@ -32,9 +32,32 @@ header {
     margin: 0 auto;
 }
 
+@media (max-width: 600px) {
+    .NO_DATA{
+        height: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-color: #FFFFFF;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
+        border-radius: 25px;
+        text-align: start;
+        width: 300px;
+    }
+}
+
 .NO_DATA{
     height: 100%;
     padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+    text-align: start;
+    width: 300px;
 }
 
 //Linkek

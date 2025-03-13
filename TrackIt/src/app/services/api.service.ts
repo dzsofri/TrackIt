@@ -72,4 +72,8 @@ export class ApiService {
   readUserChallenges(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/challenges/${userId}`, this.tokenHeader());
   }
+
+  readFriendRequests(table: string, receiverId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/friendrequests/${receiverId}`, this.tokenHeader());
+}
 }

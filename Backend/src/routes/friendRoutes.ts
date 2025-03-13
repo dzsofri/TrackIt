@@ -112,12 +112,12 @@ router.post("/friendrequests/reject/:requestId", tokencheck, async (req: any, re
 
 
 // Barátkérések lekérése
-router.get("/friendrequests", tokencheck, async (req: any, res: any) => {
-    const userId = req.user.id;
+router.get("/friendrequests/:receiverId", tokencheck, async (req: any, res: any) => {
+    const receiverId = req.params.receiverId;
 
     try {
         const friendRequests = await AppDataSource.getRepository(FriendRequests).find({
-            where: [{ receiverId: userId, status: "pending" }, { senderId: userId, status: "pending" }],
+            where: [{ receiver: { id: receiverId }, status: "pending" }, { sender: { id: receiverId }, status: "pending" }],
             relations: ["sender", "receiver"]
         });
 
