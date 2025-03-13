@@ -72,12 +72,6 @@ export class KanbanComponent implements OnInit {
       });
   }
   
-  
-  
-  
-  
-  
-
   // **Új feladat inicializálása**
   private createEmptyTask(): Task {
     return { title: '', description: '', dueDate: '', priority: 'Közepes', status: 'todo' };
@@ -199,11 +193,26 @@ export class KanbanComponent implements OnInit {
     // Itt lehet megnyitni egy szerkesztő modált vagy beállítani az aktuális szerkesztendő taskot
   }
   
-  deleteTask(task: any, column: any) {
+  deleteTask(task: Task, column: Column) {
     const index = column.tasks.indexOf(task);
     if (index > -1) {
+      // Törlés az oszlopból
       column.tasks.splice(index, 1);
+  
+      // HTTP kérés küldése a backendnek a feladat törlésére
+      this.http.delete<{ message: string }>(`http://localhost:3000/tasks/${task.id}`)
+        .subscribe({
+          next: (response) => {
+            console.log('Feladat törölve:', response.message);
+            this.updateTaskCount();
+          },
+          error: (error) => {
+            console.error('Hiba történt a feladat törlésénél:', error);
+          }
+        });
     }
   }
+  
+  
 
 }

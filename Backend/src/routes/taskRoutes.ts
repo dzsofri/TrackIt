@@ -41,6 +41,7 @@ router.post("/", async (req: any, res: any) => {
     }
 });
 
+
 router.get("/", async (req: any, res: any) => {
     try {
         const tasks = await AppDataSource.getRepository(Tasks).find();
@@ -88,6 +89,30 @@ router.put("/tasks/:id", async (req: any, res: any) => {
 
     } catch (error) {
         console.error("Hiba történt a feladat frissítésekor:", error);
+        return res.status(500).json({ message: "Szerverhiba történt." });
+    }
+});
+
+// Task törléséhez szükséges végpont
+router.delete("/:id", async (req: any, res: any) => {
+    try {
+        const { id } = req.params;
+        
+        // Ellenőrizzük, hogy létezik-e a feladat az adatbázisban
+        const taskRepository = AppDataSource.getRepository(Tasks);
+        const task = await taskRepository.findOneBy({ id });
+
+        if (!task) {
+            return res.status(404).json({ message: "Feladat nem található!" });
+        }
+
+        // Feladat törlése az adatbázisból
+        await taskRepository.remove(task);
+
+        return res.status(200).json({ message: "Feladat sikeresen törölve!" });
+
+    } catch (error) {
+        console.error("Hiba történt a feladat törlésénél:", error);
         return res.status(500).json({ message: "Szerverhiba történt." });
     }
 });
