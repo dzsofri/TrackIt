@@ -1,6 +1,7 @@
 <div class="welcome-wrapper">
   <div class="content">
-    <div class="text" [@fadeOut]="textState">
+    <!-- Bevezető szöveg -->
+    <div class="text" *ngIf="textVisible" [@fadeOut]="textState">
       <h1>Üdvözlünk a <span class="highlight">TrackIt</span> világában!</h1>
       <p><strong>Kezdjük el együtt megtervezni a sikereidet!</strong></p>
       <p>
@@ -8,6 +9,8 @@
         pillanattól hatékonyan használhasd. – <strong>indulhatunk?</strong>
       </p>
     </div>
+
+    <!-- Lépések -->
     <div class="steps-container" [@moveRight]="stepState">
       <div class="steps">
         <div class="step" [ngClass]="{ active: steps[0].active }">
@@ -24,14 +27,13 @@
       <button class="get-started-button" (click)="startApp()">Get Started</button>
     </div>
 
-    <!-- Kanban (becsúszik) -->
+    <!-- Kanban Tábla -->
     <div class="kanban-container" *ngIf="isKanbanVisible" [@slideIn]="kanbanState">
-
       <app-kanban></app-kanban>
-    </div>
+    </div>  
   </div>
 
-  <!-- Különálló blobok (only when Kanban is not visible) -->
+  <!-- Dekoratív blobok -->
   <div *ngIf="!isKanbanVisible">
     <div class="blob blob-left"></div>
     <div class="blob blob-right"></div>

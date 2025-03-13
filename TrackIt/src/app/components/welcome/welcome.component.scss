@@ -1,4 +1,4 @@
-html, body{
+html, body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -21,7 +21,7 @@ html, body{
   position: relative;
 }
 
-/* Alap blob stílus (nagy kijelzőkön) */
+// Blob animáció és alapstílus
 .blob {
   position: absolute;
   width: min(40vw, 400px);
@@ -33,75 +33,73 @@ html, body{
   pointer-events: none;
   opacity: 0.7;
   animation: circular-motion 15s linear infinite;
+
+  &-left {
+    top: -10vh;
+    left: -6vw;
+  }
+
+  &-right {
+    bottom: -8vh;
+    right: -8vw;
+  }
 }
 
-/* Pozíciók */
-.blob-left {
-  top: -10vh;
-  left: -6vw;
-}
-
-.blob-right {
-  bottom: -8vh;
-  right: -8vw;
-}
-
+// Reszponzív blob méretezés
 @media (max-width: 700px) {
   .blob {
     width: min(30vw, 250px);
     height: min(30vw, 250px);
-  }
 
-  .blob-left {
-    top: -8vh;
-    left: -12vw;
-  }
+    &-left {
+      top: -8vh;
+      left: -12vw;
+    }
 
-  .blob-right {
-    bottom: -8vh;
-    right: -12vw;
+    &-right {
+      bottom: -8vh;
+      right: -12vw;
+    }
   }
 }
 
-/* 500px alatt még kisebb méret és még távolabb */
 @media (max-width: 500px) {
   .blob {
     width: min(25vw, 200px);
     height: min(25vw, 200px);
     opacity: 0.6;
-  }
 
-  .blob-left {
-    top: -5vh;
-    left: -15vw;
-  }
+    &-left {
+      top: -5vh;
+      left: -15vw;
+    }
 
-  .blob-right {
-    bottom: -5vh;
-    right: -15vw;
+    &-right {
+      bottom: -5vh;
+      right: -15vw;
+    }
   }
 }
 
-/* 400px alatt még jobban csökkentjük */
 @media (max-width: 400px) {
   .blob {
     width: 150px;
     height: 150px;
     opacity: 0.5;
-  }
 
-  .blob-left {
-    top: -3vh;
-    left: -18vw;
-  }
+    &-left {
+      top: -3vh;
+      left: -18vw;
+    }
 
-  .blob-right {
-    bottom: -3vh;
-    right: -18vw;
+    &-right {
+      bottom: -3vh;
+      right: -18vw;
+    }
   }
 }
 
-/* Blob animáció */
+// Animációk
 @keyframes circular-motion {
   0% {
     transform: rotate(0deg) scale(1) translate(5px, 5px);
@@ -120,9 +118,7 @@ html, body{
   }
 }
 
-
-
-/* Tartalom elrendezése */
+// Tartalom elrendezése
 .content {
   display: flex;
   flex-wrap: wrap;
@@ -147,10 +143,10 @@ h1 {
   font-size: clamp(2rem, 4vw, 2.5rem);
   font-weight: bold;
   margin-bottom: 1rem;
-}
 
-h1 .highlight {
-  color: #627966;
+  .highlight {
+    color: #627966;
+  }
 }
 
 p {
@@ -159,7 +155,7 @@ p {
   line-height: 1.5;
 }
 
-/* Lépések konténer */
+// Lépések
 .steps-container {
   display: flex;
   flex-direction: column;
@@ -171,7 +167,6 @@ p {
   padding: 1rem;
 }
 
-
 .steps {
   display: flex;
   flex-direction: column;
@@ -179,8 +174,6 @@ p {
   width: 100%;
 }
 
-
-/* Lépések */
 .step {
   display: flex;
   align-items: center;
@@ -196,55 +189,43 @@ p {
   color: #333;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
   font-size: clamp(1rem, 2vw, 1.2rem);
+
+  &.active {
+    background-color: #627966;
+    color: white;
+  }
+
+  &.completed {
+    background-color: #ddd;
+    color: #333;
+  }
+
+  &:hover {
+    background-color: #eef7ee;
+    box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:first-child {
+    background-color: #627966;
+    color: white;
+  }
+
+  .step-number {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    font-weight: bold;
+    background-color: #37533c;
+    color: white;
+    border-radius: 50%;
+    font-size: 1.2rem;
+  }
 }
 
-/* Az aktív lépés háttérszíne */
-.step.active {
-  background-color: #627966; /* Zöld háttér */
-  color: white; /* Fehér szöveg szín */
-}
-
-/* A befejezett lépés háttérszíne */
-.step.completed {
-  background-color: #ddd;
-  color: #333;
-}
-
-/* Hover állapot */
-.step:hover {
-  background-color: #eef7ee;
-  box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-
-/* Az első lépés háttérszíne */
-.step:first-child {
-  background-color: #627966; /* Zöld háttér */
-  color: white; /* Fehér szöveg szín */
-}
-
-.step.active + .step { /* A következő lépés háttérszíne, ha az előző befejeződött */
-  background-color: #f9f9f9;
-}
-
-/* Lépés számozás */
-.step .step-number{
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 0.75rem;
-  font-weight: bold;
-  background-color: #37533c;
-  color: white;
-  border-radius: 50%;
-  font-size: 1.2rem;
-}
-
-
-
-/* "Get Started" gomb */
+// "Get Started" gomb
 .get-started-button {
   margin: 1.5rem;
   padding: 1rem 2rem;
@@ -260,14 +241,14 @@ p {
   min-width: 200px;
   max-width: 400px;
   box-sizing: border-box;
+
+  &:hover {
+    background-color: #627966;
+    color: white;
+  }
 }
 
-.get-started-button:hover {
-  background-color: #627966;
-  color: white;
-}
-
-/* Kanban konténer */
+// Kanban konténer
 .kanban-container {
   position: absolute;
   left: 0;
@@ -275,16 +256,15 @@ p {
   width: 100%;
   height: 100%;
   display: flex;
+  overflow: auto;
+  padding: 2vw;
+  box-sizing: border-box;
+  gap: 2vw;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-.kanban-column {
-  width: 32%;
-  min-width: 200px; /* Kisebb képernyőn ne legyen túl keskeny */
-  background: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column; 
 
+.kanban-column{
+  height: 80%;
 }

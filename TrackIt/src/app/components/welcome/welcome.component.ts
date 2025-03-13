@@ -14,13 +14,13 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   animations: [
     trigger('slideIn', [
       transition(':enter', [
-        style({ transform: 'translateX(100%)', opacity: 1 }),
+        style({ transform: 'translateX(100%)', opacity: 0 }),  // Indulás állapot
         animate('0.8s ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
       ])
     ]),
     trigger('moveRight', [
       state('default', style({ transform: 'translateX(0)' })),
-      state('moved', style({ transform: 'translateX(50%)' })), // teljesen kicsúszik
+      state('moved', style({ transform: 'translateX(90%)' })),
       transition('default => moved', [
         animate('1s cubic-bezier(0.25, 0.8, 0.25, 1)')
       ])
@@ -28,9 +28,10 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     trigger('fadeOut', [
       transition('visible => hidden', [
         animate('1s ease-out', style({
-        transform: 'translateX(-150%)',
-        opacity: 0,
-        display: 'none' })) // teljesen eltűnik
+          transform: 'translateX(-150%)',
+          opacity: 0,
+          visibility: 'hidden'  // Helyettesítve a display: 'none' helyett
+        }))
       ])
     ])
   ]
@@ -49,24 +50,25 @@ export class WelcomeComponent {
 
   textVisible = true; // Az elején a szöveg látható
 
-startApp() {
-  this.steps[0].completed = true;
-  this.steps[0].active = false;
-  this.steps[1].active = true;
-
-  // Szöveg eltűnésének indítása
-  this.textState = 'hidden';
-
-  // Steps-container jobbra csúszik
-  this.stepState = 'moved';
-
-  // Kanban megjelenítése késleltetéssel
-  setTimeout(() => {
-    this.isKanbanVisible = true;
-    this.kanbanState = 'visible'; // ha kell animációhoz állapot
-  }, 1000);
+  startApp() {
+    this.steps[0].completed = true;
+    this.steps[0].active = false;
+    this.steps[1].active = true;
   
-}
+    // Szöveg eltűnésének indítása
+    this.textState = 'hidden';
+    this.textVisible = false; // Eltünteti a szöveget a DOM-ból
+  
+    // Steps-container jobbra csúszik
+    this.stepState = 'moved';
+  
+    // Kanban megjelenítése késleltetéssel
+    setTimeout(() => {
+      this.isKanbanVisible = true;
+      this.kanbanState = 'visible'; // ha kell animációhoz állapot
+    }, 1000);
+  }
+  
 
   
 }

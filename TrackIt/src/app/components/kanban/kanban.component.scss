@@ -13,7 +13,7 @@
 .todo-creator {
     width: 30%;
     min-width: 250px; /* Ne legyen túl keskeny kis kijelzőn */
-    height: 99.9%;
+    height: 100%;
     background: #f8f9fa;
     padding: 20px;
     border-radius: 15px;
@@ -117,8 +117,10 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column; 
-
+    flex-direction: column;
+    max-height: 87.6vh; 
+    overflow-y: auto;
+    
 }
 
 /* Kanban feladatok */
