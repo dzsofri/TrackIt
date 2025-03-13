@@ -101,17 +101,20 @@ export class ApiService {
     );
   }
 
-  getFeedbackQuestions(): Observable<{ questions: any[], message?: string }> {
-    return this.http.get<{ questions: any[], message?: string }>(
-      `${this.server}/feedbacks/questions`,
-      this.tokenHeader()
-    ).pipe(
-      catchError(error => {
-        console.error('Error fetching feedback questions:', error);
-        return of({ questions: [], message: 'Error occurred while fetching feedback questions' });
-      })
-    );
-  }
+// Ezt a kódot feltételezve, hogy a backend biztosítja az id mezőt
+getFeedbackQuestions(): Observable<{ questions: { id: number, question: string }[], message?: string }> {
+  return this.http.get<{ questions: { id: number, question: string }[], message?: string }>(
+    `${this.server}/feedbacks/questions`,
+    this.tokenHeader()
+  ).pipe(
+    catchError(error => {
+      console.error('Error fetching feedback questions:', error);
+      return of({ questions: [], message: 'Error occurred while fetching feedback questions' });
+    })
+  );
+}
+
+
 
   getFeedbackData(questionId: number): Observable<{ questionId: number, feedbackCount: Record<number, number>, message?: string }> {
     return this.http.get<{ questionId: number, feedbackCount: Record<number, number>, message?: string }>(

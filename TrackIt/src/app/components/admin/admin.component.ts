@@ -7,6 +7,7 @@ import { User } from '../../interfaces/user';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
+import { FeedbackQuestion } from '../../interfaces/feedbackQuestions';
 
 @Component({
   selector: 'app-admin',
@@ -28,7 +29,7 @@ export class AdminComponent implements OnInit {
   postCount: number = 0;
   rewardCount: number = 2040;
 
-  feedbackQuestions: string[] = [];
+  feedbackQuestions: FeedbackQuestion[] = [];
   feedbackData: number[][] = [];
   feedbackChart: Chart | undefined;
   selectedQuestionIndex: number = 0;
@@ -52,10 +53,14 @@ export class AdminComponent implements OnInit {
   loadFeedbackQuestions(): void {
     this.api.getFeedbackQuestions().subscribe({
       next: (response) => {
-        // Ellenőrizzük, hogy az ID-ket külön kell kérni
-        this.feedbackQuestions = response.questions.map(f => f.question);
-        console.log('Kérdések betöltve:', this.feedbackQuestions);
-        console.log('Kérdés ID-k:', response.questions.map((q, index) => index + 1)); // Az ID-kat megjelenítjük, hogy az index alapján lekérhessük
+        // Store the full FeedbackQuestion objects
+        this.feedbackQuestions = response.questions;
+    
+        // Extract only the 'question' values for display purposes
+        const questions = this.feedbackQuestions.map((q) => q.question); 
+        console.log('Kérdések betöltve:', questions);  // Display the questions array
+    
+        this.loadFeedbackData();  // Continue with the loading of feedback data
       },
       error: (err) => {
         console.log('Hiba a kérdések betöltése során:', err);
@@ -64,22 +69,27 @@ export class AdminComponent implements OnInit {
     });
   }
   
-  
   loadFeedbackData(): void {
     if (this.feedbackQuestions.length === 0) {
       console.log('Nincsenek kérdések, nem tölthető be az adat!');
       return;
     }
   
-    const questionId = this.selectedQuestionIndex + 1;  // A kiválasztott kérdés ID-ja
-    console.log('Kérdés ID:', questionId);  // Ellenőrizzük, hogy az ID helyes-e
+    const question = this.feedbackQuestions[this.selectedQuestionIndex];
+    const questionId = question.id;  // Get the id of the selected question
+  
+    console.log('Kérdés ID:', questionId);
   
     this.api.getFeedbackData(questionId).subscribe({
       next: (response) => {
         console.log('Válasz érkezett:', response);
+  
+        // Ha van válasz
         if (response.feedbackCount) {
           const feedbackCount: Record<string, number> = response.feedbackCount;
           const ratings = ['1', '2', '3', '4', '5'];  // Az értékelési skála
+  
+          // Frissítjük a feedbackData tömböt a megfelelő indexnél
           this.feedbackData[this.selectedQuestionIndex] = ratings.map(rating => feedbackCount[rating] ?? 0);
         } else {
           this.feedbackData[this.selectedQuestionIndex] = [0, 0, 0, 0, 0];
@@ -97,9 +107,7 @@ export class AdminComponent implements OnInit {
   }
   
   
-  
-  
-  
+
 
   fetchCounts(): void {
     this.api.getUsers().subscribe((response) => {
@@ -128,11 +136,14 @@ export class AdminComponent implements OnInit {
     this.loadDataForMonth(this.selectedMonthIndex);
     this.loadPostsChart();
   }
-
   onQuestionChange(event: Event): void {
     this.selectedQuestionIndex = (event.target as HTMLSelectElement).selectedIndex;
-    this.loadFeedbackChart();
+    console.log('Változott a kérdés ID:', this.feedbackQuestions[this.selectedQuestionIndex].id);
+    
+    // Frissítjük a feedback adatokat az új kérdéshez
+    this.loadFeedbackData();
   }
+  
 
   loadDataForMonth(monthIndex: number): void {
     this.selectedMonthData = this.generateRandomDataForMonth(monthIndex);
@@ -170,6 +181,7 @@ export class AdminComponent implements OnInit {
   }
 
   loadFeedbackChart(): void {
+    
     const canvas = document.getElementById('feedbackChart') as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d');
   

@@ -72,7 +72,7 @@
       <h5 class="card-title mb-0">Visszajelzések</h5>
       <select class="form-control w-auto" id="questionSelect" (change)="onQuestionChange($event)">
         <option *ngFor="let question of feedbackQuestions; let i = index" [value]="i">
-          {{ question }}
+          {{ question.question }}
         </option>
       </select>
     </div>
