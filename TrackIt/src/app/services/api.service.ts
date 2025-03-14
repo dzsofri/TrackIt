@@ -75,5 +75,5 @@ export class ApiService {
 
   readFriendRequests(table: string, receiverId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/friendrequests/${receiverId}`, this.tokenHeader());
-}
+  }
 }

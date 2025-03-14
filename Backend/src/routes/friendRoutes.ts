@@ -112,20 +112,26 @@ router.post("/friendrequests/reject/:requestId", tokencheck, async (req: any, re
 
 
 // Barátkérések lekérése
-router.get("/friendrequests/:receiverId", tokencheck, async (req: any, res: any) => {
+router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
     const receiverId = req.params.receiverId;
 
     try {
-        const friendRequests = await AppDataSource.getRepository(FriendRequests).find({
-            where: [{ receiver: { id: receiverId }, status: "pending" }, { sender: { id: receiverId }, status: "pending" }],
-            relations: ["sender", "receiver"]
-        });
+        const friendRequests = await AppDataSource.getRepository(FriendRequests)
+            .createQueryBuilder("friendRequest")
+            .leftJoinAndSelect("friendRequest.sender", "sender")
+            .leftJoinAndSelect("friendRequest.receiver", "receiver")
+            .where("friendRequest.receiverId = :receiverId", { receiverId })
+            .orWhere("friendRequest.senderId = :receiverId", { receiverId })
+            .andWhere("friendRequest.status = :status", { status: "pending" })
+            .getMany();
 
         res.json({ friendRequests });
     } catch (error) {
+        console.error("Error fetching friend requests:", error);
         res.status(500).json({ error: "Hiba történt a barátkérések lekérése közben." });
     }
 });
+
 
 // Követők lekérése
 router.get("/followers", tokencheck, async (req: any, res: any) => {

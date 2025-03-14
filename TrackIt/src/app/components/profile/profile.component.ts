@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   userID: string = "";
+  receiverId: string = "";
   user_statistics: User_statistics | null = null;
   habits: Habit[] = [];
   user_challenges: User_Challenge[] = [];
@@ -33,6 +34,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.userID = this.activatedRoute.snapshot.params['userID'];
+    this.receiverId = this.activatedRoute.snapshot.params['receiverId'];
 
     this.auth.user$.subscribe(user => {
       if (user) {
@@ -80,18 +82,25 @@ export class ProfileComponent implements OnInit {
         });
       }
 
-      this.api.readFriendRequests('friend_requests', this.userID).subscribe({
+      this.api.readFriendRequests('friend_requests', this.receiverId).subscribe({
         next: (res: any) => {
-            if (!res || res.length === 0) {
-                console.warn('No user friend_requests found.');
-                return;
-            }
-            this.friend_requests = res.friendRequests;
+          if (!res || !res.friendRequests || res.friendRequests.length === 0) {
+            console.warn('No user friend_requests found.');
+            return;
+          }
+          this.friend_requests = res.friendRequests.map((request: Friend_Request) => ({
+            id: request.id,
+            senderId: request.senderId,
+            receiverId: request.receiverId,
+            status: request.status,
+            sender: request.sender,
+            receiver: request.receiver
+          }));
         },
         error: (err) => {
-            console.error('Error fetching user friend_requests:', err);
+          console.error('Error fetching user friend_requests:', err);
         }
-    });
+      });
     });
   }
 

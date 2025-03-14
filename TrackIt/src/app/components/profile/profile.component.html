@@ -152,8 +152,9 @@
                 <h3>Barátok kezelése</h3>
                 <div class="barat_box1">
                     <div class="barat_content1" *ngIf="friend_requests; else noFriendRequests">
-                        <p *ngFor="let friend_request of friend_requests" class="barat_text"><img id="profile">
-                            <span class="username">{{friend_request.senderId}}</span>
+                        <p *ngFor="let friend_request of friend_requests" class="barat_text">
+                            <img id="profile">
+                            <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
                             <button class="del1">Barát törlése</button>
                         </p>
                     </div>
