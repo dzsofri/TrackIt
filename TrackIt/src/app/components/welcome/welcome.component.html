@@ -11,15 +11,15 @@
     </div>
 
     <!-- Lépések -->
-    <div class="steps-container" [@moveRight]="stepState">
+    <div class="steps-container" [class.minimized]="isMinimized" [@moveRight]="stepState">
       <div class="steps">
-        <div class="step" [ngClass]="{ active: steps[0].active }">
+        <div class="step" [ngClass]="getStepClass(1)">
           <span class="step-number">1</span> Üdvözlünk!
         </div>
-        <div class="step">  
+        <div class="step" [ngClass]="getStepClass(2)">
           <span class="step-number">2</span> ToDo lista és Kanban tábla létrehozása
         </div>
-        <div class="step" [ngClass]="{ active: steps[2].active }">
+        <div class="step" [ngClass]="getStepClass(3)">
           <span class="step-number">3</span> TrackIt funkciók felfedezése
         </div>
       </div>
