@@ -94,12 +94,37 @@
         <button class="btn btn-outline-secondary">Keresés</button>
       </div>
     </div>
-  <div class="list-group mb-4">
-    <a *ngFor="let user of filteredUsers" href="#" class="list-group-item">
-      {{ user.name }}  <!-- A felhasználó neve -->
-      <button class="btn btn-danger">Törlés</button>
-    </a>
-  </div>
+    <div class="list-group mb-4">
+      <a *ngFor="let user of filteredUsers"  class="list-group-item" (click)="openUserModal(user)">
+        {{ user.name }}
+        <button class="btn btn-danger">Törlés</button>
+      </a>
+    </div>
+    
+    <!-- Modal -->
+    <ng-template #userModal let-modal>
+      <div class="modal fade" tabindex="-1" aria-labelledby="modal-basic-title" aria-hidden="true" [ngClass]="{'show': modal.isOpen()}">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-basic-title">{{ selectedUser?.name }}</h5>
+              <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+            </div>
+            <div class="modal-body">
+              <p><strong>Email:</strong> {{ selectedUser?.email }}</p>
+              <p><strong>Regisztráció dátuma:</strong> {{ selectedUser?.createdAt | date }}</p>
+              <p><strong>Felhasználói státusz:</strong> {{ selectedUser?.role }}</p>
+              <!-- További felhasználói adatok ide jöhetnek -->
+            </div>
+            <div class="modal-footer">
+              <!-- Add footer buttons if necessary -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    
+    
   
 
   <!-- Bejegyzések -->

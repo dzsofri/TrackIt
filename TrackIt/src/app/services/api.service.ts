@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { User } from '../interfaces/user';
 
 @Injectable({
@@ -47,11 +48,11 @@ export class ApiService {
     );
   }
 
-  getAllUsers(): Observable<{ users: User[], message: string }> {
-    return this.http.get<{ users: User[], message: string }>(this.server + '/users', this.tokenHeader()).pipe(
+  getAllUsers(): Observable<{ users: User[], count: number,message: string }> {
+    return this.http.get<{ users: User[],count: number, message: string }>(this.server + '/users', this.tokenHeader()).pipe(
       catchError(error => {
         console.error('Error fetching users:', error);
-        return of({ users: [], message: 'Error occurred while fetching users' });
+        return of({ users: [],count: 0, message: 'Error occurred while fetching users' });
       })
     );
   }
@@ -91,7 +92,7 @@ export class ApiService {
 
   getPosts(): Observable<{ posts: any[], count: number, message?: string }> {
     return this.http.get<{ posts: any[], count: number, message?: string }>(
-      `${this.server}/posts`,
+      `${this.server}/posts/all`,
       this.tokenHeader()
     ).pipe(
       catchError(error => {
@@ -127,6 +128,27 @@ getFeedbackQuestions(): Observable<{ questions: { id: number, question: string }
       })
     );
   }
+  
+  getPostsByMonth(month: number, year: number): Observable<{ posts: any[], count: number, message?: string }> {
+    return this.http.get<{ posts: any[], count: number, message?: string }>(
+      `${this.server}/posts/by-month?month=${month}&year=${year}`,
+      this.tokenHeader()
+    ).pipe(
+      map((response: { posts: any[], count: number }) => {
+        // Ha nincs adat, de a kérés sikeres volt, csak egy üzenetet adunk vissza
+        if (!response.posts || response.posts.length === 0) {
+          return { posts: [], count: 0, message: 'Nincs adat a kiválasztott hónapra' };
+        }
+        return response;
+      }),
+      catchError(error => {
+        console.error('Hiba a havi posztok lekérdezésekor:', error);
+        return of({ posts: [], count: 0, message: 'Hiba történt az adatok lekérése során' });
+      })
+    );
+  }
+  
+  
   
 
   read_Stat(table: string, field: string, op: string, value: string) {

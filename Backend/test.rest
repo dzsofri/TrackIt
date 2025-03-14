@@ -85,7 +85,8 @@ Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmMzcwMzc5L
 
 
 ### posztok listázása (tokennel)
-GET http://localhost:{{PORT}}/posts
+GET http://localhost:{{PORT}}/posts/by-month?month=3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMyNWQ3ZDk4LWMwMzMtNGQ3YS05NTBhLTZlOTU1ZWUxZGU4YyIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTk0MDM1NCwiZXhwIjoxNzQyMDI2NzU0fQ.GzE3n1VKLB5OfMcRqZ25lsXZPv7QQYUjYCUfFVEmz7E"
 
 
 

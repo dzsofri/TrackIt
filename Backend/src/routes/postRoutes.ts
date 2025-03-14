@@ -2,6 +2,8 @@ import { Router } from "express";
 import { Posts } from "../entities/Post";
 import { AppDataSource } from "../data-source";
 import { Between } from "typeorm";
+import { tokencheck } from "../utiles/tokenUtils";
+import { isAdmin } from "../utiles/adminUtils";
 
 const router = Router();
 
@@ -25,7 +27,7 @@ router.get("/all", async (req: any, res: any) => {
 });
 
 
-router.get("/by-month", async (req: any, res: any) => {
+router.get("/by-month",tokencheck, async (req: any, res: any) => {
     try {
         const postRepository = AppDataSource.getRepository(Posts);
 

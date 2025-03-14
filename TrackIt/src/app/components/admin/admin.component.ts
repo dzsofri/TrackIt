@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import Chart from 'chart.js/auto';
 import { CountUp } from 'countup.js';
@@ -8,14 +8,18 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { FeedbackQuestion } from '../../interfaces/feedbackQuestions';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbModule],
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
+  @ViewChild('userModal') userModal: any; // A modális sablon referenciája
+  selectedUser: User | null = null;
+
   months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   selectedMonthData: number[] = [];
   daysInSelectedMonth: string[] = [];
@@ -29,20 +33,90 @@ export class AdminComponent implements OnInit {
   postCount: number = 0;
   rewardCount: number = 2040;
 
+  noDataMessage: string = ''; // Üzenet, ha nincs adat
+
   feedbackQuestions: FeedbackQuestion[] = [];
   feedbackData: number[][] = [];
   feedbackChart: Chart | undefined;
   selectedQuestionIndex: number = 0;
 
-  constructor(private api: ApiService, private auth: AuthService, private router: Router) {}
+  constructor(
+    private api: ApiService, 
+    private auth: AuthService, 
+    private router: Router, 
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
+    this.selectedMonthIndex = new Date().getMonth() - 2; // Kiválasztott hónap módosítása
+    console.log('selectedMonthIndex az ngOnInit-ban:', this.selectedMonthIndex); // Ellenőrzés
+
+    this.loadDataForMonth(this.selectedMonthIndex); // Hívjuk meg a hónap adatainak betöltését
     this.loadFeedbackQuestions();
-    this.loadDataForMonth(this.selectedMonthIndex);
     this.loadPostsChart();
     this.loadFeedbackChart();
     this.getAllUsers();
     this.fetchCounts();
+  }
+
+  openUserModal(user: User): void {
+    this.selectedUser = user; // Beállítjuk a kiválasztott felhasználót
+    this.modalService.open(this.userModal); // Megnyitjuk a modált
+  }
+
+  onMonthChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const newMonthIndex = target.selectedIndex;
+
+    console.log('New selectedMonthIndex:', newMonthIndex); // Hónapváltoztatás ellenőrzése
+    if (this.selectedMonthIndex !== newMonthIndex) {
+      this.selectedMonthIndex = newMonthIndex;
+      console.log('Selected Month Index updated:', this.selectedMonthIndex); // Nyomkövetés
+      this.loadDataForMonth(this.selectedMonthIndex); // Hónap adatainak betöltése
+      this.loadPostsChart(); // Grafikon frissítése
+    }
+  }
+
+  loadDataForMonth(monthIndex: number): void {
+    const year = new Date().getFullYear();
+    this.daysInSelectedMonth = this.generateMonthDays(monthIndex);
+    this.noDataMessage = ''; // Reseteljük az üzenetet, hogy ne maradjon ott a régi hibaüzenet
+    this.api.getPostsByMonth(monthIndex + 1, year).subscribe({
+      next: (response) => {
+        if (!response.posts || response.posts.length === 0) {
+          console.warn("Nincs adat erre a hónapra.");
+          this.noDataMessage = "Nincs adat a kiválasztott hónapra."; // Üzenet, ha nincs adat
+          this.selectedMonthData = this.daysInSelectedMonth.map(() => 0); // Ha nincs adat, üres adatot jelenítünk meg
+        } else {
+          const dailyPostCounts: { [key: string]: number } = {};
+
+          // Inicializáljuk az összes napot nullával
+          this.daysInSelectedMonth.forEach(day => {
+            dailyPostCounts[day] = 0;
+          });
+
+          // Számoljuk meg a posztokat napokra bontva
+          response.posts.forEach(post => {
+            const postDate = new Date(post.createdAt);
+            const day = postDate.getDate().toString();
+            if (dailyPostCounts[day] !== undefined) {
+              dailyPostCounts[day]++;
+            }
+          });
+
+          // Az adatokat a Chart.js számára alakítjuk át
+          this.selectedMonthData = this.daysInSelectedMonth.map(day => dailyPostCounts[day]);
+        }
+
+        this.loadPostsChart();  // Frissítjük a grafikont
+      },
+      error: (error) => {
+        console.error("Hiba a posztok betöltése során:", error);
+        this.noDataMessage = "Hiba történt az adatok betöltése során.";  // Hibaüzenet
+        this.selectedMonthData = this.daysInSelectedMonth.map(() => 0);  // Ha hiba történt, üres adatot jelenítünk meg
+        this.loadPostsChart();  // Frissítjük a grafikont
+      }
+    });
   }
 
   loadFeedbackQuestions(): void {
@@ -83,7 +157,9 @@ export class AdminComponent implements OnInit {
   }
 
   fetchCounts(): void {
-    this.api.getUsers().subscribe(response => this.initCountUp('userCount', response.count));
+    this.api.getAllUsers().subscribe(response => 
+      this.initCountUp('userCount', response.users.length));
+    
     this.api.getChallenges().subscribe(response => this.initCountUp('challengeCount', response.count));
     this.api.getPosts().subscribe(response => this.initCountUp('postCount', response.count));
   }
@@ -92,20 +168,9 @@ export class AdminComponent implements OnInit {
     new CountUp(elementId, count, { duration: 2.5 }).start();
   }
 
-  onMonthChange(event: Event): void {
-    this.selectedMonthIndex = (event.target as HTMLSelectElement).selectedIndex;
-    this.loadDataForMonth(this.selectedMonthIndex);
-    this.loadPostsChart();
-  }
-
   onQuestionChange(event: Event): void {
     this.selectedQuestionIndex = (event.target as HTMLSelectElement).selectedIndex;
     this.loadFeedbackData();
-  }
-
-  loadDataForMonth(monthIndex: number): void {
-    this.selectedMonthData = this.generateRandomDataForMonth(monthIndex);
-    this.daysInSelectedMonth = this.generateMonthDays(monthIndex);
   }
 
   loadPostsChart(): void {
