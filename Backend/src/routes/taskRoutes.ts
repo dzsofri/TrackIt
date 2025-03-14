@@ -13,9 +13,10 @@ const router = Router();
 
 
 // Új feladat létrehozása (Token ellenőrzéssel)
-router.post("/", async (req: any, res: any) => {
+router.post("/", tokencheck, async (req: any, res: any) => { // tokencheck middleware hozzáadása
     try {
         const { title, description, priority, dueDate } = req.body;
+        const userId = req.user.id; // A tokenből kinyert userId
 
         // Hiányzó adatok ellenőrzése
         if (!title || !priority || !dueDate) {
@@ -30,7 +31,9 @@ router.post("/", async (req: any, res: any) => {
         task.priority = priority;
         task.dueDate = new Date(dueDate);
         task.createdAt = new Date();
+        task.userId = userId; // A kinyert userId hozzárendelése a feladathoz
 
+        // Task mentése az adatbázisba
         await AppDataSource.getRepository(Tasks).save(task);
 
         return res.status(201).json({ message: "Feladat sikeresen létrehozva!", task });
