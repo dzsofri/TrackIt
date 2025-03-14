@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { User_Challenge } from '../../interfaces/user_challenges';
+import { Friend_Request } from '../../interfaces/friend_requests';
 
 @Component({
   selector: 'app-profile',
@@ -21,9 +22,11 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   userID: string = "";
+  receiverId: string = "";
   user_statistics: User_statistics | null = null;
   habits: Habit[] = [];
   user_challenges: User_Challenge[] = [];
+  friend_requests: Friend_Request[] = [];
   totalProgressPercentage: number = 0;
   weeklyProgressPercentage: number = 0;
   monthlyProgressPercentage: number = 0;
@@ -31,6 +34,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.userID = this.activatedRoute.snapshot.params['userID'];
+    this.receiverId = this.activatedRoute.snapshot.params['receiverId'];
 
     this.auth.user$.subscribe(user => {
       if (user) {
@@ -77,6 +81,26 @@ export class ProfileComponent implements OnInit {
           }
         });
       }
+
+      this.api.readFriendRequests('friend_requests', this.receiverId).subscribe({
+        next: (res: any) => {
+          if (!res || !res.friendRequests || res.friendRequests.length === 0) {
+            console.warn('No user friend_requests found.');
+            return;
+          }
+          this.friend_requests = res.friendRequests.map((request: Friend_Request) => ({
+            id: request.id,
+            senderId: request.senderId,
+            receiverId: request.receiverId,
+            status: request.status,
+            sender: request.sender,
+            receiver: request.receiver
+          }));
+        },
+        error: (err) => {
+          console.error('Error fetching user friend_requests:', err);
+        }
+      });
     });
   }
 

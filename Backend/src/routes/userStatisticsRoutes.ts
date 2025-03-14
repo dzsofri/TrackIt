@@ -22,7 +22,7 @@ router.get("/statistics/:userId", tokencheck, async (req: any, res: any) => {
     });
 
     if (!statistics || statistics.length === 0) {
-      return res.status(404).json({ error: "No statistics available for the user." });
+      return res.status(204).json({ message: "No statistics available for the user." });
     }
 
     res.json(statistics);
@@ -45,7 +45,7 @@ router.get("/habit/:userId", tokencheck, async (req: any, res: any) => {
     });
 
     if (!habits || habits.length === 0) {
-      return res.status(404).json({ error: "No habits available for the user." });
+      return res.status(204).json({ message: "No habits available for the user." });
     }
 
     res.json(habits);
@@ -68,7 +68,7 @@ router.get("/challenges/:userId", tokencheck, async (req: any, res: any) => {
     });
 
     if (!challenges || challenges.length === 0) {
-      return res.status(404).json({ error: "No challenges available for the user." });
+      return res.status(204).json({ message: "No challenges available for the user." });
     }
 
     res.json(challenges);
