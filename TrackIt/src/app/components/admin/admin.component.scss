@@ -1,0 +1,248 @@
+@use "sass:color";
+
+// Color variables
+$primary-color: #f8f9fa;
+$card-bg: #ffffff;
+$btn-danger-color: #dc3545;
+$border-radius-sm: 10px;
+$font-size-lg: 1.25rem;
+$font-size-sm: 1rem;
+$chart-bg: #d6f7ff;
+
+// Card styles
+.card {
+  background-color: $card-bg;
+  border-radius: $border-radius-sm;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .card-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-weight: bold;
+    font-size: $font-size-lg;
+  }
+
+  .card-text {
+    font-size: $font-size-sm;
+  }
+
+  
+}
+
+// Stat card styles for equal size
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 150px; // Set height for equal size
+  background-color: $card-bg;
+  border-radius: $border-radius-sm;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 15px;
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .card-text {
+    text-align: center;
+  }
+
+  .icon-svg {
+    width: 40px; // Adjusted icon size for stat cards
+    height: 40px;
+    margin-top: 10px;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Icon styles
+.icon-svg {
+  width: 50px;
+  height: 50px;
+  margin-left: 15px;
+  margin-bottom: 0;
+  align-self: center;
+}
+
+// Chart container
+.chart-container {
+  position: relative;
+  width: 90%;
+  height: 400px;
+  margin: auto;
+}
+
+// Search group
+.searchgroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  input {
+    border-radius: $border-radius-sm;
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+
+  button {
+    border-radius: $border-radius-sm;
+  }
+}
+
+// List group and items
+.list-group {
+  border-radius: $border-radius-sm;
+  background-color: #fff;
+  padding: 10px;
+}
+
+.list-group-item {
+  border-radius: $border-radius-sm;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #e9ecef;
+  }
+
+  .btn-danger {
+    background-color: $btn-danger-color;
+    border: none;
+    color: #fff;
+    font-size: $font-size-sm;
+    border-radius: $border-radius-sm;
+    padding: 6px 12px;
+
+    &:hover {
+      background-color: color.adjust($btn-danger-color, $lightness: -5%);
+    }
+  }
+}
+
+// Media queries for responsiveness
+@media (max-width: 767px) {
+  .col-md-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .searchgroup {
+    flex-direction: column !important;
+    width: 100%;
+    gap: 10px;
+
+    input {
+      width: 100%;
+      margin-right: 0;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .icon-svg {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .btn-outline-secondary {
+    width: 100%;
+  }
+
+  .stat-card {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 991px) {
+  .card-body {
+    flex-direction: column !important;
+    align-items: center;
+  }
+
+  .card-text {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
+    width: 100%;
+  }
+
+  .icon-svg {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .btn-outline-secondary {
+    padding: 8px 20px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .card-body {
+    flex-direction: column !important;
+    align-items: center;
+  }
+
+  .icon-svg {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .btn-outline-secondary {
+    padding: 8px 20px;
+  }
+}
+
+// Container layout
+.container {
+  margin-top: 50px;
+
+  .row {
+    margin-bottom: 20px;
+  }
+
+  .col-md-3 {
+    margin-bottom: 10px;
+  }
+}
+
+// Button styles
+.btn-danger {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: $border-radius-sm;
+}
+
+.btn-outline-secondary {
+  padding: 8px 20px;
+  font-size: 1rem;
+  border-radius: $border-radius-sm;
+}
+

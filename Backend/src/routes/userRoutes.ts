@@ -7,6 +7,7 @@ import { validatePassword } from "../utiles/passwordUtils";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from 'dotenv'; // dotenv importálása
+import { isAdmin } from "../utiles/adminUtils";
 const ejs = require("ejs");
 const path = require("path");
 
@@ -136,41 +137,32 @@ router.get('/:id', tokencheck, async (req: any, res: any) => {
 });
 
 // Felhasználó adatainak módosítása
-router.put('/:id', tokencheck, async (req: any, res: any) => {
+router.put('/:id', tokencheck, isAdmin, async (req: any, res: any) => {
     const { id } = req.params;
-    const { name, email, password, pictureId } = req.body;
-    const userId = req.user.id;
+    const { role } = req.body;  // Csak role változása
     const invalidFields: string[] = [];
-
-    const isUserAdmin = req.user.role === "ADMIN";
-    if (userId !== id && !isUserAdmin) {
-        return res.status(403).json({ error: 'Nincs jogosultságod módosítani ezt a felhasználót.', invalid: ['user'] });
-    }
 
     try {
         const userRepository = AppDataSource.getRepository(Users);
         const user = await userRepository.findOne({ where: { id } });
+        
         if (!user) {
             return res.status(404).json({ error: 'Felhasználó nem található.', invalid: ['user'] });
         }
 
-        if (name) user.name = name;
-        if (email) user.email = email;
-        if (password) {
-            if (!validatePassword(password)) {
-                addInvalidField(invalidFields, 'password');
-                return res.status(400).json({ message: "A jelszó nem felel meg az erősségi követelményeknek!", invalid: invalidFields });
-            }
-            user.password = await bcrypt.hash(password, 10);
-        }
-        if (pictureId) user.pictureId = pictureId;
+        if (role) user.role = role;
 
-        await userRepository.save(user);
-        res.json({ message: 'Felhasználó sikeresen frissítve.' });
+        const updatedUser = await userRepository.save(user);  // A frissített felhasználó mentése
+        console.log("Frissített felhasználó:", updatedUser);  // Debug üzenet
+
+        res.json({ message: 'Felhasználó sikeresen frissítve.', updatedUser });
     } catch (error) {
-        res.status(500).json({ error: 'Hiba történt a felhasználó adatainak frissítése közben.', invalid: invalidFields });
+        console.error("Hiba a felhasználó frissítésekor:", error);  // Hibakezelés
+        res.status(500).json({ error: 'Hiba történt a felhasználó adatainak frissítése közben.' });
     }
 });
+
+
 
 // Felhasználó törlése
 router.delete('/:id', tokencheck, async (req: any, res: any) => {
