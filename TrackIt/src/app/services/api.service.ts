@@ -27,14 +27,19 @@ export class ApiService {
   }
 
   registration(data: object) {
-    return this.http.post(this.server + '/users/register', data);
+    return this.http.post(this.server + '/users/register', data).pipe(
+      catchError(error => {
+        console.error('Registration failed', error);
+        return of({ message: 'Registration failed' });
+      })
+    );
   }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.server}/users/login`, { email, password }).pipe(
       catchError(error => {
         console.error('Login failed', error);
-        return of(error);
+        return of({ message: 'Login failed' });
       })
     );
   }
@@ -43,16 +48,16 @@ export class ApiService {
     return this.http.post<any>(`${this.server}/users/forgot-password`, { email }).pipe(
       catchError(error => {
         console.error('Forgot password failed', error);
-        return of(error);
+        return of({ message: 'Forgot password failed' });
       })
     );
   }
 
-  getAllUsers(): Observable<{ users: User[], count: number,message: string }> {
-    return this.http.get<{ users: User[],count: number, message: string }>(this.server + '/users', this.tokenHeader()).pipe(
+  getAllUsers(): Observable<{ users: User[], count: number, message: string }> {
+    return this.http.get<{ users: User[], count: number, message: string }>(this.server + '/users', this.tokenHeader()).pipe(
       catchError(error => {
         console.error('Error fetching users:', error);
-        return of({ users: [],count: 0, message: 'Error occurred while fetching users' });
+        return of({ users: [], count: 0, message: 'Error occurred while fetching users' });
       })
     );
   }
@@ -61,7 +66,7 @@ export class ApiService {
     return this.http.post<any>(`${this.server}/users/reset-password`, { email, token, newPassword }).pipe(
       catchError(error => {
         console.error('Password reset failed', error);
-        return of(error);
+        return of({ message: 'Password reset failed' });
       })
     );
   }
@@ -102,20 +107,17 @@ export class ApiService {
     );
   }
 
-// Ezt a kódot feltételezve, hogy a backend biztosítja az id mezőt
-getFeedbackQuestions(): Observable<{ questions: { id: number, question: string }[], message?: string }> {
-  return this.http.get<{ questions: { id: number, question: string }[], message?: string }>(
-    `${this.server}/feedbacks/questions`,
-    this.tokenHeader()
-  ).pipe(
-    catchError(error => {
-      console.error('Error fetching feedback questions:', error);
-      return of({ questions: [], message: 'Error occurred while fetching feedback questions' });
-    })
-  );
-}
-
-
+  getFeedbackQuestions(): Observable<{ questions: { id: number, question: string }[], message?: string }> {
+    return this.http.get<{ questions: { id: number, question: string }[], message?: string }>(
+      `${this.server}/feedbacks/questions`,
+      this.tokenHeader()
+    ).pipe(
+      catchError(error => {
+        console.error('Error fetching feedback questions:', error);
+        return of({ questions: [], message: 'Error occurred while fetching feedback questions' });
+      })
+    );
+  }
 
   getFeedbackData(questionId: number): Observable<{ questionId: number, feedbackCount: Record<number, number>, message?: string }> {
     return this.http.get<{ questionId: number, feedbackCount: Record<number, number>, message?: string }>(
@@ -128,14 +130,13 @@ getFeedbackQuestions(): Observable<{ questions: { id: number, question: string }
       })
     );
   }
-  
+
   getPostsByMonth(month: number, year: number): Observable<{ posts: any[], count: number, message?: string }> {
     return this.http.get<{ posts: any[], count: number, message?: string }>(
       `${this.server}/posts/by-month?month=${month}&year=${year}`,
       this.tokenHeader()
     ).pipe(
       map((response: { posts: any[], count: number }) => {
-        // Ha nincs adat, de a kérés sikeres volt, csak egy üzenetet adunk vissza
         if (!response.posts || response.posts.length === 0) {
           return { posts: [], count: 0, message: 'Nincs adat a kiválasztott hónapra' };
         }
@@ -147,7 +148,15 @@ getFeedbackQuestions(): Observable<{ questions: { id: number, question: string }
       })
     );
   }
-  
+
+  updateUser(id: string, userData: any): Observable<any> {
+    return this.http.put<any>(`${this.server}/users/${id}`, userData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Error updating user:', error);
+        return of({ message: 'User update failed' });
+      })
+    );
+  }
   
   
 

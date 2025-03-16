@@ -101,32 +101,29 @@
       </a>
     </div>
     
-    <!-- Modal -->
-    <ng-template #userModal let-modal>
-      <div class="modal fade" tabindex="-1" aria-labelledby="modal-basic-title" aria-hidden="true" [ngClass]="{'show': modal.isOpen()}">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modal-basic-title">{{ selectedUser?.name }}</h5>
-              <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
-            </div>
-            <div class="modal-body">
-              <p><strong>Email:</strong> {{ selectedUser?.email }}</p>
-              <p><strong>Regisztráció dátuma:</strong> {{ selectedUser?.createdAt | date }}</p>
-              <p><strong>Felhasználói státusz:</strong> {{ selectedUser?.role }}</p>
-              <!-- További felhasználói adatok ide jöhetnek -->
-            </div>
-            <div class="modal-footer">
-              <!-- Add footer buttons if necessary -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    
-    
-  
 
+<!-- Modal -->
+<ng-template #userModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{ selectedUser?.name }}</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p><strong>Email:</strong> {{ selectedUser?.email }}</p>
+    <p><strong>Regisztráció dátuma:</strong> {{ selectedUser?.createdAt | date }}</p>
+    <select *ngIf="selectedUser" class="form-select" id="role" [(ngModel)]="selectedUser.role" name="role" required>
+      <option value="admin">Admin</option>
+      <option value="user">Felhasználó</option>
+    </select>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="onSaveChanges()">Mentés</button>
+  </div>
+</ng-template>
+
+
+    
+    
   <!-- Bejegyzések -->
   <h5>Bejegyzések</h5>
 

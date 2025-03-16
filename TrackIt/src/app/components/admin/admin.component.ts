@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { FeedbackQuestion } from '../../interfaces/feedbackQuestions';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -60,9 +61,43 @@ export class AdminComponent implements OnInit {
   }
 
   openUserModal(user: User): void {
-    this.selectedUser = user; // Beállítjuk a kiválasztott felhasználót
-    this.modalService.open(this.userModal); // Megnyitjuk a modált
+    this.selectedUser = user || { role: 'user' }; // Fallback to a default object if null
+    this.modalService.open(this.userModal, { centered: true, size: 'lg' });
   }
+  
+  
+  onSaveChanges(): void {
+    if (this.selectedUser && this.selectedUser.id) {  // Ellenőrizd, hogy az id létezik
+      const userData = {
+        role: this.selectedUser.role  // Csak a role mezőt küldjük el
+      };
+  
+      console.log("Mentés:", userData);  // Ellenőrzés
+  
+      // Az updateUser most már biztosan két paraméterrel hívható
+      this.api.updateUser(this.selectedUser.id, userData).subscribe({
+        next: (response) => {
+          console.log("Válasz a backendről:", response);
+          if (response.updatedUser) {
+            console.log("Frissített felhasználó:", response.updatedUser);
+            this.getAllUsers();  // Frissíti a felhasználói listát
+          } else {
+            console.error("Hiba történt a frissítés során.");
+          }
+        },
+        error: (error) => {
+          console.error("Hiba a felhasználó frissítésekor:", error);
+        }
+      });
+    } else {
+      console.error("Nem található felhasználó id.");
+    }
+  }
+  
+  
+  
+
+  
 
   onMonthChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
