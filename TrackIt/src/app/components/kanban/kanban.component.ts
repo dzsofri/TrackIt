@@ -29,6 +29,9 @@ interface Column {
 })
 
 export class KanbanComponent implements OnInit {
+  noTasksMessage: string | null = null; // 💡 Üzenet tárolására
+
+
   columns: Column[] = [
     { name: 'Teendők', tasks: [] },
     { name: 'Folyamatban', tasks: [] },
@@ -42,18 +45,25 @@ export class KanbanComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get<{ tasks: Task[] }>("http://localhost:3000/tasks")
+    this.http.get<{ message?: string; tasks: Task[] }>("http://localhost:3000/tasks")
       .subscribe({
         next: (response) => {
           console.log("Feladatok betöltve:", response.tasks);
-          
+
           // Az oszlopok kiürítése az új betöltéshez
           this.columns.forEach(column => column.tasks = []);
-  
+
+          // Ha nincsenek feladatok, figyelmeztetés kiírása
+          if (response.tasks.length === 0) {
+            console.warn(response.message || "Nincsenek feladatok az adatbázisban!");
+            this.noTasksMessage = response.message || "Nincsenek feladatok az adatbázisban!"; // UI-nak tárolás
+            return;
+          }
+
           // A feladatok hozzáadása a megfelelő oszlopokhoz
           response.tasks.forEach(task => {
-            console.log('Task:', task); // Nyomtasd ki a feladatokat
-  
+            console.log('Task:', task); // Nyomtatás ellenőrzéshez
+
             if (task.status === 'todo') {
               this.columns[0].tasks.push(task); // Teendők oszlop
             } else if (task.status === 'in-progress') {
@@ -62,15 +72,17 @@ export class KanbanComponent implements OnInit {
               this.columns[2].tasks.push(task); // Kész oszlop
             }
           });
-  
+
           // Az oszlopok kiírása a konzolra ellenőrzéshez
           console.log('Updated columns:', this.columns);
         },
         error: (error) => {
           console.error("Hiba történt a feladatok lekérdezésekor:", error);
+          this.noTasksMessage = "Hiba történt a feladatok betöltésekor.";
         }
       });
-  }
+}
+
   
   // **Új feladat inicializálása**
   private createEmptyTask(): Task {

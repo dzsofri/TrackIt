@@ -266,45 +266,4 @@
   }
 
 
-  .kanban-column{
-    height: 80%;
-  }
-
-  .steps-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 1rem;
-    position: relative; /* Ezzel biztosíthatod, hogy ne csússzon el */
-    z-index: 10; /* Ha esetleg más elemek kitakarják */
-  }
-
-  .steps-container.reduced {
-    transform: scale(0.8);
-  }
-
-
-
-  .reduced .step {
-    font-size: 0.9rem; // Kisebb méret, ha Kanban megjelenik
-    padding: 5px 10px;
-  }
-
-
-  .steps-container.minimized {
-
-    transform: none;
-    max-width: 250px;
-    padding: 0.5rem;
-  }
-
-  .steps-container.minimized .step {
-    font-size: 0.9rem;
-    padding: 5px 10px;
-    text-align: left;
-  }
 

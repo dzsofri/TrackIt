@@ -13,10 +13,9 @@ const router = Router();
 
 
 // Új feladat létrehozása (Token ellenőrzéssel)
-router.post("/", tokencheck, async (req: any, res: any) => { // tokencheck middleware hozzáadása
+router.post("/", async (req: any, res: any) => { // tokencheck middleware hozzáadása
     try {
         const { title, description, priority, dueDate } = req.body;
-        const userId = req.user.id; // A tokenből kinyert userId
 
         // Hiányzó adatok ellenőrzése
         if (!title || !priority || !dueDate) {
@@ -31,7 +30,6 @@ router.post("/", tokencheck, async (req: any, res: any) => { // tokencheck middl
         task.priority = priority;
         task.dueDate = new Date(dueDate);
         task.createdAt = new Date();
-        task.userId = userId; // A kinyert userId hozzárendelése a feladathoz
 
         // Task mentése az adatbázisba
         await AppDataSource.getRepository(Tasks).save(task);
@@ -50,7 +48,7 @@ router.get("/", async (req: any, res: any) => {
         const tasks = await AppDataSource.getRepository(Tasks).find();
 
         if (!tasks.length) {
-            return res.status(404).json({ message: "Nincsenek feladatok az adatbázisban!" });
+            return res.status(200).json({ message: "Nincsenek feladatok az adatbázisban!", tasks: [] }); // 🔹 Üzenet + üres lista
         }
 
         return res.status(200).json({ tasks });
