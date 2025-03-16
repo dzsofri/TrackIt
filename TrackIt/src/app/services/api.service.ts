@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +74,11 @@ export class ApiService {
     return this.http.get(`${this.server}/${table}/challenges/${userId}`, this.tokenHeader());
   }
 
-  readFriendRequests(table: string, receiverId: string): Observable<any> {
-    return this.http.get(`${this.server}/${table}/friendrequests/${receiverId}`, this.tokenHeader());
+  readFriendRequests(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/friendrequests/${userId}`, this.tokenHeader());
+  }
+
+  getUser(userId: string): Observable<User> {
+    return this.http.get<User>(`${this.server}/users/${userId}`, this.tokenHeader());
   }
 }

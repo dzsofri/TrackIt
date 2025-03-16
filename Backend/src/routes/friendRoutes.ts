@@ -4,6 +4,7 @@ import { FriendRequests } from "../entities/FriendRequest";
 import { Users } from "../entities/User";
 import { tokencheck } from "../utiles/tokenUtils";
 import { Follows } from "../entities/Follow";
+import { Brackets } from "typeorm";
 
 const router = Router();
 
@@ -122,7 +123,10 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
             .leftJoinAndSelect("friendRequest.receiver", "receiver")
             .where("friendRequest.receiverId = :receiverId", { receiverId })
             .orWhere("friendRequest.senderId = :receiverId", { receiverId })
-            .andWhere("friendRequest.status = :status", { status: "pending" })
+            .andWhere(new Brackets(qb => {
+                qb.where("friendRequest.status = :pendingStatus", { pendingStatus: "pending" })
+                  .orWhere("friendRequest.status = :acceptedStatus", { acceptedStatus: "accepted" })
+            }))
             .getMany();
 
         res.json({ friendRequests });

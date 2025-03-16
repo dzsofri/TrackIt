@@ -140,29 +140,48 @@
             <div class="col-12 col-sm-12 col-md-6 mb-4">
                 <h3>Barátok kezelése</h3>
                 <div class="barat_box1">
-                    <div class="barat_content1">
-                        <p class="barat_text"><img id="profile">
-                            <span class="username">"Felhasználó neve"</span>
-                            <button class="del1">Barát törlése</button>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-12 col-md-6 mb-4">
-                <h3>Barátok kezelése</h3>
-                <div class="barat_box1">
-                    <div class="barat_content1" *ngIf="friend_requests; else noFriendRequests">
-                        <p *ngFor="let friend_request of friend_requests" class="barat_text">
+                  <div class="barat_content1">
+                    <ng-container *ngIf="friend_requests.length > 0; else noFriendRequests">
+                      <ng-container *ngIf="hasAcceptedFriends(); else noFriendRequests">
+                        <ng-container *ngFor="let friend_request of friend_requests">
+                          <p *ngIf="friend_request.status === 'accepted'" class="barat_text">
                             <img id="profile">
                             <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
                             <button class="del1">Barát törlése</button>
-                        </p>
-                    </div>
+                          </p>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </div>
                 </div>
                 <ng-template #noFriendRequests>
-                    <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+                  <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
                 </ng-template>
-            </div>
+              </div>
+              <div class="col-12 col-sm-12 col-md-6 mb-4">
+                <h3>Követési kérelmek kezelése</h3>
+                <div class="barat_box1">
+                  <div class="barat_content1">
+                    <ng-container *ngIf="friend_requests.length > 0; else noFriendRequests">
+                      <ng-container *ngIf="hasPendingFriends(); else noFriendRequests">
+                        <ng-container *ngFor="let friend_request of friend_requests">
+                          <p *ngIf="friend_request.status === 'pending'" class="barat_text">
+                            <img id="profile">
+                            <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
+                            <span class="buttons">
+                                <button class="add">Megerősítés</button>
+                                <button class="del2">Barát törlése</button>
+                              </span>
+                          </p>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+                <ng-template #noFriendRequests>
+                  <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+                </ng-template>
+              </div>
         </div>
     </div>
 
