@@ -1,6 +1,20 @@
-
-<!--<router-outlet></router-outlet>-->
-
-      <router-outlet></router-outlet>
-
-  
+<div class="app-container">
+      <div class="position-relative">
+        <!-- Csak akkor jelenik meg a sidebar, ha az isSidebarVisible true -->
+        <app-sidebar *ngIf="isSidebarVisible" [isSidebarCollapsed]="isSidebarCollapsed" (sidebarToggle)="onSidebarToggle()"></app-sidebar>
+        <button
+          class="sidebar-toggle-btn"
+          [ngClass]="{ 'sidebar-collapsed': isSidebarCollapsed }"
+          (click)="onSidebarToggle()"
+        >
+          <i [class]="isSidebarCollapsed ? 'fas fa-arrow-right' : 'fas fa-arrow-left'"></i>
+        </button>
+      </div>
+    
+      <main class="content" [ngClass]="{ 'content-expanded': isSidebarCollapsed }">
+        <div class="content-inner">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+    </div>
+    

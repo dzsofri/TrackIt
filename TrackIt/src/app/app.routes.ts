@@ -9,17 +9,18 @@ import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 import { AdminComponent } from './components/admin/admin.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { sidebarGuard } from './guards/sidebar.guard';
 
 
 export const routes: Routes = [
-  { path: 'welcome', component: WelcomeComponent,canActivate: [authGuard], data: { animation: 'WelcomePage' } },
+  { path: 'welcome', component: WelcomeComponent,canActivate: [authGuard, sidebarGuard], data: { animation: 'WelcomePage' } },
   { path: 'kanban', component: KanbanComponent, canActivate: [authGuard], data: { animation: 'KanbanPage' } }, // Csak bejelentkezett felhasználóknak
   { path: 'admin', component: AdminComponent}, // Csak bejelentkezett felhasználóknak
  
 
 
-  { path: 'login', component: LoginComponent },
-  { path: 'registration', component: RegistrationComponent },
+  { path: 'login', component: LoginComponent, canActivate: [sidebarGuard] },
+  { path: 'registration', component: RegistrationComponent, canActivate: [sidebarGuard] },
   { path: 'lostpass', component: LostPassComponent },
   { path: 'reset-password', component: PassChangeComponent },
 
