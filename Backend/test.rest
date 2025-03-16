@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "email": "beretizsofia310@gmail.com",
-  "password": "Titkosjelszo123"
+  "password": "Nyuszika310"
 }
 
 
@@ -17,12 +17,13 @@ GET http://localhost:{{PORT}}/users
 GET http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
 Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzenRAZXhhbXBsZS5jb20iLCJpYXQiOjE3Mzg2MDk3MjIsImV4cCI6MTczODYxMzMyMn0.5EdWDe46fSRLHz17DgqD-1c-AxXePO3jBztNvKTncyU"
 ### Felhasználó frissítése ID alapján
-PUT http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
+PUT http://localhost:{{PORT}}/users/3bae486c-7ff3-4d47-bcc2-cd6b6bd08584
+Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTg2MzIyNywiZXhwIjoxNzQxOTQ5NjI3fQ.e2D2ORegVAs3tNSMgMaMl-D0VMgQT1V5na9bj5YouVk"
 Content-Type: application/json
 
 {
-  "name": "Frissített Felhasználó",
-  "email": "frissitett@example.com",
+  "name": "Beréti Zsófia",
+  "email": "beretizsofia310@gmail.com",
   "password": "Titkosjelszo123",
   "role": "admin",
   "picture_id": 2
@@ -75,8 +76,23 @@ Content-Type: application/json
 
 
 ### lekérdezések listázása (tokennel)
-GET http://localhost:{{PORT}}/feedbacks
-Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+GET http://localhost:{{PORT}}/feedbacks/questions
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBiNDdkNTc4LTNkMWItNGNhZS04ODhkLWMwY2FlODU3OTIwYSIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTg2NDA0NywiZXhwIjoxNzQxOTUwNDQ3fQ.KBi-BNlCBRdHlgYqInVjkkNhwH0zoSm8UY3Oqq-w3r0
+
+### lekérdezések listázása (tokennel)
+GET http://localhost:{{PORT}}/feedbacks/data/1
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmMzcwMzc5LTcxNjAtNDkzYi1iNTE3LWY2YzllYzRhZjEzMiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTg1Njg3MSwiZXhwIjoxNzQxOTQzMjcxfQ.KCH3wsTkYFKr6K3DEalRMGljdmtfT2jfduj5bB_HK1o
+
+
+### posztok listázása (tokennel)
+GET http://localhost:{{PORT}}/posts/by-month?month=3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMyNWQ3ZDk4LWMwMzMtNGQ3YS05NTBhLTZlOTU1ZWUxZGU4YyIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTk0MDM1NCwiZXhwIjoxNzQyMDI2NzU0fQ.GzE3n1VKLB5OfMcRqZ25lsXZPv7QQYUjYCUfFVEmz7E"
+
+
+
+### challengek listázása (tokennel)
+GET http://localhost:{{PORT}}/challenges
+
 
 ### visszajelzések listázása userId alapján(tokennel)
 GET http://localhost:{{PORT}}/feedbacks/user/3bae486c-7ff3-4d47-bcc2-cd6b6bd08584
@@ -87,6 +103,7 @@ Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjL
 ### Visszajelzések lekérdezése kérdés ID alapján
 GET http://localhost:3000/feedbacks/question/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+
 
 ###  Visszajelzések átlagos értékelésének lekérése
 GET http://localhost:3000/feedbacks/average-rating

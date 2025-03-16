@@ -1,129 +1,145 @@
 <div class="container">
-    <div class="row mb-4">
+  <!-- Statisztikai kártyák -->
+
+    <div class="row mb-4 stat-cards">
       <div class="col-md-3">
-        <div class="card p-3 text-center">
+        <div class="card stat-card p-3 text-center">
           <div class="card-body">
-            <div><h5 class="fs-5">Összes felhasználó</h5>
-            <p class="card-title">40689</p></div>
-            
+            <div class="card-text">
+              <h5 class="fs-5">Összes felhasználó</h5>
+            <p class="card-title" id="userCount">0</p></div>
             <img src="assets/svg/allusers.svg" alt="Felhasználók" class="icon-svg">
-          </div>
+          
+        </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card p-3 text-center">
+        <div class="card stat-card p-3 text-center">
           <div class="card-body">
-            <div><h5 class="fs-5">Összes kihívás</h5>
-            <p class="card-title">10293</p></div>
-            
+            <div class="card-text">
+            <h5  class="fs-5">Összes kihívás</h5>
+            <p class="card-title" id="challengeCount">0</p></div>
             <img src="assets/svg/allchallenges.svg" alt="Kihívások" class="icon-svg">
-          </div>
+          
+        </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card p-3 text-center">
+        <div class="card stat-card p-3 text-center">
           <div class="card-body">
-            <div><h5 class="fs-5">Összes bejegyzés</h5>
-            <p class="card-title">14562</p></div>
-            
+            <div class="card-text">
+            <h5 class="fs-5">Összes bejegyzés</h5>
+            <p class="card-title" id="postCount">0</p>
+          </div>
             <img src="assets/svg/allposts.svg" alt="Bejegyzések" class="icon-svg">
           </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card p-3 text-center">
+        <div class="card stat-card p-3 text-center">
           <div class="card-body">
-            <div><h5 class="fs-5">Összes jutalom</h5>
-            <p class="card-title">2040</p></div>
-            
+            <div class="card-text">
+            <h5 class="fs-">Összes jutalom</h5>
+            <p class="card-title" id="rewardCount">0</p>
+          </div>
             <img src="assets/svg/allrewards.svg" alt="Jutalmak" class="icon-svg">
           </div>
         </div>
       </div>
     </div>
- 
 
-
-        <!-- Line Chart (Placeholder) -->
-        <div class="mb-4">
-          <div class="d-flex justify-content-between align-items-center">
-              <h5 class="card-title mb-0">Postok</h5>
-              <select class="form-control w-auto" id="monthSelect" (change)="onMonthChange($event)">
-                  <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
-              </select>
-          </div>
-          <div class="card mt-2">
-              <div class="card-body">
-                  <div class="chart-container">
-                      <canvas id="postsChart"></canvas>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-        <!-- Search Bar -->
-        <div class=" mb-3 searchgroup">
-          <div class="usersText"> <h5>Felhasználók</h5></div>
-           
-            <div class="search-bar">
-                <input type="text" class="form-control" placeholder="Keresés" aria-label="Keresés">
-                <button class="btn btn-outline-secondary">Keresés</button>
-            </div>
-        </div>
-        
-        <div class="list-group mb-4">
-            <a href="#" class="list-group-item">
-                Lois Griffin
-                <button class="btn btn-danger">Törlés</button>
-            </a>
-            <a href="#" class="list-group-item">
-                Stewie Griffin
-                <button class="btn btn-danger">Törlés</button>
-            </a>
-            <a href="#" class="list-group-item">
-                Joe Swanson
-                <button class="btn btn-danger">Törlés</button>
-            </a>
-            <a href="#" class="list-group-item">
-                Vargucz Gergő
-                <button class="btn btn-danger">Törlés</button>
-            </a>
-            <a href="#" class="list-group-item">
-                Glenn Quagmire
-                <button class="btn btn-danger">Törlés</button>
-            </a>
-            <a href="#" class="list-group-item">
-                Herbert
-                <button class="btn btn-danger">Törlés</button>
-            </a>
-            <a href="#" class="list-group-item">
-                Adam West
-                <button class="btn btn-danger">Törlés</button>
-            </a>
-            <a href="#" class="list-group-item">
-                Philip J. Fry
-                <button class="btn btn-danger">Törlés</button>
-            </a>
-        </div>
-
-        <!-- Posts Section -->
-        <h5>Bejegyzések</h5>
-
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h6 class="card-title">somodikonrad18</h6>
-                <p class="card-text">Nagyon komoly dolgok történnének most</p>
-                <img src="https://via.placeholder.com/200x200.png" class="img-fluid" alt="Post Image">
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h6 class="card-title">Robbano Cica</h6>
-                <p class="card-text">Robbannak a cica kihívásokkkk</p>
-                <img src="https://via.placeholder.com/200x200.png" class="img-fluid" alt="Post Image">
-            </div>
-        </div>
-
+  
+  <!-- Posztok diagram -->
+  <div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">Postok</h5>
+      <select class="form-control w-auto" id="monthSelect" (change)="onMonthChange($event)">
+        <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
+      </select>
     </div>
+    <div class="card mt-2">
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="postsChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visszajelzések diagram -->
+  <div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">Visszajelzések</h5>
+      <select class="form-control w-auto" id="questionSelect" (change)="onQuestionChange($event)">
+        <option *ngFor="let question of feedbackQuestions; let i = index" [value]="i">
+          {{ question.question }}
+        </option>
+      </select>
+    </div>
+    <div class="card mt-2">
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="feedbackChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- Felhasználók keresése -->
+    <div class="mb-3 searchgroup">
+      <div class="usersText"> <h5>Felhasználók</h5></div>
+      <div class="search-bar">
+        <input type="text" class="form-control" placeholder="Keresés" aria-label="Keresés" (input)="onSearchChange($event)">
+        <button class="btn btn-outline-secondary">Keresés</button>
+      </div>
+    </div>
+    <div class="list-group mb-4">
+      <a *ngFor="let user of filteredUsers"  class="list-group-item" (click)="openUserModal(user)">
+        {{ user.name }}
+        <button class="btn btn-danger">Törlés</button>
+      </a>
+    </div>
+    
+
+<!-- Modal -->
+<ng-template #userModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{ selectedUser?.name }}</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p><strong>Email:</strong> {{ selectedUser?.email }}</p>
+    <p><strong>Regisztráció dátuma:</strong> {{ selectedUser?.createdAt | date }}</p>
+    <select *ngIf="selectedUser" class="form-select" id="role" [(ngModel)]="selectedUser.role" name="role" required>
+      <option value="admin">Admin</option>
+      <option value="user">Felhasználó</option>
+    </select>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="onSaveChanges()">Mentés</button>
+  </div>
+</ng-template>
+
+
+    
+    
+  <!-- Bejegyzések -->
+  <h5>Bejegyzések</h5>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h6 class="card-title">somodikonrad18</h6>
+      <p class="card-text">Nagyon komoly dolgok történnének most</p>
+      <img src="https://via.placeholder.com/200x200.png" class="img-fluid" alt="Post Image">
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h6 class="card-title">Robbano Cica</h6>
+      <p class="card-text">Robbannak a cica kihívásokkkk</p>
+      <img src="https://via.placeholder.com/200x200.png" class="img-fluid" alt="Post Image">
+    </div>
+  </div>
+</div>
