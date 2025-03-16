@@ -8,7 +8,7 @@
     <ul class="nav nav-tabs">
         <li class="nav-item" role="presentation">
             <button 
-            class="nav-link" 
+            class="nav-link active" 
             [class.active]="activeTab === 'statisztika'"
             (click)="setActiveTab('statisztika')"
           >Statisztika</button>
@@ -50,33 +50,52 @@
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Teljesítményeim</h3>
                 <div class="teljesitmeny_box1">
-                    <div class="teljesitmeny_content1">
-                        <p class="teljesitmeny_text"><img id="elvegzett">120 <b class="folyamat">Elvégzett</b></p>
-                        <p class="teljesitmeny_text"><img id="elmaradt">120 <b class="folyamat">Elmaradt</b></p>
-                        <p class="teljesitmeny_text"><img id="teljesitve">120 %<b class="folyamat">Teljesítve</b></p>
-                    </div>
+                  <div class="teljesitmeny_content1" *ngIf="user_statistics; else noData">
+                    <p class="teljesitmeny_text"><img id="elvegzett">{{user_statistics.completedTasks}} <b class="folyamat">Elvégzett</b></p>
+                    <p class="teljesitmeny_text"><img id="elmaradt">{{user_statistics.missedTasks}} <b class="folyamat">Elmaradt</b></p>
+                    <p class="teljesitmeny_text"><img id="teljesitve">{{user_statistics.completionRate}}%<b class="folyamat">Teljesítve</b></p>
+                  </div>
+                  <ng-template #noData>
+                    <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+                  </ng-template>
                 </div>
-            </div>
+              </div>
 
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Eredményeim</h3>
                 <div class="teljesitmeny_box2">
-                    <div class="teljesitmeny_content2">
-                        <p class="teljesitmeny_text">30 napos produktivitási kihívás: <br> <b class="folyamat">25 nap teljesítve</b></p>
-                        <p class="teljesitmeny_text">Heti 3 új feladat kihívás teljesítése: <br> <b class="folyamat">90%</b></p>
+                  <div class="teljesitmeny_content2" *ngIf="user_challenges.length > 0; else noChallenge">
+                    <div *ngFor="let user_challenge of user_challenges">
+                      <p class="teljesitmeny_text">
+                        {{user_challenge.challengeName}}: <br>
+                        <b class="folyamat">{{getCompletedDays(user_challenge)}} nap teljesítve</b>
+                      </p>
                     </div>
+                    <div class="arany">
+                        <p class="teljesitmeny_text">
+                          Heti teljesítési arány: <b class="folyamat">{{weeklyProgressPercentage}}%</b>
+                        </p>
+                        <p class="teljesitmeny_text">
+                          Havi teljesítési arány: <b class="folyamat">{{monthlyProgressPercentage}}%</b>
+                        </p>
+                    </div>
+                  </div>
+                  <ng-template #noChallenge>
+                    <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+                  </ng-template>
                 </div>
             </div>
 
             <div class="col-12 col-sm-12 col-md-4 mb-4">
                 <h3>Szokásaim</h3>
                 <div class="teljesitmeny_box3">
-                    <div class="teljesitmeny_content3">
-                        <p class="teljesitmeny_text">Edzés: <b class="folyamat"> Heti átlag 4 alkalom</b></p>
-                        <p class="teljesitmeny_text">Vízfogyasztás: <b class="folyamat">Napi 2 liter átlag</b></p>
-                        <p class="teljesitmeny_text">Meditáció: <b class="folyamat">15 perc naponta, 90%-os teljesítettség</b></p>
+                    <div class="teljesitmeny_content3" *ngIf="habits.length > 0; else noHabits">
+                        <p *ngFor="let habit of habits" class="teljesitmeny_text">{{habit.habitName}}: <b class="folyamat"> Heti {{habit.frequency}} alkalom</b></p>
                     </div>
                 </div>
+                <ng-template #noHabits>
+                    <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+                </ng-template>
             </div>
         </div>
     </div>
@@ -130,18 +149,19 @@
                 </div>
             </div>
             <div class="col-12 col-sm-12 col-md-6 mb-4">
-                <h3>Követési kérelmek kezelése</h3>
-                <div class="barat_box2">
-                    <div class="barat_content2">
-                        <p class="barat_text"><img id="profile2">
-                            <span class="username2">"Felhasználó neve"</span>
-                            <span class="buttons">
-                                <button class="add">Megerősítés</button>
-                                <button class="del2">Elutasítás</button>
-                            </span>
+                <h3>Barátok kezelése</h3>
+                <div class="barat_box1">
+                    <div class="barat_content1" *ngIf="friend_requests; else noFriendRequests">
+                        <p *ngFor="let friend_request of friend_requests" class="barat_text">
+                            <img id="profile">
+                            <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
+                            <button class="del1">Barát törlése</button>
                         </p>
                     </div>
                 </div>
+                <ng-template #noFriendRequests>
+                    <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+                </ng-template>
             </div>
         </div>
     </div>

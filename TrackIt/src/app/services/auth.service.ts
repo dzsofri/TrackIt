@@ -9,6 +9,8 @@ export class AuthService {
   private tokenName = environment.tokenName;
   private isLoggedIn = new BehaviorSubject<boolean>(this.hasToken());
   isLoggedIn$: Observable<boolean> = this.isLoggedIn.asObservable();
+  private userSubject = new BehaviorSubject<any>(this.loggedUser());
+  user$: Observable<any> = this.userSubject.asObservable();
 
   constructor() { }
 
@@ -19,11 +21,13 @@ export class AuthService {
   login(token: string) {
     localStorage.setItem(this.tokenName, token);
     this.isLoggedIn.next(true);
+    this.userSubject.next(this.loggedUser());
   }
 
   logout() {
     localStorage.removeItem(this.tokenName);
     this.isLoggedIn.next(false);
+    this.userSubject.next(null);
   }
 
   loggedUser() {

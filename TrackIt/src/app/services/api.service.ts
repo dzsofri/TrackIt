@@ -158,9 +158,20 @@ export class ApiService {
     );
   }
   
-  
-
-  read_Stat(table: string, field: string, op: string, value: string) {
-    return this.http.get(`${this.server}/public/${table}/${field}/${op}/${value}`);
+  readUserStatistics(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/statistics/${userId}`, this.tokenHeader());
   }
+
+  readUserHabits(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/habit/${userId}`, this.tokenHeader());
+  }
+
+  readUserChallenges(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/challenges/${userId}`, this.tokenHeader());
+  }
+
+  readFriendRequests(table: string, receiverId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/friendrequests/${receiverId}`, this.tokenHeader());
+  }
+
 }
