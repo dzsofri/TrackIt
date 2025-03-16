@@ -6,11 +6,13 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { User_Challenge } from '../../interfaces/user_challenges';
+import { FormsModule } from '@angular/forms';
+import { User } from '../../interfaces/user';
 import { Friend_Request } from '../../interfaces/friend_requests';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
@@ -21,24 +23,31 @@ export class ProfileComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  userID: string = "";
-  receiverId: string = "";
+  // Interfaces
   user_statistics: User_statistics | null = null;
   habits: Habit[] = [];
   user_challenges: User_Challenge[] = [];
   friend_requests: Friend_Request[] = [];
+  senderNames: { [key: string]: string } = {}; // To store sender names
+
+  // Tabs
+  activeTab: string = 'statisztika';
+  setActiveTab(tabName: string) {
+    this.activeTab = tabName;
+  }
+
+  userID: string = "";
   totalProgressPercentage: number = 0;
   weeklyProgressPercentage: number = 0;
   monthlyProgressPercentage: number = 0;
-  activeTab: string = 'statisztika';
-
+  
   ngOnInit(): void {
     this.userID = this.activatedRoute.snapshot.params['userID'];
-    this.receiverId = this.activatedRoute.snapshot.params['receiverId'];
-
     this.auth.user$.subscribe(user => {
       if (user) {
         this.userID = user.id;
+
+        // Statisztika Tab
         this.api.readUserStatistics('user_statistics', this.userID).subscribe({
           next: (res: any) => {
             if (!res || res.length === 0) {
@@ -51,7 +60,6 @@ export class ProfileComponent implements OnInit {
             console.error('Error fetching user statistics:', err);
           }
         });
-
         this.api.readUserHabits('user_statistics', this.userID).subscribe({
           next: (res: any) => {
             if (!res || res.length === 0) {
@@ -64,7 +72,6 @@ export class ProfileComponent implements OnInit {
             console.error('Error fetching user habits:', err);
           }
         });
-
         this.api.readUserChallenges('user_statistics', this.userID).subscribe({
           next: (res: any) => {
             if (!res || res.length === 0) {
@@ -80,38 +87,37 @@ export class ProfileComponent implements OnInit {
             console.error('Error fetching user challenges:', err);
           }
         });
-      }
 
-      this.api.readFriendRequests('friend_requests', this.receiverId).subscribe({
-        next: (res: any) => {
-          if (!res || !res.friendRequests || res.friendRequests.length === 0) {
-            console.warn('No user friend_requests found.');
-            return;
+        // Barátok Tab
+        this.api.readFriendRequests('friends', this.userID).subscribe({
+          next: (res: any) => {
+              if (!res || res.friendRequests.length === 0) {
+                  console.warn('No user friend_requests found.');
+                  return;
+              }
+              this.friend_requests = res.friendRequests.filter((request: Friend_Request) => 
+                request.status === 'pending' || request.status === 'accepted'
+              );
+              this.friend_requests.forEach(request => {
+                this.api.getUser(request.senderId.toString()).subscribe((user: User) => {
+                    this.senderNames[request.senderId] = user.name ?? 'Ismeretlen felhasználó';
+                });
+              });
+          },
+          error: (err) => {
+              console.error('Error fetching user friend_requests:', err);
           }
-          this.friend_requests = res.friendRequests.map((request: Friend_Request) => ({
-            id: request.id,
-            senderId: request.senderId,
-            receiverId: request.receiverId,
-            status: request.status,
-            sender: request.sender,
-            receiver: request.receiver
-          }));
-        },
-        error: (err) => {
-          console.error('Error fetching user friend_requests:', err);
-        }
-      });
+        });
+      }
     });
   }
 
-  setActiveTab(tabName: string) {
-    this.activeTab = tabName;
+  hasAcceptedFriends(): boolean {
+    return this.friend_requests.some(request => request.status === 'accepted');
   }
 
-  isPasswordVisible = false;
-
-  togglePasswordVisibility() {
-    this.isPasswordVisible = !this.isPasswordVisible;
+  hasPendingFriends(): boolean {
+    return this.friend_requests.some(request => request.status === 'pending');
   }
 
   private sumUserStatistics(statistics: User_statistics[]): User_statistics {
@@ -171,4 +177,17 @@ export class ProfileComponent implements OnInit {
     const totalProgress = monthlyChallenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0);
     return monthlyChallenges.length > 0 ? totalProgress / monthlyChallenges.length : 0;
   }
+
+  // Profil módosítása
+  invalidFields: string[] = [];
+  isPasswordVisible = false;
+
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+    
+  user: User = {
+    email: '',
+    password: '',
+  };
 }

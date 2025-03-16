@@ -669,7 +669,6 @@ span{
     border: none;
     border-radius: 50px;
     padding: 10px;
-    width: 80%;
 }
 
 .del2{
@@ -681,7 +680,6 @@ span{
     border-radius: 50px;
     padding: 10px;
     border: none;
-    width: 80%;
 }
 
 .del1{
@@ -708,12 +706,12 @@ span{
         font-size: 15px;
     }
 
-    .del{
+    .del1, .del2{
         font-size: 12px;
     }
 
     .add{
-        font-size: 15px;
+        font-size: 12px;
     }
 }
 
@@ -819,16 +817,13 @@ span{
         max-height: 50px;
     }
 
-    .del1{
-        font-size: 15px;
-    }
-
-    .del2{
-        font-size: 15px;
+    .del1, .del2{
+        font-size: 12px;
+        margin-left: 0 auto;
     }
 
     .add{
-        font-size: 15px;
+        font-size: 12px;
     }
 
     .username {
