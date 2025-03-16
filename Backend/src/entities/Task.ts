@@ -36,4 +36,6 @@ export class Tasks {
     // Hozzáadjuk ezt a kapcsolatot a statisztikákhoz
     @OneToMany(() => UserStatistics, (statistics) => statistics.activeTask)
     statistics: UserStatistics[];  // Statikus statisztikák a feladathoz
+
+    status: 'todo' | 'in-progress' | 'done'; // Itt is érdemes ezt a típusdefiníciót alkalmazni
 }

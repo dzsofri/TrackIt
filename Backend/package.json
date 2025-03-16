@@ -4,7 +4,7 @@
   "description": "TrackIt 2025 Backend API",
   "main": "server.ts",
   "scripts": {
-    "dev": "ts-node src/server.ts",
+    "dev": "nodemon --ext ts --exec ts-node src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc"
   },
@@ -13,12 +13,14 @@
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.12.0",
-    "node": "^18.20.6",
-    "nodemon": "^3.1.9",
+    "node": "^18.20.7",
+    "node.js": "^0.0.1-security",
+    "nodemailer": "^6.10.0",
     "process": "^0.11.10",
     "require": "^2.4.20",
     "typeorm": "^0.3.20",
@@ -28,6 +30,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
+    "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"

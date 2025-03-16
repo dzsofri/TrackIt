@@ -1,155 +1,274 @@
 import express, { Request, Response, NextFunction, Router } from "express";
 import bcrypt from "bcrypt";
-import { db } from "../server";
-import { isAdmin } from "../utiles/adminUtils";
-import { v4 as uuidv4 } from 'uuid';
-import { generateToken, tokencheck } from "../utiles/tokenUtils";
-import { getRepository } from "typeorm";
+import { AppDataSource } from "../data-source";
 import { Users } from "../entities/User";
+import { generateToken, tokencheck } from "../utiles/tokenUtils";
+import { validatePassword } from "../utiles/passwordUtils";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
+import dotenv from 'dotenv'; // dotenv importálása
+import { isAdmin } from "../utiles/adminUtils";
+const ejs = require("ejs");
+const path = require("path");
+
+dotenv.config(); 
 
 const router = Router();
 
-// Bejelentkezés (Token generálás)
-router.post('/login', (req, res) => {
-    const { email, password } = req.body;
+// Hibás mezők tárolása
+const addInvalidField = (fields: string[], fieldName: string) => {
+    if (!fields.includes(fieldName)) {
+        fields.push(fieldName);
+    }
+};
+
+
+// SMTP beállítások
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+
     
-    db.query('SELECT * FROM users WHERE email = ?', [email], (err, result: any) => {
-        if (err) return res.status(500).json({ error: 'Hiba történt a bejelentkezés során.' });
-        if (result.length === 0) return res.status(401).json({ error: 'Érvénytelen belépési adatok' });
+  });
 
-        const user = result[0];
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) return res.status(500).json({ error: 'Hiba történt a jelszó ellenőrzésekor.' });
-            if (!isMatch) return res.status(401).json({ error: 'Érvénytelen belépési adatok' });
+// Regisztráció
+router.post("/register", async (req: any, res: any) => {
+    const invalidFields: string[] = [];
+    const { name, email, password } = req.body;
 
-            const token = generateToken(user);
-            res.status(200).json({
-                message: "Sikeres bejelentkezés!",
-                token: generateToken(user)
-              });
+    if (!name) addInvalidField(invalidFields, 'name');
+    if (!email) addInvalidField(invalidFields, 'email');
+    if (!password) addInvalidField(invalidFields, 'password');
+
+    if (invalidFields.length) {
+        return res.status(400).json({ message: "Hiányzó adatok!", invalid: invalidFields });
+    }
+
+    if (!validatePassword(password)) {
+        addInvalidField(invalidFields, 'password');
+        return res.status(400).json({ 
+            message: "A jelszó nem felel meg az erősségi követelményeknek!",
+            invalid: invalidFields
         });
+    }
+
+    const existingUser = await AppDataSource.getRepository(Users).findOne({ where: { email } });
+    if (existingUser) {
+        return res.status(400).json({ message: "Ez az e-mail már létezik!", invalid: ['email'] });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new Users();
+    user.name = name;
+    user.email = email;
+    user.password = hashedPassword;
+
+    await AppDataSource.getRepository(Users).save(user);
+
+    res.status(201).json({
+        message: "Sikeres regisztráció!",
+        user: { name: user.name, email: user.email },
+        token: generateToken(user)
     });
 });
 
-// Új felhasználó regisztrációja
-router.post('/registration', (req:any, res:any) => {
-  const { name, email, password, confirm } = req.body;
+// Bejelentkezés
+router.post("/login", async (req: any, res: any) => {
+    const invalidFields: string[] = [];
+    const { email, password } = req.body;
 
-  // Jelszó ellenőrzése: legalább 8 karakter, tartalmaz kis- és nagybetűt, valamint számot
-  const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  if (!passwordRegExp.test(password)) {
-      return res.status(400).json({ 
-          error: 'A jelszónak legalább 8 karakter hosszúnak kell lennie, tartalmaznia kell kis- és nagybetűket, valamint legalább egy számot.' 
-      });
-  }
-  if (!name || !email || !password || !confirm) {
-      return res.status(400).json({ message: 'Hiányzó adatok!' });
-  }
-  if (password !== confirm) {
-      return res.status(400).json({ message: 'A megadott jelszavak nem egyeznek!' });
-  }
+    if (!email) addInvalidField(invalidFields, 'email');
+    if (!password) addInvalidField(invalidFields, 'password');
 
-  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results: any) => {
-      if (err) {
-          return res.status(500).json({ error: 'Hiba történt az e-mail cím ellenőrzésekor.' });
-      }
-      if (results.length > 0) {
-          return res.status(400).json({ message: 'Ez az e-mail cím már regisztrálva van!' });
-      }
+    if (invalidFields.length) {
+        return res.status(400).json({ message: "Hiányzó adatok!", invalid: invalidFields });
+    }
 
-      bcrypt.hash(password, 10, (err, hashedPassword) => {
-          if (err) {
-              return res.status(500).json({ error: 'Hiba történt a jelszó titkosítása közben.' });
-          }
+    const user = await AppDataSource.getRepository(Users).findOne({ where: { email } });
+    if (!user) {
+        addInvalidField(invalidFields, 'email');
+        return res.status(400).json({ message: "Felhasználó nem található!", invalid: invalidFields });
+    }
 
-          const id = uuidv4();
-          const role = 'user';   
-          // Ne tárold a JWT titkosítást az adatbázisban
-          db.query(
-              'INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)',
-              [id, name, email, hashedPassword, role], // JWT-t nem tárolunk az adatbázisban
-              (err, result) => {
-                  if (err) {
-                      return res.status(500).json({ error: 'Hiba történt a felhasználó regisztrálása közben.' });
-                  }
-                  return res.status(200).json({ message: 'Sikeres regisztráció!' });
-              }
-          );
-      });
-  });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        return res.status(400).json({ message: "Hibás jelszó!" });
+    }
+
+    res.status(200).json({
+        message: "Sikeres bejelentkezés!",
+        token: generateToken(user),
+        user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role
+        }
+    });
 });
 
 // Felhasználók lekérése
-router.get('/', tokencheck, (req, res) => {
-    db.query('SELECT * FROM users', (err, result: any) => {
-        if (err) return res.status(500).json({ error: 'Hiba történt a felhasználók lekérése közben.' });
-        res.json({ users: result, message: 'Felhasználók lekérdezése sikeresen megtörtént.' });
-    });
+router.get('/', tokencheck, async (req: any, res: any) => {
+    try {
+        const users = await AppDataSource.getRepository(Users).find();
+        res.json({ users, message: 'Felhasználók lekérdezése sikeresen megtörtént.' });
+    } catch (error) {
+        res.status(500).json({ error: 'Hiba történt a felhasználók lekérése közben.' });
+    }
 });
 
 // Egy adott felhasználó lekérése
-router.get('/:id', tokencheck, (req, res) => {
+router.get('/:id', tokencheck, async (req: any, res: any) => {
     const { id } = req.params;
-    
-    db.query('SELECT * FROM users WHERE id = ?', [id], (err, result: any) => {
-        if (err) return res.status(500).json({ error: 'Hiba történt a felhasználó lekérése közben.' });
-        res.json({ user: result[0], message: 'Felhasználó sikeresen lekérdezve.' });
-    });
-});
-
-// Felhasználó adatainak módosítása
-router.put('/:id', tokencheck, async (req:any, res:any) => {
-    const { id } = req.params;
-    const { name, email, password, pictureId } = req.body;
-    const userId = req.user.id;  // A tokenből származó felhasználó azonosítója
-
-    // Ellenőrzés, hogy a felhasználó saját magát próbálja-e módosítani
-    if (userId !== id && !isAdmin) {
-        return res.status(403).json({ error: 'Nincs jogosultságod módosítani ezt a felhasználót.' });
-    }
-
     try {
-        const userRepository = getRepository(Users);
-        const user = await userRepository.findOne({ where: { id } });
-
-        // Ha nem található a felhasználó
+        const user = await AppDataSource.getRepository(Users).findOne({ where: { id } });
         if (!user) {
             return res.status(404).json({ error: 'Felhasználó nem található.' });
         }
-
-        // Frissítés a megadott mezőkkel
-        if (name) user.name = name;
-        if (email) user.email = email;
-        if (password) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            user.password = hashedPassword;
-        }
-        if (pictureId) user.pictureId = pictureId;
-
-        // Mentés az adatbázisba
-        await userRepository.save(user);
-
-        res.json({ message: 'Felhasználó sikeresen frissítve.' });
+        res.json({ user, message: 'Felhasználó sikeresen lekérdezve.' });
     } catch (error) {
-        console.error(error);
+        res.status(500).json({ error: 'Hiba történt a felhasználó lekérése közben.' });
+    }
+});
+
+// Felhasználó adatainak módosítása
+router.put('/:id', tokencheck, isAdmin, async (req: any, res: any) => {
+    const { id } = req.params;
+    const { role } = req.body;  // Csak role változása
+    const invalidFields: string[] = [];
+
+    try {
+        const userRepository = AppDataSource.getRepository(Users);
+        const user = await userRepository.findOne({ where: { id } });
+        
+        if (!user) {
+            return res.status(404).json({ error: 'Felhasználó nem található.', invalid: ['user'] });
+        }
+
+        if (role) user.role = role;
+
+        const updatedUser = await userRepository.save(user);  // A frissített felhasználó mentése
+        console.log("Frissített felhasználó:", updatedUser);  // Debug üzenet
+
+        res.json({ message: 'Felhasználó sikeresen frissítve.', updatedUser });
+    } catch (error) {
+        console.error("Hiba a felhasználó frissítésekor:", error);  // Hibakezelés
         res.status(500).json({ error: 'Hiba történt a felhasználó adatainak frissítése közben.' });
     }
 });
 
-// Felhasználó törlése
-router.delete('/:id', tokencheck, (req:any, res:any) => {
-    const { id } = req.params;
-    const userId = req.user.id;  // A tokenből származó felhasználó azonosítója
 
-    // Ellenőrzés, hogy a felhasználó saját magát próbálja-e törölni
-    if (userId !== id && !isAdmin) {
-        return res.status(403).json({ error: 'Nincs jogosultságod törölni ezt a felhasználót.' });
+
+// Felhasználó törlése
+router.delete('/:id', tokencheck, async (req: any, res: any) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const invalidFields: string[] = [];
+
+    const isUserAdmin = req.user.role === "ADMIN";
+    if (userId !== id && !isUserAdmin) {
+        return res.status(403).json({ error: 'Nincs jogosultságod törölni ezt a felhasználót.', invalid: ['user'] });
     }
 
-    db.query('DELETE FROM users WHERE id = ?', [id], (err, result: any) => {
-        if (err) return res.status(500).json({ error: 'Hiba történt a felhasználó törlése közben.' });
+    try {
+        const userRepository = AppDataSource.getRepository(Users);
+        const user = await userRepository.findOne({ where: { id } });
+        if (!user) {
+            return res.status(404).json({ error: 'Felhasználó nem található.', invalid: ['user'] });
+        }
+
+        await userRepository.delete(id);
         res.json({ message: 'Felhasználó sikeresen törölve.' });
-    });
+    } catch (error) {
+        res.status(500).json({ error: 'Hiba történt a felhasználó törlése közben.', invalid: invalidFields });
+    }
 });
+
+// Jelszó elfelejtése - Token generálás és e-mail küldés
+router.post("/forgot-password", async (req: any, res: any) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ message: "E-mail megadása kötelező!" });
+    }
+
+    const user = await AppDataSource.getRepository(Users).findOne({ where: { email } });
+    if (!user) {
+        return res.status(400).json({ message: "Ezzel az e-mail címmel nem található felhasználó!" });
+    }
+
+    // Token generálása
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = await bcrypt.hash(resetToken, 10);
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 óra lejárati idő
+
+    await AppDataSource.getRepository(Users).save(user);
+
+    // E-mail küldése
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${email}`;
+const mailOptions = {
+    from: `"TrackIt" <${process.env.SMTP_USER}>`,
+    to: user.email,
+    subject: "Jelszó visszaállítási kérelem",
+    html: await ejs.renderFile(path.join(__dirname, '../../views/reset-password.ejs'), { user, resetUrl }),
+};
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: "Jelszó visszaállítási e-mail elküldve!" });
+    } catch (error) {
+        console.error("E-mail küldési hiba:", error);
+        res.status(500).json({ message: "Hiba történt az e-mail küldésekor." });
+    }
+});
+
+// Jelszó visszaállítása
+router.post("/reset-password", async (req: any, res: any) => {
+    const { email, token, newPassword } = req.body;
+
+    const invalidFields: string[] = []; // Hibás mezők tömbje
+
+    // Ellenőrizzük, hogy az új jelszó meg van-e adva
+    if (!newPassword || newPassword.trim() === '') {
+        invalidFields.push('newPassword'); // Hozzáadjuk a hibás mezőt
+    }
+
+    if (invalidFields.length > 0) {
+        return res.status(400).json({ 
+            message: "A jelszó nem felel meg a követelményeknek!", 
+            invalid: invalidFields 
+        });
+    }
+
+    const user = await AppDataSource.getRepository(Users).findOne({ where: { email } });
+    if (!user || !user.resetPasswordToken || !user.resetPasswordExpires) {
+        return res.status(400).json({ message: "Érvénytelen vagy lejárt token!" });
+    }
+
+    // Token ellenőrzése
+    const isTokenValid = await bcrypt.compare(token, user.resetPasswordToken);
+    if (!isTokenValid || user.resetPasswordExpires < new Date()) {
+        return res.status(400).json({ message: "Érvénytelen vagy lejárt token!" });
+    }
+
+    // Jelszó frissítése
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await AppDataSource.getRepository(Users).save(user);
+
+    res.status(200).json({ message: "Jelszó sikeresen frissítve!" });
+});
+
+
+
+
 
 export default router;

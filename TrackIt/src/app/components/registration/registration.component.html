@@ -1,0 +1,76 @@
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+    <div class="row w-100">
+        <div id="heroimage" class="welcome-wrapper"></div>
+
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <div class="card p-4 w-100" id="registration-form">
+                <h2 class="text-center mb-2">Hozd létre a fiókodat!</h2>
+                <p class="text-center">Adja meg személyes adatait a fiók létrehozásához.</p>
+                
+                <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
+                    <!-- Név mező -->
+                    <div class="mb-3 box">
+                        <label for="name" class="form-label">Név</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="pl. Somodi Konrád" required [(ngModel)]="user.name">
+                    </div>
+
+                    <!-- Email mező -->
+                    <div class="mb-3 box">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="pl. somodikonrad@turr.hu" required [(ngModel)]="user.email">
+                    </div>
+
+                    <!-- Jelszó mező -->
+                    <div class="mb-3 box">
+                        <label for="password" class="form-label">Jelszó</label>
+                        <div class="input-group">
+                            <input [type]="isPasswordVisible ? 'text' : 'password'" class="form-control" id="password" name="password" placeholder="Írja be a jelszavát!" required [(ngModel)]="user.password">
+                            <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+                                <ng-container *ngIf="isPasswordVisible; else hiddenEye">
+                                    <!-- Nyitott szem ikon -->
+                                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
+                                        <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                    </svg>
+                                </ng-container>
+                                <ng-template #hiddenEye>
+                                    <!-- Zárt szem ikon -->
+                                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="m4 15.6 3.055-3.056A4.913 4.913 0 0 1 7 12.012a5.006 5.006 0 0 1 5-5c.178.009.356.027.532.054l1.744-1.744A8.973 8.973 0 0 0 12 5.012c-5.388 0-10 5.336-10 7A6.49 6.49 0 0 0 4 15.6Z"/>
+                                        <path d="m14.7 10.726 4.995-5.007A.998.998 0 0 0 18.99 4a1 1 0 0 0-.71.305l-4.995 5.007a2.98 2.98 0 0 0-.588-.21l-.035-.01a2.981 2.981 0 0 0-3.584 3.583c0 .012.008.022.01.033.05.204.12.402.211.59l-4.995 4.983a1 1 0 1 0 1.414 1.414l4.995-4.983c.189.091.386.162.59.211.011 0 .021.007.033.01a2.982 2.982 0 0 0 3.584-3.584c0-.012-.008-.023-.011-.035a3.05 3.05 0 0 0-.21-.588Z"/>
+                                    </svg>
+                                </ng-template>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Jelszó megerősítés mező -->
+                    <div class="mb-3 box">
+                        <label for="confirm" class="form-label">Jelszó megerősítés</label>
+                        <div class="input-group">
+                            <input [type]="isConfirmPasswordVisible ? 'text' : 'password'" class="form-control" id="confirm" name="confirm" placeholder="Írja be a jelszavát!" required [(ngModel)]="user.confirm">
+                            <button class="btn btn-outline-secondary" type="button" (click)="toggleConfirmPasswordVisibility()">
+                                <ng-container *ngIf="isConfirmPasswordVisible; else hiddenConfirmEye">
+                                     <!-- Nyitott szem ikon -->
+                                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
+                                        <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                    </svg>
+                                </ng-container>
+                                <ng-template #hiddenConfirmEye>
+                                       <!-- Zárt szem ikon -->
+                                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M4 15.6l3.055-3.056A4.913 4.913 0 0 1 7 12.012a5.006 5.006 0 0 1 5-5"/>
+                                    </svg>
+                                </ng-template>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100" >Regisztráció</button>
+                    <p class="text-center mt-3">Van már fiókod? <a href="/login">Jelentkezz be!</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

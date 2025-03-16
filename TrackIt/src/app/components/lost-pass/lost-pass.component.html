@@ -1,0 +1,27 @@
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+    <div class="row w-100">
+        <div id="heroimage" class="welcome-wrapper"></div>
+
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <div class="card p-4 w-100" id="registration-form">
+                <h2 class="text-center mb-2">Elfelejtett jelszó!</h2>
+                <p class="text-center">Adja meg email címét, és küldünk egy linket a jelszó visszaállításához.
+                </p>
+                
+                <div class="top-stripe"></div>
+
+                <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
+                   
+                    <!-- Email mező -->
+                    <div class="mb-3 box email" >
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="pl. somodikonrad@turr.hu" required [(ngModel)]="user.email">
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100" >Jelszó visszaálltása</button>
+                    <p class="text-center mt-3">Vissza a  <a href="/login">bejelentkezéshez</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
