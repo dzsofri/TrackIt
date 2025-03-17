@@ -5,8 +5,8 @@ POST http://localhost:{{PORT}}/users/login
 Content-Type: application/json
 
 {
-  "email": "beretizsofia310@gmail.com",
-  "password": "Titkosjelszo123"
+  "email": "somodikonrad@turr.hu",
+  "password": "20060120Koni"
 }
 
 
@@ -137,8 +137,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmL
 
 
 ### Feladat létrehozása
-POST http://localhost:3000/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImEzYWY3NTM0LTY0YzktNGJmOC1iMzVjLTAzNDdkNjUwMTVlNSIsImVtYWlsIjoic29tb2Rpa29ucmFkMTIzM0BnbWFpbC5jb20iLCJpYXQiOjE3NDE5NDM3NzcsImV4cCI6MTc0MjAzMDE3N30.2__G0IlbI2L38oIueyKmNzt0nO7Uzn8NgrxRxsYR0ZE
+POST http://localhost:{{PORT}}/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjhiODg4LTIxZTUtNGQwZC1iNTk5LWE4N2U1NWNiZDRhNyIsImVtYWlsIjoic29tb2Rpa29ucmFkQHR1cnIuaHUiLCJpYXQiOjE3NDIyMzAxNzIsImV4cCI6MTc0MjMxNjU3Mn0.QPBr9zYeQXqFq8NNolKoE9EFCWt8WnrL9OkmnSeIjFc
 Content-Type: application/json
 
 {

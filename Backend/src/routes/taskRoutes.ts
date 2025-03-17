@@ -13,16 +13,18 @@ const router = Router();
 
 
 // Új feladat létrehozása (Token ellenőrzéssel)
-router.post("/", async (req: any, res: any) => { // tokencheck middleware hozzáadása
+router.post("/", tokencheck, async (req: any, res: any) => {
     try {
         const { title, description, priority, dueDate } = req.body;
 
-        // Hiányzó adatok ellenőrzése
         if (!title || !priority || !dueDate) {
-            return res.status(400).json({ message: "Hiányzó adatok!", invalidFields: { title, priority, dueDate } });
+            return res.status(400).json({ message: "Hiányzó adatok!" });
         }
 
-        // Új feladat mentése
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({ message: "Felhasználói azonosítás szükséges!" });
+        }
+
         const task = new Tasks();
         task.id = uuidv4();
         task.title = title;
@@ -30,17 +32,18 @@ router.post("/", async (req: any, res: any) => { // tokencheck middleware hozzá
         task.priority = priority;
         task.dueDate = new Date(dueDate);
         task.createdAt = new Date();
+        task.userId = req.user.id; // 🔹 Beállítjuk a felhasználó ID-ját
 
-        // Task mentése az adatbázisba
         await AppDataSource.getRepository(Tasks).save(task);
 
-        return res.status(201).json({ message: "Feladat sikeresen létrehozva!", task });
+        return res.status(201).json({ message: "Feladat létrehozva!", task });
 
     } catch (error) {
-        console.error("Hiba történt a feladat létrehozásakor:", error);
-        return res.status(500).json({ message: "Szerverhiba történt." });
+        console.error("Hiba történt:", error);
+        return res.status(500).json({ message: "Szerverhiba." });
     }
 });
+
 
 
 router.get("/", async (req: any, res: any) => {
