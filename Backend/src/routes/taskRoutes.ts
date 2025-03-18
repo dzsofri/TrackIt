@@ -44,8 +44,6 @@ router.post("/", tokencheck, async (req: any, res: any) => {
     }
 });
 
-
-
 router.get("/", async (req: any, res: any) => {
     try {
         const tasks = await AppDataSource.getRepository(Tasks).find();
@@ -62,21 +60,14 @@ router.get("/", async (req: any, res: any) => {
     }
 });
 
-// Task frissítéséhez szükséges kérés típusának meghatározása
-interface UpdateTaskRequest {
-    status: 'todo' | 'in-progress' | 'done'; // Az elfogadott státuszok
-}
+// Task frissítéséhez szükséges kérés típusának meghatározása  
 
-router.put("/tasks/:id", async (req: any, res: any) => {
+
+router.put("/:id", async (req: any, res: any) => {
     try {
         const { id } = req.params;
-        const { status }: UpdateTaskRequest = req.body; // Kinyerjük a status-t az req.body-ból
+        const { title, description, dueDate } = req.body;
 
-        // Ellenőrizzük, hogy érvényes státusz lett-e megadva
-        const validStatuses = ["todo", "in-progress", "done"];
-        if (!validStatuses.includes(status)) {
-            return res.status(400).json({ message: "Érvénytelen státusz!" });
-        }
 
         const taskRepository = AppDataSource.getRepository(Tasks);
         let task = await taskRepository.findOneBy({ id });
@@ -85,8 +76,11 @@ router.put("/tasks/:id", async (req: any, res: any) => {
             return res.status(404).json({ message: "Feladat nem található!" });
         }
 
-        // Státusz frissítése
-        task.status = status;
+        // Csak a megengedett mezők frissítése
+        task.title = title;
+        task.description = description;
+        task.dueDate = dueDate;
+
         await taskRepository.save(task);
 
         return res.status(200).json({ message: "Feladat frissítve!", task });
@@ -96,6 +90,7 @@ router.put("/tasks/:id", async (req: any, res: any) => {
         return res.status(500).json({ message: "Szerverhiba történt." });
     }
 });
+
 
 // Task törléséhez szükséges végpont
 router.delete("/:id", async (req: any, res: any) => {
@@ -120,8 +115,5 @@ router.delete("/:id", async (req: any, res: any) => {
         return res.status(500).json({ message: "Szerverhiba történt." });
     }
 });
-
-
-
 
 export default router;

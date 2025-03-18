@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { TaskEditComponent } from '../task-edit/task-edit.component';
 
 
 interface Task {
@@ -23,7 +24,7 @@ interface Column {
 @Component({
   selector: 'app-kanban',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TaskEditComponent],
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.scss']
 })
@@ -200,9 +201,23 @@ export class KanbanComponent implements OnInit {
     task.showMenu = !task.showMenu;
   }
   
-  editTask(task: any) {
-    console.log("Bejegyzés módosítása:", task);
-    // Itt lehet megnyitni egy szerkesztő modált vagy beállítani az aktuális szerkesztendő taskot
+  selectedTask: Task | null = null;
+
+
+  editTask(task: Task) {
+    this.selectedTask = { ...task }; // Másolat készítése
+  }
+  
+  onTaskUpdated(updatedTask: Task) {
+    // Frissítjük a megfelelő oszlopban a task-ot
+    const column = this.columns.find(col => col.tasks.some(t => t.id === updatedTask.id));
+    if (column) {
+      const index = column.tasks.findIndex(t => t.id === updatedTask.id);
+      if (index !== -1) {
+        column.tasks[index] = updatedTask;
+      }
+    }
+    this.selectedTask = null;
   }
   
   deleteTask(task: Task, column: Column) {

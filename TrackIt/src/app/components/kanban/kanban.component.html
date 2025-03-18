@@ -42,8 +42,8 @@
             <div class="task-menu-container">
               <button class="menu-button" (click)="toggleTaskMenu(task)">&#8942;</button>
               <div class="menu-options" *ngIf="task.showMenu">
-                <button class="menu-item edit" (click)="editTask(task)">✏️ Bejegyzés módosítása</button>
-                <button class="menu-item delete" (click)="deleteTask(task, column)">🗑️ Bejegyzés törlése</button>
+                <button class="menu-item edit" (click)="editTask(task)">✏️ Feladat módosítása</button>
+                <button class="menu-item delete" (click)="deleteTask(task, column)">🗑️ Feladat törlése</button>
               </div>
             </div>
           </div>
@@ -58,4 +58,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Popup szerkesztő ablak -->
+  <app-task-edit 
+    *ngIf="selectedTask" 
+    [task]="selectedTask" 
+    (closePopup)="selectedTask = null" 
+    (taskUpdated)="onTaskUpdated($event)">
+  </app-task-edit>
 </div>
