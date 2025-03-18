@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule instead of HttpClient
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
-
+  private tokenName = environment.tokenName;
   
 
 
@@ -25,7 +26,9 @@ export class LoginComponent {
     private api: ApiService,
     private auth: AuthService,
     private router: Router
-  ){}
+  ){  
+    
+  }
 
   invalidFields: string[] = [];
   

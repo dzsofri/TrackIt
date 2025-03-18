@@ -12,10 +12,10 @@ export class AuthService {
   private userSubject = new BehaviorSubject<any>(this.loggedUser());
   user$: Observable<any> = this.userSubject.asObservable();
 
-  constructor() { }
-
+  constructor() {  }
+ 
   private hasToken(): boolean {
-    return !!localStorage.getItem(this.tokenName);
+    return !!localStorage.getItem(this.tokenName)
   }
 
   login(token: string) {
@@ -34,17 +34,21 @@ export class AuthService {
     const token = localStorage.getItem(this.tokenName);
     if (token) {
       try {
+        console.log('Token found:', token);
         return JSON.parse(atob(token.split('.')[1])); 
       } catch (error) {
         console.error("Hibás token formátum!", error);
         return null;
       }
     }
+    console.log('No token found');
     return null;
   }
+  
 
   isLoggedUser(): boolean {
     return this.hasToken();
+     
   }
 
   

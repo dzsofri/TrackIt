@@ -1,0 +1,42 @@
+<div class="sidebar" [ngClass]="{ 'sidebar-collapsed': isSidebarCollapsed }">
+    <div class="sidebar-header">
+      <a href="#" class="sidebar-logo">
+        {{ isSidebarCollapsed ? 'C' : 'CodeWithChintan' }}
+      </a>
+    </div>
+    <div class="sidebar-menu">
+      <ul>
+        <ng-container *ngFor="let item of menuItems">
+          <li class="sidebar-menu-item">
+            <a
+              href="#"
+              class="sidebar-item"
+              [ngClass]="{
+                'has-children': item.children?.length,
+                'menu-item-active': item.isOpen
+              }"
+              (click)="navigateTo(item.route); toggleMenuItem(item)"
+            >
+              <i [class]="item.icon"></i>
+              <span class="sidebar-item-text">{{ item.label }}</span>
+              <i
+                *ngIf="item.children?.length && !isSidebarCollapsed"
+                class="fas fa-chevron-down sidebar-item-arrow"
+                [ngClass]="{ rotated: item.isOpen }"
+              ></i>
+            </a>
+  
+            <ul *ngIf="item.children?.length && !isSidebarCollapsed && item.isOpen" class="sidebar-submenu">
+              <li *ngFor="let child of item.children">
+                <a href="#" class="sidebar-item sidebar-subitem">
+                  <i [class]="child.icon"></i>
+                  <span class="sidebar-item-text">{{ child.label }}</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+  
