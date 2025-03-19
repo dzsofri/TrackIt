@@ -122,7 +122,6 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
             .leftJoinAndSelect("friendRequest.sender", "sender")
             .leftJoinAndSelect("friendRequest.receiver", "receiver")
             .where("friendRequest.receiverId = :receiverId", { receiverId })
-            .orWhere("friendRequest.senderId = :receiverId", { receiverId })
             .andWhere(new Brackets(qb => {
                 qb.where("friendRequest.status = :pendingStatus", { pendingStatus: "pending" })
                   .orWhere("friendRequest.status = :acceptedStatus", { acceptedStatus: "accepted" })

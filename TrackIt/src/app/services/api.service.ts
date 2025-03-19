@@ -179,4 +179,8 @@ export class ApiService {
     return this.http.get<User>(`${this.server}/users/${userId}`, this.tokenHeader());
   }
 
+  deleteFriendRequest(table: string, requestId: string) {
+    return this.http.delete(`${this.server}/${table}/reject/${requestId}`, this.tokenHeader());
+}
+
 }

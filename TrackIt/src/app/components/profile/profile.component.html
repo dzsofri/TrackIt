@@ -68,7 +68,7 @@
                     <div *ngFor="let user_challenge of user_challenges">
                       <p class="teljesitmeny_text">
                         {{user_challenge.challengeName}}: <br>
-                        <b class="folyamat">{{getCompletedDays(user_challenge)}} nap teljesítve</b>
+                        <b class="folyamat">{{getCompletedDays(user_challenge)}} nap alatt teljesítve</b>
                       </p>
                     </div>
                     <div class="arany">
@@ -141,21 +141,21 @@
                 <h3>Barátok kezelése</h3>
                 <div class="barat_box1">
                   <div class="barat_content1">
-                    <ng-container *ngIf="friend_requests.length > 0; else noFriendRequests">
-                      <ng-container *ngIf="hasAcceptedFriends(); else noFriendRequests">
+                    <ng-container *ngIf="friend_requests.length > 0; else noFriends">
+                      <ng-container *ngIf="hasAcceptedFriends(); else noFriends">
                         <ng-container *ngFor="let friend_request of friend_requests">
                           <p *ngIf="friend_request.status === 'accepted'" class="barat_text">
                             <img id="profile">
                             <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
-                            <button class="del1">Barát törlése</button>
+                            <button class="del1" (click)="deleteFriend(friend_request.id)">Barát törlése</button>
                           </p>
                         </ng-container>
                       </ng-container>
                     </ng-container>
                   </div>
                 </div>
-                <ng-template #noFriendRequests>
-                  <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+                <ng-template #noFriends>
+                  <h5 class="NO_DATA">Még nincs ismerősöd!</h5>
                 </ng-template>
               </div>
               <div class="col-12 col-sm-12 col-md-6 mb-4">
@@ -170,7 +170,7 @@
                             <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
                             <span class="buttons">
                                 <button class="add">Megerősítés</button>
-                                <button class="del2">Barát törlése</button>
+                                <button class="del2" (click)="deleteFriend(friend_request.id)">Elutasítás</button>
                               </span>
                           </p>
                         </ng-container>
@@ -179,7 +179,7 @@
                   </div>
                 </div>
                 <ng-template #noFriendRequests>
-                  <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+                  <h5 class="NO_DATA">Jelenleg nincs követési kérésed!</h5>
                 </ng-template>
               </div>
         </div>

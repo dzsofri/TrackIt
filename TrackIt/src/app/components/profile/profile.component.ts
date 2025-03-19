@@ -9,6 +9,7 @@ import { User_Challenge } from '../../interfaces/user_challenges';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../interfaces/user';
 import { Friend_Request } from '../../interfaces/friend_requests';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private api: ApiService,
     private auth: AuthService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private message:MessageService
   ) {}
 
   // Interfaces
@@ -120,6 +122,23 @@ export class ProfileComponent implements OnInit {
     return this.friend_requests.some(request => request.status === 'pending');
   }
 
+  deleteFriend(requestId: string) {
+    const userId = this.userID; // Bejelentkezett felhasználó ID-jának megszerzése
+
+    this.api.deleteFriendRequest('friendrequests', requestId).subscribe(
+        (res: any) => {
+            if (res.receiverId !== userId) {
+                this.message.showMessage('Hiba', 'Csak a címzett utasíthatja el a barátkérést.', 'error');
+                return;
+            }
+            this.message.showMessage('OK', 'A barátkérés elutasítva és törölve lett!', 'success');
+        },
+        (error: any) => {
+            this.message.showMessage('Hiba', 'A barátkérés nem található.', 'error');
+        }
+    );
+}
+
   private sumUserStatistics(statistics: User_statistics[]): User_statistics {
     const summedStatistics = statistics.reduce((acc, curr) => {
       acc.completedTasks += curr.completedTasks;
@@ -156,24 +175,42 @@ export class ProfileComponent implements OnInit {
 
   private calculateWeeklyProgress(challenges: User_Challenge[]): number {
     const currentDate = new Date();
+  
     const weeklyChallenges = challenges.filter(challenge => {
       const createdAt = new Date(challenge.createdAt);
-      const diffDays = Math.ceil((currentDate.getTime() - createdAt.getTime()) / (1000 * 3600 * 24));
-      return diffDays <= 7;
+      const futureDate = new Date(createdAt.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const completedAt = new Date(challenge.completedAt);
+  
+      if (completedAt <= futureDate) {
+        const totalDays = (futureDate.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+        const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+        challenge.progressPercentage = (daysCompleted / totalDays) * 100;
+        return true;
+      }
+      return false;
     });
-
+  
     const totalProgress = weeklyChallenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0);
     return weeklyChallenges.length > 0 ? totalProgress / weeklyChallenges.length : 0;
   }
 
   private calculateMonthlyProgress(challenges: User_Challenge[]): number {
     const currentDate = new Date();
+  
     const monthlyChallenges = challenges.filter(challenge => {
       const createdAt = new Date(challenge.createdAt);
-      const diffDays = Math.ceil((currentDate.getTime() - createdAt.getTime()) / (1000 * 3600 * 24));
-      return diffDays <= 30;
+      const futureDate = new Date(createdAt.getTime() + 30 * 24 * 60 * 60 * 1000);
+      const completedAt = new Date(challenge.completedAt);
+  
+      if (completedAt <= futureDate) {
+        const totalDays = (futureDate.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+        const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+        challenge.progressPercentage = (daysCompleted / totalDays) * 100;
+        return true;
+      }
+      return false;
     });
-
+  
     const totalProgress = monthlyChallenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0);
     return monthlyChallenges.length > 0 ? totalProgress / monthlyChallenges.length : 0;
   }
