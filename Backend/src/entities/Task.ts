@@ -1,6 +1,5 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { Users } from "./User";
-import { TaskStatuses } from "./TaskStatus";
 import { UserStatistics } from "./UserStatistic";
 
 @Entity()
@@ -29,9 +28,6 @@ export class Tasks {
 
     @CreateDateColumn()
     createdAt: Date;    
-
-    @OneToMany(() => TaskStatuses, (taskStatus) => taskStatus.task)
-    taskStatuses: TaskStatuses[];
 
     @OneToMany(() => UserStatistics, (statistics) => statistics.activeTask)
     statistics: UserStatistics[];
