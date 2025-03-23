@@ -11,7 +11,7 @@ export class TaskStatuses {
     task: Tasks;
 
     @Column({ type: "varchar", length: 100 })
-    priority: string;
+    status: string;
 
     @Column({ type: "varchar", length: 40 })
     color: string;

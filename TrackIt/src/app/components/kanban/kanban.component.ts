@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
+import { environment } from '../../environments/environment';
+import { ApiService } from '../../services/api.service';
+
 
 
 interface Task {
-  id?: string; 
+  id: string; 
   title: string; 
   description: string; 
   dueDate: string; 
@@ -16,10 +19,13 @@ interface Task {
   showMenu?: boolean;
 }
 
+
 interface Column {
   name: string; 
+  status: 'todo' | 'in-progress' | 'done';
   tasks: Task[]; 
 }
+
 
 @Component({
   selector: 'app-kanban',
@@ -29,21 +35,39 @@ interface Column {
   styleUrls: ['./kanban.component.scss']
 })
 
+
+
 export class KanbanComponent implements OnInit {
   noTasksMessage: string | null = null; // 💡 Üzenet tárolására
 
-
+  private tokenName = environment.tokenName;
+  
   columns: Column[] = [
-    { name: 'Teendők', tasks: [] },
-    { name: 'Folyamatban', tasks: [] },
-    { name: 'Kész', tasks: [] }
+    { name: 'Teendők', status: 'todo', tasks: [] },
+    { name: 'Folyamatban', status: 'in-progress', tasks: [] },
+    { name: 'Kész', status: 'done', tasks: [] }
   ];
+  
+
+  getToken():String | null{
+    return localStorage.getItem(this.tokenName);
+  }
+
+
+tokenHeader():{ headers: HttpHeaders }{
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return { headers }
+  }
+
 
   draggedTask: Task | null = null;
   draggedFrom: Column | null = null;
   newTask: Task = this.createEmptyTask();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private api: ApiService) {}
 
   ngOnInit() {
     this.http.get<{ message?: string; tasks: Task[] }>("http://localhost:3000/tasks")
@@ -87,7 +111,7 @@ export class KanbanComponent implements OnInit {
   
   // **Új feladat inicializálása**
   private createEmptyTask(): Task {
-    return { title: '', description: '', dueDate: '', priority: 'Közepes', status: 'todo' };
+    return {id:'', title: '', description: '', dueDate: '', priority: 'Közepes', status: 'todo' };
   }
   
 
@@ -99,14 +123,17 @@ export class KanbanComponent implements OnInit {
     }
   
     const taskToSend: Task = {
+      id: '',
       title: this.newTask.title.trim(),
       description: this.newTask.description.trim() || "",
       dueDate: this.newTask.dueDate,
       priority: this.newTask.priority || "Közepes",
       status: "todo" // Kezdetben a "todo" oszlopban lesz
+      ,
+      
     };
   
-    this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend)
+    this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend, this.tokenHeader())
       .subscribe({
         next: (response) => {
           console.log("Feladat sikeresen mentve:", response);
@@ -135,20 +162,31 @@ export class KanbanComponent implements OnInit {
 
 
   // **Feladat áthelyezése másik oszlopba**
-  onDrop(event: DragEvent, targetColumn: Column) {
-    event.preventDefault();
-    if (this.draggedTask && this.draggedFrom && this.draggedFrom !== targetColumn) {
+  // A status frissítése PATCH kéréssel a backendben
+onDrop(event: DragEvent, targetColumn: Column) {
+  event.preventDefault();
+  if (this.draggedTask && this.draggedFrom && this.draggedFrom !== targetColumn) {
       // Feladat áthelyezése az új oszlopba
       this.draggedFrom.tasks = this.draggedFrom.tasks.filter(t => t !== this.draggedTask);
       targetColumn.tasks.push(this.draggedTask);
-  
-      // **Számláló frissítése minden oszlopnál**
+
+      // Frissítjük a task státuszát lokálisan
+      this.draggedTask.status = targetColumn.status;
+
+      // Backend hívás a státusz frissítésére
+      this.api.updateTaskStatus(this.draggedTask.id!, targetColumn.status!).subscribe(response => {
+          console.log('Feladat státusza frissítve az adatbázisban', response);
+      });
+
+      // Számláló frissítése minden oszlopnál
       this.updateTaskCount();
-  
+
       this.draggedTask = null;
       this.draggedFrom = null;
-    }
   }
+}
+
+
 
   onDragStart(event: DragEvent, task: Task, column: Column) {
     this.draggedTask = task;
@@ -208,17 +246,18 @@ export class KanbanComponent implements OnInit {
     this.selectedTask = { ...task }; // Másolat készítése
   }
   
-  onTaskUpdated(updatedTask: Task) {
-    // Frissítjük a megfelelő oszlopban a task-ot
-    const column = this.columns.find(col => col.tasks.some(t => t.id === updatedTask.id));
+  onTaskUpdated(updatedFields: Partial<Task>) {
+    const column = this.columns.find(col => col.tasks.some(t => t.id === updatedFields.id));
     if (column) {
-      const index = column.tasks.findIndex(t => t.id === updatedTask.id);
+      const index = column.tasks.findIndex(t => t.id === updatedFields.id);
       if (index !== -1) {
-        column.tasks[index] = updatedTask;
+        // Csak az érkező mezőket frissítjük
+        column.tasks[index] = { ...column.tasks[index], ...updatedFields };
       }
     }
     this.selectedTask = null;
   }
+  
   
   deleteTask(task: Task, column: Column) {
     const index = column.tasks.indexOf(task);

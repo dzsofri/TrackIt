@@ -5,7 +5,7 @@ POST http://localhost:{{PORT}}/users/login
 Content-Type: application/json
 
 {
-  "email": "somodikonrad@turr.hu",
+  "email": "somodikonrad@gmail.com",
   "password": "20060120Koni"
 }
 
@@ -143,14 +143,14 @@ GET http://localhost:{{PORT}}/tasks
 
 ### Feladat létrehozása
 POST http://localhost:{{PORT}}/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjhiODg4LTIxZTUtNGQwZC1iNTk5LWE4N2U1NWNiZDRhNyIsImVtYWlsIjoic29tb2Rpa29ucmFkQHR1cnIuaHUiLCJpYXQiOjE3NDIzMjIzMjUsImV4cCI6MTc0MjQwODcyNX0.4_GBGZ1mGoSbp1Bp_aXUYizcZogk-KJ8pmMkTphoOO4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFiYzg4ZTA2LTM3ZjgtNDM1MC05N2JmLWI5ZTE0MDE1MDAxZSIsImVtYWlsIjoic29tb2Rpa29ucmFkQGdtYWlsLmNvbSIsImlhdCI6MTc0Mjc0MzcyNCwiZXhwIjoxNzQyODMwMTI0fQ.tOSeA8EWiyeRPM-ENMxKroCIJhMwHFiuLD-30w9eKr0
 Content-Type: application/json
 
 {
-    "title": "UserId kötős feladat 2",
-    "description": "Ez egy teszt feladat.",
-    "priority": "Magas",
-    "dueDate": "2025-03-18"
+    "title": "UserId kötős feladat 101",
+    "description": "Ez egy teszt feladat valami valami.",
+    "priority": "Alacsony",
+    "dueDate": "2025-03-22"
 }
 
 
