@@ -179,8 +179,15 @@ export class ApiService {
     return this.http.get<User>(`${this.server}/users/${userId}`, this.tokenHeader());
   }
 
-  deleteFriendRequest(table: string, requestId: string) {
-    return this.http.delete(`${this.server}/${table}/reject/${requestId}`, this.tokenHeader());
-}
+  getLoggedUser(table: string, id: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/users/${id}`, this.tokenHeader());
+  }
 
+  deleteFriendRequest(table: string, id: string) {
+    return this.http.delete(`${this.server}/${table}/friendrequests/${id}`, this.tokenHeader());
+  }
+ 
+  acceptFriendRequest(table: string, id: string) {
+    return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
+  }
 }

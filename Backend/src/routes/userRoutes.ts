@@ -123,7 +123,7 @@ router.get('/', tokencheck, async (req: any, res: any) => {
 });
 
 // Egy adott felhasználó lekérése
-router.get('/:id', tokencheck, async (req: any, res: any) => {
+router.get('/users/:id', tokencheck, async (req: any, res: any) => {
     const { id } = req.params;
     try {
         const user = await AppDataSource.getRepository(Users).findOne({ where: { id } });
