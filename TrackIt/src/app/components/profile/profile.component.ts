@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { User_statistics } from '../../interfaces/user_statistics';
 import { Habit } from '../../interfaces/habits';
@@ -10,22 +10,20 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../interfaces/user';
 import { Friend_Request } from '../../interfaces/friend_requests';
 import { MessageService } from '../../services/message.service';
-import { environment } from '../../environments/environment';
-
+import * as bootstrap from 'bootstrap';
 @Component({
   selector: 'app-profile',
   imports: [CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
   constructor(
     private api: ApiService,
     private auth: AuthService,
     private activatedRoute: ActivatedRoute,
     private message: MessageService
   ) {}
-
   // Interfaces
   user_statistics: User_statistics | null = null;
   habits: Habit[] = [];
@@ -34,7 +32,6 @@ export class ProfileComponent implements OnInit {
   senderNames: { [key: string]: string } = {}; // To store sender names
   currentUserId: string | null = null;
   userNames: { [key: string]: string } = {};
-
   // Default user
   user: User = {
     id: '',
@@ -46,30 +43,25 @@ export class ProfileComponent implements OnInit {
     createdAt: '',
     confirm: ''
   };
-
   // Tabs
   activeTab: string = 'statisztika';
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
   }
-
   id: string = "";
   totalProgressPercentage: number = 0;
   weeklyProgressPercentage: number = 0;
   monthlyProgressPercentage: number = 0;
-  
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.params['id'];
     this.auth.user$.subscribe(user => {
       if (user) {
         this.id = user.id;
-
-        // Fetch user data
         this.api.getLoggedUser('users', this.id).subscribe({
           next: (res: any) => {
             this.user = res.user;
             if (this.user && this.user.id) {
-              this.userNames[this.user.id] = this.user.name ?? 'Ismeretlen felhasználó'; // Store user name with default value
+              this.userNames[this.user.id] = this.user.name ?? 'Ismeretlen felhasználó';
               //console.log('User fetched:', this.user);
               //console.log('User names:', this.userNames);
             }
@@ -78,7 +70,6 @@ export class ProfileComponent implements OnInit {
             console.error('Error fetching user data:', err);
           }
         });
-
         // Statisztika Tab
         this.api.readUserStatistics('user_statistics', this.id).subscribe({
           next: (res: any) => {
@@ -119,13 +110,17 @@ export class ProfileComponent implements OnInit {
             console.error('Error fetching user challenges:', err);
           }
         });
-
         // Barátok Tab
         this.FriendRequest();
       }
     });
   }
-
+  ngAfterViewInit(): void {
+    const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.forEach(popoverTriggerEl => {
+      new bootstrap.Popover(popoverTriggerEl);
+    });
+  }
   FriendRequest(){
     this.api.readFriendRequests('friends', this.id).subscribe({
       next: (res: any) => {
@@ -150,15 +145,12 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
   hasAcceptedFriends(): boolean {
     return this.friend_requests.some(request => request.status === 'accepted');
   }
-
   hasPendingFriends(): boolean {
     return this.friend_requests.some(request => request.status === 'pending');
   }
-
   deleteFriend(id: string) {
     if (confirm('Biztosan elutasítod/törlöd a barátkérést?')) {
       this.api.deleteFriendRequest('friends', id).subscribe(
@@ -177,7 +169,6 @@ export class ProfileComponent implements OnInit {
       );
     }
   }
-
   acceptFriend(id: string) {
     if (confirm('Biztosan megerősíti ezt a barátkérést?')) {
       this.api.acceptFriendRequest('friends', id).subscribe(
@@ -196,7 +187,6 @@ export class ProfileComponent implements OnInit {
       );
     }
   }
-
   private sumUserStatistics(statistics: User_statistics[]): User_statistics {
     const summedStatistics = statistics.reduce((acc, curr) => {
       acc.completedTasks += curr.completedTasks;
@@ -211,34 +201,28 @@ export class ProfileComponent implements OnInit {
       activeChallengeId: '',
       activeTaskId: ''
     });
-
     const totalTasks = summedStatistics.completedTasks + summedStatistics.missedTasks;
     summedStatistics.completionRate = totalTasks > 0 ? Math.ceil((summedStatistics.completedTasks / totalTasks) * 100) : 0;
-
     return summedStatistics;
   }
-  
   getCompletedDays(user_challenge: User_Challenge): number {
     const createdAt = new Date(user_challenge.createdAt);
     const completedAt = user_challenge.completedAt ? new Date(user_challenge.completedAt) : new Date();
     const finalDate = user_challenge.finalDate ? new Date(user_challenge.finalDate) : null;
-    
+   
     const endDate = finalDate && finalDate < completedAt ? finalDate : completedAt;
-    
+   
     const timeDiff = Math.abs(endDate.getTime() - createdAt.getTime());
     const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    
+   
     return Math.min(diffDays, user_challenge.durationDays);
   }
-
   private calculateWeeklyProgress(challenges: User_Challenge[]): number {
     const currentDate = new Date();
-  
     const weeklyChallenges = challenges.filter(challenge => {
       const createdAt = new Date(challenge.createdAt);
       const futureDate = new Date(createdAt.getTime() + 7 * 24 * 60 * 60 * 1000);
       const completedAt = new Date(challenge.completedAt);
-  
       if (completedAt <= futureDate) {
         const totalDays = (futureDate.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
         const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
@@ -247,19 +231,15 @@ export class ProfileComponent implements OnInit {
       }
       return false;
     });
-  
     const totalProgress = weeklyChallenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0);
     return weeklyChallenges.length > 0 ? totalProgress / weeklyChallenges.length : 0;
   }
-
   private calculateMonthlyProgress(challenges: User_Challenge[]): number {
     const currentDate = new Date();
-  
     const monthlyChallenges = challenges.filter(challenge => {
       const createdAt = new Date(challenge.createdAt);
       const futureDate = new Date(createdAt.getTime() + 30 * 24 * 60 * 60 * 1000);
       const completedAt = new Date(challenge.completedAt);
-  
       if (completedAt <= futureDate) {
         const totalDays = (futureDate.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
         const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
@@ -268,15 +248,11 @@ export class ProfileComponent implements OnInit {
       }
       return false;
     });
-  
     const totalProgress = monthlyChallenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0);
     return monthlyChallenges.length > 0 ? totalProgress / monthlyChallenges.length : 0;
   }
-
-  // Profil módosítása
   invalidFields: string[] = [];
   isPasswordVisible = false;
-
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
