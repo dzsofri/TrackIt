@@ -53,7 +53,7 @@ export class LoginComponent {
   
           if (res.token) {
             this.auth.login(res.token);  // Csak a tokent adjuk át az AuthService-nek
-            this.router.navigateByUrl('/profile');
+            this.router.navigateByUrl('/kanban');
           } else {
             console.error('HIBA: A token hiányzik a válaszból');
           }

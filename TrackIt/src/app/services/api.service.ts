@@ -54,14 +54,6 @@ export class ApiService {
     );
   }
 
-  getAllUsers(): Observable<{ users: User[], count: number, message: string }> {
-    return this.http.get<{ users: User[], count: number, message: string }>(this.server + '/users', this.tokenHeader()).pipe(
-      catchError(error => {
-        console.error('Error fetching users:', error);
-        return of({ users: [], count: 0, message: 'Error occurred while fetching users' });
-      })
-    );
-  }
 
   resetPassword(email: string, token: string, newPassword: any): Observable<any> {
     return this.http.post<any>(`${this.server}/users/reset-password`, { email, token, newPassword }).pipe(
@@ -190,4 +182,18 @@ export class ApiService {
   acceptFriendRequest(table: string, id: string) {
     return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
   }
+
+  updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
+    const body = { status: newStatus };
+    return this.http.patch<any>(`${this.server}/tasks/${taskId}/status`, body, this.tokenHeader()).pipe(
+        catchError(error => {
+            console.error('Feladat státuszának frissítése sikertelen', error);
+            return of(error);
+        })
+    );
+}
+
+
+
+
 }

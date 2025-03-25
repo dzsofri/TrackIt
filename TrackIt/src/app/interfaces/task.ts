@@ -7,4 +7,5 @@ export interface Task {
     userId?: string; // Az opcionális felhasználói azonosító
     createdAt?: Date; // A feladat létrehozásának dátuma (opcionális)
     updatedAt?: Date; // A feladat legutóbbi módosításának dátuma (opcionális)
+    showMenu?: boolean;
 }
