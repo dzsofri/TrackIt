@@ -5,11 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { filter } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { NewpostComponent } from './components/newpost/newpost.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, SidebarComponent, RouterModule],
+  imports: [CommonModule, HttpClientModule, SidebarComponent, RouterModule, NewpostComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

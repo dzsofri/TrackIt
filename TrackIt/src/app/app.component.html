@@ -1,3 +1,5 @@
+<app-newpost></app-newpost>
+
 <div class="app-container">
   <div class="position-relative" [ngClass]="{ 'hidden-sidebar': !showSidebar }">
     <app-sidebar
@@ -20,4 +22,6 @@
   <main class="content" [ngClass]="{ 'content-expanded': !showSidebar }">
     <div class="content-inner"><router-outlet/></div>
   </main>
+
+
 </div>
