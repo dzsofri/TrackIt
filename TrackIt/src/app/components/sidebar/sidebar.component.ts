@@ -94,4 +94,10 @@ export class SidebarComponent {
       item.isOpen = !item.isOpen;
     }
   }
+
+  logout() {
+    this.authService.logout();
+
+     this.router.navigate(['/login']);
+  }
 }

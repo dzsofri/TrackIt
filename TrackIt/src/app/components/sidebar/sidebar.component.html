@@ -67,4 +67,23 @@
       </a>
     </li>
   </ul>
+
+  <!-- Logout gomb -->
+  <ul class="sidebar-footer" style="list-style-type: none; padding: 0; margin-top: auto;">
+    <li class="sidebar-menu-item" style="list-style-type: none; padding: 0; margin: 0;">
+      <a
+        href="#"
+        class="sidebar-item"
+        (click)="logout()"
+      >
+        <!-- Logout Ikon -->
+        <img
+          src="/assets/icons/logout_logo.png"
+          alt="Kijelentkezés"
+          class="me-2 mt-1 sidebar-custom-icon"
+        />
+        <span class="sidebar-item-text" [class.d-none]="isSidebarCollapsed">Kijelentkezés</span>
+      </a>
+    </li>
+  </ul>
 </div>
