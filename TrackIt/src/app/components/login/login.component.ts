@@ -20,10 +20,7 @@ import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 })
 export class LoginComponent {
 
-  @Input() visible = false;
-@Input() type: 'success' | 'danger' | 'alert' | 'primary' = 'primary';
-@Input() message = '';
-@Output() close = new EventEmitter<void>();
+
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
   private tokenName = environment.tokenName;
@@ -34,7 +31,7 @@ export class LoginComponent {
 
   // MODAL változók
   modalVisible = false;
-  modalType: 'success' | 'danger' | 'alert' | 'primary' = 'primary';
+  modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
 
   constructor(
@@ -51,52 +48,80 @@ export class LoginComponent {
     this.api.login(this.user.email, this.user.password).subscribe({
       next: (res: any) => {
         console.log('API válasz:', res);
-
         this.invalidFields = res.invalid || [];
-
-
+  
         if (this.invalidFields.length === 0) {
-          console.log('Sikeres bejelentkezés:', res.message);
-
           if (res.token) {
             this.auth.login(res.token);
-
+  
             // Modal beállítása sikeres bejelentkezéshez
-            this.modalMessage = 'Sikeres bejelentkezés!';
+            this.modalMessage = res.message || 'Sikeres bejelentkezés!';
             this.modalType = 'success';
             this.modalVisible = true;
-
+  
+            // Debugging modal összes adatát kiírni
+            console.log('Modal adatai (sikeres bejelentkezés után):', {
+              modalMessage: this.modalMessage,
+              modalType: this.modalType,
+              modalVisible: this.modalVisible
+            });
+  
+            // 2 másodperc múlva bezárni a modalt és navigálni
             setTimeout(() => {
               this.modalVisible = false;
               this.router.navigateByUrl('/profile');
             }, 2000);
+  
           } else {
             console.error('HIBA: A token hiányzik a válaszból');
-
-            // Modal beállítása hiba esetén
-            this.modalMessage = 'Hiba történt a bejelentkezés során!';
-            this.modalType = 'danger';
+  
+            this.modalMessage = res.message || 'Hiba történt a bejelentkezés során!';
+            this.modalType = 'success';
             this.modalVisible = true;
+  
+            // Debugging modal összes adatát kiírni hiba esetén
+            console.log('Modal adatai (hiba esetén):', {
+              modalMessage: this.modalMessage,
+              modalType: this.modalType,
+              modalVisible: this.modalVisible
+            });
           }
         } else {
-          console.log('HIBA:', res.message, 'danger');
-
-          // Modal beállítása sikertelen bejelentkezés esetén
-          this.modalMessage = 'Hibás bejelentkezési adatok!';
-          this.modalType = 'danger';
+          console.log('HIBA:', res.message);
+  
+          this.modalMessage = res.message || 'Hibás bejelentkezési adatok!';
+          this.modalType = 'error';
           this.modalVisible = true;
+  
+          // Debugging modal összes adatát kiírni hibás bejelentkezés esetén
+          console.log('Modal adatai (hibás bejelentkezés):', {
+            modalMessage: this.modalMessage,
+            modalType: this.modalType,
+            modalVisible: this.modalVisible
+          });
+          
         }
       },
       error: (err) => {
         console.error('Login API hiba:', err);
-
-        // Modal beállítása API hiba esetén
-        this.modalMessage = 'Ismeretlen hiba történt!';
-        this.modalType = 'danger';
+  
+        // Hiba esetén modal beállítása
+        this.modalMessage = err.error.message || 'Ismeretlen hiba történt!';
+        this.modalType = 'error';
         this.modalVisible = true;
+  
+        // Debugging modal összes adatát kiírni API hiba esetén
+        console.log('Modal adatai (API hiba):', {
+          modalMessage: this.modalMessage,
+          modalType: this.modalType,
+          modalVisible: this.modalVisible
+        });
       }
     });
   }
+  
+
+  
 
   isInvalid(field: string) {
     return this.invalidFields.includes(field);

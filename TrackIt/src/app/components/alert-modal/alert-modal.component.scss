@@ -1,67 +1,77 @@
-// Háttér
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background-color: white;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 500px;  /* Szélesebb forma */
+    height: 150px; /* Csökkentett magasság */
+    text-align: center;
+    display: flex;
+    flex-direction: row;  /* Fektetett elrendezés */
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;  /* Jobb felső sarokba helyezve */
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+    background-color: transparent !important;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+
+/* Ikon stílusa */
+.modal .icon img {
+    width: 50px;
+    height: 50px;
+}
+
+/* Szöveg igazítása */
+.modal p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    flex-grow: 1;
+    text-align: left; /* Balra igazított szöveg */
+}
+
+/* OK gomb */
+.modal button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.modal button:hover {
+    background-color: #0056b3;
+}
+
+/* Háttér */
 .modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 10;
-  }
-  
-  // Modal ablak
-  .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    min-width: 300px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    z-index: 11;
-  
-    &.success {
-      border-top: 5px solid #28a745;
-    }
-  
-    &.danger {
-      border-top: 5px solid #dc3545;
-    }
-  
-    &.alert {
-      border-top: 5px solid #ffc107;
-    }
-  
-    &.primary {
-      border-top: 5px solid #007bff;
-    }
-  }
-  
-  // Animáció megjelenéskor
-  .modal.ng-animating {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  
-  // Ikon
-  .icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-  }
-  
-  // Bezáró gomb
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-  }
-  
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+}

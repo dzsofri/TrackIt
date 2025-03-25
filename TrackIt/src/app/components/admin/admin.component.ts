@@ -192,7 +192,7 @@ export class AdminComponent implements OnInit {
   }
 
   fetchCounts(): void {
-    this.api.getAllUsers().subscribe(response => 
+    this.api.getUsers().subscribe(response => 
       this.initCountUp('userCount', response.users.length));
     
     this.api.getChallenges().subscribe(response => this.initCountUp('challengeCount', response.count));
@@ -274,7 +274,7 @@ export class AdminComponent implements OnInit {
   }
 
   getAllUsers(): void {
-    this.api.getAllUsers().subscribe({
+    this.api.getUsers().subscribe({
       next: (response) => {
         this.users = response?.users || [];
       },

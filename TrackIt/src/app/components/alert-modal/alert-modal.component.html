@@ -2,14 +2,32 @@
 
 <div class="modal" *ngIf="visible" [ngClass]="type">
   <div class="icon">
-    <span *ngIf="type === 'success'">✅</span>
-    <span *ngIf="type === 'danger'">❌</span>
-    <span *ngIf="type === 'alert'">⚠️</span>
-    <span *ngIf="type === 'primary'">ℹ️</span>
+    <ng-container *ngIf="type === 'success'">
+      <img src="assets/icons/success.png" alt="Siker">
+    </ng-container>
+    <ng-container *ngIf="type === 'error'">
+      <img src="assets/icons/error.png" alt="Hiba">
+    </ng-container>
+    <ng-container *ngIf="type === 'warning'">
+      <img src="assets/icons/warning.png" alt="Figyelmeztetés">
+    </ng-container>
+    <ng-container *ngIf="type === 'info'">
+      <img src="assets/icons/info.png" alt="Információ">
+    </ng-container>
   </div>
 
-  <div class="content">
+  <div class="modal-content">
+
     <p>{{ message }}</p>
+
+    <div class="modal-buttons" *ngIf="type === 'info'">
+      <button class="confirm-btn">Megerősítés</button>
+      <button class="cancel-btn" (click)="closeModal()">Törlés</button>
+    </div>
+
+    <div class="modal-buttons" *ngIf="type !== 'info'">
+      <button (click)="closeModal()">OK</button>
+    </div>
   </div>
 
   <button class="close-btn" (click)="closeModal()">✖</button>
