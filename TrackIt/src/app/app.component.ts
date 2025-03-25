@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
     ).subscribe(() => {
       const currentRoute = this.router.url;  // Az aktuális URL lekérése
       // Ha az aktuális oldal nem tartozik a megjelenítendő oldalak közé, elrejtjük a sidebar-t
-      this.showSidebar = !['/login', '/register'].includes(currentRoute);
+      this.showSidebar = !['/login', '/registration', '/reset-password', '/lostpass', '/welcome'].includes(currentRoute);
     });
   }
 

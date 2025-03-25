@@ -6,7 +6,7 @@
 
 .content {
   flex-grow: 1;
-  margin-left: 250px; // Alapértelmezett szélesség, amikor a sidebar látható
+  margin-left: 25px; // Alapértelmezett szélesség, amikor a sidebar látható
   transition: all 0.3s ease-in-out;
   background-color: #f4f6f7;
   overflow-y: auto;
@@ -18,14 +18,14 @@
   }
 
   &-expanded {
-    margin-left: 0px; // Amikor a sidebar össze van csukva
+    margin-left: 0px;
   }
 }
 
 .sidebar-toggle-btn {
   position: absolute;
   top: 1rem;
-  left: 260px; // Alapértelmezett pozíció, amikor a sidebar nincs összehúzva
+  left: 260px;
   background-color: #627966;
   border: none;
   color: #fff;

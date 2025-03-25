@@ -11,8 +11,12 @@ export class AuthService {
   isLoggedIn$: Observable<boolean> = this.isLoggedIn.asObservable();
   private userSubject = new BehaviorSubject<any>(this.loggedUser());
   user$: Observable<any> = this.userSubject.asObservable();
+  
+  // Az admin státusz figyelése observable-ként
+  private isAdminSubject = new BehaviorSubject<boolean>(this.isAdmin());
+  isAdmin$: Observable<boolean> = this.isAdminSubject.asObservable();
 
-  constructor() {  }
+  constructor() {}
 
   private hasToken(): boolean {
     return !!localStorage.getItem(this.tokenName);
@@ -22,12 +26,14 @@ export class AuthService {
     localStorage.setItem(this.tokenName, token);
     this.isLoggedIn.next(true);
     this.userSubject.next(this.loggedUser());
+    this.isAdminSubject.next(this.isAdmin()); // Admin státusz frissítése
   }
 
   logout() {
     localStorage.removeItem(this.tokenName);
     this.isLoggedIn.next(false);
     this.userSubject.next(null);
+    this.isAdminSubject.next(false); // Admin státusz frissítése
   }
 
   loggedUser() {
@@ -57,5 +63,5 @@ export class AuthService {
       return payload.role === 'admin';
     }
     return false;
-}
+  }
 }
