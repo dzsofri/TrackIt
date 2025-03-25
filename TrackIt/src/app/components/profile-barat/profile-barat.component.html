@@ -1,0 +1,47 @@
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-6 mb-4">
+        <h3>Barátok kezelése</h3>
+        <div class="barat_box1">
+          <div class="barat_content1">
+            <ng-container *ngIf="friend_requests.length > 0; else noFriends">
+              <ng-container *ngIf="hasAcceptedFriends(); else noFriends">
+                <ng-container *ngFor="let friend_request of friend_requests">
+                  <p *ngIf="friend_request.status === 'accepted'" class="barat_text">
+                    <img id="profile">
+                    <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
+                    <button class="del1" (click)="deleteFriend(friend_request.id)">Barát törlése</button>
+                  </p>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <ng-template #noFriends>
+          <h5 class="NO_DATA">Még nincs ismerősöd!</h5>
+        </ng-template>
+      </div>
+      <div class="col-12 col-sm-12 col-md-6 mb-4">
+        <h3>Követési kérelmek kezelése</h3>
+        <div class="barat_box1">
+          <div class="barat_content1">
+            <ng-container *ngIf="friend_requests.length > 0; else noFriendRequests">
+              <ng-container *ngIf="hasPendingFriends(); else noFriendRequests">
+                <ng-container *ngFor="let friend_request of friend_requests">
+                  <p *ngIf="friend_request.status === 'pending'" class="barat_text">
+                    <img id="profile">
+                    <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
+                    <span class="buttons">
+                      <button class="add" (click)="acceptFriend(friend_request.id)">Megerősítés</button>
+                      <button class="del2" (click)="deleteFriend(friend_request.id)">Elutasítás</button>
+                    </span>
+                  </p>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <ng-template #noFriendRequests>
+          <h5 class="NO_DATA">Jelenleg nincs követési kérésed!</h5>
+        </ng-template>
+      </div>
+</div>

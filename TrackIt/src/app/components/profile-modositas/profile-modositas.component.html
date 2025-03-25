@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-6 mb-4">
+        <div class="profile_box1">
+            <div class="profile_content1">
+                <img id="profilekep">
+                <button class="profilekep_modositas">Profilkép módosítása</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 mb-4">
+        <h3>Adotok módosítása</h3>
+        <div class="profile_box2">
+            <div class="profile_content2">
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Név módosítása</label>
+                        <input type="text" class="form-control" id="name" placeholder="pl. Somodi Konrád" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email módosítása</label>
+                        <input type="email" class="form-control" id="email" placeholder="pl. somodikonrad@turr.hu" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Jelszó módosítása</label>
+                        <div class="input-group">
+                            <input [type]="isPasswordVisible ? 'text' : 'password'" class="form-control" id="password" placeholder="Írja be a jelszavát!" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Értesítés beállítása</label>
+                        <input type="date" class="form-control" id="date" required>
+                    </div>
+                    <button type="submit" class="mentes">Mentés</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
