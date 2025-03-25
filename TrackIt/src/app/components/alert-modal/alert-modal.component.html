@@ -1,0 +1,16 @@
+<div class="modal-backdrop" *ngIf="visible" (click)="closeModal()"></div>
+
+<div class="modal" *ngIf="visible" [ngClass]="type">
+  <div class="icon">
+    <span *ngIf="type === 'success'">✅</span>
+    <span *ngIf="type === 'danger'">❌</span>
+    <span *ngIf="type === 'alert'">⚠️</span>
+    <span *ngIf="type === 'primary'">ℹ️</span>
+  </div>
+
+  <div class="content">
+    <p>{{ message }}</p>
+  </div>
+
+  <button class="close-btn" (click)="closeModal()">✖</button>
+</div>

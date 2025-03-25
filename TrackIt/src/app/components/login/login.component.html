@@ -47,3 +47,11 @@
         </div>
     </div>
 </div>
+
+
+<app-alert-modal 
+  [visible]="modalVisible" 
+  [type]="modalType" 
+  [message]="modalMessage" 
+  (close)="modalVisible = false">
+</app-alert-modal>
