@@ -11,23 +11,29 @@ export class AuthService {
   isLoggedIn$: Observable<boolean> = this.isLoggedIn.asObservable();
   private userSubject = new BehaviorSubject<any>(this.loggedUser());
   user$: Observable<any> = this.userSubject.asObservable();
+  
+  // Az admin státusz figyelése observable-ként
+  private isAdminSubject = new BehaviorSubject<boolean>(this.isAdmin());
+  isAdmin$: Observable<boolean> = this.isAdminSubject.asObservable();
 
-  constructor() {  }
- 
+  constructor() {}
+
   private hasToken(): boolean {
-    return !!localStorage.getItem(this.tokenName)
+    return !!localStorage.getItem(this.tokenName);
   }
 
   login(token: string) {
     localStorage.setItem(this.tokenName, token);
     this.isLoggedIn.next(true);
     this.userSubject.next(this.loggedUser());
+    this.isAdminSubject.next(this.isAdmin()); // Admin státusz frissítése
   }
 
   logout() {
     localStorage.removeItem(this.tokenName);
     this.isLoggedIn.next(false);
     this.userSubject.next(null);
+    this.isAdminSubject.next(false); // Admin státusz frissítése
   }
 
   loggedUser() {
@@ -35,7 +41,8 @@ export class AuthService {
     if (token) {
       try {
         console.log('Token found:', token);
-        return JSON.parse(atob(token.split('.')[1])); 
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload;
       } catch (error) {
         console.error("Hibás token formátum!", error);
         return null;
@@ -44,16 +51,17 @@ export class AuthService {
     console.log('No token found');
     return null;
   }
-  
 
   isLoggedUser(): boolean {
     return this.hasToken();
-     
   }
 
-  
-
   isAdmin(): boolean {
-    return this.loggedUser()?.role === 'admin';
+    const payload = this.loggedUser();
+    if (payload) {
+      console.log('Role:', payload.role);
+      return payload.role === 'admin';
+    }
+    return false;
   }
 }

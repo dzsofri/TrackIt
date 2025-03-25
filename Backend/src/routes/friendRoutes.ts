@@ -4,6 +4,7 @@ import { FriendRequests } from "../entities/FriendRequest";
 import { Users } from "../entities/User";
 import { tokencheck } from "../utiles/tokenUtils";
 import { Follows } from "../entities/Follow";
+import { Brackets } from "typeorm";
 
 const router = Router();
 
@@ -54,33 +55,28 @@ router.post("/send-friendrequest", tokencheck, async (req: any, res: any) => {
 });
 
 // Barátkérés elfogadása
-router.post("/friendrequests/accept/:requestId", tokencheck, async (req: any, res: any) => {
-    const { requestId } = req.params;
-
+router.post("/friendrequests/:id/accept", tokencheck, async (req: any, res: any) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+ 
     try {
-        const friendRequest = await AppDataSource.getRepository(FriendRequests).findOneOrFail({ where: { id: requestId } });
-
-     
-        const currentUserId = req.user.id;
-        if (friendRequest.receiverId !== currentUserId) {
+        const friendRequest = await AppDataSource.getRepository(FriendRequests).findOneOrFail({ where: { id } });
+ 
+        if (friendRequest.receiverId !== userId) {
             return res.status(403).json({ error: "Nincs jogosultságod a barátkérés elfogadásához." });
         }
-
-        
+ 
         friendRequest.status = "accepted";
         await AppDataSource.getRepository(FriendRequests).save(friendRequest);
-
+ 
         const followRelation = new Follows();
-        followRelation.followerUser = friendRequest.sender; 
-        followRelation.followedUser = friendRequest.receiver; 
-        followRelation.followerUserId = friendRequest.senderId; 
-        followRelation.followedUserId = friendRequest.receiverId; 
-
+        followRelation.followerUser = friendRequest.sender;
+        followRelation.followedUser = friendRequest.receiver;
+        followRelation.followerUserId = friendRequest.senderId;
+        followRelation.followedUserId = friendRequest.receiverId;
+ 
         await AppDataSource.getRepository(Follows).save(followRelation);
-
-        // Barátkérés törlése
-        await AppDataSource.getRepository(FriendRequests).remove(friendRequest);
-
+ 
         res.json({ message: "A barátkérés elfogadva és a követés létrehozva!" });
     } catch (error) {
         res.status(404).json({ error: "A barátkérés nem található." });
@@ -89,21 +85,21 @@ router.post("/friendrequests/accept/:requestId", tokencheck, async (req: any, re
 
 
 // Barátkérés elutasítása
-router.post("/friendrequests/reject/:requestId", tokencheck, async (req: any, res: any) => {
-    const { requestId } = req.params;
-    const userId = req.user.id; // Bejelentkezett felhasználó ID-ja
-
+router.delete("/friendrequests/:id", tokencheck, async (req: any, res: any) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+ 
     try {
-        const friendRequest = await AppDataSource.getRepository(FriendRequests).findOneOrFail({ 
-            where: { id: requestId }
+        const friendRequest = await AppDataSource.getRepository(FriendRequests).findOneOrFail({
+            where: { id }
         });
-
+ 
         if (friendRequest.receiverId !== userId) {
             return res.status(403).json({ error: "Csak a címzett utasíthatja el a barátkérést." });
         }
-
+ 
         await AppDataSource.getRepository(FriendRequests).remove(friendRequest);
-        
+ 
         res.json({ message: "A barátkérés elutasítva és törölve lett!" });
     } catch (error) {
         res.status(404).json({ error: "A barátkérés nem található." });
@@ -121,8 +117,10 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
             .leftJoinAndSelect("friendRequest.sender", "sender")
             .leftJoinAndSelect("friendRequest.receiver", "receiver")
             .where("friendRequest.receiverId = :receiverId", { receiverId })
-            .orWhere("friendRequest.senderId = :receiverId", { receiverId })
-            .andWhere("friendRequest.status = :status", { status: "pending" })
+            .andWhere(new Brackets(qb => {
+                qb.where("friendRequest.status = :pendingStatus", { pendingStatus: "pending" })
+                  .orWhere("friendRequest.status = :acceptedStatus", { acceptedStatus: "accepted" })
+            }))
             .getMany();
 
         res.json({ friendRequests });

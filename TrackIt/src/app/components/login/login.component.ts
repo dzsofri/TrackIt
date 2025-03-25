@@ -54,6 +54,7 @@ export class LoginComponent {
 
         this.invalidFields = res.invalid || [];
 
+
         if (this.invalidFields.length === 0) {
           console.log('Sikeres bejelentkezés:', res.message);
 

@@ -5,8 +5,8 @@ POST http://localhost:{{PORT}}/users/login
 Content-Type: application/json
 
 {
-  "email": "beretizsofia310@gmail.com",
-  "password": "Nyuszika310"
+  "email": "somodikonrad@gmail.com",
+  "password": "20060120Koni"
 }
 
 
@@ -153,10 +153,25 @@ DELETE http://localhost:3000/friendrequests/followers/d52808cf-dff3-4ae4-9045-c9
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmLTM5M2EtNDUxYS05OTJmLTc5Y2M1MmY0ZDVlOCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MDY2NjExOCwiZXhwIjoxNzQwNzUyNTE4fQ.77Lq6ZTEABSrgivit4xZNPwz3bPPY5I6FstH1dMt3e0
 
 
-### Statisztika lekérése
-GET http://localhost:3000/user_statistics/statistics/45cae97b-cbdb-452f-b639-e2e9c28374c7
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ1Y2FlOTdiLWNiZGItNDUyZi1iNjM5LWUyZTljMjgzNzRjNyIsImVtYWlsIjoiZHVkYXNsZXZlbnRlQHR1cnIuaHUiLCJpYXQiOjE3NDE1MzQ2ODYsImV4cCI6MTc0MTYyMTA4Nn0.8P0o6eU0EstYA2WgFVlFcpiLv8amntnZ2_qx2ugcDEk
+### Összes feladat betöltése
 
-### Hobbik lekérése
-GET http://localhost:3000/user_statistics/habit/45cae97b-cbdb-452f-b639-e2e9c28374c7
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQ1Y2FlOTdiLWNiZGItNDUyZi1iNjM5LWUyZTljMjgzNzRjNyIsImVtYWlsIjoiZHVkYXNsZXZlbnRlQHR1cnIuaHUiLCJpYXQiOjE3NDE1MzQ2ODYsImV4cCI6MTc0MTYyMTA4Nn0.8P0o6eU0EstYA2WgFVlFcpiLv8amntnZ2_qx2ugcDEk
+GET http://localhost:{{PORT}}/tasks
+
+
+### Feladat létrehozása
+POST http://localhost:{{PORT}}/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFiYzg4ZTA2LTM3ZjgtNDM1MC05N2JmLWI5ZTE0MDE1MDAxZSIsImVtYWlsIjoic29tb2Rpa29ucmFkQGdtYWlsLmNvbSIsImlhdCI6MTc0Mjc0MzcyNCwiZXhwIjoxNzQyODMwMTI0fQ.tOSeA8EWiyeRPM-ENMxKroCIJhMwHFiuLD-30w9eKr0
+Content-Type: application/json
+
+{
+    "title": "UserId kötős feladat 101",
+    "description": "Ez egy teszt feladat valami valami.",
+    "priority": "Alacsony",
+    "dueDate": "2025-03-22"
+}
+
+
+### Feladat törlése
+
+DELETE http://localhost:{{PORT}}/tasks/e1c60327-27aa-43f5-81fe-0b2832f82478
+

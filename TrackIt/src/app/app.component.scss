@@ -1,32 +1,32 @@
 .app-container {
   display: flex;
-  height: 100vh;
+
   overflow: hidden;
 }
 
 .content {
   flex-grow: 1;
-  margin-left: 250px;
+  margin-left: 25px; // Alapértelmezett szélesség, amikor a sidebar látható
   transition: all 0.3s ease-in-out;
   background-color: #f4f6f7;
   overflow-y: auto;
 
   &-inner {
     padding: 2rem;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
   }
 
   &-expanded {
-    margin-left: 50px;
+    margin-left: 0px;
   }
 }
 
 .sidebar-toggle-btn {
   position: absolute;
   top: 1rem;
-  left: 220px; // Default position when sidebar is expanded
-  background-color: #ffffff;
+  left: 260px;
+  background-color: #627966;
   border: none;
   color: #fff;
   padding: 0.5rem;
@@ -38,10 +38,14 @@
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: #34495e;
+    background-color: #364238;
   }
 
   &.sidebar-collapsed {
-    left: 15px; // Position when sidebar is collapsed
+    left: 20px; // A gomb helyzete, amikor a sidebar össze van csukva
   }
+}
+
+.hidden-sidebar {
+  display: none; // A sidebar elrejtése, ha el van rejtve
 }
