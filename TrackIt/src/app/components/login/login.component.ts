@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule instead of HttpClient
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -17,18 +18,20 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
+  private tokenName = environment.tokenName;
 
-  
 
 
   constructor(
     private api: ApiService,
     private auth: AuthService,
     private router: Router
-  ){}
+  ){
+
+  }
 
   invalidFields: string[] = [];
-  
+
   user: User = {
     email: '',
     password: '',
@@ -39,19 +42,20 @@ export class LoginComponent {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
-  isAdmin: boolean = false; 
+  isAdmin: boolean = false;
    // Új változó, ami az admin státuszt tárolja
   onSubmit() {
     this.api.login(this.user.email, this.user.password).subscribe({
       next: (res: any) => {
         console.log('API válasz:', res);  // Debugging log
-  
+
         this.invalidFields = res.invalid || [];
-  
+
         if (this.invalidFields.length === 0) {
-          console.log('Sikeres bejelentkezés:', res.message);
-  
+
+
           if (res.token) {
+            console.log('Sikeres bejelentkezés:', res.message);
             this.auth.login(res.token);  // Csak a tokent adjuk át az AuthService-nek
             this.router.navigateByUrl('/kanban');
           } else {
@@ -67,9 +71,9 @@ export class LoginComponent {
       }
     });
   }
-  
-  
-  
+
+
+
 
   isInvalid(field: string) {
     console.log('dfrsrd',this.invalidFields)

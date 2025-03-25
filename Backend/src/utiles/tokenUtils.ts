@@ -4,7 +4,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";  // Ensure you s
 
 // Function to generate JWT
 function generateToken(user: any) {
-  return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1d' });
+  return jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 }
 
 
