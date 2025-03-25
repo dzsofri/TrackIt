@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
+
 import { map } from 'rxjs/operators';
 import { User } from '../interfaces/user';
 
@@ -53,14 +54,6 @@ export class ApiService {
     );
   }
 
-  getAllUsers(): Observable<{ users: User[], count: number, message: string }> {
-    return this.http.get<{ users: User[], count: number, message: string }>(this.server + '/users', this.tokenHeader()).pipe(
-      catchError(error => {
-        console.error('Error fetching users:', error);
-        return of({ users: [], count: 0, message: 'Error occurred while fetching users' });
-      })
-    );
-  }
 
   resetPassword(email: string, token: string, newPassword: any): Observable<any> {
     return this.http.post<any>(`${this.server}/users/reset-password`, { email, token, newPassword }).pipe(
@@ -170,8 +163,37 @@ export class ApiService {
     return this.http.get(`${this.server}/${table}/challenges/${userId}`, this.tokenHeader());
   }
 
-  readFriendRequests(table: string, receiverId: string): Observable<any> {
-    return this.http.get(`${this.server}/${table}/friendrequests/${receiverId}`, this.tokenHeader());
+  readFriendRequests(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/friendrequests/${userId}`, this.tokenHeader());
   }
+
+  getUser(userId: string): Observable<User> {
+    return this.http.get<User>(`${this.server}/users/${userId}`, this.tokenHeader());
+  }
+
+  getLoggedUser(table: string, id: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/users/${id}`, this.tokenHeader());
+  }
+
+  deleteFriendRequest(table: string, id: string) {
+    return this.http.delete(`${this.server}/${table}/friendrequests/${id}`, this.tokenHeader());
+  }
+ 
+  acceptFriendRequest(table: string, id: string) {
+    return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
+  }
+
+  updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
+    const body = { status: newStatus };
+    return this.http.patch<any>(`${this.server}/tasks/${taskId}/status`, body, this.tokenHeader()).pipe(
+        catchError(error => {
+            console.error('Feladat státuszának frissítése sikertelen', error);
+            return of(error);
+        })
+    );
+}
+
+
+
 
 }

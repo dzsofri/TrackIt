@@ -28,30 +28,42 @@
       
       <div class="kanban-column-header">
         <h3>{{ column.name }}</h3>
-        <!-- Feladatok száma -->
         <div class="task-count">{{ column.tasks.length }} feladat</div>
       </div>
 
-      <div class="kanban-tasks" 
-           (drop)="onDrop($event, column)" 
-           (dragover)="onDragOver($event)" 
-           (dragenter)="onDragEnter($event)">
+      <div class="kanban-tasks" (drop)="onDrop($event, column)" (dragover)="onDragOver($event)" (dragenter)="onDragEnter($event)">
         <div *ngFor="let task of column.tasks" 
              class="kanban-task" 
              draggable="true" 
              (dragstart)="onDragStart($event, task, column)">
           
-          <h4><strong>Cím:</strong> {{ task.title }}</h4>
-          <p>{{ task.description }}</p>
+          <div class="task-header">
+            <h4><strong>Cím:</strong> {{ task.title }}</h4>
+            <div class="task-menu-container">
+              <button class="menu-button" (click)="toggleTaskMenu(task)">&#8942;</button>
+              <div class="menu-options" *ngIf="task.showMenu">
+                <button class="menu-item edit" (click)="editTask(task)">✏️ Feladat módosítása</button>
+                <button class="menu-item delete" (click)="deleteTask(task, column)">🗑️ Feladat törlése</button>
+              </div>
+            </div>
+          </div>
+          
+          <p><strong>Leírás:</strong> {{ task.description }}</p>
           <p><strong>Határidő:</strong> {{ task.dueDate | date:'yyyy. MM. dd.' }}</p>
-
-          <!-- Prioritás szín megjelenítése csak a kis pöttyön -->
+          
           <p *ngIf="task.priority">
             <span class="priority-box" [ngClass]="getPriorityClass(task.priority)"></span>
           </p>
-          
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Popup szerkesztő ablak -->
+  <app-task-edit 
+    *ngIf="selectedTask" 
+    [task]="selectedTask" 
+    (closePopup)="selectedTask = null" 
+    (taskUpdated)="onTaskUpdated($event)">
+  </app-task-edit>
 </div>

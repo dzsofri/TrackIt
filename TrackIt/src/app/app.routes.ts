@@ -1,4 +1,3 @@
-// app-routing.module.ts
 import { Routes, RouterModule } from '@angular/router';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { LoginComponent } from './components/login/login.component';
@@ -8,59 +7,55 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
 
 export const routes: Routes = [
-  { 
-    path: 'welcome', 
+  {
+    path: 'welcome',
     component: WelcomeComponent,
     canActivate: [AuthGuard],
-    data: { label: 'Welcome', icon: 'fas fa-home' }
+    data: { label: 'Welcome', icon: '/assets/icons/badges_logo.png' }
   },
-  { 
-    path: 'kanban', 
-    component: KanbanComponent, 
+  {
+    path: 'kanban',
+    component: KanbanComponent,
     canActivate: [AuthGuard],
-    data: { label: 'Kanban', icon: 'fas fa-tasks' }
+    data: { label: 'ToDo - Kanban', icon: '/assets/icons/todo_logo.png' }
   },
-  { 
-    path: 'admin', 
-    component: AdminComponent, 
-    canActivate: [AuthGuard],
-    data: { label: 'Admin Panel', icon: 'fas fa-user-shield' }
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [AuthGuard, adminGuard],
+    data: { label: 'Admin Panel', icon: '/assets/icons/admin_logo.png' }
   },
-  { 
-    path: 'login', 
-    component: LoginComponent, 
-   
+  {
+    path: 'login',
+    component: LoginComponent,
   },
-  { 
-    path: 'registration', 
-    component: RegistrationComponent, 
-   
+  {
+    path: 'registration',
+    component: RegistrationComponent,
   },
-  { 
-    path: 'lostpass', 
+  {
+    path: 'lostpass',
     component: LostPassComponent,
-    
   },
-  { 
-    path: 'reset-password', 
+  {
+    path: 'reset-password',
     component: PassChangeComponent,
-   
   },
-  { 
-    path: 'profile', 
+  {
+    path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
-    data: { label: 'Profile', icon: 'fas fa-user' }
+    data: { label: 'Profile', icon: '/assets/icons/profile_logo.png' }
   },
-  { 
-    path: '', 
-    redirectTo: 'login', 
-    pathMatch: 'full' 
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
   },
 ];
 
