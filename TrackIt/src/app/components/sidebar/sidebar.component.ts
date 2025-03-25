@@ -1,14 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { routes } from '../../app.routes';
 import { CommonModule } from '@angular/common';
-
+import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 interface MenuItem {
   label: string;
   icon: string;
   route: string;
   isOpen?: boolean;
+  isActive?: boolean;
   children?: MenuItem[];
 }
 
@@ -16,56 +19,77 @@ interface MenuItem {
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
-  imports: [CommonModule]
+  imports: [CommonModule, RouterModule]
 })
 export class SidebarComponent {
   @Input() isSidebarCollapsed = false;
   @Output() sidebarToggle = new EventEmitter<void>();
 
   menuItems: MenuItem[] = [];
+  isAdmin = false;
+  lastActiveMenuItem: MenuItem | null = null;
 
-  constructor(private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.loadMenuItems();
-    console.log('Betöltött menü elemek:', this.menuItems);
+    this.isAdmin = this.authService.isAdmin();
+    this.router.events.subscribe(() => {
+      this.checkAdminRoute();
+    });
   }
 
-  // Az útvonalakból generáljuk a menüelemeket
   loadMenuItems() {
     this.menuItems = this.generateMenuItemsFromRoutes(routes);
-    console.log('Generált menü elemek:', this.menuItems); // Nézd meg, hogy az útvonalak helyesen kerülnek-e be
   }
-  
 
-  // Az útvonalakból létrehozzuk a menüelemeket
   generateMenuItemsFromRoutes(routes: any[]): MenuItem[] {
     return routes
-      .filter(route => route.data) // Csak azok az útvonalak, amiknek van data
+      .filter(route => route.data)
       .map(route => ({
-        label: route.data?.label || '', 
-        icon: route.data?.icon || '',  
-        route: route.path,           
-        children: route.children || [], 
+        label: route.data?.label || '',
+        icon: route.data?.icon || '',
+        route: route.path,
+        children: route.children || [],
+        isActive: false,
       }));
+  }
+
+  setActiveMenuItem(item: MenuItem) {
+    if (!this.isSidebarCollapsed) {
+      this.menuItems.forEach(menu => menu.isActive = false);
+      item.isActive = true;
+      this.lastActiveMenuItem = item;
+    }
   }
 
   toggleSidebar() {
     this.sidebarToggle.emit();
+    if (this.isSidebarCollapsed) {
+      if (this.lastActiveMenuItem) {
+        this.lastActiveMenuItem.isActive = true;
+      }
+    } else {
+      this.menuItems.forEach(menu => menu.isActive = false);
+    }
   }
-  navigateTo(route: string) {
-    console.log('Navigálás előtt', route);  
-    this.router.navigate([route]).then(() => {
-      console.log('Navigáltunk ide:', route); 
-    }).catch((err) => {
-      console.error('Hiba a navigáció során:', err); 
-    });
-  }
-  
-  
-  
 
-  toggleMenuItem(item: MenuItem) {
+  checkAdminRoute() {
+    const currentRoute = this.router.url;
+    const isAdminRoute = currentRoute.includes('/admin');
+    if (isAdminRoute) {
+      this.menuItems.forEach(item => {
+        if (item.route === '/admin') {
+          item.isActive = true;
+        }
+      });
+    }
+  }
+
+  toggleChildMenuItem(item: MenuItem) {
     if (item.children && !this.isSidebarCollapsed) {
       item.isOpen = !item.isOpen;
     }

@@ -1,42 +1,70 @@
 <div class="sidebar" [ngClass]="{ 'sidebar-collapsed': isSidebarCollapsed }">
-    <div class="sidebar-header">
-      <a href="#" class="sidebar-logo">
-        {{ isSidebarCollapsed ? 'C' : 'CodeWithChintan' }}
-      </a>
-    </div>
-    <div class="sidebar-menu">
-      <ul>
-        <ng-container *ngFor="let item of menuItems">
+  <div class="sidebar-header">
+    <a class="sidebar-logo">
+      <img src="/assets/images/logo.png" alt="Logo" class="logo" />
+      <span *ngIf="!isSidebarCollapsed">TrackIt</span>
+    </a>
+  </div>
+
+  <div class="sidebar-menu">
+    <ul>
+      <!-- Normál menüpontok -->
+      <ng-container *ngFor="let item of menuItems">
+        <ng-container *ngIf="item.route !== 'admin'"> <!-- KIHAGYJUK AZ ADMIN PANELT -->
           <li class="sidebar-menu-item">
             <a
               href="#"
               class="sidebar-item"
+              [routerLink]="[item.route]"
+              routerLinkActive="menu-item-active"
+              [routerLinkActiveOptions]="{ exact: true }"
               [ngClass]="{
                 'has-children': item.children?.length,
-                'menu-item-active': item.isOpen
+                'menu-item-active': item.isActive && !isSidebarCollapsed
               }"
-              (click)="navigateTo(item.route); toggleMenuItem(item)"
+              (click)="setActiveMenuItem(item); toggleChildMenuItem(item)"
             >
-              <i [class]="item.icon"></i>
-              <span class="sidebar-item-text">{{ item.label }}</span>
+              <!-- Ikon mindig látható, ha nem az összecsukott oldalsáv van -->
+              <img
+                *ngIf="item.icon && !item.icon.startsWith('fas')"
+                [src]="item.isActive && !isSidebarCollapsed ? item.icon.replace('.png', '_white.png') : item.icon"
+                alt="{{ item.label }}"
+                class="me-2 mt-1 sidebar-custom-icon"
+              />
+              <span class="sidebar-item-text" [class.d-none]="isSidebarCollapsed">{{ item.label }}</span>
               <i
                 *ngIf="item.children?.length && !isSidebarCollapsed"
                 class="fas fa-chevron-down sidebar-item-arrow"
                 [ngClass]="{ rotated: item.isOpen }"
               ></i>
             </a>
-  
-            <ul *ngIf="item.children?.length && !isSidebarCollapsed && item.isOpen" class="sidebar-submenu">
-              <li *ngFor="let child of item.children">
-                <a href="#" class="sidebar-item sidebar-subitem">
-                  <i [class]="child.icon"></i>
-                  <span class="sidebar-item-text">{{ child.label }}</span>
-                </a>
-              </li>
-            </ul>
           </li>
         </ng-container>
-      </ul>
-    </div>
+      </ng-container>
+    </ul>
   </div>
-  
+
+  <!-- Admin menüpont alul, külön listában -->
+  <ul *ngIf="isAdmin" class="sidebar-footer" style="list-style-type: none; padding: 0; margin: 0;">
+    <li class="sidebar-menu-item" style="list-style-type: none; padding: 0; margin: 0;">
+      <a
+        href="#"
+        class="sidebar-item"
+        [routerLink]="'/admin'"
+        routerLinkActive="menu-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [ngClass]="{
+          'menu-item-active': isAdmin && !isSidebarCollapsed
+        }"
+      >
+        <!-- Admin Ikon -->
+        <img
+          [src]="'/assets/icons/admin_logo.png'"
+          alt="Admin Panel"
+          class="me-2 mt-1 sidebar-custom-icon"
+        />
+        <span class="sidebar-item-text" [class.d-none]="isSidebarCollapsed">Admin Panel</span>
+      </a>
+    </li>
+  </ul>
+</div>

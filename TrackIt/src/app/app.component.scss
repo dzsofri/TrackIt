@@ -25,8 +25,8 @@
 .sidebar-toggle-btn {
   position: absolute;
   top: 1rem;
-  left: 220px; // Default position when sidebar is expanded
-  background-color: #ffffff;
+  left: 260px; // Default position when sidebar is expanded
+  background-color: #627966;
   border: none;
   color: #fff;
   padding: 0.5rem;
@@ -38,10 +38,10 @@
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: #34495e;
+    background-color: #364238;
   }
 
   &.sidebar-collapsed {
-    left: 15px; // Position when sidebar is collapsed
+    left: 20px; // Position when sidebar is collapsed
   }
 }
