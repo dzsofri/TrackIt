@@ -6,23 +6,18 @@ import { tokencheck } from "../utiles/tokenUtils";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
 
-
 const router = Router();
 
 
-
-
 // Új feladat létrehozása (Token ellenőrzéssel)
-router.post("/", async (req: any, res: any) => {
+router.post("/", tokencheck, async (req: any, res: any) => {
     try {
         const { title, description, priority, dueDate } = req.body;
 
-        // Hiányzó adatok ellenőrzése
         if (!title || !priority || !dueDate) {
-            return res.status(400).json({ message: "Hiányzó adatok!", invalidFields: { title, priority, dueDate } });
+            return res.status(400).json({ message: "Hiányzó adatok!" });
         }
 
-        // Új feladat mentése
         const task = new Tasks();
         task.id = uuidv4();
         task.title = title;
@@ -30,14 +25,15 @@ router.post("/", async (req: any, res: any) => {
         task.priority = priority;
         task.dueDate = new Date(dueDate);
         task.createdAt = new Date();
+        task.userId = req.user.id; // 🔹 Beállítjuk a felhasználó ID-ját
 
         await AppDataSource.getRepository(Tasks).save(task);
 
-        return res.status(201).json({ message: "Feladat sikeresen létrehozva!", task });
+        return res.status(201).json({ message: "Feladat létrehozva!", task });
 
     } catch (error) {
-        console.error("Hiba történt a feladat létrehozásakor:", error);
-        return res.status(500).json({ message: "Szerverhiba történt." });
+        console.error("Hiba történt:", error);
+        return res.status(500).json({ message: "Szerverhiba." });
     }
 });
 
@@ -46,7 +42,7 @@ router.get("/", async (req: any, res: any) => {
         const tasks = await AppDataSource.getRepository(Tasks).find();
 
         if (!tasks.length) {
-            return res.status(404).json({ message: "Nincsenek feladatok az adatbázisban!" });
+            return res.status(200).json({ message: "Nincsenek feladatok az adatbázisban!", tasks: [] }); // 🔹 Üzenet + üres lista
         }
 
         return res.status(200).json({ tasks });
@@ -57,23 +53,14 @@ router.get("/", async (req: any, res: any) => {
     }
 });
 
+// Task frissítéséhez szükséges kérés típusának meghatározása  
 
 
-// Task frissítéséhez szükséges kérés típusának meghatározása
-interface UpdateTaskRequest {
-    status: 'todo' | 'in-progress' | 'done'; // Az elfogadott státuszok
-}
-
-router.put("/tasks/:id", async (req: any, res: any) => {
+router.put("/:id", async (req: any, res: any) => {
     try {
         const { id } = req.params;
-        const { status }: UpdateTaskRequest = req.body; // Kinyerjük a status-t az req.body-ból
+        const { title, description, dueDate , status} = req.body;
 
-        // Ellenőrizzük, hogy érvényes státusz lett-e megadva
-        const validStatuses = ["todo", "in-progress", "done"];
-        if (!validStatuses.includes(status)) {
-            return res.status(400).json({ message: "Érvénytelen státusz!" });
-        }
 
         const taskRepository = AppDataSource.getRepository(Tasks);
         let task = await taskRepository.findOneBy({ id });
@@ -82,8 +69,12 @@ router.put("/tasks/:id", async (req: any, res: any) => {
             return res.status(404).json({ message: "Feladat nem található!" });
         }
 
-        // Státusz frissítése
+        // Csak a megengedett mezők frissítése
+        task.title = title;
+        task.description = description;
+        task.dueDate = dueDate;
         task.status = status;
+
         await taskRepository.save(task);
 
         return res.status(200).json({ message: "Feladat frissítve!", task });
@@ -94,6 +85,60 @@ router.put("/tasks/:id", async (req: any, res: any) => {
     }
 });
 
+
+// Task törléséhez szükséges végpont
+router.delete("/:id", async (req: any, res: any) => {
+    try {
+        const { id } = req.params;
+        
+        // Ellenőrizzük, hogy létezik-e a feladat az adatbázisban
+        const taskRepository = AppDataSource.getRepository(Tasks);
+        const task = await taskRepository.findOneBy({ id });
+
+        if (!task) {
+            return res.status(404).json({ message: "Feladat nem található!" });
+        }
+
+        // Feladat törlése az adatbázisból
+        await taskRepository.remove(task);
+
+        return res.status(200).json({ message: "Feladat sikeresen törölve!" });
+
+    } catch (error) {
+        console.error("Hiba történt a feladat törlésénél:", error);
+        return res.status(500).json({ message: "Szerverhiba történt." });
+    }
+});
+
+// Státusz frissítése PATCH kéréssel
+router.patch("/:id/status", async (req: any, res: any) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!status) {
+            return res.status(400).json({ message: "A státusz nem lehet üres!" });
+        }
+
+        const taskRepository = AppDataSource.getRepository(Tasks);
+        let task = await taskRepository.findOneBy({ id });
+
+        if (!task) {
+            return res.status(404).json({ message: "Feladat nem található!" });
+        }
+
+        // Csak a státusz frissítése
+        task.status = status;
+
+        await taskRepository.save(task);
+
+        return res.status(200).json({ message: "Feladat státusza frissítve!", task });
+
+    } catch (error) {
+        console.error("Hiba történt a feladat státuszának frissítésekor:", error);
+        return res.status(500).json({ message: "Szerverhiba történt." });
+    }
+});
 
 
 

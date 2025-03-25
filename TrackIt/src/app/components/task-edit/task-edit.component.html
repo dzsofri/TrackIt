@@ -1,0 +1,21 @@
+<div class="popup-overlay">
+    <div class="popup-content">
+      <h3>Feladat szerkesztése</h3>
+  
+      <label for="title">Cím:</label>
+      <input type="text" [(ngModel)]="task.title">
+  
+      <label for="description">Leírás:</label>
+      <textarea [(ngModel)]="task.description"></textarea>
+  
+      <label for="dueDate">Határidő:</label>
+      <input type="date" [(ngModel)]="task.dueDate">
+
+      <p><strong>Prioritás:</strong> {{ task.priority }}</p>
+
+
+      <button class="saveChange" (click)="saveChanges()">Mentés</button>
+      <button class="cancel" (click)="cancel()">Mégse</button>
+    </div>
+  </div>
+  
