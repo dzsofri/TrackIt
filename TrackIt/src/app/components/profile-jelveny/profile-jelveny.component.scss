@@ -86,15 +86,16 @@ html, body {
 .tab-content{
     width: 0 auto;
 }
-h3{
-    padding: 20px;
-}
 img {
     margin-right: 20px;
 }
 span{
     margin-right: 20px;
     margin-left: 20px;
+}
+[data-bs-title] {
+    font-size: large;
+    font-weight: bold;
 }
 #jelveny-tab-pane {
     text-align: start;
@@ -188,11 +189,11 @@ span{
     border-radius: 50px;
     height: 35px;
     padding: 2.5px;
+    box-sizing: border-box;
 }
+
 .progress {
-    width: 80%;
     height: 30px;
-    background: linear-gradient(90deg, #F3B14E, #FFCE51);
     border-radius: 50px;
     font-weight: bold;
     color: #5c3b00;
@@ -203,7 +204,49 @@ span{
     padding-right: 10px;
     box-sizing: border-box;
     overflow: hidden;
+    animation: fillProgress 2s ease forwards, moveStripes 4s linear infinite;
+    background: repeating-linear-gradient(
+        45deg,
+        #F3B14E,
+        #F3B14E 10px,
+        #FFCE51 10px,
+        #FFCE51 20px
+    );
+    background-size: 200% 100%;
+    width: var(--progress-width, 0%);
 }
+
+@keyframes fillProgress {
+    from {
+        width: 0;
+    }
+    to {
+        width: var(--progress-width, 80%);
+    }
+}
+
+@keyframes moveStripes {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -120% 0;
+    }
+}
+
+.highest{
+    font-style: italic;
+    color: #709376;
+    font-weight: bold;
+    font-size: large;
+    text-decoration: underline;
+}
+
+.folyamat{
+    color: #709376;
+    margin-left: 5px;
+}
+
 .jelveny_content1 .jelveny_text{
     display: flex;
     flex-direction: column;
@@ -256,21 +299,6 @@ span{
 }
 .jelveny_item {
     flex: 1 1 calc(25% - 10px);
-}
-.popover-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.popover-list::before {
-    content: "Beginner - 0-999 pont\nExplorer - 1,000-2,999 pont\nChallenger - 3,000-5,999 pont\nAchiever - 6,000-9,999 pont\nElite Achiever - 10,000-14,999 pont\nMaster Achiever - 15,000-19,999 pont\nSuper Achiever - 20,000+ pont";
-    white-space: pre-line;
-    display: block;
-}
-
-.popover-list li {
-    display: none;
 }
 @media screen and (max-width: 1200px) {
     .jelveny_item {

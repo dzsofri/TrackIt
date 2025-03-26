@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../../services/message.service';
 import { User_Challenge } from '../../interfaces/user_challenges';
 import { CommonModule } from '@angular/common';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-profile-jelveny',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './profile-jelveny.component.html',
   styleUrl: './profile-jelveny.component.scss'
 })
-export class ProfileJelvenyComponent {
+export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
   constructor(
       private api: ApiService,
       private auth: AuthService,
@@ -25,6 +26,11 @@ export class ProfileJelvenyComponent {
     userNames: { [key: string]: string } = {};
 
     activeTab: string = 'statisztika';
+    totalPoints: number = 0;
+    userRank: string = 'Kezdő Felfedező';
+    nextRankPoints: number = 1000;
+    highersRank: string = '';
+
     setActiveTab(tabName: string) {
       this.activeTab = tabName;
     }
@@ -43,6 +49,7 @@ export class ProfileJelvenyComponent {
                 return;
               }
               this.user_challenges = res;
+              this.calculatePointsAndRank();
             },
             error: (err) => {
               console.error('Error fetching user challenges:', err);
@@ -52,12 +59,68 @@ export class ProfileJelvenyComponent {
       });
     }
 
-    /*
     ngAfterViewInit(): void {
-      const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
-      popoverTriggerList.forEach(popoverTriggerEl => {
-        new bootstrap.Popover(popoverTriggerEl);
+      const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.forEach(tooltipTriggerEl => {
+        new bootstrap.Tooltip(tooltipTriggerEl);
       });
     }
-    */
+
+    private calculatePointsAndRank(): void {
+      this.totalPoints = this.calculateTotalPoints(this.user_challenges);
+      const rankInfo = this.calculateUserRank(this.totalPoints);
+      this.userRank = rankInfo.rank;
+      this.nextRankPoints = rankInfo.nextRankPoints;
+
+      if (this.totalPoints >= 20000) {
+        this.highersRank = 'Gratulálunk! Elérted a legmagasabb rangot!';
+      }
+    }
+  
+    private calculateTotalPoints(challenges: User_Challenge[]): number {
+      return challenges.reduce((acc, challenge) => acc + (challenge.rewardPoints || 0), 0);
+    }
+  
+    private calculateUserRank(points: number): { rank: string, nextRankPoints: number } {
+      if (points >= 20000) {
+        return { rank: 'Legendás', nextRankPoints: 20000 };
+      } else if (points >= 15000) {
+        return { rank: 'Mesterfokú', nextRankPoints: 20000 };
+      } else if (points >= 10000) {
+        return { rank: 'Kiváló', nextRankPoints: 15000 };
+      } else if (points >= 6000) {
+        return { rank: 'Mester', nextRankPoints: 10000 };
+      } else if (points >= 3000) {
+        return { rank: 'Bátor hős', nextRankPoints: 6000 };
+      } else if (points >= 1000) {
+        return { rank: 'Nagy felfedező', nextRankPoints: 3000 };
+      } else {
+        return { rank: 'Kezdő Felfedező', nextRankPoints: 1000 };
+      }
+    }
+
+    getProgressBarWidth(): string {
+      const currentRankPoints = this.getCurrentRankPoints(this.userRank);
+      const progress = ((this.totalPoints - currentRankPoints) / (this.nextRankPoints - currentRankPoints)) * 100;
+      return `${progress}%`;
+    }
+
+    private getCurrentRankPoints(rank: string): number {
+      switch (rank) {
+        case 'Legendás':
+          return 20000;
+        case 'Mesterfokú':
+          return 15000;
+        case 'Kiváló':
+          return 10000;
+        case 'Mester':
+          return 6000;
+        case 'Bátor hős':
+          return 3000;
+        case 'Nagy felfedező':
+          return 1000;
+        default:
+          return 0;
+      }
+    }
 }
