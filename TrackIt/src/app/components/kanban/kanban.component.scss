@@ -406,3 +406,69 @@ input, textarea {
   
 
   
+  .popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fekete, átlátszó háttér */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* A popup tetején legyen */
+  }
+  
+  .popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px; /* Popup szélessége */
+  }
+  
+  .popup p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .confirm-button {
+    background-color: #4caf50;
+    color: white;
+    margin-right: 10px;
+  }
+  
+  .confirm-button:hover {
+    background-color: #45a049;
+  }
+  
+  .cancel-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .cancel-button:hover {
+    background-color: #e53935;
+  }
+  
+  @media (max-width: 768px) {
+    .popup {
+      width: 80%;
+    }
+  
+    button {
+      width: 45%;
+      margin: 10px 0;
+    }
+  }
+  
