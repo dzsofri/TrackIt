@@ -66,4 +66,14 @@
     (closePopup)="selectedTask = null" 
     (taskUpdated)="onTaskUpdated($event)">
   </app-task-edit>
+
+  <!-- Popup megerősítő ablak -->
+  <div class="popup-container" *ngIf="showPopup">
+    <div class="popup">
+      <p>{{ popupMessage }}</p>
+      <button class="confirm-button" (click)="confirmTaskMove()">Igen</button>
+      <button class="cancel-button" (click)="cancelTaskMove()">Mégse</button>
+    </div>
+  </div>
+  
 </div>
