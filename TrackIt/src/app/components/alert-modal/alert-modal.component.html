@@ -3,32 +3,43 @@
 <div class="modal" *ngIf="visible" [ngClass]="type">
   <div class="icon">
     <ng-container *ngIf="type === 'success'">
-      <img src="assets/icons/success.png" alt="Siker">
+      <img src="assets/svg/success.svg" alt="Siker">
     </ng-container>
     <ng-container *ngIf="type === 'error'">
-      <img src="assets/icons/error.png" alt="Hiba">
+      <img src="assets/svg/error.svg" alt="Hiba">
     </ng-container>
     <ng-container *ngIf="type === 'warning'">
-      <img src="assets/icons/warning.png" alt="Figyelmeztetés">
+      <img src="assets/svg/warning.svg" alt="Figyelmeztetés">
     </ng-container>
     <ng-container *ngIf="type === 'info'">
-      <img src="assets/icons/info.png" alt="Információ">
+      <img src="assets/svg/info.svg" alt="Információ">
     </ng-container>
   </div>
 
   <div class="modal-content">
-
     <p>{{ message }}</p>
+    <div *ngIf="invalidFields.length > 0" class="invalid-fields">
+      <p>A következő mezők hibásak:</p>
+      <ul>
+        <li *ngFor="let f of invalidFields">{{ f }}</li>
+      </ul>
+    </div>
+
+    <div class="modal-buttons" *ngIf="type === 'warning'">
+      <!-- Emlékeztető gomb a 'warning' típusnál -->
+      <button (click)="closeModal()">Emlékeztess később</button>
+    </div>
 
     <div class="modal-buttons" *ngIf="type === 'info'">
-      <button class="confirm-btn">Megerősítés</button>
-      <button class="cancel-btn" (click)="closeModal()">Törlés</button>
+      <!-- Két gomb az 'info' típusnál -->
+      <button class="cancel-btn" >Törlés</button>
+      <button class="confirm-btn" >Elfogadás</button>
     </div>
 
-    <div class="modal-buttons" *ngIf="type !== 'info'">
-      <button (click)="closeModal()">OK</button>
-    </div>
-  </div>
 
-  <button class="close-btn" (click)="closeModal()">✖</button>
+
+
 </div>
+<button class="close-btn" (click)="closeModal()">
+  <img src="assets/icons/budos_nagy_x.png" alt="Bezárás">
+</button>

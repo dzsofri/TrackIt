@@ -1,38 +1,30 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { User } from '../../interfaces/user';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../environments/environment';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
-
-
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule, HttpClientModule, AlertModalComponent], 
+  imports: [FormsModule, CommonModule, RouterModule, AlertModalComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
 
-
   isPasswordVisible = false;
-  isConfirmPasswordVisible = false;
-  private tokenName = environment.tokenName;
-
-  invalidFields: string[] = [];
   user: User = { email: '', password: '' };
-  isAdmin: boolean = false;
 
-  // MODAL változók
+  // Modal változók
   modalVisible = false;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
+  invalidFields: string[] = [];
 
   constructor(
     private api: ApiService,
@@ -45,85 +37,59 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.invalidFields = []; // Reset the invalid fields
+
+    // API kérés
     this.api.login(this.user.email, this.user.password).subscribe({
       next: (res: any) => {
-        console.log('API válasz:', res);
+        // Ellenőrizzük, hogy van-e "invalid" mező
         this.invalidFields = res.invalid || [];
-  
+        console.log('API válasza:', res);
+
+        // Ha nincs hibás mező
         if (this.invalidFields.length === 0) {
           if (res.token) {
+            // Ha van érvényes token
             this.auth.login(res.token);
-  
+
             // Modal beállítása sikeres bejelentkezéshez
             this.modalMessage = res.message || 'Sikeres bejelentkezés!';
             this.modalType = 'success';
             this.modalVisible = true;
-  
-            // Debugging modal összes adatát kiírni
-            console.log('Modal adatai (sikeres bejelentkezés után):', {
-              modalMessage: this.modalMessage,
-              modalType: this.modalType,
-              modalVisible: this.modalVisible
-            });
-  
-            // 2 másodperc múlva bezárni a modalt és navigálni
+
             setTimeout(() => {
               this.modalVisible = false;
-              this.router.navigateByUrl('/profile');
+              this.router.navigateByUrl('/profile'); // Redirect to profile page
             }, 2000);
-  
           } else {
-            console.error('HIBA: A token hiányzik a válaszból');
-  
+            // Ha nem érkezik token a válaszban
             this.modalMessage = res.message || 'Hiba történt a bejelentkezés során!';
-            this.modalType = 'success';
+            this.modalType = 'error';
             this.modalVisible = true;
-  
-            // Debugging modal összes adatát kiírni hiba esetén
-            console.log('Modal adatai (hiba esetén):', {
-              modalMessage: this.modalMessage,
-              modalType: this.modalType,
-              modalVisible: this.modalVisible
-            });
+            this.invalidFields = this.invalidFields;
           }
         } else {
+          // Ha vannak hibás mezők
           console.log('HIBA:', res.message);
-  
-          this.modalMessage = res.message || 'Hibás bejelentkezési adatok!';
-          this.modalType = 'error';
+
+          // Modal beállítása a hibás mezők listájával
+          this.modalMessage = 'Hibás bejelentkezési adatok! Kérjük ellenőrizze a következő mezőket: ';
+          this.modalType = 'error'; // Hibás bejelentkezési adatok esetén error
           this.modalVisible = true;
-  
-          // Debugging modal összes adatát kiírni hibás bejelentkezés esetén
-          console.log('Modal adatai (hibás bejelentkezés):', {
-            modalMessage: this.modalMessage,
-            modalType: this.modalType,
-            modalVisible: this.modalVisible
-          });
-          
+          this.invalidFields = this.invalidFields;
         }
       },
       error: (err) => {
-        console.error('Login API hiba:', err);
-  
-        // Hiba esetén modal beállítása
-        this.modalMessage = err.error.message || 'Ismeretlen hiba történt!';
+        // API hiba esetén
+        this.modalMessage = err.error?.message || 'Ismeretlen hiba történt!';
         this.modalType = 'error';
         this.modalVisible = true;
-  
-        // Debugging modal összes adatát kiírni API hiba esetén
-        console.log('Modal adatai (API hiba):', {
-          modalMessage: this.modalMessage,
-          modalType: this.modalType,
-          modalVisible: this.modalVisible
-        });
+        this.invalidFields = this.invalidFields;
       }
     });
   }
-  
-
-  
 
   isInvalid(field: string) {
-    return this.invalidFields.includes(field);
+    return this.invalidFields.includes(field); // Visszaadja, hogy a mező hibás-e
   }
 }
