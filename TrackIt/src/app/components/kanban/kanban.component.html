@@ -77,3 +77,11 @@
   </div>
   
 </div>
+
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
+  [invalidFields]="invalidFields"
+  [message]="modalMessage"
+  (close)="modalVisible = false">
+</app-alert-modal>
