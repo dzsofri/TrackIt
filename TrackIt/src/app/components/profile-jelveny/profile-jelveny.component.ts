@@ -27,7 +27,7 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
 
     activeTab: string = 'statisztika';
     totalPoints: number = 0;
-    userRank: string = 'Kezdő Felfedező';
+    userRank: string = 'Újonc';
     nextRankPoints: number = 1000;
     highersRank: string = '';
 
@@ -83,19 +83,19 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
   
     private calculateUserRank(points: number): { rank: string, nextRankPoints: number } {
       if (points >= 20000) {
-        return { rank: 'Legendás', nextRankPoints: 20000 };
+        return { rank: 'Legenda', nextRankPoints: 20000 };
       } else if (points >= 15000) {
-        return { rank: 'Mesterfokú', nextRankPoints: 20000 };
+        return { rank: 'Mester', nextRankPoints: 20000 };
       } else if (points >= 10000) {
-        return { rank: 'Kiváló', nextRankPoints: 15000 };
+        return { rank: 'Szuper', nextRankPoints: 15000 };
       } else if (points >= 6000) {
-        return { rank: 'Mester', nextRankPoints: 10000 };
+        return { rank: 'Bajnok', nextRankPoints: 10000 };
       } else if (points >= 3000) {
-        return { rank: 'Bátor hős', nextRankPoints: 6000 };
+        return { rank: 'Harcos', nextRankPoints: 6000 };
       } else if (points >= 1000) {
-        return { rank: 'Nagy felfedező', nextRankPoints: 3000 };
+        return { rank: 'Felfedező', nextRankPoints: 3000 };
       } else {
-        return { rank: 'Kezdő Felfedező', nextRankPoints: 1000 };
+        return { rank: 'Újonc', nextRankPoints: 1000 };
       }
     }
 
@@ -107,17 +107,17 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
 
     private getCurrentRankPoints(rank: string): number {
       switch (rank) {
-        case 'Legendás':
+        case 'Legenda':
           return 20000;
-        case 'Mesterfokú':
-          return 15000;
-        case 'Kiváló':
-          return 10000;
         case 'Mester':
+          return 15000;
+        case 'Szuper':
+          return 10000;
+        case 'Bajnok':
           return 6000;
-        case 'Bátor hős':
+        case 'Harcos':
           return 3000;
-        case 'Nagy felfedező':
+        case 'Felfedező':
           return 1000;
         default:
           return 0;

@@ -123,6 +123,7 @@ span{
     background-color: #FFFFFF;
     box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
+    padding: 10px;
     width: 40vw;
 }
 .jelveny_content1 {
@@ -131,7 +132,7 @@ span{
     align-items: flex-start;
     justify-content: flex-start;
     gap: 20px;
-    width: 85%;
+    width: 100%;
     padding: 20px;
 }
 .jelveny_content2 {
@@ -143,26 +144,12 @@ span{
     width: 100%;
 }
 .achievement-box {
-    padding: 20px;
+    padding: 10px;
     width: 100%;
     background-color: #F8F8F8;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
     text-align: start;
-}
-#star {
-    background-image: url('/assets/images/star.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    display: flex;
-    width: 15vw;
-    max-width: 15px;
-    height: 15vw;
-    max-height: 15px;
-    padding: 10px;
-    margin-top: 2.5px;
-    flex-shrink: 0;
-    margin-right: 10px;
 }
 .achievement-box h3 {
     text-align: start;
@@ -180,7 +167,7 @@ span{
     justify-content: center;
     align-items: center;
     padding-top: 15px;
-    opacity: 0.7;
+    opacity: 0.8;
     white-space: nowrap;
 }
 .progress-bar {
@@ -204,7 +191,7 @@ span{
     padding-right: 10px;
     box-sizing: border-box;
     overflow: hidden;
-    animation: fillProgress 2s ease forwards, moveStripes 4s linear infinite;
+    animation: fillProgress 2s ease forwards;
     background: repeating-linear-gradient(
         45deg,
         #F3B14E,
@@ -222,15 +209,6 @@ span{
     }
     to {
         width: var(--progress-width, 80%);
-    }
-}
-
-@keyframes moveStripes {
-    from {
-        background-position: 0 0;
-    }
-    to {
-        background-position: -120% 0;
     }
 }
 
@@ -348,10 +326,6 @@ span{
 @media screen and (max-width: 600px) {
     .jelveny_item {
         flex: 1 1 100%;
-    }
-    .jelveny_box1, .jelveny_box2 {
-        box-shadow: none;
-        background-color: transparent;
     }
     .jelveny_content2 .jelveny_text {
         font-size: 13px !important;
