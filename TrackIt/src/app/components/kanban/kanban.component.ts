@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { environment } from '../../environments/environment';
 import { ApiService } from '../../services/api.service';
+import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 
 interface Task {
   id: string;
@@ -26,7 +27,7 @@ interface Column {
 @Component({
   selector: 'app-kanban',
   standalone: true,
-  imports: [CommonModule, FormsModule, TaskEditComponent],
+  imports: [CommonModule, FormsModule, TaskEditComponent, AlertModalComponent],
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.scss']
 })
@@ -38,6 +39,13 @@ export class KanbanComponent implements OnInit {
   popupMessage: string | null = null;
   showPopup: boolean = false;
   popupTimeout: any;
+
+
+  modalVisible = false;
+  modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  modalMessage = '';
+  invalidFields: string[] = [];
+
 
   private tokenName = environment.tokenName;
 
@@ -66,6 +74,8 @@ export class KanbanComponent implements OnInit {
   constructor(private http: HttpClient, private api: ApiService) { }
 
   ngOnInit() {
+    this.invalidFields = []; 
+    
     this.http.get<{ message?: string; tasks: Task[] }>("http://localhost:3000/tasks")
       .subscribe({
         next: (response) => {
@@ -103,7 +113,12 @@ export class KanbanComponent implements OnInit {
 
   addTask() {
     if (!this.newTask.title.trim() || !this.newTask.dueDate) {
-      console.warn('A cím és a határidő megadása kötelező!');
+      console.warn();
+
+      // Modal beállítása sikeres bejelentkezéshez
+      this.modalMessage = 'A cím és a határidő megadása kötelező!'
+      this.modalType = 'error';
+      this.modalVisible = true;
       return;
     }
 
@@ -281,4 +296,8 @@ export class KanbanComponent implements OnInit {
     }
   }
   
+
+  isInvalid(field: string) {
+    return this.invalidFields.includes(field); // Visszaadja, hogy a mező hibás-e
+  }
 }
