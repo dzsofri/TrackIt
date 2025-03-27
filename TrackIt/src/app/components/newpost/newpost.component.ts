@@ -5,6 +5,7 @@ import { NewpostmodalComponent } from '../newpostmodal/newpostmodal.component';
 
 @Component({
   selector: 'app-newpost',
+  standalone: true,
   imports: [CommonModule, FormsModule, NewpostmodalComponent],
   templateUrl: './newpost.component.html',
   styleUrls: ['./newpost.component.scss']

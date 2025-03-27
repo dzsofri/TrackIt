@@ -170,6 +170,18 @@ Content-Type: application/json
     "dueDate": "2025-03-22"
 }
 
+### Poszt létrehozás
+
+POST http://localhost:3000/posts/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFiYzg4ZTA2LTM3ZjgtNDM1MC05N2JmLWI5ZTE0MDE1MDAxZSIsImVtYWlsIjoic29tb2Rpa29ucmFkQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzQzMDA4MjI5LCJleHAiOjE3NDMwOTQ2Mjl9.6kwLv-kYZVlg8ax469g9udrgL6GxmY8dKE69WcTWy4s
+Content-Type: application/json
+
+{
+  "title": "Token alapú poszt 2",
+  "body": "Ez egy tokenből származó userID teszt.",
+  "status": "active"
+}
+
 
 ### Feladat törlése
 

@@ -191,6 +191,16 @@ export class ApiService {
             return of(error);
         })
     );
+
+}
+
+createPost(postData: { title: string; body: string; status: string }): Observable<any> {
+  return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a bejegyzés létrehozásakor:', error);
+      return of({ message: 'Bejegyzés létrehozása sikertelen' });
+    })
+  );
 }
 
 

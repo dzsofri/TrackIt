@@ -3,10 +3,13 @@ import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../../services/message.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NewpostComponent } from '../newpost/newpost.component';
 
 @Component({
   selector: 'app-profile-bejegyzes',
-  imports: [],
+  imports: [CommonModule, FormsModule, NewpostComponent],
   templateUrl: './profile-bejegyzes.component.html',
   styleUrl: './profile-bejegyzes.component.scss'
 })
