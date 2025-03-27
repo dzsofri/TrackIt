@@ -212,6 +212,15 @@ span{
     }
 }
 
+@keyframes moveStripes {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -120% 0;
+    }
+}
+
 .highest{
     font-style: italic;
     color: #709376;
