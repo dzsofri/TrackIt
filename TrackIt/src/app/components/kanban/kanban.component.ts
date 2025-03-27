@@ -41,6 +41,7 @@ export class KanbanComponent implements OnInit {
   popupTimeout: any;
 
 
+  modalVisible = false;
   isModalVisible = false;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
