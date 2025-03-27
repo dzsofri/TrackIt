@@ -101,8 +101,14 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
 
     getProgressBarWidth(): string {
       const currentRankPoints = this.getCurrentRankPoints(this.userRank);
-      const progress = ((this.totalPoints - currentRankPoints) / (this.nextRankPoints - currentRankPoints)) * 100;
-      return `${progress}%`;
+      const pointsNeeded = this.nextRankPoints - currentRankPoints;
+    
+      if (pointsNeeded === 0) {
+        return '100%';
+      }
+    
+      const progress = ((this.totalPoints - currentRankPoints) / pointsNeeded) * 100;
+      return `${Math.min(Math.max(progress, 0), 100)}%`;
     }
 
     private getCurrentRankPoints(rank: string): number {
