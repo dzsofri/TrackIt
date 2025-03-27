@@ -41,7 +41,7 @@ export class KanbanComponent implements OnInit {
   popupTimeout: any;
 
 
-  modalVisible = false;
+  isModalVisible = false;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
   invalidFields: string[] = [];
@@ -118,7 +118,7 @@ export class KanbanComponent implements OnInit {
       // Modal beállítása sikeres bejelentkezéshez
       this.modalMessage = 'A cím és a határidő megadása kötelező!'
       this.modalType = 'error';
-      this.modalVisible = true;
+      this.isModalVisible = true;
       return;
     }
 
