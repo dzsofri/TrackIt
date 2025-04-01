@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import { UserStatistics } from "../entities/UserStatistic";
 import { Habits } from "../entities/Habit";
 import { UserChallenges } from "../entities/UserChallenge";
+import { Users } from "../entities/User";
+import { Tasks } from "../entities/Task";
 
 dotenv.config();
 const router = express.Router();
@@ -29,6 +31,82 @@ router.get("/statistics/:userId", tokencheck, async (req: any, res: any) => {
   } catch (error) {
     console.error("Error fetching statistics:", error);
     res.status(500).json({ error: "Error fetching statistics." });
+  }
+});
+
+router.post("/completedTask", tokencheck, async (req: any, res: any) => {
+  try {
+    const { taskId } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized: User ID not found." });
+    }
+
+    const tasksRepo = AppDataSource.getRepository(Tasks);
+    const task = await tasksRepo.findOne({ where: { id: taskId } });
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found." });
+    }
+
+    const usersRepo = AppDataSource.getRepository(Users);
+    const user = await usersRepo.findOne({ where: { id: userId } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const userStatisticsRepo = AppDataSource.getRepository(UserStatistics);
+    
+    const userStatistics = new UserStatistics();
+    userStatistics.user = user;
+    userStatistics.completedTasks = 1;
+    userStatistics.missedTasks = 0;
+    userStatistics.completionRate = 0;
+    userStatistics.activeTask = task;
+    userStatistics.createdAt = new Date();
+
+    await userStatisticsRepo.save(userStatistics);
+
+    return res.status(200).json({ message: "UserStatistics updated successfully", userStatistics });
+  } catch (error) {
+    console.error("Error updating UserStatistics:", error);
+    return res.status(500).json({ message: "Server error." });
+  }
+});
+
+router.post("/missedTask", tokencheck, async (req: any, res: any) => {
+  try {
+    const { taskId } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized: User ID not found." });
+    }
+
+    const tasksRepo = AppDataSource.getRepository(Tasks);
+    const task = await tasksRepo.findOne({ where: { id: taskId } });
+
+    const usersRepo = AppDataSource.getRepository(Users);
+    const user = await usersRepo.findOne({ where: { id: userId } });
+
+    const userStatisticsRepo = AppDataSource.getRepository(UserStatistics);
+    
+    const userStatistics = new UserStatistics();
+    userStatistics.user = user;
+    userStatistics.completedTasks = 0;
+    userStatistics.missedTasks = 1;
+    userStatistics.completionRate = 0;
+    userStatistics.activeTask = task;
+    userStatistics.createdAt = new Date();
+
+    await userStatisticsRepo.save(userStatistics);
+
+    return res.status(200).json({ message: "UserStatistics updated successfully", userStatistics });
+  } catch (error) {
+    console.error("Error updating UserStatistics:", error);
+    return res.status(500).json({ message: "Server error." });
   }
 });
 

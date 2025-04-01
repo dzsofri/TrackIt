@@ -28,7 +28,7 @@ export class UserStatistics {
     @JoinColumn({ name: "activeChallengeId" })
     activeChallenge: UserChallenges;
 
-    @ManyToOne(() => Tasks, (task) => task.statistics, { nullable: true })
+    @ManyToOne(() => Tasks, (task) => task.statistics, { nullable: true, onDelete: "CASCADE" })
     @JoinColumn({ name: "activeTaskId" })
     activeTask: Tasks;
 }
