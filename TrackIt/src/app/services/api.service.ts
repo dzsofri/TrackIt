@@ -205,6 +205,12 @@ createPost(postData: { title: string; body: string; status: string }): Observabl
 }
 
 
+postCompletedTask(userId: string, taskId: string): Observable<any> {
+  return this.http.post(`${this.server}/user_statistics/completedTask`, { userId, taskId }, this.tokenHeader());
+}
 
+postMissedTask(userId: string, taskId: string): Observable<any> {
+  return this.http.post(`${this.server}/user_statistics/missedTask`, { userId, taskId }, this.tokenHeader());
+}
 
 }

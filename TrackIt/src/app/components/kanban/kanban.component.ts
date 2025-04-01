@@ -129,7 +129,7 @@ export class KanbanComponent implements OnInit {
       description: this.newTask.description.trim() || "",
       dueDate: this.newTask.dueDate,
       priority: this.newTask.priority || "Közepes",
-      status: "todo" // Kezdetben a "todo" oszlopban lesz
+      status: this.newTask.status || "todo" // Kezdetben a "todo" oszlopban lesz
     };
 
     this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend, this.tokenHeader())
@@ -211,6 +211,13 @@ export class KanbanComponent implements OnInit {
     // Frissítés az adatbázisban
     this.api.updateTaskStatus(task.id!, targetColumn.status).subscribe(response => {
       console.log('Feladat státusza frissítve az adatbázisban', response);
+  
+      // **POST request to update UserStatistics**
+      if (targetColumn.status === 'done') {
+        this.api.postCompletedTask(task.userId!, task.id!).subscribe(response => {
+          console.log('UserStatistics frissítve', response);
+        });
+      }
     });
     
     // Feladat az oszlop frissítése után
@@ -280,22 +287,34 @@ export class KanbanComponent implements OnInit {
     this.selectedTask = null;
   }
 
-  deleteTask(task: Task, column: Column) {
+  deleteTask(task: Task, column: Column): boolean {
     const index = column.tasks.indexOf(task);
     if (index > -1) {
-      column.tasks.splice(index, 1);
-      this.http.delete<{ message: string }>(`http://localhost:3000/tasks/${task.id}`)
-        .subscribe({
-          next: (response) => {
-            console.log('Feladat törölve:', response.message);
-            this.updateTaskCount();
-          },
-          error: (error) => {
-            console.error('Hiba történt a feladat törlésénél:', error);
-          }
-        });
+        column.tasks.splice(index, 1);
+        
+        this.http.delete<{ message: string }>(`http://localhost:3000/tasks/${task.id}`)
+            .subscribe({
+                next: (response) => {
+                    console.log('Feladat törölve:', response.message);
+                    this.updateTaskCount();
+                    
+                    if(task.status != 'done'){
+                      this.api.postMissedTask(task.userId!, task.id!).subscribe(response => {
+                        console.log('UserStatistics frissítve (missed task)', response);
+                    });
+                    }
+                },
+                error: (error) => {
+                    console.error('Hiba történt a feladat törlésénél:', error);
+                }
+            });
+
+        return true;
     }
-  }
+    return false;
+}
+
+
   
 
   isInvalid(field: string) {
