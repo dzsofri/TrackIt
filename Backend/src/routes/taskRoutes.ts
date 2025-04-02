@@ -53,6 +53,28 @@ router.get("/", async (req: any, res: any) => {
     }
 });
 
+
+
+router.get("/priority/:priority", async (req: any, res: any) => {
+    const { priority } = req.params;
+
+    try {
+        // Feladatok szűrése prioritás alapján
+        const tasks = await AppDataSource.getRepository(Tasks).find({
+            where: { priority: priority },
+        });
+
+        if (tasks.length === 0) {
+            return res.status(200).json({ message: `Nincsenek ${priority} prioritású feladatok.`, tasks: [] });
+        }
+
+        return res.status(200).json({ tasks });
+    } catch (error) {
+        console.error("Hiba történt a feladatok lekérésekor:", error);
+        return res.status(500).json({ message: "Szerverhiba történt." });
+    }
+});
+
 // Task frissítéséhez szükséges kérés típusának meghatározása  
 
 
