@@ -9,7 +9,7 @@ import { NewpostComponent } from '../newpost/newpost.component';
 
 @Component({
   selector: 'app-profile-bejegyzes',
-  imports: [CommonModule, FormsModule, NewpostComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './profile-bejegyzes.component.html',
   styleUrl: './profile-bejegyzes.component.scss'
 })

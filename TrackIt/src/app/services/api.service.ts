@@ -195,7 +195,7 @@ export class ApiService {
 
 }
 
-createPost(postData: { title: string; body: string; status: string }): Observable<any> {
+createPost(postData: { title: string; body: string;}): Observable<any> {
   return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
     catchError(error => {
       console.error('Hiba a bejegyzés létrehozásakor:', error);
@@ -203,6 +203,7 @@ createPost(postData: { title: string; body: string; status: string }): Observabl
     })
   );
 }
+
 
 
 
