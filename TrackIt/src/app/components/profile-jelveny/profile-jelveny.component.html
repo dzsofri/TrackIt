@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-6 mb-4">
+        <h3>Rangom</h3>
+        <div class="jelveny_box1">
+            <div class="jelveny_content1" *ngIf="user_challenges.length > 0; else noRank">
+                <div class="achievement-box">
+                    <h3>{{userRank}}
+                      <button type="button" class="btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="Újonc - 0-999 RangPont, Felfedező - 1,000-2,999 RP, Harcos - 3,000-5,999 RP, Bajnok - 6,000-9,999 RP, Szuper - 10,000-14,999 RP, Mester - 15,000-19,999 RP, Legenda - 20,000 + RP">*</button>
+                    </h3>
+                    <p class="highest">{{highersRank}}</p>
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress" [ngStyle]="{'--progress-width': getProgressBarWidth()}">
+                            <p class="current_point">{{totalPoints}} RP/{{nextRankPoints}} RP</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="jelveny_text">Legjobb heti teljesítmény: <b class="folyamat">100%-os célmegvalósítás</b></p>
+            </div>
+            <ng-template #noRank>
+                <h5 class="NO_DATA">Még nincs rankod!</h5>
+            </ng-template>
+        </div>
+    </div>
+      <div class="col-12 col-sm-12 col-md-6 mb-4">
+        <h3>Jelvényeim</h3>
+        <div class="jelveny_box2">
+            <div class="jelveny_content2" *ngIf="user_challenges.length > 0; else noBadges">
+                <div class="jelveny_grid">
+                    <div *ngFor="let user_challenge of user_challenges" class="jelveny_item">
+                        <p class="jelveny_text"><img id="erem"> {{user_challenge.challengeName}} <span class="point">{{user_challenge.rewardPoints}} pont</span> </p>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noBadges>
+                <h5 class="NO_DATA">Még nincsenek jelvényeid!</h5>
+            </ng-template>
+        </div>
+      </div>
+  </div>

@@ -1,0 +1,42 @@
+<div class="modal-backdrop" *ngIf="visible" (click)="closeModal()"></div>
+
+<div class="modal" *ngIf="visible" [ngClass]="type">
+  <div class="icon">
+    <ng-container *ngIf="type === 'success'">
+      <img src="assets/svg/success.svg" alt="Siker">
+    </ng-container>
+    <ng-container *ngIf="type === 'error'">
+      <img src="assets/svg/error.svg" alt="Hiba">
+    </ng-container>
+    <ng-container *ngIf="type === 'warning'">
+      <img src="assets/svg/warning.svg" alt="Figyelmeztetés">
+    </ng-container>
+    <ng-container *ngIf="type === 'info'">
+      <img src="assets/svg/info.svg" alt="Információ">
+    </ng-container>
+  </div>
+
+  <div class="modal-content">
+    <p>{{ message }}</p>
+
+    <div *ngIf="invalidFields.length > 0" class="invalid-fields">
+      <p>A következő mezők hibásak:</p>
+      <ul>
+        <li *ngFor="let f of invalidFields">{{ f }}</li>
+      </ul>
+    </div>
+
+    <!-- Dinamikus gombok -->
+    <div class="modal-buttons" *ngIf="buttons.length > 0">
+      <button *ngFor="let btn of buttons"
+              [class]="btn.class || ''"
+              (click)="btn.action()">
+        {{ btn.label }}
+      </button>
+    </div>
+  </div>
+
+  <button class="close-btn" (click)="closeModal()">
+    <img src="assets/icons/budos_nagy_x.png" alt="Bezárás">
+  </button>
+</div>

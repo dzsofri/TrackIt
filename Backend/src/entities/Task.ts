@@ -29,7 +29,7 @@ export class Tasks {
     @CreateDateColumn()
     createdAt: Date;    
 
-    @OneToMany(() => UserStatistics, (statistics) => statistics.activeTask)
+    @OneToMany(() => UserStatistics, (statistics) => statistics.activeTask, { onDelete: "CASCADE" })
     statistics: UserStatistics[];
 
     // **Hozzáadjuk a status mezőt**

@@ -5,39 +5,29 @@ header {
     justify-content: center;
     text-align: center;
 }
-
 @media (max-width: 480px) {
     header {
         display: block;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
     }
 }
-
 #felhasznalo{
-    background-image: url('/assets/images/profileKep.png');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background: url('/assets/images/profileKep.png') no-repeat center/cover;
     display: block;
     justify-content: center;
     align-items: center;
     width: 70vw;
     max-width: 150px;
     height: 50vw;
-    max-height: 150px; 
+    max-height: 150px;
     padding: 0.3px;
     border-radius: 50%;
     margin: 0 auto;
 }
-
 @media (max-width: 600px) {
     .NO_DATA{
         height: 100%;
         padding: 20px;
         display: flex;
-        flex-direction: row;
         justify-content: center;
         align-items: center;
         background-color: #FFFFFF;
@@ -47,67 +37,52 @@ header {
         width: 300px;
     }
 }
-
 .NO_DATA{
     height: 100%;
     padding: 20px;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
     border-radius: 25px;
     text-align: center;
     width: 300px;
 }
-
 //Linkek
 .nav-link.active {
     color: #627966;
     background-color: #F5F5F7;
 }
-
 .nav-link {
     color: #9F9FA1;
 }
-
+.nav-item-tab, .nav-item {
+    display: flex;
+    background-color: #F5F5F7;
+    justify-content: center;
+}
 .nav-item-tab {
-    display: flex;
-    background-color: #F5F5F7;
     border-radius: 0px 30px 0px 0px;
-    justify-content: center;
 }
-
 .nav-item {
-    display: flex;
-    background-color: #F5F5F7;
     width: 100px;
-    justify-content: center;
 }
-  
 .d-none {
     display: none;
 }
-
 html, body {
-    height: 0 auto;
-    margin: 0 auto;
-    padding: 0 auto;
+    margin: 0;
 }
-
-.tab-content{
-    width: 0 auto;
+.tab-content, html, body {
+    width: auto;
+    height: auto;
 }
-
 h3{
     padding: 20px;
 }
-
-img {
+img, span {
     margin-right: 20px;
 }
-
-span{
-    margin-right: 20px;
+span {
     margin-left: 20px;
 }
 
@@ -118,241 +93,14 @@ span{
     padding: 5vh 5vw;
     min-width: 500px;
 }
-
-.teljesitmeny_content1, .teljesitmeny_content3 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 20px;
-    width: 100%;
-    padding: 20px;
-}
-
-.teljesitmeny_content2{
-    flex-direction: column;
-    align-items: center;
-    border-radius: 20px;
-    width: 100%;
-    padding: 20px;
-}
-
-.arany{
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
-.arany p{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.teljesitmeny_box1, .teljesitmeny_box2, .teljesitmeny_box3 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    background-color: #FFFFFF;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-}
-
-.teljesitmeny_text {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: #F8F8F8;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 25px;
-    text-align: start;
-    width: 100%;
-    padding: 10px;
-}
-
-#elvegzett {
-    background-color: #173622;
-    background-image: url('/assets/images/pipa.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 25vw;
-    max-width: 70px;
-    height: 25vw;
-    max-height: 70px; 
-    padding: 0.3px;
-    border-radius: 50%;
-    opacity: 0.8;
-}
-
-#elmaradt {
-    background-color: rgba(255, 0, 0, 0.2);
-    background-image: url('/assets/images/kereszt.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 25vw;
-    max-width: 70px;
-    height: 25vw;
-    max-height: 70px; 
-    padding: 0.3px;
-    border-radius: 50%;
-}
-
-#teljesitve {
-    background-color: #000000;
-    background-image: url('/assets/images/stat.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 25vw;
-    max-width: 70px;
-    height: 25vw;
-    max-height: 70px; 
-    padding: 0.3px;
-    border-radius: 50%;
-}
-
-.folyamat{
-    color: #709376;
-    margin-left: 5px;
-}
-
 @media (max-width: 600px) {
     #statisztika-tab-pane h3{
         text-align: start;
     }
-
-    .teljesitmeny_box1, .teljesitmeny_box2, .teljesitmeny_box3{
-        box-shadow: none;
-        background-color: transparent;
-    }
-
-    .teljesitmeny_content2{
-        flex-direction: column;
-        align-items: center;
-        border-radius: 20px;
-        width: 100%;
-        padding: 20px;
-    }
-
-    .teljesitmeny_box1{
-        width: 300px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .teljesitmeny_box3 {
-        flex-direction: column;
-    }
-
-    .teljesitmeny_content3 {
-        flex-direction: row;
-        height: 200px;
-        width: 500px;
-        gap: 30px;
-
-    }
-
-    .teljesitmeny_content3 .teljesitmeny_text{
-        flex-direction: column;
-        justify-content: space-around;
-        height: 150px;
-        align-items: center;
-        text-align: center;
-    }
-
-    #elvegzett {
-        width: 15vw;
-        height: 15vw;
-    }
-
-    #elmaradt {
-        width: 15vw;
-        height: 15vw;
-    }
-
-    #teljesitve {
-        width: 15vw;
-        height: 15vw;
-    }
 }
-
-@media (max-width: 480px) {
-    #elvegzett, #elmaradt, #teljesitve {
-        width: 12vw;
-        height: 12vw;
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    .teljesitmeny_content2{
-        flex-direction: column;
-        align-items: center;
-        border-radius: 20px;
-        width: 100%;
-        padding: 20px;
-    }
-}
-
 @media (max-width: 768px) {
     #statisztika-tab-pane {
         padding: 3vh 3vw;
-    }
-
-    #elvegzett, #elmaradt, #teljesitve {
-        width: 15vw;
-        height: 15vw;
-        max-width: 60px;
-        max-height: 60px;
-    }
-
-    .teljesitmeny_text {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .teljesitmeny_content2{
-        flex-direction: column;
-        align-items: center;
-        border-radius: 20px;
-        width: 100%;
-        padding: 20px;
-    }
-}
-
-@media (max-width: 1024px) {
-    .teljesitmeny_text{
-        font-size: 90%;
-    }
-
-    .teljesitmeny_content2{
-        flex-direction: column;
-        align-items: center;
-        border-radius: 20px;
-        width: 100%;
-        padding: 20px;
-    }
-
-    #elvegzett, #elmaradt, #teljesitve {
-        width: 10vw;
-        height: 10vw;
-        max-width: 60px;
-        max-height: 60px;
     }
 }
 
@@ -367,219 +115,6 @@ span{
     height: 100%;
 }
 
-.jelveny_box2 {
-    display: flex;
-    flex-direction: row;
-    background-color: #FFFFFF;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    padding: 10px;
-    width: 45vw;
-}
-
-.jelveny_box1{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #FFFFFF;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    width: 40vw;
-}
-
-.jelveny_content1 {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 20px;
-    width: 85%;
-    padding: 20px;
-}
-
-.jelveny_content2 {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-}
-
-.achievement-box {
-    padding: 20px;
-    width: 100%;
-    background-color: #F8F8F8;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    text-align: start;
-}
-
-#star {
-    background-image: url('/assets/images/star.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    display: flex;
-    width: 15vw;
-    max-width: 15px;
-    height: 15vw;
-    max-height: 15px;
-    padding: 10px;
-    margin-top: 6px;
-}
-
-.achievement-box h3 {
-    text-align: start;
-    font-weight: bold;
-}
-
-.max_point {
-    text-align: start;
-    color: #709376;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.current_point {
-    font-size: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 10px;
-    padding-top: 15px;
-    opacity: 0.5;
-}
-
-.progress-bar {
-    width: 100%;
-    background: linear-gradient(90deg, rgba(243, 177, 78, 0.4), rgba(255, 206, 81, 0.4));
-    border-radius: 50px;
-    height: 35px;
-    padding: 2.5px;
-}
-
-.progress {
-    width: 80%;
-    height: 30px;
-    background: linear-gradient(90deg, #F3B14E, #FFCE51);
-    border-radius: 50px;
-    font-weight: bold;
-    color: #5c3b00;
-    line-height: 30px;
-    justify-content: end;
-    padding-right: 10px;
-}
-
-.jelveny_content1 .jelveny_text{
-    display: flex;
-    flex-direction: column;
-    text-align: start;
-    background-color: #F8F8F8;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 25px;
-    width: 100%;
-    padding: 15px;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.jelveny_content2 .jelveny_text{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #F8F8F8;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 25px;
-    padding: 20px 20px 70px 20px;
-    font-weight: bold;
-    color: #3E3F40;
-    width: 100%;
-}
-
-#erem {
-    background-image: url('/assets/images/erem.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    width: 25vw;
-    max-width: 70px;
-    height: 25vw;
-    max-height: 70px;
-    margin:  0 auto;
-    padding: 35px;
-    margin-bottom: 20px;
-}
-
-.point{
-    color: #9298A0;
-    font-weight: bold;
-}
-
-.jelveny_grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    justify-content: center;
-}
-
-@media screen and (max-width: 768px) {
-    .jelveny_box1, .jelveny_box2 {
-        width: 100%;
-    }
-
-    .jelveny_grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-
-    .progress-bar {
-        height: 35px;
-    }
-
-    .progress {
-        height: 30px;
-        line-height: 30px;
-    }
-
-    #star {
-        width: 5vw;
-        height: 5vw;
-        max-width: 10px;
-        max-height: 10px;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    .jelveny_grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-
-    .jelveny_box1, .jelveny_box2{
-        box-shadow: none;
-        background-color: transparent;
-    }
-
-    .jelveny_content2 .jelveny_text{
-        font-size: 13px !important;
-    }
-}
-
-@media (max-width: 1024px) {
-    .jelveny_box1, .jelveny_box2 {
-        width: 100%;
-    }
-
-    .jelveny_grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 1200px) {
-    
-.jelveny_content2 .jelveny_text{
-    font-size: 14px;
-}
-}
-
 //Barát tab-pane
 #barat-tab-pane {
     display: flex;
@@ -591,277 +126,32 @@ span{
     min-width: 500px;
     height: 0 auto;
 }
-
-.barat_box1, .barat_box2 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: #FFFFFF;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    width: 45vw;
-}
-
-.barat_content1 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    width: 100%;
-    padding: 20px;
-}
-
-.barat_content2 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    width: 100%;
-    padding: 20px;
-}
-
-.barat_text {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: #F8F8F8;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 25px;
-    width: 100%;
-    padding: 10px;
-}
-
-.buttons {
-    display: flex;
-    gap: 5px;
-    margin-left: auto;
-}
-
-
-.username, .username2 {
-    margin-right: 10px;
-    font-weight: bold;
-}
-
-#profile, #profile2 {
-    background-image: url('/assets/images/profileKep.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 25vw;
-    max-width: 60px;
-    height: 25vw;
-    max-height: 60px; 
-    padding: 0.3px;
-    border-radius: 50%;
-}
-
-.add{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #488853;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 10px;
-}
-
-.del2{
-    display: flex;
-    background-color: #FA0202;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    border-radius: 50px;
-    padding: 10px;
-    border: none;
-}
-
-.del1{
-    display: flex;
-    background-color: #FA0202;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    border-radius: 50px;
-    padding: 10px;
-    border: none;
-    margin-left: auto;
-}
-
-@media (max-width: 1200px){
-    #profile, #profile2 {
-        width: 10vw;
-        height: 10vw;
-        max-width: 60px;
-        max-height: 60px;
-    }
-
-    .username, .username2{
-        font-size: 15px;
-    }
-
-    .del1, .del2{
-        font-size: 12px;
-    }
-
-    .add{
-        font-size: 12px;
-    }
-}
-
 @media (max-width: 1024px) {
     #barat-tab-pane {
         padding: 5vh;
     }
-
-    #profile, #profile2 {
-        width: 15vw;
-        height: 15vw;
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    .del1{
-        font-size: 12px;
-    }
-
-    .del2{
-        font-size: 12px;
-    }
-
-    .add{
-        font-size: 12px;
-    }
-
-    .username, .username2 {
-        font-size: 15px;
-        font-weight: bold;
-        flex-grow: 1;
-    }
-
-    .buttons{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    .barat_box1{
-        width: 40vw;
-    }
-
-    .barat_box2{
-        width: 47vw;
-    }
 }
-
 @media (max-width: 768px) {
     #barat-tab-pane {
         flex-direction: column;
         align-items: center;
         padding: 3vh;
     }
-
-    .barat_box1, .barat_box2 {
-        width: 100%;
-        max-width: 100%;
-        flex-direction: column;
-        padding: 10px;
-    }
-
-    .barat_text {
-        flex-direction: row;
-        text-align: start;
-        padding: 15px;
-        font-size: 20px;
-    }
-
-    #profile, #profile2 {
-        width: 15vw;
-        height: 15vw;
-        max-width: 60px;
-        max-height: 60px;
-    }
-
-    .buttons {
-        flex-direction: row;
-    }
 }
-
 @media (max-width: 600px) {
     #barat-tab-pane {
         width: 100%;
         flex-direction: column;
         padding: 3vh;
     }
-
-    .barat_box1, .barat_box2 {
-        width: 105%;
-        max-width: 105%;
-        flex-direction: column;
-        padding: 10px;
-        box-shadow: none;
-        background-color: transparent;
-    }
-
-    #profile, #profile2 {
-        width: 12vw;
-        height: 12vw;
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    .del1, .del2{
-        font-size: 12px;
-        margin-left: 0 auto;
-    }
-
-    .add{
-        font-size: 12px;
-    }
-
-    .username {
-        font-size: 15px;
-        font-weight: bold;
-        flex-grow: 1;
-    }
 }
-
 @media (max-width: 480px) {
     #barat-tab-pane {
         width: 100%;
         flex-direction: column;
         padding: 3vh;
     }
-
-    .barat_box1, .barat_box2 {
-        width: 120%;
-        max-width: 105%;
-        flex-direction: column;
-        padding: 10px;
-        box-shadow: none;
-        background-color: transparent;
-    }
-
-    #profile2 {
-        width: 12vw;
-        height: 12vw;
-        max-width: 40px;
-        max-height: 40px;
-    }
-
-    .del1 .del2 .add{
-        width: 12%;
-        padding: 12px;
-    }
 }
-
 
 // Profil módosítás
 #profile-tab-pane {
@@ -874,177 +164,14 @@ span{
     min-width: 500px;
     height: 100%;
 }
-
-.profile_box2 {
-    display: flex;
-    flex-direction: column;
-    background-color: #FFFFFF;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    width: 45vw;
-}
-
-.profile_box1{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 35vw;
-    margin-top: 15%;
-}
-
-.profile_content1{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: 0 auto;
-}
-
-.profile_content2 {
-    display: flex;
-    flex-direction: column;
-    border-radius: 20px;
-    padding: 20px;
-}
-
-input{
-    background-color: #F8F8F8;
-    border-radius: 25px;
-    width: 100%;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-    height: 60px;
-}
-
-.mentes{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #488853;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-    float: right;
-    color: white;
-    font-size: 17px;
-}
-
-.profilekep_modositas{
-    border-radius: 100px;
-    color: #98B09C;
-    border: 5px solid;
-    margin: 10px auto;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 10px;
-    justify-content: center;
-    align-items: center;
-}
-
-#profilekep{
-    background-image: url('/assets/images/profileKep.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    max-width: 200px;
-    height: 100vw;
-    max-height: 200px;
-    padding: 0.3px;
-    border-radius: 50%;
-    margin: auto;
-}
-
-@media screen and (max-width: 768px) {
-    .profile_box2 {
-        width: 90vw;
-    }
-
-    .profile_box1 {
-        width: 100%;
-        max-width: 100%;
-        margin: 20px;
-    }
-
-    .profile_content1 {
-        flex-direction: row;
-        gap: 20px;
-    }
-
-    .profilekep_modositas{
-        border-radius: 100px;
-        color: #98B09C;
-        border: 5px solid;
-        margin: 20px auto;
-        font-size: 20px;
-        font-weight: bold;
-        padding: 10px;
-        width: 250px;
-        justify-content: center;
-        align-items: center;
-    }
-}
-
 @media (max-width: 600px) {
     #profile-tab-pane {
         width: 100%;
         flex-direction: column;
         padding: 3vh;
     }
-
-    .profile_box2 {
-        width: 105%;
-        max-width: 105%;
-        flex-direction: column;
-        padding: 10px;
-        box-shadow: none;
-        background-color: transparent;
-    }
-
-    .profile_box1 {
-        width: 100%;
-        max-width: 100%;
-        margin: 20px;
-    }
-
-    .profile_content1 {
-        flex-direction: row;
-        gap: 20px;
-    }
-
-    .profilekep_modositas{
-        border-radius: 100px;
-        color: #98B09C;
-        border: 5px solid;
-        margin: 20px auto;
-        font-size: 20px;
-        font-weight: bold;
-        padding: 10px;
-        display: flex;
-        width: 250px;
-        justify-content: center;
-        align-items: center;
-    }
-
-    #profilekep{
-        background-image: url('/assets/images/profileKep.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100vw;
-        max-width: 150px;
-        height: 100vw;
-        max-height: 150px;
-        padding: 0.3px;
-        border-radius: 50%;
-        margin: auto;
-    }
 }
- 
+
 //Bejegyzés
 #bejegyzes-tab-pane {
     display: flex;
@@ -1055,246 +182,4 @@ input{
     width: 100%;
     min-width: 500px;
     height: 100%;
-}
- 
-.bejegyzes_box {
-    display: flex;
-    flex-direction: column;
-    background-color: #FFFFFF;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    width: 45vw;
-}
- 
-.bejegyzes_fejlec {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    padding: 10px;
-    position: relative;
-}
- 
-.leiras {
-    flex-grow: 1;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    padding: 10px 0 0 10px;
-    gap: 10px;
-}
-
-.leiras p{
-    font-weight: normal;
-}
- 
-.card button {
-    border: none;
-    display: flex;
-    background-color: transparent;
-    justify-content: flex-start;
-}
-
-.card {
-    border-radius: 20px;
-    background: #F5F5F7;
-    padding: 10px;
-}
- 
-i{
-    margin-right: 5px;
-}
- 
-.btn{
-    font-size: 25px;
-    font-weight: bolder;
-}
- 
-#bejegyzes_profile{
-    background-image: url('/assets/images/profileKep.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30vw;
-    max-width: 60px;
-    height: 30vw;
-    max-height: 60px;
-    padding: 0.3px;
-    border-radius: 50%;
-    margin: auto;
-}
-
-.collapse-left {
-    position: absolute;
-    right: 40px;
-    z-index: 10;
-    border-radius: 10px;
-    padding: 5px;
-}
-
-#bejegyzes_kep{
-    background-image: url('/assets/images/bejegyzeskep.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    display: flex;
-    align-items: center;
-    width: 20vw;
-    max-width: 250px;
-    height: 20vw;
-    max-height: 250px;
-    border-radius: 5%;
-    padding: 40%;
-    margin: auto;
-}
-
-@media screen and (max-width: 768px) {
-    .bejegyzes_box {
-        width: 70vw;
-    }
-
-    .card button {
-        border: none;
-        display: flex;
-        background-color: transparent;
-        justify-content: flex-start;
-    }
-    
-    .card {
-        border-radius: 20px;
-        background: #F5F5F7;
-        font-size: 10px;
-    }
-
-    .leiras {
-        flex-grow: 1;
-        text-align: left;
-        display: flex;
-        flex-direction: column;
-        padding: 10px 0 0 10px;
-        gap: 10px;
-        font-size: 13px;
-    }
-    
-    .leiras p{
-        font-weight: normal;
-        font-size: 13px;
-    }
-
-    #bejegyzes_profile {
-        width: 12vw;
-        height: 12vw;
-        max-width: 50px;
-        max-height: 50px;
-    }
-}
-
-@media (max-width: 600px) {
-    .bejegyzes_box {
-        width: 70vw;
-    }
-
-    #bejegyzes_profile {
-        width: 12vw;
-        height: 12vw;
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    .leiras {
-        flex-grow: 1;
-        text-align: left;
-        display: flex;
-        flex-direction: column;
-        padding: 10px 0 0 10px;
-        gap: 10px;
-        font-size: 15px !important;
-    }
-    
-    .leiras p{
-        font-weight: normal;
-        font-size: 15px !important;
-    }
-    
-    .card {
-        border-radius: 20px;
-        background: #F5F5F7;
-        font-size: 10px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .bejegyzes_box {
-        width: 70vw !important;
-    }
-
-    #bejegyzes_profile {
-        width: 12vw;
-        height: 12vw;
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    .leiras {
-        flex-grow: 1;
-        text-align: left;
-        display: flex;
-        flex-direction: column;
-        padding: 10px 0 0 10px;
-        gap: 10px;
-        font-size: 15px;
-    }
-    
-    .leiras p{
-        font-weight: normal;
-        font-size: 15px;
-    }
-}
-
-@media (max-width: 1200px){
-    .collapse-left {
-        position: absolute;
-        margin-left: 20%;
-        margin-top: 12%;
-    }
-}
-
-@media (max-width: 1024px) {
-    .bejegyzes_box {
-        width: 70vw;
-    }
-    
-    .card {
-        border-radius: 20px;
-        background: #F5F5F7;
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 360px) {
-    .bejegyzes_box {
-        width: 100vw !important;
-    }
-
-    #bejegyzes_profile {
-        width: 12vw;
-        height: 12vw;
-        max-width: 50px;
-        max-height: 50px;
-    }
-
-    .leiras {
-        flex-grow: 1;
-        text-align: left;
-        display: flex;
-        flex-direction: column;
-        padding: 10px 0 0 10px;
-        gap: 10px;
-        font-size: 15px;
-    }
-    
-    .leiras p{
-        font-weight: normal;
-        font-size: 15px;
-    }
 }

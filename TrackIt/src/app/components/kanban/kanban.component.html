@@ -66,4 +66,26 @@
     (closePopup)="selectedTask = null" 
     (taskUpdated)="onTaskUpdated($event)">
   </app-task-edit>
+
+  <!-- Popup megerősítő ablak -->
+  <div class="popup-container" *ngIf="showPopup">
+    <div class="popup">
+      <p>{{ popupMessage }}</p>
+      <button class="confirm-button" (click)="confirmTaskMove()">Igen</button>
+      <button class="cancel-button" (click)="cancelTaskMove()">Mégse</button>
+    </div>
+  </div>
+  
 </div>
+
+<app-alert-modal 
+  [visible]="isModalVisible" 
+  [type]="'warning'"
+  [message]="'Biztosan folytatni szeretnéd?'"
+  [invalidFields]="['Név', 'Email cím']"
+  [buttons]="[
+    { label: 'Igen', action: confirmTaskMove, class: 'cancel-btn' },
+    { label: 'Nem', action: cancelTaskMove, class: 'confirm-btn' }
+  ]"
+  (close)="modalVisible = false">
+</app-alert-modal>

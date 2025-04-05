@@ -1,0 +1,11 @@
+<div class="newpost-wrapper">
+    <div class="newpost-container">
+      <img src="assets/spongebob.png" class="avatar" />
+      <span class="post-placeholder">Mi jár a fejedben...</span>
+      <button (click)="openPopup()" class="post-button">Közzététel</button>
+    </div>
+  </div>
+  
+  <!-- Popup megjelenítése, ha isPopupOpen igaz -->
+  <app-newpostmodal *ngIf="isPopupOpen" (closePopup)="closePopup()"></app-newpostmodal>
+  

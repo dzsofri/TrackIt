@@ -1,0 +1,227 @@
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+@media (max-width: 480px) {
+    header {
+        display: block;
+    }
+}
+#felhasznalo{
+    background: url('/assets/images/profileKep.png') no-repeat center/cover;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    width: 70vw;
+    max-width: 150px;
+    height: 50vw;
+    max-height: 150px;
+    padding: 0.3px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+@media (max-width: 600px) {
+    .NO_DATA{
+        height: 100%;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #FFFFFF;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
+        border-radius: 25px;
+        text-align: center;
+        width: 300px;
+    }
+}
+.NO_DATA{
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+    text-align: center;
+    width: 300px;
+}
+//Linkek
+.nav-link.active {
+    color: #627966;
+    background-color: #F5F5F7;
+}
+.nav-link {
+    color: #9F9FA1;
+}
+.nav-item-tab, .nav-item {
+    display: flex;
+    background-color: #F5F5F7;
+    justify-content: center;
+}
+.nav-item-tab {
+    border-radius: 0px 30px 0px 0px;
+}
+.nav-item {
+    width: 100px;
+}
+.d-none {
+    display: none;
+}
+html, body {
+    margin: 0;
+}
+.tab-content, html, body {
+    width: auto;
+    height: auto;
+}
+h3{
+    padding: 20px;
+}
+img, span {
+    margin-right: 20px;
+}
+span {
+    margin-left: 20px;
+}
+
+#statisztika-tab-pane {
+    text-align: center;
+    background-color: #F5F5F7;
+    padding: 5vh 5vw;
+    min-width: 500px;
+}
+.teljesitmeny_content1, .teljesitmeny_content2, .teljesitmeny_content3 {
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    width: 100%;
+    padding: 20px;
+}
+.arany{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.arany p{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.teljesitmeny_box1, .teljesitmeny_box2, .teljesitmeny_box3 {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #FFFFFF;
+    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+}
+.teljesitmeny_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F8F8F8;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    text-align: start;
+    width: 100%;
+    padding: 10px;
+}
+#elvegzett, #elmaradt, #teljesitve {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25vw;
+    max-width: 70px;
+    height: 25vw;
+    max-height: 70px;
+    padding: 0.3px;
+    border-radius: 50%;
+}
+#elvegzett {
+    background-color: #173622;
+    background-image: url('/assets/images/pipa.png');
+    opacity: 0.8;
+}
+#elmaradt {
+    background-color: rgba(255, 0, 0, 0.2);
+    background-image: url('/assets/images/kereszt.png');
+}
+#teljesitve {
+    background-color: #000000;
+    background-image: url('/assets/images/stat.png');
+}
+.folyamat{
+    color: #709376;
+    margin-left: 5px;
+}
+@media (max-width: 600px) {
+    #statisztika-tab-pane h3{
+        text-align: start;
+    }
+
+    .teljesitmeny_box1 {
+        width: 300px;
+        margin: 0 auto;
+    }
+    .teljesitmeny_box3 {
+        flex-direction: column;
+    }
+    .teljesitmeny_content3 {
+        flex-direction: row;
+        height: 200px;
+        width: 500px;
+        gap: 30px;
+    }
+    .teljesitmeny_content3 .teljesitmeny_text{
+        flex-direction: column;
+        justify-content: space-around;
+        height: 150px;
+        align-items: center;
+        text-align: center;
+    }
+    #elvegzett, #elmaradt, #teljesitve {
+        width: 15vw;
+        height: 15vw;
+    }
+}
+@media (max-width: 480px) {
+    #elvegzett, #elmaradt, #teljesitve {
+        width: 12vw;
+        height: 12vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+}
+@media (max-width: 768px) {
+    #statisztika-tab-pane {
+        padding: 3vh 3vw;
+    }
+    #elvegzett, #elmaradt, #teljesitve {
+        width: 15vw;
+        height: 15vw;
+        max-width: 60px;
+        max-height: 60px;
+    }
+    .teljesitmeny_text {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+@media (max-width: 1024px) {
+    .teljesitmeny_text{
+        font-size: 90%;
+    }
+    #elvegzett, #elmaradt, #teljesitve {
+        width: 10vw;
+        height: 10vw;
+        max-width: 60px;
+        max-height: 60px;
+    }
+}

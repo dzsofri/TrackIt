@@ -6,9 +6,9 @@
             <div class="card p-4 w-100" id="registration-form">
                 <h2 class="text-center mb-2">Jelentkezz be a fiókodba!</h2>
                 <p class="text-center">Adja meg személyes adatait a bejelentkezéshez!</p>
-                
+
                 <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
-                   
+
                     <!-- Email mező -->
                     <div class="mb-3 box">
                         <label for="email" class="form-label">Email</label>
@@ -40,10 +40,18 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-dark w-100" >Regisztráció</button>
+                    <button type="submit" class="btn btn-dark w-100" >Bejelentkezés</button>
                     <p class="text-center mt-3">Még nincs fiókod? <a href="/registration">Regisztrálj!</a></p>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
+  [invalidFields]="invalidFields"
+  [message]="modalMessage"
+  (close)="modalVisible = false">
+</app-alert-modal>

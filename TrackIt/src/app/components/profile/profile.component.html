@@ -49,227 +49,26 @@
 
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane show active" [class.d-none]="activeTab !== 'statisztika'" id="statisztika-tab-pane" role="tabpanel" aria-labelledby="statisztika-tab" tabindex="0">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-4 mb-4">
-                <h3>Teljesítményeim</h3>
-                <div class="teljesitmeny_box1">
-                  <div class="teljesitmeny_content1" *ngIf="user_statistics; else noData">
-                    <p class="teljesitmeny_text"><img id="elvegzett">{{user_statistics.completedTasks}} <b class="folyamat">Elvégzett</b></p>
-                    <p class="teljesitmeny_text"><img id="elmaradt">{{user_statistics.missedTasks}} <b class="folyamat">Elmaradt</b></p>
-                    <p class="teljesitmeny_text"><img id="teljesitve">{{user_statistics.completionRate}}%<b class="folyamat">Teljesítve</b></p>
-                  </div>
-                  <ng-template #noData>
-                    <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
-                  </ng-template>
-                </div>
-              </div>
-
-            <div class="col-12 col-sm-12 col-md-4 mb-4">
-                <h3>Eredményeim</h3>
-                <div class="teljesitmeny_box2">
-                  <div class="teljesitmeny_content2" *ngIf="user_challenges.length > 0; else noChallenge">
-                    <div *ngFor="let user_challenge of user_challenges">
-                      <p class="teljesitmeny_text">
-                        {{user_challenge.challengeName}}: <br>
-                        <b class="folyamat">{{getCompletedDays(user_challenge)}} nap alatt teljesítve</b>
-                      </p>
-                    </div>
-                    <div class="arany">
-                        <p class="teljesitmeny_text">
-                          Heti teljesítési arány: <b class="folyamat">{{weeklyProgressPercentage}}%</b>
-                        </p>
-                        <p class="teljesitmeny_text">
-                          Havi teljesítési arány: <b class="folyamat">{{monthlyProgressPercentage}}%</b>
-                        </p>
-                    </div>
-                  </div>
-                  <ng-template #noChallenge>
-                    <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
-                  </ng-template>
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-12 col-md-4 mb-4">
-                <h3>Szokásaim</h3>
-                <div class="teljesitmeny_box3">
-                    <div class="teljesitmeny_content3" *ngIf="habits.length > 0; else noHabits">
-                        <p *ngFor="let habit of habits" class="teljesitmeny_text">{{habit.habitName}}: <b class="folyamat"> Heti {{habit.frequency}} alkalom</b></p>
-                    </div>
-                </div>
-                <ng-template #noHabits>
-                    <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
-                </ng-template>
-            </div>
-        </div>
+      <app-profile-stat></app-profile-stat>
     </div>
 
 
     <div class="tab-pane" [class.d-none]="activeTab !== 'jelveny'" id="jelveny-tab-pane" role="tabpanel" aria-labelledby="jelveny-tab" tabindex="0">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-6 mb-4">
-                <h3>Rangom</h3>
-                <div class="jelveny_box1">
-                    <div class="jelveny_content1">
-                        <div class="achievement-box">
-                            <h3>Super Achiever <p class="max_point">2000 pont</p></h3>
-                            <div class="progress-bar">
-                                <div class="progress"><img id="star"><p class="current_point">2000/2000</p></div>
-                            </div>
-                        </div>
-                        <p class="jelveny_text">Legjobb heti teljesítmény:<b class="folyamat">100%-os célmegvalósítás</b></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-12 col-md-6 mb-4">
-                <h3>Jelvényeim</h3>
-                <div class="jelveny_box2">
-                    <div class="jelveny_content2">
-                        <div class="jelveny_grid">
-                            <p class="jelveny_text"><img id="erem"> "Kihívás neve" <span class="point">x pont</span> </p>
-                            <p class="jelveny_text"><img id="erem"> "Kihívás neve" <span class="point">x pont</span> </p>
-                            <p class="jelveny_text"><img id="erem"> "Kihívás neve" <span class="point">x pont</span> </p>
-                            <p class="jelveny_text"><img id="erem"> "Kihívás neve" <span class="point">x pont</span> </p>
-                            <p class="jelveny_text"><img id="erem"> "Kihívás neve" <span class="point">x pont</span> </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <app-profile-jelveny></app-profile-jelveny>
     </div>
 
 
     <div class="tab-pane" [class.d-none]="activeTab !== 'barat'" id="barat-tab-pane" role="tabpanel" aria-labelledby="barat-tab" tabindex="0">
-      <div class="row">
-          <div class="col-12 col-sm-12 col-md-6 mb-4">
-              <h3>Barátok kezelése</h3>
-              <div class="barat_box1">
-                <div class="barat_content1">
-                  <ng-container *ngIf="friend_requests.length > 0; else noFriends">
-                    <ng-container *ngIf="hasAcceptedFriends(); else noFriends">
-                      <ng-container *ngFor="let friend_request of friend_requests">
-                        <p *ngIf="friend_request.status === 'accepted'" class="barat_text">
-                          <img id="profile">
-                          <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
-                          <button class="del1" (click)="deleteFriend(friend_request.id)">Barát törlése</button>
-                        </p>
-                      </ng-container>
-                    </ng-container>
-                  </ng-container>
-                </div>
-              </div>
-              <ng-template #noFriends>
-                <h5 class="NO_DATA">Még nincs ismerősöd!</h5>
-              </ng-template>
-            </div>
-            <div class="col-12 col-sm-12 col-md-6 mb-4">
-              <h3>Követési kérelmek kezelése</h3>
-              <div class="barat_box1">
-                <div class="barat_content1">
-                  <ng-container *ngIf="friend_requests.length > 0; else noFriendRequests">
-                    <ng-container *ngIf="hasPendingFriends(); else noFriendRequests">
-                      <ng-container *ngFor="let friend_request of friend_requests">
-                        <p *ngIf="friend_request.status === 'pending'" class="barat_text">
-                          <img id="profile">
-                          <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
-                          <span class="buttons">
-                            <button class="add" (click)="acceptFriend(friend_request.id)">Megerősítés</button>
-                            <button class="del2" (click)="deleteFriend(friend_request.id)">Elutasítás</button>
-                          </span>
-                        </p>
-                      </ng-container>
-                    </ng-container>
-                  </ng-container>
-                </div>
-              </div>
-              <ng-template #noFriendRequests>
-                <h5 class="NO_DATA">Jelenleg nincs követési kérésed!</h5>
-              </ng-template>
-            </div>
-      </div>
-  </div>
+      <app-profile-barat></app-profile-barat>
+    </div>
 
 
     <div class="tab-pane" [class.d-none]="activeTab !== 'bejegyzes'" id="bejegyzes-tab-pane" role="tabpanel" aria-labelledby="bejegyzes-tab" tabindex="0">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-6 mb-4">
-                <div class="bejegyzes_box">
-                    <div class="bejegyzes_content">
-                        <header class="bejegyzes_fejlec">
-                            <img id="bejegyzes_profile">
-                            <b class="leiras">"Felhasználó neve" <p>"Bejegyzés képpel"</p></b>
-                            <p>
-                                <button class="btn toggle-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">...</button>
-                            </p>
-                            <div class="collapse collapse-left" id="collapse1">
-                                <div class="card">
-                                    <button><i class="bi bi-pencil"></i>Bejegyzés módosítása</button>
-                                    <hr>
-                                    <button><i class="bi bi-trash"></i>Bejegyzés törlése</button>
-                                </div>
-                            </div>
-                        </header>
-                        <div class="bejegyzes">
-                            <img id="bejegyzes_kep">
-                        </div>
-                        <header class="bejegyzes_fejlec">
-                            <img id="bejegyzes_profile">
-                            <b class="leiras">"Felhasználó neve" <p>"Kép nélküli bejegyzés"</p></b>
-                            <p>
-                                <button class="btn toggle-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">...</button>
-                            </p>
-                            <div class="collapse collapse-left" id="collapse2">
-                                <div class="card">
-                                    <button><i class="bi bi-pencil"></i>Bejegyzés módosítása</button>
-                                    <hr>
-                                    <button><i class="bi bi-trash"></i>Bejegyzés törlése</button>
-                                </div>
-                            </div>
-                        </header>
-                    </div>
-                </div>
-            </div>
-        </div>        
+      <app-profile-bejegyzes></app-profile-bejegyzes>
     </div>
 
 
     <div class="tab-pane" [class.d-none]="activeTab !== 'profile'" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-6 mb-4">
-                <div class="profile_box1">
-                    <div class="profile_content1">
-                        <img id="profilekep">
-                        <button class="profilekep_modositas">Profilkép módosítása</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-12 col-md-6 mb-4">
-                <h3>Adotok módosítása</h3>
-                <div class="profile_box2">
-                    <div class="profile_content2">
-                        <form>
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Név módosítása</label>
-                                <input type="text" class="form-control" id="name" placeholder="pl. Somodi Konrád" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email módosítása</label>
-                                <input type="email" class="form-control" id="email" placeholder="pl. somodikonrad@turr.hu" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Jelszó módosítása</label>
-                                <div class="input-group">
-                                    <input [type]="isPasswordVisible ? 'text' : 'password'" class="form-control" id="password" placeholder="Írja be a jelszavát!" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="date" class="form-label">Értesítés beállítása</label>
-                                <input type="date" class="form-control" id="date" required>
-                            </div>
-                            <button type="submit" class="mentes">Mentés</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <app-profile-modositas></app-profile-modositas>
     </div>
 </div>

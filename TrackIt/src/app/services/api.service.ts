@@ -39,11 +39,12 @@ export class ApiService {
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.server}/users/login`, { email, password }).pipe(
       catchError(error => {
-        console.error('Login failed', error);
-        return of({ message: 'Login failed' });
+
+        return of({ message: error.error.message, invalidFields: error.error.invalid });
       })
     );
   }
+
 
   forgotPassword(email: string): Observable<any> {
     return this.http.post<any>(`${this.server}/users/forgot-password`, { email }).pipe(
@@ -150,7 +151,7 @@ export class ApiService {
       })
     );
   }
-  
+
   readUserStatistics(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/statistics/${userId}`, this.tokenHeader());
   }
@@ -178,7 +179,7 @@ export class ApiService {
   deleteFriendRequest(table: string, id: string) {
     return this.http.delete(`${this.server}/${table}/friendrequests/${id}`, this.tokenHeader());
   }
- 
+
   acceptFriendRequest(table: string, id: string) {
     return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
   }
@@ -191,9 +192,25 @@ export class ApiService {
             return of(error);
         })
     );
+
+}
+
+createPost(postData: { title: string; body: string; status: string }): Observable<any> {
+  return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a bejegyzés létrehozásakor:', error);
+      return of({ message: 'Bejegyzés létrehozása sikertelen' });
+    })
+  );
 }
 
 
+postCompletedTask(userId: string, taskId: string): Observable<any> {
+  return this.http.post(`${this.server}/user_statistics/completedTask`, { userId, taskId }, this.tokenHeader());
+}
 
+postMissedTask(userId: string, taskId: string): Observable<any> {
+  return this.http.post(`${this.server}/user_statistics/missedTask`, { userId, taskId }, this.tokenHeader());
+}
 
 }

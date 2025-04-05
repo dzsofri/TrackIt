@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-4 mb-4">
+        <h3>Teljesítményeim</h3>
+        <div class="teljesitmeny_box1">
+          <div class="teljesitmeny_content1" *ngIf="user_statistics; else noData">
+            <p class="teljesitmeny_text"><img id="elvegzett">{{user_statistics.completedTasks}} <b class="folyamat">Elvégzett</b></p>
+            <p class="teljesitmeny_text"><img id="elmaradt">{{user_statistics.missedTasks}} <b class="folyamat">Elmaradt</b></p>
+            <p class="teljesitmeny_text"><img id="teljesitve">{{user_statistics.completionRate}}%<b class="folyamat">Teljesítve</b></p>
+          </div>
+          <ng-template #noData>
+            <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+          </ng-template>
+        </div>
+      </div>
+
+    <div class="col-12 col-sm-12 col-md-4 mb-4">
+        <h3>Eredményeim</h3>
+        <div class="teljesitmeny_box2">
+          <div class="teljesitmeny_content2" *ngIf="user_challenges.length > 0; else noChallenge">
+            <div *ngFor="let user_challenge of user_challenges">
+              <p class="teljesitmeny_text">
+                {{user_challenge.challengeName}}: <br>
+                <b class="folyamat">{{getCompletedDays(user_challenge)}} nap alatt teljesítve</b>
+              </p>
+            </div>
+            <div class="arany">
+                <p class="teljesitmeny_text">
+                  Heti teljesítési arány: <b class="folyamat">{{weeklyProgressPercentage}}%</b>
+                </p>
+                <p class="teljesitmeny_text">
+                  Havi teljesítési arány: <b class="folyamat">{{monthlyProgressPercentage}}%</b>
+                </p>
+            </div>
+          </div>
+          <ng-template #noChallenge>
+            <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+          </ng-template>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-12 col-md-4 mb-4">
+        <h3>Szokásaim</h3>
+        <div class="teljesitmeny_box3">
+            <div class="teljesitmeny_content3" *ngIf="habits.length > 0; else noHabits">
+                <p *ngFor="let habit of habits" class="teljesitmeny_text">{{habit.habitName}}: <b class="folyamat"> Heti {{habit.frequency}} alkalom</b></p>
+            </div>
+        </div>
+        <ng-template #noHabits>
+            <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+        </ng-template>
+    </div>
+</div>

@@ -1,6 +1,25 @@
+<div class="app-container">
+  <div class="position-relative" [ngClass]="{ 'hidden-sidebar': !showSidebar }">
+    <app-sidebar
+      [isSidebarCollapsed]="isSidebarCollapsed"
+      (sidebarToggle)="onSidebarToggle()"
+    ></app-sidebar>
+    <button
+      class="sidebar-toggle-btn"
+      [ngClass]="{ 'sidebar-collapsed': isSidebarCollapsed }"
+      (click)="onSidebarToggle()"
+    >
+      <i
+        [class]="
+          isSidebarCollapsed ? 'fas fa-arrow-right' : 'fas fa-arrow-left'
+        "
+      ></i>
+    </button>
+  </div>
 
-<!--<router-outlet></router-outlet>-->
+  <main class="content" [ngClass]="{ 'content-expanded': !showSidebar }">
+    <div class="content-inner"><router-outlet/></div>
+  </main>
 
-      <router-outlet></router-outlet>
 
-  
+</div>
