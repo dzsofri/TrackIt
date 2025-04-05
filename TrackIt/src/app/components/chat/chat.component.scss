@@ -1,0 +1,173 @@
+.chat-container {
+    display: flex;
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    
+  }
+  
+  .sidebar {
+    height: 100%;
+    width: 300px;
+    background: #f3f3f3;
+    padding: 1rem;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    border-top-left-radius: 20px;
+  
+    h2 {
+      font-size: 20px;
+      margin-bottom: 1rem;
+    }
+  
+    .contact {
+      display: flex;
+      align-items: center;
+      background: white;
+      padding: 10px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+  
+      .info {
+        flex: 1;
+        .name {
+          font-weight: 600;
+        }
+        .last-message {
+          font-size: 12px;
+          color: gray;
+        }
+      }
+  
+      .dot {
+        width: 8px;
+        height: 8px;
+        background: #007bff;
+        border-radius: 50%;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+  
+  .chat-window {
+    position: fixed;
+    bottom: 0;
+    left: 350px; /* Adjust this if the sidebar width changes */
+    right: 0;
+    height: calc(100% - 0px); /* Adjust if there's a header or other elements above */
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    padding-bottom: 2%;
+
+  
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      h4 {
+        margin: 0;
+      }
+      small {
+        color: gray;
+      }
+      .chat-date {
+        font-size: 0.9rem;
+        color: gray;
+      }
+    }
+  
+    .messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+  
+    .message {
+      display: flex;
+      margin: 0.5rem 0;
+  
+      &.user {
+        justify-content: flex-end;
+  
+        .bubble {
+          background: #4caf50;
+          color: white;
+          border-radius: 15px;
+          padding: 0.5rem 1rem;
+          max-width: 300px;
+        }
+      }
+  
+      &.other {
+        justify-content: flex-start;
+  
+        .bubble {
+          background: #f0f0f5;
+          color: black;
+          border-radius: 15px;
+          padding: 0.5rem 1rem;
+          max-width: 300px;
+        }
+      }
+  
+      .bubble {
+        font-size: 14px;
+  
+        small {
+          display: block;
+          font-size: 10px;
+          text-align: right;
+          margin-top: 4px;
+          opacity: 0.6;
+        }
+      }
+    }
+  
+    .input-bar {
+      display: flex;
+      align-items: center;
+      border-top: 1px solid #eee;
+      padding: 0.5rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin: 0 2rem;
+
+      input {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        font-size: 14px;
+      }
+
+      button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        margin-left: 0.5rem;
+        cursor: pointer;
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .chat-window {
+        left: 60px; /* Adjust this value to match the width of your main nav sidebar */
+        margin-left: 10px; /* Optional: Add some spacing for better alignment */
+    }
+}
