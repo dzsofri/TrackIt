@@ -53,6 +53,15 @@ export const routes: Routes = [
     data: { label: 'Profile', icon: '/assets/icons/profile_logo.png' }
   },
   {
+    path: 'chat',
+    component: ChatComponent,
+    canActivate: [AuthGuard],
+    data: { label: 'Üzenetek', icon: '/assets/icons/messages_logo.png' }
+  },
+
+
+
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
