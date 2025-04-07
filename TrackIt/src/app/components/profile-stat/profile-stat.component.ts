@@ -122,9 +122,12 @@ export class ProfileStatComponent {
     return summedStatistics;
   }
   
-  getCompletedDays(user_challenge: User_Challenge): number {
+  getCompletedDays(user_challenge: User_Challenge): string {
     const createdAt = new Date(user_challenge.createdAt);
     const completedAt = user_challenge.completedAt ? new Date(user_challenge.completedAt) : new Date();
+    if (completedAt < createdAt) {
+      return 'nincs feladat teljesítve';
+    }
     const finalDate = user_challenge.finalDate ? new Date(user_challenge.finalDate) : null;
    
     const endDate = finalDate && finalDate < completedAt ? finalDate : completedAt;
@@ -132,7 +135,7 @@ export class ProfileStatComponent {
     const timeDiff = Math.abs(endDate.getTime() - createdAt.getTime());
     const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
    
-    return Math.min(diffDays, user_challenge.durationDays);
+    return `${Math.min(diffDays, user_challenge.durationDays)} nap alatt teljesítve`;
   }
 
   private calculateWeeklyProgress(challenges: User_Challenge[]): number {
@@ -141,14 +144,22 @@ export class ProfileStatComponent {
       const createdAt = new Date(challenge.createdAt);
       const futureDate = new Date(createdAt.getTime() + 7 * 24 * 60 * 60 * 1000);
       const completedAt = new Date(challenge.completedAt);
-      if (completedAt <= futureDate) {
-        const totalDays = (futureDate.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
-        const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
-        challenge.progressPercentage = (daysCompleted / totalDays) * 100;
+
+      if (futureDate < currentDate) {
+        return false;
+      }
+
+      if (completedAt < createdAt) {
+        challenge.progressPercentage = 0;
         return true;
       }
-      return false;
+
+      const totalDays = 7;
+      const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+      challenge.progressPercentage = daysCompleted <= 1 ? 100 : Math.max(0, Math.min(100, ((totalDays - daysCompleted) / totalDays) * 100));
+      return true;
     });
+
     const totalProgress = weeklyChallenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0);
     return weeklyChallenges.length > 0 ? totalProgress / weeklyChallenges.length : 0;
   }
@@ -159,14 +170,22 @@ export class ProfileStatComponent {
       const createdAt = new Date(challenge.createdAt);
       const futureDate = new Date(createdAt.getTime() + 30 * 24 * 60 * 60 * 1000);
       const completedAt = new Date(challenge.completedAt);
-      if (completedAt <= futureDate) {
-        const totalDays = (futureDate.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
-        const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
-        challenge.progressPercentage = (daysCompleted / totalDays) * 100;
+
+      if (futureDate < currentDate) {
+        return false;
+      }
+
+      if (completedAt < createdAt) {
+        challenge.progressPercentage = 0;
         return true;
       }
-      return false;
+
+      const totalDays = 30;
+      const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+      challenge.progressPercentage = daysCompleted <= 1 ? 100 : Math.max(0, Math.min(100, ((totalDays - daysCompleted) / totalDays) * 100));
+      return true;
     });
+
     const totalProgress = monthlyChallenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0);
     return monthlyChallenges.length > 0 ? totalProgress / monthlyChallenges.length : 0;
   }

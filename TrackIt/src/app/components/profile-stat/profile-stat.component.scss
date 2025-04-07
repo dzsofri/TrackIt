@@ -30,9 +30,6 @@ header {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #FFFFFF;
-        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-        border-radius: 25px;
         text-align: center;
         width: 300px;
     }
@@ -82,22 +79,23 @@ h3{
 img, span {
     margin-right: 20px;
 }
-span {
-    margin-left: 20px;
-}
-
 #statisztika-tab-pane {
     text-align: center;
     background-color: #F5F5F7;
     padding: 5vh 5vw;
-    min-width: 500px;
 }
-.teljesitmeny_content1, .teljesitmeny_content2, .teljesitmeny_content3 {
+.teljesitmeny_content1, .teljesitmeny_content2 {
     flex-direction: column;
     align-items: center;
     border-radius: 20px;
     width: 100%;
-    padding: 20px;
+    padding: 5px;
+}
+.teljesitmeny_content3{
+    flex-direction: row;
+    align-items: center;
+    border-radius: 20px;
+    padding: 5px;
 }
 .arany{
     display: flex;
@@ -138,9 +136,9 @@ span {
     justify-content: center;
     align-items: center;
     width: 25vw;
-    max-width: 70px;
+    max-width: 60px;
     height: 25vw;
-    max-height: 70px;
+    max-height: 60px;
     padding: 0.3px;
     border-radius: 50%;
 }
@@ -161,27 +159,33 @@ span {
     color: #709376;
     margin-left: 5px;
 }
+.teljesitmeny_grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px;
+}
+.teljesitmeny_item {
+    flex: 1 1 25%;
+    max-width: 25%;
+}
 @media (max-width: 600px) {
     #statisztika-tab-pane h3{
         text-align: start;
     }
-
     .teljesitmeny_box1 {
         width: 300px;
         margin: 0 auto;
     }
     .teljesitmeny_box3 {
-        flex-direction: column;
+        flex-direction: row;
     }
     .teljesitmeny_content3 {
         flex-direction: row;
-        height: 200px;
-        width: 500px;
         gap: 30px;
     }
     .teljesitmeny_content3 .teljesitmeny_text{
         flex-direction: column;
-        justify-content: space-around;
         height: 150px;
         align-items: center;
         text-align: center;
@@ -190,6 +194,15 @@ span {
         width: 15vw;
         height: 15vw;
     }
+    .teljesitmeny_item {
+        flex: 1 1 50%;
+        max-width: 50%;
+    }
+    .teljesitmeny_grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
 }
 @media (max-width: 480px) {
     #elvegzett, #elmaradt, #teljesitve {
@@ -197,6 +210,34 @@ span {
         height: 12vw;
         max-width: 50px;
         max-height: 50px;
+    }
+    .teljesitmeny_grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 10px;
+    }
+    .teljesitmeny_content3 {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    .teljesitmeny_box1, .teljesitmeny_box2, .teljesitmeny_box3 {
+        width: 65%;
+        margin-left: 25px;
+        padding: 10px;
+    }
+    .teljesitmeny_item {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+    h3{
+        text-align: start;
+    }
+    .teljesitmeny_content1, .teljesitmeny_content2, .teljesitmeny_content3{
+        text-align: start;
+    }
+    .teljesitmeny_text{
+        text-align: start;
     }
 }
 @media (max-width: 768px) {
@@ -213,15 +254,49 @@ span {
         font-size: 14px;
         padding: 8px;
     }
+    .teljesitmeny_item {
+        flex: 1 1 25%;
+        max-width: 25%;
+    }
 }
 @media (max-width: 1024px) {
     .teljesitmeny_text{
         font-size: 90%;
     }
     #elvegzett, #elmaradt, #teljesitve {
-        width: 10vw;
-        height: 10vw;
-        max-width: 60px;
-        max-height: 60px;
+        width: 15vw;
+        height: 15vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+    .teljesitmeny_item {
+        flex: 1 1 25%;
+        max-width: 25%;
+    }
+}
+@media (max-width: 360px) {
+    header,
+    .NO_DATA,
+    .teljesitmeny_content1,
+    .teljesitmeny_content2,
+    .teljesitmeny_content3,
+    h3,
+    .teljesitmeny_box1,
+    .teljesitmeny_box2,
+    .teljesitmeny_box3 {
+        align-items: flex-start !important;
+        text-align: left !important;
+        margin-left: 0 !important;
+    }
+
+    .teljesitmeny_box1,
+    .teljesitmeny_box2,
+    .teljesitmeny_box3 {
+        margin-left: 0 !important;
+        width: 55% !important;
+    }
+
+    .teljesitmeny_content3 {
+        align-items: flex-start !important;
     }
 }

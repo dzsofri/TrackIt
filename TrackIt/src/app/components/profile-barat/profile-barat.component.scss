@@ -30,8 +30,6 @@ header {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #FFFFFF;
-        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
         border-radius: 25px;
         text-align: center;
         width: 300px;
@@ -79,9 +77,6 @@ html, body {
 h3{
     padding: 20px;
 }
-img, span {
-    margin-right: 20px;
-}
 span {
     margin-left: 20px;
 }
@@ -93,8 +88,6 @@ span {
     align-content: flex-start;
     justify-content: flex-start;
     width: 100%;
-    min-width: 500px;
-    height: auto;
     flex-direction: column;
 }
 .barat_box1, .barat_box2 {
@@ -104,7 +97,7 @@ span {
     background-color: #FFFFFF;
     box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
-    width: 45vw;
+    width: 40vw;
 }
 .barat_content1 {
     display: flex;
@@ -113,7 +106,7 @@ span {
     justify-content: center;
     border-radius: 20px;
     width: 100%;
-    padding: 20px;
+    padding: 10px;
 }
 .barat_content2 {
     display: flex;
@@ -122,7 +115,7 @@ span {
     justify-content: center;
     border-radius: 20px;
     width: 100%;
-    padding: 20px;
+    padding: 10px;
 }
 .barat_text {
     display: flex;
@@ -199,6 +192,57 @@ span {
     border: none;
     margin-left: auto;
 }
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+}
+.popup p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+.confirm-button {
+    background-color: #4caf50;
+    color: white;
+    margin-right: 10px;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+}
+.confirm-button:hover {
+    background-color: #45a049;
+}
+.cancel-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+}
+.cancel-button:hover {
+    background-color: #e53935;
+}
+.modal-container {
+    width: 20%;
+    padding: 20px;
+    border-radius: 15px;
+    background: #fff;
+}
 @media (max-width: 1200px){
     #profile, #profile2 {
         width: 10vw;
@@ -217,9 +261,6 @@ span {
     }
 }
 @media (max-width: 1024px) {
-    #barat-tab-pane {
-        padding: 5vh;
-    }
     #profile, #profile2 {
         width: 15vw;
         height: 15vw;
@@ -243,7 +284,6 @@ span {
     .buttons{
         display: flex;
         justify-content: center;
-        align-items: center;
         flex-direction: column;
     }
     .barat_box1{
@@ -254,21 +294,14 @@ span {
     }
 }
 @media (max-width: 768px) {
-    #barat-tab-pane {
-        flex-direction: column;
-        align-items: center;
-        padding: 3vh;
-    }
     .barat_box1, .barat_box2 {
         width: 100%;
-        max-width: 100%;
         flex-direction: column;
         padding: 10px;
     }
     .barat_text {
         flex-direction: row;
         text-align: start;
-        padding: 15px;
         font-size: 20px;
     }
     #profile, #profile2 {
@@ -280,16 +313,15 @@ span {
     .buttons {
         flex-direction: row;
     }
+    .popup {
+        width: 80%;
+        margin: 0 auto;
+        margin-left: 20%;
+    }
 }
 @media (max-width: 600px) {
-    #barat-tab-pane {
-        width: 100%;
-        flex-direction: column;
-        padding: 3vh;
-    }
     .barat_box1, .barat_box2 {
-        width: 105%;
-        max-width: 105%;
+        width: 100%;
         flex-direction: column;
         padding: 10px;
     }
@@ -313,27 +345,74 @@ span {
     }
 }
 @media (max-width: 480px) {
-    #barat-tab-pane {
-        width: 100%;
-        flex-direction: column;
-        padding: 3vh;
-    }
     .barat_box1, .barat_box2 {
-        width: 120%;
-        max-width: 105%;
+        width: 85%;
         flex-direction: column;
         padding: 10px;
-        box-shadow: none;
-        background-color: transparent;
     }
     #profile2 {
-        width: 12vw;
-        height: 12vw;
-        max-width: 40px;
-        max-height: 40px;
+        width: 10vw;
+        height: 10vw;
+        max-width: 50px;
+        max-height: 50px;
     }
     .del1 .del2 .add{
-        width: 12%;
-        padding: 12px;
+        padding: 10px;
+    }
+    .buttons{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+}
+@media (max-width: 360px) {
+    header,
+    .NO_DATA,
+    h3,
+    .barat_box1,
+    .barat_box2,
+    .barat_content1,
+    .barat_content2,
+    .barat_text {
+        justify-content: start;
+        text-align: left !important;
+        margin-left: 0 !important;
+    }
+    .barat_box1,
+    .barat_box2 {
+        margin-left: 0 !important;
+        width: 55% !important;
+    }
+    .barat_content1,
+    .barat_content2 {
+        align-items: flex-start !important;
+    }
+    .buttons {
+        flex-direction: column !important;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 65px;
+    }
+    .username, .username2 {
+        font-size: 13px;
+        text-align: left;
+    }
+    #profile {
+        width: 20vw;
+        height: 20vw;
+        max-width: 30px;
+        max-height: 30px;
+    }
+    #profile2 {
+        width: 20vw;
+        height: 20vw;
+        max-width: 30px;
+        max-height: 30px;
+    }
+    .add, .del2 {
+        font-size: 10px;
+        padding: 8px;
+        width: 100%;
+        text-align: center;
     }
 }
