@@ -17,8 +17,7 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
   constructor(
       private api: ApiService,
       private auth: AuthService,
-      private activatedRoute: ActivatedRoute,
-      private message: MessageService
+      private activatedRoute: ActivatedRoute
     ) {}
 
     user_challenges: User_Challenge[] = [];
@@ -30,6 +29,7 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
     userRank: string = 'Újonc';
     nextRankPoints: number = 1000;
     highersRank: string = '';
+    highestWeeklyPerformance: number = 0; // Új változó a legmagasabb heti teljesítmény tárolására
 
     setActiveTab(tabName: string) {
       this.activeTab = tabName;
@@ -50,6 +50,7 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
               }
               this.user_challenges = res;
               this.calculatePointsAndRank();
+              this.highestWeeklyPerformance = this.calculateWeeklyProgress(this.user_challenges); // Legmagasabb heti teljesítmény kiszámítása
             },
             error: (err) => {
               console.error('Error fetching user challenges:', err);
@@ -128,5 +129,34 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
         default:
           return 0;
       }
+    }   
+    
+    private calculateWeeklyProgress(challenges: User_Challenge[]): number {
+      const currentDate = new Date();
+      let highestWeeklyPerformance = 0;
+    
+      const weeklyChallenges = challenges.filter(challenge => {
+        const createdAt = new Date(challenge.createdAt);
+        const futureDate = new Date(createdAt.getTime() + 7 * 24 * 60 * 60 * 1000);
+        const completedAt = new Date(challenge.completedAt);
+    
+        if (futureDate < currentDate) {
+          return false;
+        }
+    
+        if (completedAt < createdAt) {
+          challenge.progressPercentage = 0;
+          highestWeeklyPerformance = Math.max(highestWeeklyPerformance, challenge.progressPercentage);
+          return true;
+        }
+    
+        const totalDays = 7;
+        const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+        challenge.progressPercentage = daysCompleted <= 1 ? 100 : Math.max(0, Math.min(100, ((totalDays - daysCompleted) / totalDays) * 100));
+        highestWeeklyPerformance = Math.max(highestWeeklyPerformance, challenge.progressPercentage);
+        return true;
+      });
+    
+      return highestWeeklyPerformance;
     }
 }
