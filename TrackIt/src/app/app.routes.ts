@@ -10,6 +10,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
+import { ChatComponent } from './components/chat/chat.component';
 
 export const routes: Routes = [
   {

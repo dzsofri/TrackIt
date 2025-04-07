@@ -1,40 +1,43 @@
 <div class="chat-container">
     <div class="sidebar" *ngIf="isSidebarOpen">
-        <button class="close-btn" (click)="toggleSidebar()">✖</button>
-        <h2>Bejövő üzenetek</h2>
-        <div class="contact" *ngFor="let contact of contacts">
-            <img [src]="'assets/avatars/' + contact.avatar" alt="{{contact.name}}" />
-            <div class="info">
-                <div class="name">{{ contact.name }}</div>
-                <div class="last-message">{{ contact.message }} <span *ngIf="contact.time">· {{ contact.time }}</span></div>
-            </div>
-            <span class="dot" *ngIf="contact.unread"></span>
+      <button class="close-btn" (click)="toggleSidebar()">✖</button>
+      <h2>Bejövő üzenetek</h2>
+      <div class="contact" *ngFor="let contact of contacts">
+        <img [src]="'assets/avatars/' + contact.avatar" alt="{{contact.name}}" />
+        <div class="info">
+          <div class="name">{{ contact.name }}</div>
+          <div class="last-message">{{ contact.message }} <span *ngIf="contact.time">· {{ contact.time }}</span></div>
         </div>
+        <span class="dot" *ngIf="contact.unread"></span>
+      </div>
     </div>
-
+  
     <div class="chat-window">
-        <div class="chat-header">
-            <div>
-                <h4>Felhasználó</h4>
-                <small>Utoljára elérhető 30 perce</small>
-            </div>
-            <div class="chat-date">01/04/2025</div>
+      <div class="chat-header">
+        <div>
+          <h4>{{ currentUser }}</h4>  <!-- A felhasználó neve -->
+          <small>Utoljára elérhető 30 perce</small>
         </div>
+        <div class="chat-date">{{ currentDate }}</div>
+      </div>
+  
+      <div *ngFor="let msg of messages" 
+      class="message" 
+      [ngClass]="msg.sender === currentUser ? 'my-message' : 'other-message'">
+   <img *ngIf="msg.sender !== currentUser" [src]="'assets/avatars/' + msg.sender + '.png'" class="avatar" />
+   <div class="bubble">
+     <strong *ngIf="msg.sender !== currentUser">{{ msg.sender }}</strong>
+     <span>{{ msg.text }}</span>
+     <small>{{ msg.time }}</small>
+   </div>
+ </div>
+ 
 
-        <div class="messages">
-            <div *ngFor="let msg of messages" class="message" [ngClass]="msg.sender">
-                <div class="bubble">
-                    <span>{{ msg.text }}</span>
-                    <small>{{ msg.time }}</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="input-bar">
-            <button class="open-sidebar-btn" *ngIf="!isSidebarOpen" (click)="toggleSidebar()">☰</button>
-            <input placeholder="Aa" />
-            <button></button>
-            <button>➤</button>
-        </div>
+  
+      <div class="input-bar">
+        <button class="open-sidebar-btn" *ngIf="!isSidebarOpen" (click)="toggleSidebar()">☰</button>
+        <input [(ngModel)]="message" placeholder="Aa" />
+        <button (click)="sendMessage()">➤</button>
+      </div>
     </div>
 </div>
