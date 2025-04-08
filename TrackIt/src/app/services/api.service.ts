@@ -192,25 +192,44 @@ export class ApiService {
             return of(error);
         })
     );
+  }
 
-}
+  createPost(postData: { title: string; body: string; status: string }): Observable<any> {
+    return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a bejegyzés létrehozásakor:', error);
+        return of({ message: 'Bejegyzés létrehozása sikertelen' });
+      })
+    );
+  }
 
-createPost(postData: { title: string; body: string; status: string }): Observable<any> {
-  return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
-    catchError(error => {
-      console.error('Hiba a bejegyzés létrehozásakor:', error);
-      return of({ message: 'Bejegyzés létrehozása sikertelen' });
-    })
-  );
-}
+  postCompletedTask(userId: string, taskId: string): Observable<any> {
+    return this.http.post(`${this.server}/user_statistics/completedTask`, { userId, taskId }, this.tokenHeader());
+  }
+
+  postMissedTask(userId: string, taskId: string): Observable<any> {
+    return this.http.post(`${this.server}/user_statistics/missedTask`, { userId, taskId }, this.tokenHeader());
+  }
+
+  sendMessage(senderId: string, receiverId: string, message: string): Observable<any> {
+    return this.http.post<any>(`${this.server}/chat/send`, {
+      senderId,
+      receiverId,
+      message
+    }, this.tokenHeader());
+  }
 
 
-postCompletedTask(userId: string, taskId: string): Observable<any> {
-  return this.http.post(`${this.server}/user_statistics/completedTask`, { userId, taskId }, this.tokenHeader());
-}
+  getMessagesBetweenUsers(user1Id: string, user2Id: string): Observable<any> {
+    return this.http.get<any>(`${this.server}/chat/messages/${user1Id}/${user2Id}`, this.tokenHeader());
+  }
 
-postMissedTask(userId: string, taskId: string): Observable<any> {
-  return this.http.post(`${this.server}/user_statistics/missedTask`, { userId, taskId }, this.tokenHeader());
-}
+
+  getUserById(userId: string): Observable<User> {
+    return this.http.get<User>(`${this.server}/users/${userId}`, this.tokenHeader()).pipe(
+
+    );
+  }
+
 
 }

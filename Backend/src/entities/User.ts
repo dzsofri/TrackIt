@@ -8,6 +8,7 @@ import { UserChallenges } from "./UserChallenge";
 import { UserStatistics } from "./UserStatistic";
 import { Feedbacks } from "./Feedback";
 import { Habits } from "./Habit";
+import { Chat } from "./Chat";
 
 export enum UserRole {
     ADMIN = "admin",
@@ -72,4 +73,11 @@ export class Users {
 
     @OneToMany(() => Feedbacks, (feedback) => feedback.user, { onDelete: "CASCADE" })
     feedbacks: Feedbacks[];
+
+        @OneToMany(() => Chat, (chat) => chat.sender, { onDelete: "CASCADE" })
+    sentMessages: Chat[]; // A felhasználó által küldött üzenetek
+
+    @OneToMany(() => Chat, (chat) => chat.receiver, { onDelete: "CASCADE" })
+    receivedMessages: Chat[]; // A felhasználó által fogadott üzenetek
+
 }

@@ -14,7 +14,7 @@ import userStatisticsRoutes from "./routes/userStatisticsRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import postRoutes from "./routes/postRoutes";
 import challengeRoutes from "./routes/challengeRoutes";
-import chatRoutes from "./routes/chatRoutes";
+import chatRoutes from "./routes/chatRoutes"; // import chatRoutes
 
 dotenv.config();
 
@@ -31,15 +31,25 @@ const io = new Server(server, {
 
 // ✅ Setup socket.io events
 io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
+  console.log('🟢 User connected:', socket.id);
 
-  socket.on('message', (msg) => {
-    console.log('Received message:', msg);
-    io.emit('message', msg);
+  socket.on('joinPrivateRoom', (userId) => {
+    socket.join(userId);
+    console.log(`User ${userId} joined the room`);
   });
+  
 
+  // Üzenet küldése a privát szobába
+  socket.on('privateMessage', (msg) => {
+    console.log('Private message received:', msg);
+  
+    // Send message to the receiver's room
+    socket.to(msg.receiverId).emit('messageReceived', msg);
+    console.log('Message sent to room:', msg.receiverId, 'by:', msg.senderId);
+  });
+  
   socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
+    console.log('🔴 User disconnected:', socket.id);
   });
 });
 
@@ -55,7 +65,7 @@ app.use("/friends", friendRoutes);
 app.use("/user_statistics", userStatisticsRoutes);
 app.use("/posts", postRoutes);
 app.use("/challenges", challengeRoutes);
-app.use("/chat", chatRoutes);
+app.use("/chat", chatRoutes); // hozzáadjuk a chat routes-ot
 
 // Start everything
 const PORT = process.env.PORT || 3000;
@@ -72,4 +82,3 @@ AppDataSource.initialize()
   .catch((err) => {
     console.error("❌ Hiba történt az adatbázis kapcsolat során:", err);
   });
-

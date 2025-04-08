@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { environment } from '../environments/environment';
+import { ChatMessage } from '../interfaces/chatMessage';
 
-export interface ChatMessage {
-  sender: string;
-  text: string;
-  time: string;
-}
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +13,36 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('http://localhost:3000');
+    this.socket = io(environment.serverUrl);
+
+    // WebSocket kapcsolat eseményeinek kezelése
+    this.socket.on('connect', () => {
+      console.log('WebSocket connected:', this.socket.id);
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log('WebSocket disconnected');
+    });
   }
 
-  sendMessage(msg: ChatMessage): void {
-    this.socket.emit('message', msg); // Üzenet küldése a szerverre
+  // Szoba csatlakoztatása
+  joinPrivateRoom(userId: string): void {
+    this.socket.emit('joinPrivateRoom', userId);
+    console.log('Joining room for user:', userId); // Debug log
   }
 
+  // Üzenet küldése
+  sendPrivateMessage(msg: ChatMessage): void {
+    console.log('Sending message:', msg); // Debug log
+    this.socket.emit('privateMessage', msg);
+  }
+
+  // Üzenet fogadása
   onMessage(callback: (msg: ChatMessage) => void): void {
-    this.socket.on('message', callback); // Üzenet fogadása a szerverről
+    this.socket.on('messageReceived', (msg: ChatMessage) => {
+      console.log('Message received:', msg); // Log every received message
+      callback(msg); // Callback on received message
+    });
   }
+
 }
