@@ -14,9 +14,10 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./newpost.component.scss']
 })
 export class NewpostComponent {
+  postTitle: string = ''; // A poszt címe
   postContent: string = ''; // A poszt tartalma
   isPopupOpen: boolean = false; // Popup állapot (nyitva vagy zárva)
-  postStatus: any;
+  postStatus: string = 'published'; // Alapértelmezett státusz
 
   constructor(private apiService: ApiService) {}
 
@@ -31,16 +32,16 @@ export class NewpostComponent {
   }
 
   // A poszt tartalmának elmentése
-  submitPost(content: string) {
-    if (content.trim()) {
-      if (!this.postStatus) {
-        this.postStatus = 'published'; // Ha nincs státusz, akkor alapértelmezett 'published'
+  submitPost() {
+    if (this.postContent.trim()) {
+      if (!this.postTitle.trim()) {
+        this.postTitle = 'Név nélküli poszt'; // Alapértelmezett cím, ha nem adnak meg
       }
   
       const postData = {
-        title: 'Example Post Title',
-        body: content,
-        status: this.postStatus // Használjuk a `postStatus` változót
+        title: this.postTitle,  // A felhasználó által megadott cím
+        body: this.postContent, // A poszt tartalma
+        status: this.postStatus  // A státusz (pl. 'published')
       };
   
       this.apiService.createPost(postData).subscribe(
@@ -55,10 +56,9 @@ export class NewpostComponent {
     }
   }
   
-  
-
   // Amikor a modálban a posztot elküldik
   handlePostSubmit(postContent: string) {
-    this.submitPost(postContent); // Átadjuk a tartalmat a submitPost metódusnak
+    this.postContent = postContent; // Beállítjuk a tartalmat
+    this.submitPost(); // Átadjuk a tartalmat a submitPost metódusnak
   }
 }
