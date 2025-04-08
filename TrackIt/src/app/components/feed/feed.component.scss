@@ -1,8 +1,48 @@
 .feed-container {
   display: flex;
-  flex-direction: column; // Egymás alá helyezi az elemeket
-  align-items: center; // Vízszintesen középre igazítja
-  justify-content: center; // Függőlegesen középre igazítja (ha szükséges)
+  flex-direction: column;
+  align-items: center;
   width: 100%;
+  padding: 2rem;
+  gap: 1.5rem;
 }
 
+.post {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.post-title h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.post-body p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.post-status {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.post img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.no-image-text {
+  color: #bbb;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+  
