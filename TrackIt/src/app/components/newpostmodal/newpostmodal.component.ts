@@ -10,17 +10,20 @@ import { FormsModule } from '@angular/forms';
 })
 export class NewpostmodalComponent {
   @Output() closePopup = new EventEmitter<void>(); // Esemény a popup bezárásához
+  @Output() postSubmit = new EventEmitter<string>(); // Esemény a poszt tartalmának továbbításához
 
   postContent: string = ''; // A poszt tartalma
 
   // Modal bezárása
   closeModal() {
-    this.closePopup.emit(); // Esemény kibocsátása, hogy a szülő komponens bezárja a modalt
+    this.closePopup.emit(); // Esemény kibocsátása a szülő komponensnek
   }
 
   // Poszt küldése
   submitPost() {
-    console.log("Poszt közzétéve:", this.postContent);
-    this.closeModal(); // Bezárja a popupot a mentés után
+    if (this.postContent.trim()) {
+      this.postSubmit.emit(this.postContent); // Poszt tartalma küldése a szülőnek
+      this.closeModal(); // Bezárja a popupot a mentés után
+    }
   }
 }

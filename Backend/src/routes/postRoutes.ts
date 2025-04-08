@@ -96,16 +96,20 @@ router.get("/all-by-month", async (req: any, res: any) => {
         return res.status(500).json({ message: "Szerverhiba történt." });
     }
 });
-
 router.post("/create", tokencheck, async (req: any, res: any) => {
     try {
         const { title, body, status } = req.body;
+        console.log("Received data:", { title, body, status }); // Debugging
+
         const userId = req.user.id;  // Tokenből kapjuk a user ID-t
         const createdAt = new Date();
 
         if (!userId) {
             return res.status(401).json({ message: "Felhasználói azonosító nem található a tokenben." });
         }
+
+        // Ha a status nincs megadva, alapértelmezett értékként 'published'-ot állítunk be
+        const postStatus = status || 'published';
 
         const postRepository = AppDataSource.getRepository(Posts);
 
@@ -114,7 +118,7 @@ router.post("/create", tokencheck, async (req: any, res: any) => {
             body,
             userId,
             createdAt,
-            status
+            status: postStatus // Itt használjuk az alapértelmezett értéket
         });
 
         await postRepository.save(newPost);
@@ -125,6 +129,8 @@ router.post("/create", tokencheck, async (req: any, res: any) => {
         return res.status(500).json({ message: "Szerverhiba történt." });
     }
 });
+
+
 
 
 

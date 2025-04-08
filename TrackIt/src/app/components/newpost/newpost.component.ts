@@ -1,3 +1,5 @@
+// newpost.component.ts
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -14,10 +16,11 @@ import { ApiService } from '../../services/api.service';
 export class NewpostComponent {
   postContent: string = ''; // A poszt tartalma
   isPopupOpen: boolean = false; // Popup állapot (nyitva vagy zárva)
+  postStatus: any;
 
   constructor(private apiService: ApiService) {}
 
-  // Popup megnyitása
+  // Popup műveletek
   openPopup() {
     this.isPopupOpen = true;
   }
@@ -27,16 +30,19 @@ export class NewpostComponent {
     this.isPopupOpen = false;
   }
 
-  // Poszt beküldése
+  // A poszt tartalmának elmentése
   submitPost(content: string) {
     if (content.trim()) {
-      console.log('Új bejegyzés:', content); // Poszt tartalma
+      if (!this.postStatus) {
+        this.postStatus = 'published'; // Ha nincs státusz, akkor alapértelmezett 'published'
+      }
+  
       const postData = {
-        title: 'Example Post Title', // Cím, ha szükséges
+        title: 'Example Post Title',
         body: content,
-        status: 'draft' // Alapértelmezett státusz
+        status: this.postStatus // Használjuk a `postStatus` változót
       };
-
+  
       this.apiService.createPost(postData).subscribe(
         response => {
           console.log('Poszt sikeresen létrehozva:', response);
@@ -47,5 +53,12 @@ export class NewpostComponent {
         }
       );
     }
+  }
+  
+  
+
+  // Amikor a modálban a posztot elküldik
+  handlePostSubmit(postContent: string) {
+    this.submitPost(postContent); // Átadjuk a tartalmat a submitPost metódusnak
   }
 }

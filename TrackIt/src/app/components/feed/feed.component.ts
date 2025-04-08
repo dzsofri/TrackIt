@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProfileBejegyzesComponent } from '../profile-bejegyzes/profile-bejegyzes.component';
-import { NewpostmodalComponent } from '../newpostmodal/newpostmodal.component';
 import { NewpostComponent } from '../newpost/newpost.component';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-feed',
@@ -13,5 +13,17 @@ import { NewpostComponent } from '../newpost/newpost.component';
   styleUrl: './feed.component.scss'
 })
 export class FeedComponent {
+  posts: any[] = [];
 
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit() {
+    this.loadPosts();
+  }
+
+  loadPosts() {
+    this.apiService.getPosts().subscribe(response => {
+      this.posts = response.posts || [];
+    });
+  }
 }
