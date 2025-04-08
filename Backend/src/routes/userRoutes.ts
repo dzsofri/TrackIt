@@ -139,7 +139,7 @@ router.get('/users/:id', tokencheck, async (req: any, res: any) => {
 // Felhasználó adatainak módosítása
 router.put('/:id', tokencheck, isAdmin, async (req: any, res: any) => {
     const { id } = req.params;
-    const { role } = req.body;  // Csak role változása
+    const { role } = req.body; 
     const invalidFields: string[] = [];
 
     try {
@@ -152,12 +152,12 @@ router.put('/:id', tokencheck, isAdmin, async (req: any, res: any) => {
 
         if (role) user.role = role;
 
-        const updatedUser = await userRepository.save(user);  // A frissített felhasználó mentése
-        console.log("Frissített felhasználó:", updatedUser);  // Debug üzenet
+        const updatedUser = await userRepository.save(user); 
+        console.log("Frissített felhasználó:", updatedUser);  
 
         res.json({ message: 'Felhasználó sikeresen frissítve.', updatedUser });
     } catch (error) {
-        console.error("Hiba a felhasználó frissítésekor:", error);  // Hibakezelés
+        console.error("Hiba a felhasználó frissítésekor:", error); 
         res.status(500).json({ error: 'Hiba történt a felhasználó adatainak frissítése közben.' });
     }
 });

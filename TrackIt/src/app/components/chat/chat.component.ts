@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { ChatMessage } from '../../interfaces/chatMessage';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'app-chat',
@@ -18,7 +19,7 @@ export class ChatComponent implements OnInit {
   message = '';
   messages: ChatMessage[] = [];
   oldmessages: ChatMessage[] = [];
-  currentUser: string = '';
+  currentUser: User | null = null;
   currentUserId: string = '';
   selectedContact: any = null;
   contacts: any[] = [];
@@ -28,17 +29,14 @@ export class ChatComponent implements OnInit {
     private socketService: SocketService,
     private authService: AuthService,
     private apiService: ApiService,
-    private cdr: ChangeDetectorRef // Az Angular változás detektálása
+    private cdr: ChangeDetectorRef // Angular change detection
   ) {}
 
   ngOnInit(): void {
-
-    console.log('All senders:', this.messages.map(msg => msg.sender));
-
     this.currentDate = new Date().toISOString();
     const user = this.authService.loggedUser();
     if (user) {
-      this.currentUser = user.name;
+      this.currentUser = user;  // Assign the full user object
       this.currentUserId = user.id;
     }
 
@@ -50,42 +48,50 @@ export class ChatComponent implements OnInit {
       this.socketService.joinPrivateRoom(this.currentUserId);
     }
 
+    // Listen for incoming messages via WebSocket
     this.socketService.onMessage((msg: ChatMessage) => {
       this.handleIncomingMessage(msg);
     });
   }
 
-  // Üzenetek kezelése és frissítése
   handleIncomingMessage(msg: ChatMessage) {
-    console.log('Incoming message:', msg); // Teljes üzenet kiírása
-    console.log('Sender:', msg.sender); // Csak a sender mező kiírása
+    console.log('Incoming message:', msg); // Log the full message
+    console.log('Sender:', msg.sender); // Log just the sender field
 
+    // Csak akkor adja hozzá a feladót, ha nem található
+    if (!msg.sender) {
+      this.apiService.getUserById(msg.senderId).subscribe(user => {
+        if (user) {
+          msg.sender = user;  // Assign the full user object to msg.sender
+          console.log('Updated sender:', msg.sender);  // Log updated sender
+        }
+      });
+    }
+
+    // Ellenőrizzük, hogy a beérkezett üzenet már szerepel-e a messages listában
     if (this.selectedContact && (msg.senderId === this.selectedContact.id || msg.receiverId === this.selectedContact.id)) {
-      this.messages = [...this.messages, msg]; // Új üzenet hozzáadása
-      this.scrollToBottom();
-      this.cdr.detectChanges(); // Frissítjük a nézetet
+      const existingMessage = this.messages.find(existingMsg => existingMsg.createdAt === msg.createdAt && existingMsg.message === msg.message);
+
+      if (!existingMessage) {
+        // Ha az üzenet nem létezik, akkor hozzáadjuk
+        this.messages = [...this.messages, msg];
+        this.scrollToBottom();
+        this.cdr.detectChanges(); // Biztosítjuk, hogy a view frissüljön
+      }
     }
   }
+
   selectContact(contact: any): void {
     this.selectedContact = contact;
     this.messages = []; // Üzenetek törlése új kontaktus választásakor
 
-    // Betöltjük az üzeneteket az API-ból
+    // Betöltjük az üzeneteket az API-ból a kiválasztott kontaktus számára
     this.apiService.getMessagesBetweenUsers(this.currentUserId, contact.id).subscribe(response => {
       console.log('Messages between users:', response);
 
       if (response && Array.isArray(response)) {
         // Az új üzenetek hozzáadása az oldmessages tömbhöz
-        for (let i = 0; i < response.length; i++) {
-          // Feltételezzük, hogy a felhasználói név lekérhető az ID alapján
-          this.apiService.getUserById(response[i].senderId).subscribe(user => {
-            response[i].sender = {
-              id: response[i].senderId,
-              name: user.name // A lekérdezett név
-            };
-          });
-          this.oldmessages = [...this.oldmessages, response[i]];
-        }
+        this.oldmessages = [...response];
 
         // Üzenetek betöltése az oldmessages-ból
         this.messages = [...this.oldmessages];
@@ -98,48 +104,39 @@ export class ChatComponent implements OnInit {
 
     // Ha új üzenet érkezik, kezeljük azt
     this.socketService.onMessage((msg: ChatMessage) => {
+      console.log('Received message:', msg); // Üzenet logolása
       this.handleIncomingMessage(msg);
     });
   }
 
 
-
-
-
-
-
-
-
-  // Üzenet küldése
   sendMessage(): void {
     if (this.message.trim() && this.selectedContact) {
       const newMsg: ChatMessage = {
         senderId: this.currentUserId,
-        sender: this.currentUser,
+        sender: this.currentUser,  // Send full user object
         receiverId: this.selectedContact.id,
         receiver: this.selectedContact.name,
         message: this.message.trim(),
         createdAt: new Date().toISOString(),
-
       };
 
-      // WebSocket-en keresztül üzenet küldése
+      // Send message via WebSocket
       this.socketService.sendPrivateMessage(newMsg);
 
-      // Üzenet mentése API-n keresztül
+      // Save message via API
       this.apiService.sendMessage(this.currentUserId, this.selectedContact.id, this.message.trim()).subscribe(
         response => console.log('Message saved:', response),
         err => console.error('Error saving message:', err)
       );
 
-      // Üzenet hozzáadása a local messages tömbhöz
-      this.messages = [...this.messages, newMsg]; // Új üzenet hozzáadása
-      this.message = ''; // Üzenet mező kiürítése
+      // Add the message to the local messages array
+      this.messages = [...this.messages, newMsg]; // Add new message
+      this.message = ''; // Clear the message input field
       this.scrollToBottom();
     }
   }
 
-  // Görgetés az üzenetlista aljára
   scrollToBottom(): void {
     setTimeout(() => {
       const chatContainer = document.getElementById('chat-container');
@@ -149,12 +146,10 @@ export class ChatComponent implements OnInit {
     }, 100);
   }
 
-  // Oldalsáv nyitása és zárása
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
-  // Hiba kép kezelése
   onImageError(event: any) {
     event.target.src = 'assets/images/profileKep.png';
   }

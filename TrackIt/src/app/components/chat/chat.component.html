@@ -1,52 +1,72 @@
 <div class="chat-container">
   <!-- Sidebar: Lista a kontaktról -->
   <div class="sidebar" *ngIf="isSidebarOpen">
+    <!-- Oldalsáv bezárása gomb -->
     <button class="close-btn" (click)="toggleSidebar()">✖</button>
+
+    <!-- Bejövő üzenetek címe -->
     <h2>Bejövő üzenetek</h2>
+
+    <!-- Kontaktlista: A kontaktusok bejárása -->
     <div class="contact" *ngFor="let contact of contacts" (click)="selectContact(contact)">
       <img [src]="'assets/images/profileKep.png'" alt="{{ contact.name }}" (error)="onImageError($event)" />
+
       <div class="info">
         <div class="name">{{ contact.name }}</div>
+
         <div class="last-message">
           {{ contact.message }}
           <span *ngIf="contact.time">· {{ contact.time }}</span>
         </div>
       </div>
+
+      <!-- Olvasatlan üzenet jelzés -->
       <span class="dot" *ngIf="contact.unread"></span>
     </div>
   </div>
 
-  <!-- Chat Window: A kiválasztott kontakt beszélgetésének megjelenítése -->
+  <!-- Chat ablak: A kiválasztott kontakt beszélgetésének megjelenítése -->
   <div class="chat-window" *ngIf="selectedContact">
     <div class="chat-header">
+      <!-- Kiválasztott kontakt neve és utolsó elérhetőségi információk -->
       <div>
         <h4>{{ selectedContact.name }}</h4>
         <small>Utoljára elérhető 30 perce</small>
       </div>
+
+      <!-- Jelenlegi dátum megjelenítése -->
       <div class="chat-date">{{ currentDate }}</div>
     </div>
 
-
-
-
-
-
     <!-- Üzenetek megjelenítése -->
-    <div *ngFor="let msg of messages" class="message" [ngClass]="msg.senderId === currentUserId ? 'my-message' : 'other-message'">
+    <div *ngFor="let msg of messages" class="message" [ngClass]="msg.sender?.id === currentUserId ?  'my-message' : 'other-message'">
       <div class="bubble">
-        <strong *ngIf="msg.senderId !== currentUserId">{{ msg.sender.name }}</strong>
-        <span>{{ msg.message }}</span> <!-- Használjuk a message mezőt -->
-        <small>{{ msg.createdAt | date:'shortTime' }}</small> <!-- Idő formázása -->
+        <!-- A feladó neve csak akkor jelenjen meg, ha az üzenet nem a saját üzenet -->
+        <strong *ngIf="msg.senderId !== currentUserId && msg.sender">{{ msg.sender.name }}</strong>
+
+        <!-- Az üzenet tartalma -->
+        <span>{{ msg.message }}</span>
+
+        <!-- Az üzenet küldési ideje -->
+        <small>{{ msg.createdAt | date:'shortTime' }}</small>
+
+        <!-- A currentUserId és a msg.senderId kiírása -->
+        <div class="id-info">
+          <small>Current User ID: {{ currentUserId }}</small><br />
+          <small>Sender ID: {{ msg.senderId || msg.sender?.id }}</small>
+        </div>
       </div>
     </div>
 
-
-
-
-    <!-- Üzenetküldő mező -->
+    <!-- Üzenet írása -->
     <div class="input-bar">
+      <!-- Oldalsáv gomb (csak akkor látható, ha az oldalsáv zárva van) -->
       <button class="open-sidebar-btn" *ngIf="!isSidebarOpen" (click)="toggleSidebar()">☰</button>
+
+      <!-- Üzenet mező -->
       <input [(ngModel)]="message" placeholder="Aa" />
+
+      <!-- Üzenet küldése gomb -->
       <button (click)="sendMessage()">➤</button>
     </div>
   </div>
