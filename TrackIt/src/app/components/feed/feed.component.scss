@@ -1,9 +1,8 @@
 .feed-container {
-    display: flex;
-    flex-direction: column; // Egymás alá helyezi az elemeket
-    align-items: center; // Vízszintesen középre igazítja
-    justify-content: center; // Függőlegesen középre igazítja (ha szükséges)
-    width: 100%;
-  }
-  
-  
+  display: flex;
+  flex-direction: column; // Egymás alá helyezi az elemeket
+  align-items: center; // Vízszintesen középre igazítja
+  justify-content: center; // Függőlegesen középre igazítja (ha szükséges)
+  width: 100%;
+}
+

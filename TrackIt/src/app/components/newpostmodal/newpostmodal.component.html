@@ -1,22 +1,24 @@
 <div class="popup-overlay">
-    <div class="popup-content">
+  <div class="popup-content">
+
+    <!-- Fejléc flexboxban -->
+    <div class="popup-header">
       <span class="close-btn" (click)="closeModal()">Mégsem</span>
-  
-      <!-- Popup tartalom -->
       <h3 class="post-title">Új poszt</h3>
-  
-      <div class="user-info">
-        <img src="assets/avatar.png" alt="Avatar" class="avatar" />
-        <div>
-          <input type="text" placeholder="Mi jár a fejedben..." [(ngModel)]="postContent" class="post-input" />
-        </div>
-      </div>
-  
-      <div class="upload-section">
-        <button class="upload-btn">📷</button>
-      </div>
-  
-      <button class="post-button" (click)="submitPost()">Közzététel</button>
     </div>
+
+    <!-- Popup tartalom -->
+    <div class="user-info">
+      <img src="assets/avatar.png" alt="Avatar" class="avatar" />
+      <div>
+        <input type="text" placeholder="Mi jár a fejedben..." [(ngModel)]="postContent" class="post-input" />
+      </div>
+    </div>
+
+    <div class="upload-section">
+      <button class="upload-btn">📷</button>
+    </div>
+
+    <button class="post-button" (click)="submitPost()">Közzététel</button>
   </div>
-  
+</div>
