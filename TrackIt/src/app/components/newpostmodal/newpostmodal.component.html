@@ -15,7 +15,15 @@
     </div>
 
     <div class="upload-section">
-      <button class="upload-btn">📷</button>
+      <input
+        type="file"
+        #fileInput
+        accept="image/*"
+        hidden
+        (change)="onFileSelected($event)"
+      />
+      <button class="upload-btn" (click)="fileInput.click()">📷</button>
+      <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
     </div>
 
     <button class="post-button" (click)="submitPost()">Közzététel</button> <!-- Beküldés gomb -->

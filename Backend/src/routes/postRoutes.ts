@@ -1,11 +1,29 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import { Posts } from "../entities/Post";
 import { AppDataSource } from "../data-source";
 import { Between } from "typeorm";
 import { tokencheck } from "../utiles/tokenUtils";
 import { isAdmin } from "../utiles/adminUtils";
+import multer from 'multer';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import { Pictures } from "../entities/Picture";
 
 const router = Router();
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');  // A fájlok ide kerülnek
+  },
+  filename: (req, file, cb) => {
+    const filename = uuidv4() + path.extname(file.originalname);  // Egyedi fájlnév
+    cb(null, filename);
+  }
+});
+
+const upload = multer({ storage });
+router.use('/uploads', express.static('uploads'));
 
 
 router.get("/all", async (req: any, res: any) => {
@@ -96,39 +114,58 @@ router.get("/all-by-month", async (req: any, res: any) => {
         return res.status(500).json({ message: "Szerverhiba történt." });
     }
 });
-router.post("/create", tokencheck, async (req: any, res: any) => {
-    try {
+// Kép feltöltése és poszt létrehozása
+    router.post("/posts", tokencheck, upload.single('picture'), async (req: any, res: any) => {
+        try {
         const { title, body, status } = req.body;
-        console.log("Received data:", { title, body, status }); // Debugging
-
         const userId = req.user.id;  // Tokenből kapjuk a user ID-t
         const createdAt = new Date();
-
+    
         if (!userId) {
             return res.status(401).json({ message: "Felhasználói azonosító nem található a tokenben." });
         }
-
+    
         // Ha a status nincs megadva, alapértelmezett értékként 'published'-ot állítunk be
         const postStatus = status || 'published';
-
+    
         const postRepository = AppDataSource.getRepository(Posts);
-
+    
+        // Kép mentése a Pictures táblába
+        let pictureId: string | null = null;
+        if (req.file) {
+            const pictureRepository = AppDataSource.getRepository(Pictures);
+            
+            // Új kép entitás létrehozása
+            const newPicture = pictureRepository.create({
+            id: uuidv4(),  // Egyedi ID generálása
+            filename: req.file.filename,  // A fájl neve
+            path: req.file.path  // A fájl elérési útja
+            });
+    
+            // Kép mentése a Pictures táblába
+            const savedPicture = await pictureRepository.save(newPicture);
+            pictureId = savedPicture.id;
+        }
+    
+        // Poszt létrehozása
         const newPost = postRepository.create({
             title,
             body,
             userId,
             createdAt,
-            status: postStatus // Itt használjuk az alapértelmezett értéket
+            status: postStatus,
+            pictureId  // Ha van kép, hozzárendeljük a posthoz
         });
-
+    
         await postRepository.save(newPost);
-
+    
         return res.status(201).json({ message: "Bejegyzés sikeresen létrehozva!", post: newPost });
-    } catch (error) {
+        } catch (error) {
         console.error("Hiba a bejegyzés létrehozásakor:", error);
         return res.status(500).json({ message: "Szerverhiba történt." });
-    }
-});
+        }
+    });
+  
 
 
 
