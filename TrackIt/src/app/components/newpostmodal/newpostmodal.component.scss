@@ -43,7 +43,7 @@
   font-size: 1rem;
   background-color: transparent;
   border: none;
-  color: red;
+  color: black;
   cursor: pointer;
   padding: 0.3rem 0.6rem;
   transition: 0.3s;
@@ -55,15 +55,16 @@
 }
 
 /* Input mező */
-input {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 12px;
-  background: #f9f9f9;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
+.post-input {
+  border: none; /* Border eltávolítása */
+  outline: none; /* Az outline eltávolítása (ha van) */
+  padding: 10px; /* Opcióként párnázd a belső teret */
+  width: 100%; /* Töltsön ki minden rendelkezésre álló helyet */
+  resize: none; /* Ha nem akarod, hogy a felhasználó átméretezze */
+  font-size: 14px; /* Beállíthatod a betűméretet is */
+  box-sizing: border-box; /* Ha paddingot adsz hozzá, akkor ne változtassa meg az elem teljes szélességét */
 }
+
 
 /* Gombok */
 button {
@@ -103,6 +104,7 @@ button {
   padding: 10px;
   border: 1px solid #ccc;
   width: fit-content;
+  margin-left: 9%;
 }
 
 /* Avatar + szöveg input együtt */
@@ -153,3 +155,5 @@ button {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 }
+
+

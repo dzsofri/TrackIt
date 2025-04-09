@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../../services/message.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NewpostComponent } from '../newpost/newpost.component';
+
 
 @Component({
   selector: 'app-profile-bejegyzes',
@@ -15,8 +15,9 @@ import { NewpostComponent } from '../newpost/newpost.component';
   styleUrl: './profile-bejegyzes.component.scss'
 })
 export class ProfileBejegyzesComponent {
+  posts: any[] = []; // A posztok tárolása
   constructor(
-    private api: ApiService,
+    private apiService: ApiService,
     private auth: AuthService,
     private activatedRoute: ActivatedRoute,
     private message: MessageService
@@ -26,4 +27,18 @@ export class ProfileBejegyzesComponent {
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
   }
+
+
+  ngOnInit() {
+    this.loadPosts(); // A posztok betöltése
+  }
+
+  loadPosts() {
+    this.apiService.getPosts().subscribe(response => {
+      this.posts = response.posts || [];
+    }, error => {
+      console.error('Hiba a posztok betöltésekor:', error);
+    });
+  }
 }
+

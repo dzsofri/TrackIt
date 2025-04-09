@@ -1,5 +1,3 @@
-<!-- newpostmodal.component.html -->
-
 <div class="popup-overlay">
   <div class="popup-content">
     <div class="popup-header">
@@ -7,13 +5,22 @@
       <h3 class="post-title">Új poszt</h3> <!-- Cím -->
     </div>
 
-    <div class="user-info">
-      <img src="assets/avatar.png" alt="Avatar" class="avatar" />
+    <!-- Felhasználó információk megjelenítése -->
+    <div class="user-info" *ngIf="post?.user">
+      <!-- Avatar kép -->
+      <img [src]="post.user.imageUrl || 'assets/avatar.png'" alt="Avatar" class="avatar" />
       <div>
-        <textarea [(ngModel)]="postContent" placeholder="Mi jár a fejedben..." class="post-input"></textarea>
+        <!-- Felhasználó neve -->
+        <strong>{{ post.user.name || 'Név nem elérhető' }}</strong>
       </div>
     </div>
 
+    <!-- Bejegyzés szöveg -->
+    <div>
+      <input [(ngModel)]="postContent" placeholder="Mi jár a fejedben..." class="post-input" />
+    </div>
+
+    <!-- Kép feltöltése -->
     <div class="upload-section">
       <input
         type="file"
@@ -24,15 +31,14 @@
       />
       <button class="upload-btn" (click)="fileInput.click()">📷</button>
       <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
-    
+
       <!-- Előnézeti kép -->
       <div *ngIf="imagePreviewUrl" class="image-preview">
         <img [src]="imagePreviewUrl" alt="Előnézet" />
       </div>
     </div>
-    
-    
 
-    <button class="post-button" (click)="submitPost()">Közzététel</button> <!-- Beküldés gomb -->
+    <!-- Beküldés gomb -->
+    <button class="post-button" (click)="submitPost()">Közzététel</button>
   </div>
 </div>

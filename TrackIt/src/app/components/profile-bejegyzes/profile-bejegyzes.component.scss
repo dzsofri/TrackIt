@@ -1,208 +1,88 @@
-header {
+.feed-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    width: 100%;
+    padding: 2rem;
+    gap: 0.5rem;
+    background: transparent;
+  }
+  
+  .feed-wrapper {
+    background: #f0f0f0;        /* Világos szürke háttér csak középen */
+    padding: 2rem;
+    max-width: 1000px;          /* Szélesség limit */
+    margin: 0 auto;             /* Középre igazítás */
+    border-radius: 1rem;        /* Opcionális: lekerekítés a doboznak */
+  }
+  
+  
+  /* Egy poszt */
+  .post {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    max-width: 100%; /* Posztok mérete */
+    width: 100%;
     text-align: center;
-}
-@media (max-width: 480px) {
-    header {
-        display: block;
-    }
-}
-#felhasznalo{
-    background: url('/assets/images/profileKep.png') no-repeat center/cover;
-    display: block;
-    justify-content: center;
-    align-items: center;
-    width: 70vw;
-    max-width: 150px;
-    height: 50vw;
-    max-height: 150px;
-    padding: 0.3px;
-    border-radius: 50%;
-    margin: 0 auto;
-}
-@media (max-width: 600px) {
-    .NO_DATA{
-        height: 100%;
-        padding: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #FFFFFF;
-        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-        border-radius: 25px;
-        text-align: center;
-        width: 300px;
-    }
-}
-.NO_DATA{
-    height: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 25px;
-    text-align: center;
-    width: 300px;
-}
-//Linkek
-.nav-link.active {
-    color: #627966;
-    background-color: #F5F5F7;
-}
-.nav-link {
-    color: #9F9FA1;
-}
-.nav-item-tab, .nav-item {
-    display: flex;
-    background-color: #F5F5F7;
-    justify-content: center;
-}
-.nav-item-tab {
-    border-radius: 0px 30px 0px 0px;
-}
-.nav-item {
-    width: 100px;
-}
-.d-none {
-    display: none;
-}
-html, body {
-    margin: 0;
-}
-.tab-content, html, body {
-    width: auto;
     height: auto;
-}
-h3{
-    padding: 20px;
-}
-img, span {
-    margin-right: 20px;
-}
-span {
-    margin-left: 20px;
-}
-
-#bejegyzes-tab-pane {
-    display: flex;
-    background-color: #F5F5F7;
-    padding: 5vh;
-    align-content: center;
-    justify-content: center;
-    width: 100%;
-    min-width: 500px;
-    height: 100%;
-}
-.bejegyzes_box {
-    display: flex;
-    flex-direction: column;
-    background-color: #FFFFFF;
-    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    width: 70vw;
-}
-@media (min-width: 769px) {
-    .bejegyzes_box {
-        width: 45vw;
-    }
-}
-.bejegyzes_fejlec {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    padding: 10px;
+    min-height: 500px;
     position: relative;
-}
-.leiras {
-    flex-grow: 1;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    padding: 10px 0 0 10px;
-    gap: 10px;
-    font-size: 15px;
-}
-.leiras p {
-    font-weight: normal;
-}
-.card {
-    border-radius: 20px;
-    background: #F5F5F7;
-    padding: 10px;
-    font-size: 10px;
-}
-.card button {
-    border: none;
-    display: flex;
-    background-color: transparent;
-    justify-content: flex-start;
-}
-i {
-    margin-right: 5px;
-}
-.btn {
-    font-size: 25px;
-    font-weight: bolder;
-}
-#bejegyzes_profile {
-    background: url('/assets/images/profileKep.png') no-repeat center/cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 12vw;
-    max-width: 50px;
-    height: 12vw;
-    max-height: 50px;
-    padding: 0.3px;
-    border-radius: 50%;
-    margin: auto;
-}
-.collapse-left {
+    z-index: 1;
+  }
+  
+  /* Posztok mögött elhelyezett árnyék hatás */
+  .feed-container::before {
+    content: "";
     position: absolute;
-    right: 40px;
-    z-index: 10;
-    border-radius: 10px;
-    padding: 5px;
-}
-@media (min-width: 1201px) {
-    .collapse-left {
-        margin-left: 20%;
-        margin-top: 12%;
-    }
-}
-#bejegyzes_kep {
-    background: url('/assets/images/bejegyzeskep.png') no-repeat center/contain;
-    display: flex;
-    align-items: center;
-    width: 20vw;
-    max-width: 250px;
-    height: 20vw;
-    max-height: 250px;
-    border-radius: 5%;
-    padding: 40%;
-    margin: auto;
-}
-@media screen and (max-width: 768px) {
-    .leiras {
-        font-size: 13px;
-    }
-    .card {
-        font-size: 13px;
-    }
-}
-@media (max-width: 600px) {
-    .leiras {
-        font-size: 15px !important;
-    }
-    .card {
-        font-size: 10px !important;
-    }
-}
-@media (max-width: 480px) {
-    .bejegyzes_box {
-        width: 100vw !important;
-    }
-}
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.05); /* Sötétebb árnyalat */
+    z-index: -1; /* Háttérbe helyezés */
+    border-radius: 1rem;
+  }
+  
+  .post-with-image {
+    min-height: 500px;
+    padding: 3rem;
+    border: 2px solid #f1f1f1;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Képhez egy erősebb árnyék */
+  }
+  
+  .post-with-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Kép körüli erősebb árnyék */
+  }
+  
+  .post-title h3 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .post-body p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+  
+  .post-status {
+    font-size: 1rem;
+    color: #999;
+  }
+  
+  .no-image-text {
+    color: #bbb;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+  
+  
+  

@@ -13,6 +13,8 @@ export class NewpostmodalComponent {
   @Output() closePopup = new EventEmitter<void>();
   @Output() postSubmit = new EventEmitter<string>();
 
+  post: any;
+
   postContent: string = '';
   postTitle: string = '';
   postStatus: string = 'published';
