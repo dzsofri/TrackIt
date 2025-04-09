@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NewpostComponent } from '../newpost/newpost.component';
 import { ApiService } from '../../services/api.service';
+import { ProfileBejegyzesComponent } from '../profile-bejegyzes/profile-bejegyzes.component';
+import { NewpostComponent } from '../newpost/newpost.component';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, FormsModule, NewpostComponent],
+  imports: [CommonModule, FormsModule, ProfileBejegyzesComponent, NewpostComponent],
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.scss'
 })

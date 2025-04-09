@@ -24,7 +24,13 @@
       />
       <button class="upload-btn" (click)="fileInput.click()">📷</button>
       <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
+    
+      <!-- Előnézeti kép -->
+      <div *ngIf="imagePreviewUrl" class="image-preview">
+        <img [src]="imagePreviewUrl" alt="Előnézet" />
+      </div>
     </div>
+    
     
 
     <button class="post-button" (click)="submitPost()">Közzététel</button> <!-- Beküldés gomb -->

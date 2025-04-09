@@ -58,7 +58,12 @@ export class NewpostComponent {
   
   // Amikor a modálban a posztot elküldik
   handlePostSubmit(postContent: string) {
-    this.postContent = postContent; // Beállítjuk a tartalmat
-    this.submitPost(); // Átadjuk a tartalmat a submitPost metódusnak
+    // this.postContent = postContent;
+    // this.submitPost(); <-- EZT TÖRÖLD!
+  
+    // Ha kellene bármi másra a postContent, azt még megőrizheted
+    console.log('Poszt létrejött, ID:', postContent);
   }
+  
+  
 }

@@ -4,45 +4,83 @@
   align-items: center;
   width: 100%;
   padding: 2rem;
-  gap: 1.5rem;
+  gap: 0.5rem;
+  background: transparent;
 }
 
+.feed-wrapper {
+  background: #f0f0f0;        /* Világos szürke háttér csak középen */
+  padding: 2rem;
+  max-width: 1000px;          /* Szélesség limit */
+  margin: 0 auto;             /* Középre igazítás */
+  border-radius: 1rem;        /* Opcionális: lekerekítés a doboznak */
+}
+
+
+/* Egy poszt */
 .post {
   background-color: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  max-width: 500px;
+  padding: 2rem;
+  max-width: 100%; /* Posztok mérete */
   width: 100%;
   text-align: center;
+  height: auto;
+  min-height: 500px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Posztok mögött elhelyezett árnyék hatás */
+.feed-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.05); /* Sötétebb árnyalat */
+  z-index: -1; /* Háttérbe helyezés */
+  border-radius: 1rem;
+}
+
+.post-with-image {
+  min-height: 500px;
+  padding: 3rem;
+  border: 2px solid #f1f1f1;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Képhez egy erősebb árnyék */
+}
+
+.post-with-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Kép körüli erősebb árnyék */
 }
 
 .post-title h3 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: #333;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .post-body p {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #666;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .post-status {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #999;
-}
-
-.post img {
-  max-width: 100%;
-  border-radius: 0.75rem;
-  margin-bottom: 1rem;
 }
 
 .no-image-text {
   color: #bbb;
   font-style: italic;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
-  
+
+

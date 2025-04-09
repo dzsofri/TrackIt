@@ -25,23 +25,39 @@ const storage = multer.diskStorage({
 
   router.get("/all", async (req: any, res: any) => {
     try {
-        const postRepository = AppDataSource.getRepository(Posts);
-        const posts = await postRepository.find();
-        const count = posts.length;
+      const postRepository = AppDataSource.getRepository(Posts);
+      const posts = await postRepository.find({
+        relations: ["picture"], // hozzáadjuk a picture relációt
+      });
+  
+      const count = posts.length;
+  
+      if (count === 0) {
+        return res.status(404).json({ message: "Nincsenek posztok az adatbázisban.", count: 0 });
+      }
+  
+      const transformedPosts = posts.map(post => {
+        const imageUrl = post.picture && post.picture.filename
+    ? `http://localhost:3000/uploads/${post.picture.filename}`
+    : null;
 
-        if (count === 0) {
-            return res.status(404).json({ message: "Nincsenek posztok az adatbázisban.", count: 0 });
-        }
-
-        return res.status(200).json({ posts, count });
+  
+        return {
+          ...post,
+          imageUrl,
+        };
+      });
+  
+      return res.status(200).json({ posts: transformedPosts, count });
     } catch (error) {
-        console.error("Hiba történt a posztok lekérdezésekor:", error);
-        return res.status(500).json({ message: "Szerverhiba történt." });
+      console.error("Hiba történt a posztok lekérdezésekor:", error);
+      return res.status(500).json({ message: "Szerverhiba történt." });
     }
-});
+  });
+  
 
 
-  router.post("/", tokencheck, upload.single('picture'), async (req: any, res: any) => {
+  router.post("/", tokencheck, upload.single("picture"), async (req: any, res: any) => {
     try {
         const { title, body, status } = req.body;
         const userId = req.user.id;
@@ -51,7 +67,6 @@ const storage = multer.diskStorage({
             return res.status(401).json({ message: "Felhasználói azonosító nem található a tokenben." });
         }
 
-        const postStatus = status || 'published';
         const postRepository = AppDataSource.getRepository(Posts);
         const pictureRepository = AppDataSource.getRepository(Pictures);
 
@@ -61,7 +76,7 @@ const storage = multer.diskStorage({
             const newPicture = pictureRepository.create({
                 id: uuidv4(),
                 filename: req.file.filename,
-                path: req.file.path
+                path: req.file.path,
             });
             const savedPicture = await pictureRepository.save(newPicture);
             pictureId = savedPicture.id;
@@ -72,58 +87,26 @@ const storage = multer.diskStorage({
             body,
             userId,
             createdAt,
-            status: postStatus,
-            pictureId
+            status: status || 'published',
+            pictureId,
         });
 
         await postRepository.save(newPost);
 
-        return res.status(201).json({ message: "Bejegyzés sikeresen létrehozva!", post: newPost });
+        const imageUrl = req.file ? `http://localhost:3000/uploads/${req.file.filename}` : null;
+
+        return res.status(201).json({
+            message: "Poszt létrehozva!",
+            post: {
+                ...newPost,
+                imageUrl,
+            },
+        });
     } catch (error) {
-        console.error("Hiba a bejegyzés létrehozásakor:", error);
-        return res.status(500).json({ message: "Szerverhiba történt." });
+        console.error("Hiba a poszt létrehozásánál:", error);
+        return res.status(500).json({ message: "Szerverhiba." });
     }
 });
-
-router.post("/with-image", tokencheck, upload.single("image"), async (req: any, res: any) => {
-    try {
-      const { title, body, status } = req.body;
-      const userId = req.user.id;
-      const createdAt = new Date();
-  
-      if (!req.file) {
-        return res.status(400).json({ message: "A kép hiányzik!" });
-      }
-  
-      const pictureRepo = AppDataSource.getRepository(Pictures);
-      const newPicture = pictureRepo.create({
-        id: uuidv4(),
-        filename: req.file.filename,
-        path: req.file.path,
-      });
-  
-      await pictureRepo.save(newPicture);
-  
-      const postRepo = AppDataSource.getRepository(Posts);
-      const newPost = postRepo.create({
-        title,
-        body,
-        userId,
-        createdAt,
-        status: status || 'published',
-        pictureId: newPicture.id
-      });
-  
-      await postRepo.save(newPost);
-  
-      return res.status(201).json({ message: "Poszt létrehozva képpel!", post: newPost });
-    } catch (error) {
-      console.error("Hiba a poszt létrehozásánál:", error);
-      return res.status(500).json({ message: "Szerverhiba." });
-    }
-  });
-  
-
 
 
 

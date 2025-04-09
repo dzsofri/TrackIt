@@ -1,26 +1,45 @@
-<div class="feed-container">
-  <app-newpost></app-newpost>
+<div class="feed-bg">
+  <!-- Középre igazított feed doboz -->
+  <div class="feed-wrapper">
+    <div class="feed-container">
+      
+      <app-newpost></app-newpost>
+      <!-- Profil bejegyzés komponens -->
 
-  <div *ngIf="posts.length === 0" class="no-posts">
-    <p>Nincsenek posztok.</p>
-  </div>
+      <!-- Ha nincs poszt, akkor egy üzenet jelenik meg -->
+      <div *ngIf="posts.length === 0" class="no-posts">
+        <p>Nincsenek posztok.</p>
+      </div>
 
-  <div *ngFor="let post of posts" class="post">
-    <ng-container *ngIf="post.imageUrl && post.imageUrl !== ''">
-      <img [src]="post.imageUrl" alt="Bejegyzés képpel" />
-    </ng-container>
-    <ng-container *ngIf="!post.imageUrl || post.imageUrl === ''">
-      <p class="no-image-text">Ehhez a poszthoz nem tartozik kép.</p>
-    </ng-container>
+      <!-- Minden poszt megjelenítése -->
+      <div *ngFor="let post of posts" class="post" [ngClass]="{'post-with-image': post.imageUrl && post.imageUrl !== ''}">
+        
+        <!-- Felhasználó neve a bal felső sarokban --> 
+        <div class="post-author">
+          <strong>{{ post.user?.name || 'Név nem elérhető' }}</strong>
+        </div>
+        
+        <!-- Ha van kép, megjelenítjük -->
+        <ng-container *ngIf="post.imageUrl && post.imageUrl !== ''">
+          <img [src]="post.imageUrl" alt="Bejegyzés képpel" />
+        </ng-container>
 
-    <div class="post-title">
-      <h3>{{ post.title }}</h3>
-    </div>
-    <div class="post-body">
-      <p>{{ post.body }}</p>
-    </div>
-    <div class="post-status">
-      <span>Status: {{ post.status }}</span>
+        <!-- Ha nincs kép, akkor üzenetet jelenítünk meg -->
+        <ng-container *ngIf="!post.imageUrl || post.imageUrl === ''">
+          <p class="no-image-text">Ehhez a poszthoz nem tartozik kép.</p>
+        </ng-container>
+
+        <!-- Poszt cím és szöveg -->
+        <div class="post-title">
+          <h3>{{ post.title }}</h3>
+        </div>
+        <div class="post-body">
+          <p>{{ post.body }}</p>
+        </div>
+        <div class="post-status">
+          <span>Status: {{ post.status }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>

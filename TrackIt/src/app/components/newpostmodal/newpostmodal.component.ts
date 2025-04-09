@@ -18,6 +18,9 @@ export class NewpostmodalComponent {
   postStatus: string = 'published';
   selectedFile: File | null = null;
   selectedFileName: string | null = null;
+  imagePreviewUrl: string | null = null;
+
+
 
   constructor(private http: HttpClient) {}
 
@@ -29,8 +32,15 @@ export class NewpostmodalComponent {
     this.selectedFile = event.target.files[0];
     if (this.selectedFile) {
       this.selectedFileName = this.selectedFile.name;
+  
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
     }
   }
+  
 
   submitPost() {
     if (this.postContent.trim()) {
