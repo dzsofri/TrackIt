@@ -17,14 +17,14 @@ export class RegistrationComponent {
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
   invalidFields: string[] = [];
-  
+
   user: User = {
     name: '',
     email: '',
     password: '',
     confirm: ''
   };
-  
+
 
   errorMessage: string = '';
 
@@ -33,6 +33,18 @@ export class RegistrationComponent {
     private router: Router,
     private auth: AuthService
   ){}
+
+  // Feltételezve, hogy van egy gomb a státusz frissítésére
+updateUserStatus(newStatus: string): void {
+  this.api.updateStatus(newStatus).subscribe(response => {
+    if (response.message === 'Státusz sikeresen frissítve.') {
+      console.log('Státusz sikeresen frissítve');
+    } else {
+      console.error('Hiba történt a státusz frissítésekor', response.message);
+    }
+  });
+}
+
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -43,7 +55,7 @@ export class RegistrationComponent {
   }
 
   onSubmit() {
- 
+
 
     this.api.registration(this.user).subscribe({
       next: (res: any) => {
@@ -56,6 +68,7 @@ export class RegistrationComponent {
         }
         this.errorMessage = ''; // Töröljük a hibát a sikeres regisztráció után
         this.router.navigateByUrl('/welcome');
+        this.updateUserStatus('online');
       },
       error: (error: any) => {
         console.log('Hiba történt:', error);

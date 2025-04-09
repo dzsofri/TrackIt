@@ -36,6 +36,18 @@ export class LoginComponent {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
+  // Feltételezve, hogy van egy gomb a státusz frissítésére
+updateUserStatus(newStatus: string): void {
+  this.api.updateStatus(newStatus).subscribe(response => {
+    if (response.message === 'Státusz sikeresen frissítve.') {
+      console.log('Státusz sikeresen frissítve');
+    } else {
+      console.error('Hiba történt a státusz frissítésekor', response.message);
+    }
+  });
+}
+
+
   onSubmit() {
     this.invalidFields = []; // Reset the invalid fields
 
@@ -56,6 +68,8 @@ export class LoginComponent {
             this.modalMessage = res.message || 'Sikeres bejelentkezés!';
             this.modalType = 'success';
             this.modalVisible = true;
+
+            this.updateUserStatus('online');
 
             setTimeout(() => {
               this.modalVisible = false;

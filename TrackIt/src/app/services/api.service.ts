@@ -231,5 +231,14 @@ export class ApiService {
     );
   }
 
+  updateStatus(status: string): Observable<any> {
+    const body = { status: status };
+    return this.http.put<any>(`${this.server}/status`, body, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a státusz frissítésekor:', error);
+        return of({ message: 'A státusz frissítése sikertelen' });
+      })
+    );
+  }
 
 }

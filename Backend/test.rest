@@ -5,8 +5,8 @@ POST http://localhost:{{PORT}}/users/login
 Content-Type: application/json
 
 {
-  "email": "somodikonrad@gmail.com",
-  "password": "20060120Koni"
+  "email": "beretizsofia310@gmail.com",
+  "password": "Nyuszika310"
 }
 
 
@@ -77,7 +77,7 @@ Content-Type: application/json
 
 ### lekérdezések listázása (tokennel)
 GET http://localhost:{{PORT}}/feedbacks/questions
-Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBiNDdkNTc4LTNkMWItNGNhZS04ODhkLWMwY2FlODU3OTIwYSIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTg2NDA0NywiZXhwIjoxNzQxOTUwNDQ3fQ.KBi-BNlCBRdHlgYqInVjkkNhwH0zoSm8UY3Oqq-w3r0
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDEwNDE1OSwiZXhwIjoxNzQ0MTkwNTU5fQ.R_GE840B5mXgkRyzMm4WwjIUMjkPuaICp5lm7Hig8Xk
 
 ### lekérdezések listázása (tokennel)
 GET http://localhost:{{PORT}}/feedbacks/data/1
@@ -173,7 +173,7 @@ Content-Type: application/json
 ### Poszt létrehozás
 
 POST http://localhost:3000/posts/create
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFiYzg4ZTA2LTM3ZjgtNDM1MC05N2JmLWI5ZTE0MDE1MDAxZSIsImVtYWlsIjoic29tb2Rpa29ucmFkQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzQzMDA4MjI5LCJleHAiOjE3NDMwOTQ2Mjl9.6kwLv-kYZVlg8ax469g9udrgL6GxmY8dKE69WcTWy4s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDE5MzM5MiwiZXhwIjoxNzQ0Mjc5NzkyfQ.IT7BJGnwim27leIonv4fBsNTbocQLZP3AkgGIN_KuOA
 Content-Type: application/json
 
 {
@@ -187,3 +187,21 @@ Content-Type: application/json
 
 DELETE http://localhost:{{PORT}}/tasks/e1c60327-27aa-43f5-81fe-0b2832f82478
 
+
+
+
+
+
+### üzenetelőzmények lekérése
+GET http://localhost:{{PORT}}/chat/messages/561dd7fc-c1f1-4202-97b6-5af9355e1cca/57cbaf48-b943-4393-a50a-6a2334d485f2
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDE5MzM5MiwiZXhwIjoxNzQ0Mjc5NzkyfQ.IT7BJGnwim27leIonv4fBsNTbocQLZP3AkgGIN_KuOA
+
+###
+PATCH   http://localhost:{{PORT}}/users/status
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDE5MzM5MiwiZXhwIjoxNzQ0Mjc5NzkyfQ.IT7BJGnwim27leIonv4fBsNTbocQLZP3AkgGIN_KuOA
+Content-Type: application/json
+
+
+ {
+  "status": "online"
+}

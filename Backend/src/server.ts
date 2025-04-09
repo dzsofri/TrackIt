@@ -29,29 +29,46 @@ const io = new Server(server, {
   }
 });
 
-// ✅ Setup socket.io events
+// A felhasználó státuszának beállítása: online, offline
+const usersOnline = {}; // Online felhasználók
+
 io.on('connection', (socket) => {
   console.log('🟢 User connected:', socket.id);
 
+  // A felhasználó bejelentkezése és szobához való csatlakozás
   socket.on('joinPrivateRoom', (userId) => {
     socket.join(userId);
+    usersOnline[userId] = socket.id; // Felhasználó online státuszának tárolása
     console.log(`User ${userId} joined the room`);
-  });
-  
 
-  // Üzenet küldése a privát szobába
+    // Frissítjük a felhasználó státuszát: online
+    io.emit('userStatusChanged', { userId, status: 'online' });
+  });
+
+  // Üzenet küldése
   socket.on('privateMessage', (msg) => {
     console.log('Private message received:', msg);
-  
-    // Send message to the receiver's room
+
+    // Üzenet küldése a címzett szobájába
     socket.to(msg.receiverId).emit('messageReceived', msg);
     console.log('Message sent to room:', msg.receiverId, 'by:', msg.senderId);
   });
-  
+
+  // Felhasználó lecsatlakozása
   socket.on('disconnect', () => {
-    console.log('🔴 User disconnected:', socket.id);
+    for (const userId in usersOnline) {
+      if (usersOnline[userId] === socket.id) {
+        // Ha a felhasználó lecsatlakozik, offline státuszt küldünk
+        io.emit('userStatusChanged', { userId, status: 'offline' });
+        console.log(`User ${userId} is now offline`);
+        delete usersOnline[userId]; // Töröljük a felhasználót az online listából
+        break;
+      }
+    }
   });
 });
+
+
 
 // Middlewares
 app.use(cors());

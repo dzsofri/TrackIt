@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../environments/environment';
 import { ChatMessage } from '../interfaces/chatMessage';
-
-
-
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
   private socket: Socket;
+  private userStatusSubject: BehaviorSubject<{ userId: string, status: string }[]> = new BehaviorSubject<{ userId: string, status: string }[]>([]);
+  public userStatus$ = this.userStatusSubject.asObservable();
 
   constructor() {
     this.socket = io(environment.serverUrl);
@@ -22,6 +22,17 @@ export class SocketService {
 
     this.socket.on('disconnect', () => {
       console.log('WebSocket disconnected');
+    });
+
+    // Státusz változások figyelése
+    this.socket.on('userStatusChanged', (data: { userId: string, status: string }) => {
+      console.log('User status changed:', data);
+      this.updateUserStatus(data); // Frissítjük a státuszt
+    });
+
+    // Felhasználó offline státusza (ha már nem csatlakozik)
+    this.socket.on('userOffline', (userId: string) => {
+      this.updateUserStatus({ userId, status: 'offline' });
     });
   }
 
@@ -45,4 +56,27 @@ export class SocketService {
     });
   }
 
+  // Státusz frissítése
+  private updateUserStatus(data: { userId: string, status: string }) {
+    const currentStatus = this.userStatusSubject.value;
+    const userIndex = currentStatus.findIndex(u => u.userId === data.userId);
+
+    if (data.status === 'offline') {
+      // Ha a felhasználó offline, akkor eltávolítjuk a listából
+      if (userIndex > -1) {
+        currentStatus.splice(userIndex, 1); // Töröljük az offline felhasználót
+      }
+    } else {
+      if (userIndex > -1) {
+        // Ha létezik már a felhasználó, frissítjük a státuszt
+        currentStatus[userIndex].status = data.status;
+      } else {
+        // Ha nem létezett még, hozzáadjuk
+        currentStatus.push(data);
+      }
+    }
+
+    // A frissített státuszt kiemeljük a BehaviorSubject-en
+    this.userStatusSubject.next([...currentStatus]);
+  }
 }

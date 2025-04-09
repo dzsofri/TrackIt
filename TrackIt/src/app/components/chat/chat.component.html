@@ -1,73 +1,71 @@
-<div class="chat-container">
-  <!-- Sidebar: Lista a kontaktról -->
+<div class="chat-container" [ngClass]="{ 'dark-mode': isDarkMode }">
+  <!-- Sidebar (kapcsolatok listája) -->
   <div class="sidebar" *ngIf="isSidebarOpen">
-    <!-- Oldalsáv bezárása gomb -->
-    <button class="close-btn" (click)="toggleSidebar()">✖</button>
-
-    <!-- Bejövő üzenetek címe -->
+    <!-- Sidebar bezárása gomb -->
+    <button class="close-btn" (click)="toggleSidebar()">
+      <img [src]="getImageSrc('budos_nagy_x')" alt="close_btn">
+    </button>
     <h2>Bejövő üzenetek</h2>
 
-    <!-- Kontaktlista: A kontaktusok bejárása -->
+    <!-- Kapcsolatok listája -->
     <div class="contact" *ngFor="let contact of contacts" (click)="selectContact(contact)">
+      <!-- Kapcsolat profilképe -->
       <img [src]="'assets/images/profileKep.png'" alt="{{ contact.name }}" (error)="onImageError($event)" />
 
       <div class="info">
+        <!-- Kapcsolat neve -->
         <div class="name">{{ contact.name }}</div>
-
         <div class="last-message">
+          <!-- Kapcsolat utolsó üzenete -->
           {{ contact.message }}
           <span *ngIf="contact.time">· {{ contact.time }}</span>
         </div>
       </div>
 
-      <!-- Olvasatlan üzenet jelzés -->
+      <!-- Nem olvasott üzenet jelzése -->
       <span class="dot" *ngIf="contact.unread"></span>
+
+      <!-- Online/offline státusz színes pont -->
+      <span class="status-dot" [ngClass]="isUserOnline(contact.id) ? 'online' : 'offline'"></span>
     </div>
   </div>
 
-  <!-- Chat ablak: A kiválasztott kontakt beszélgetésének megjelenítése -->
+  <!-- Chat ablak (üzenetváltás) -->
   <div class="chat-window" *ngIf="selectedContact">
     <div class="chat-header">
-      <!-- Kiválasztott kontakt neve és utolsó elérhetőségi információk -->
       <div>
+        <!-- Kiválasztott kapcsolat neve -->
         <h4>{{ selectedContact.name }}</h4>
+        <!-- Kiválasztott kapcsolat utolsó elérhetősége -->
         <small>Utoljára elérhető 30 perce</small>
       </div>
-
-      <!-- Jelenlegi dátum megjelenítése -->
-      <div class="chat-date">{{ currentDate }}</div>
     </div>
 
-    <!-- Üzenetek megjelenítése -->
-    <div *ngFor="let msg of messages" class="message" [ngClass]="msg.sender?.id === currentUserId ?  'my-message' : 'other-message'">
-      <div class="bubble">
-        <!-- A feladó neve csak akkor jelenjen meg, ha az üzenet nem a saját üzenet -->
-        <strong *ngIf="msg.senderId !== currentUserId && msg.sender">{{ msg.sender.name }}</strong>
-
-        <!-- Az üzenet tartalma -->
-        <span>{{ msg.message }}</span>
-
-        <!-- Az üzenet küldési ideje -->
-        <small>{{ msg.createdAt | date:'shortTime' }}</small>
-
-        <!-- A currentUserId és a msg.senderId kiírása -->
-        <div class="id-info">
-          <small>Current User ID: {{ currentUserId }}</small><br />
-          <small>Sender ID: {{ msg.senderId || msg.sender?.id }}</small>
+    <!-- Üzenetek listája -->
+    <div class="messages" #messagesContainer>
+      <div *ngFor="let msg of messages" class="message" [ngClass]="msg.sender?.id === currentUserId ? 'my-message' : 'other-message'">
+        <div class="bubble">
+          <!-- Üzenet feladója (ha nem én vagyok) -->
+          <strong *ngIf="msg.senderId !== currentUserId && msg.sender">{{ msg.sender.name }}</strong><br />
+          <!-- Üzenet szövege -->
+          <span>{{ msg.message }}</span>
+          <small>{{ msg.createdAt | date: 'shortTime' }}</small>
         </div>
       </div>
     </div>
 
-    <!-- Üzenet írása -->
+    <!-- Üzenetírás mező -->
     <div class="input-bar">
-      <!-- Oldalsáv gomb (csak akkor látható, ha az oldalsáv zárva van) -->
-      <button class="open-sidebar-btn" *ngIf="!isSidebarOpen" (click)="toggleSidebar()">☰</button>
+      <!-- Sidebar gomb mobil nézetben -->
+      <button class="open-sidebar-btn" *ngIf="!isSidebarOpen" (click)="toggleSidebar()">
+        <img src="./assets/icons/burger_menu.png" alt="sidebar_open_btn">
+      </button>
 
-      <!-- Üzenet mező -->
+      <!-- Üzenet írása mező -->
       <input [(ngModel)]="message" placeholder="Aa" />
 
-      <!-- Üzenet küldése gomb -->
-      <button (click)="sendMessage()">➤</button>
+      <!-- Üzenet küldés gomb -->
+      <button class="close-btn" (click)="sendMessage()" [disabled]="!message.trim()"><img src="./assets/icons/send.png" alt="send_btn"></button>
     </div>
   </div>
 </div>

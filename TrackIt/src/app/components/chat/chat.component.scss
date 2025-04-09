@@ -1,23 +1,82 @@
+$primary-color: #4CAF50;
+$secondary-color: #f5f5f5;
+$accent-color: #ffffff;
+$hover-color: #f5f4f4;
+$text-color: #000;
+$background-color: #fff;
+$border-color: #ddd;
+$box-shadow: rgba(0, 0, 0, 0.1);
+$font-family: 'Segoe UI', sans-serif;
+
+$dark-bg: #1c1c1c;
+$dark-text: #fff;
+$dark-primary: #2e7d32;
+$dark-accent: #3e3e3e;
+$dark-border: #444;
+$dark-hover: #444;
+
 .chat-container {
   display: flex;
-  height: 100vh;
-  background-color: #f5f5f5;
-  font-family: 'Segoe UI', sans-serif;
+  height: 93vh !important;
+  background-color: $secondary-color;
+  font-family: $font-family;
+  overflow: hidden;
+}
+
+.close-btn {
+  background-color: $accent-color;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .sidebar {
   width: 300px;
-  background: white;
+  background: #c1c1c134;
   padding: 15px;
   overflow-y: auto;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px $box-shadow;
+  height: 100%;
+  animation: fadeIn 0.3s ease forwards;
 }
 
 .sidebar h3 {
   margin-bottom: 20px;
 }
+
+/* Színes státusz pont */
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.online {
+  background-color: green; /* Online állapot: zöld */
+}
+
+.offline {
+  background-color: gray; /* Offline állapot: szürke */
+}
+
+
 
 .contact {
   display: flex;
@@ -26,17 +85,20 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background 0.2s ease-in-out;
-}
+  background-color: $accent-color;
+  margin: 1rem 0;
+  box-shadow: 0 5px 8px $box-shadow;
 
-.contact:hover {
-  background-color: #f0f0f0;
-}
+  &:hover {
+    background-color: $hover-color;
+  }
 
-.contact img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 15px;
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
 }
 
 .contact-info {
@@ -44,12 +106,26 @@
 }
 
 .chat-window {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  height: 100%;
+  background: $background-color;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
+  width: 100%;
+  overflow: hidden;
+  animation: slideIn 0.3s ease forwards;
+  padding-left: 1rem;
+}
+
+.messages {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
 }
 
 .chat-header {
@@ -58,15 +134,7 @@
   text-align: center;
   font-weight: bold;
   font-size: 1.1rem;
-}
-
-.messages {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  animation: bounce 0.5s ease;
 }
 
 .message {
@@ -77,71 +145,85 @@
   display: inline-block;
   word-wrap: break-word;
   font-size: 0.95rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
+  box-shadow: 0 1px 3px $box-shadow;
+  margin-bottom: 1%;
+  animation: messageFadeIn 0.5s ease forwards;
 
-.message.my-message {
-  align-self: flex-end;
-  background-color: #4CAF50;
-  color: white;
-  border-bottom-right-radius: 0;
-}
+  &.my-message {
+    align-self: flex-end;
+    background-color: $primary-color;
+    color: $accent-color;
+    border-bottom-right-radius: 0;
+  }
 
-.message.other-message {
-  align-self: flex-start;
-  background-color: #f0f0f0;
-  color: black;
-  border-bottom-left-radius: 0;
-}
+  &.other-message {
+    align-self: flex-start;
+    background-color: $secondary-color;
+    color: $text-color;
+    border-bottom-left-radius: 0;
+  }
 
-.message small {
-  display: block;
-  text-align: right;
-  font-size: 0.7rem;
-  color: #ccc;
-  margin-top: 5px;
+  small {
+    display: block;
+    text-align: right;
+    font-size: 0.7rem;
+    color: #ccc;
+    margin-top: 5px;
+  }
 }
 
 .input-bar {
-  display: flex;
+  display: flex !important;
   align-items: center;
   padding: 15px 20px;
   border-top: 1px solid #eee;
-  background-color: #fff;
+  background-color: $background-color ;
+  max-height: 70px;
 }
 
 input {
   flex-grow: 1;
   padding: 12px 20px;
   border-radius: 25px;
-  border: 1px solid #ddd;
+  border: 1px solid $border-color;
   font-size: 1rem;
   outline: none;
 }
 
 button {
   margin-left: 10px;
-  background: #007bff;
-  color: white;
+  background: $accent-color;
+  color: $text-color;
   border: none;
-  border-radius: 50%;
   padding: 10px 12px;
   cursor: pointer;
   font-size: 1.2rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.2s ease;
 }
 
 .open-sidebar-btn {
-  background-color: #007bff;
-  color: white;
+  background-color: $accent-color;
+  color: $text-color;
   border: none;
-  padding: 10px;
   border-radius: 5px;
-  font-size: 1.5rem;
   cursor: pointer;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
 
-.open-sidebar-btn:hover {
-  background-color: #0056b3;
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background-color: #0056b3;
+  }
 }
 
 .chat-date {
@@ -157,4 +239,137 @@ button {
   position: absolute;
   top: 10px;
   right: 10px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    position: absolute;
+    top: 0;
+    left: 5;
+    z-index: 999;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.dark-mode {
+  $primary-color: $dark-primary;
+  $secondary-color: $dark-accent;
+  $accent-color: $dark-bg;
+  $text-color: $dark-text;
+  $background-color: $dark-accent;
+  $border-color: $dark-border;
+  $hover-color: $dark-hover;
+
+  .chat-container {
+    background-color: $dark-accent;
+  }
+
+  .sidebar {
+    color: $dark-text;
+    background: $dark-bg;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  strong, span, small, h4{
+    color: $dark-text;
+  }
+
+  .contact {
+    background-color: $dark-accent;
+    &:hover {
+      background-color: $dark-hover;
+    }
+  }
+
+  .chat-window {
+    background: $dark-bg;
+  }
+
+  .message.my-message {
+    background-color: $dark-primary;
+  }
+
+  .message.other-message {
+    background-color: $dark-accent;
+  }
+
+  .input-bar {
+    border-top: 1px solid $dark-border;  // Sötét szegély
+    background-color: $dark-bg;  // Sötét háttér
+  }
+
+  input {
+    background-color: $dark-accent;  // Sötét háttér
+    color: $dark-text;  // Fehér szöveg
+    border: 1px solid $dark-border;  // Sötét szegély
+    border-radius: 25px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    outline: none;
+
+    &::placeholder {
+      color: #888;  // Világosabb szürke placeholder
+    }
+
+    &:focus {
+      border-color: $dark-primary;  // A fókuszált input szegélye zöld lesz
+      background-color: $dark-bg;  // Fókuszálva sötétebb háttér
+    }
+  }
+
+  button {
+    background-color: $dark-accent;
+  }
+
+  button:hover {
+    background-color: $dark-hover;
+  }
 }
