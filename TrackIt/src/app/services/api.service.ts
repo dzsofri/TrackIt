@@ -152,6 +152,21 @@ export class ApiService {
     );
   }
 
+  updateUserData(id: string, userData: any): Observable<any> {
+    return this.http.patch<any>(`${this.server}/users/${id}`, userData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a felhasználó frissítésekor:', error);
+
+        let errorMessage = 'Hiba történt, kérjük próbálja újra.';
+        if (error.status === 403) {
+          errorMessage = 'Nincs jogosultságod módosítani ezt a felhasználót.';
+        }
+
+        return of({ message: errorMessage });
+      })
+    );
+  }
+
   readUserStatistics(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/statistics/${userId}`, this.tokenHeader());
   }

@@ -23,30 +23,6 @@ header {
     border-radius: 50%;
     margin: 0 auto;
 }
-@media (max-width: 600px) {
-    .NO_DATA{
-        height: 100%;
-        padding: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #FFFFFF;
-        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-        border-radius: 25px;
-        text-align: center;
-        width: 300px;
-    }
-}
-.NO_DATA{
-    height: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 25px;
-    text-align: center;
-    width: 300px;
-}
 //Linkek
 .nav-link.active {
     color: #627966;
@@ -79,13 +55,12 @@ html, body {
 h3{
     padding: 20px;
 }
-img, span {
+span {
     margin-right: 20px;
 }
 span {
     margin-left: 20px;
 }
-
 #profile-tab-pane {
     display: flex;
     flex-direction: column;
@@ -95,13 +70,6 @@ span {
     justify-content: space-between;
     width: 100%;
     height: 100%;
-    min-width: 500px;
-}
-@media (min-width: 601px) {
-    #profile-tab-pane {
-        flex-direction: row;
-        padding: 5vh;
-    }
 }
 .profile_box2 {
     display: flex;
@@ -119,17 +87,12 @@ span {
     }
 }
 .profile_box1 {
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    margin: 20px;
-    max-width: 100%;
 }
 @media (min-width: 769px) {
     .profile_box1 {
-        width: 35vw;
         margin-top: 15%;
     }
 }
@@ -193,7 +156,7 @@ input {
 }
 @media screen and (max-width: 768px) {
     .profile_box2 {
-        width: 90vw;
+        width: 80vw;
     }
     .profile_box1 {
         width: 100%;
@@ -218,21 +181,13 @@ input {
     }
 }
 @media (max-width: 600px) {
-    #profile-tab-pane {
-        width: 100%;
-        flex-direction: column;
-        padding: 3vh;
-    }
     .profile_box2 {
-        width: 105%;
-        max-width: 105%;
+        width: 80vw;
         flex-direction: column;
         padding: 10px;
     }
     .profile_box1 {
-        width: 100%;
-        max-width: 100%;
-        margin: 20px;
+        width: 80vw;
     }
     .profile_content1 {
         flex-direction: row;
@@ -247,7 +202,7 @@ input {
         font-weight: bold;
         padding: 10px;
         display: flex;
-        width: 250px;
+        width: 150px;
         justify-content: center;
         align-items: center;
     }
@@ -265,5 +220,81 @@ input {
         padding: 0.3px;
         border-radius: 50%;
         margin: auto;
+    }
+}
+@media (max-width: 480px) {
+    .profile_box2 {
+        width: 70vw;
+        flex-direction: column;
+        padding: 10px;
+    }
+    .profile_box1 {
+        width: 80vw;
+        margin-left: 0 auto !important;
+    }
+    .profile_content1 {
+        flex-direction: row;
+        gap: 20px;
+    }
+    .profilekep_modositas{
+        border-radius: 100px;
+        color: #98B09C;
+        border: 5px solid;
+        margin-right: 70px;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px;
+        display: flex;
+        width: 150px;
+    }
+    #profilekep{
+        background-image: url('/assets/images/profileKep.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        width: 75vw;
+        max-width: 80px;
+        height: 75vw;
+        max-height: 80px;
+        padding: 0.3px;
+        border-radius: 50%;
+        margin-left: 0 auto;
+    }
+}
+@media (max-width: 380px) {
+    .profile_box2 {
+        width: 70vw;
+        flex-direction: column;
+        padding: 10px;
+    }
+    .profile_box1 {
+        width: 20vw;
+    }
+    .profile_content1 {
+        flex-direction: column;
+        margin-left: 0 auto;
+        gap: 20px;
+    }
+    .profilekep_modositas{
+        border-radius: 100px;
+        color: #98B09C;
+        border: 5px solid;
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        width: 210px;
+    }
+    #profilekep{
+        background-image: url('/assets/images/profileKep.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        width: 75vw;
+        max-width: 150px;
+        margin-left: 30px;
+        height: 75vw;
+        max-height: 150px;
+        padding: 0.3px;
+        border-radius: 50%;
     }
 }

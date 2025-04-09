@@ -267,8 +267,41 @@ router.post("/reset-password", async (req: any, res: any) => {
     res.status(200).json({ message: "Jelszó sikeresen frissítve!" });
 });
 
+router.patch('/:id', tokencheck, async (req: any, res: any) => {
+    const { id } = req.params;
+    const { name, email, password } = req.body;
+    const userId = req.user.id;
 
+    if (userId !== id) {
+        return res.status(403).json({ error: 'Nincs jogosultságod módosítani ezt a felhasználót.' });
+    }
 
+    try {
+        const userRepository = AppDataSource.getRepository(Users);
+        const user = await userRepository.findOne({ where: { id } });
 
+        if (!user) {
+            return res.status(404).json({ error: 'Felhasználó nem található.' });
+        }
+
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (password) user.password = await bcrypt.hash(password, 10);
+
+        const updatedUser = await userRepository.save(user);
+
+        res.json({ 
+            message: 'Felhasználó adatai sikeresen frissítve.',
+            updatedUser: {
+                id: updatedUser.id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+            },
+        });
+    } catch (error) {
+        console.error('Hiba a felhasználó adatainak frissítésekor:', error);
+        res.status(500).json({ error: 'Hiba történt, kérjük próbálja újra.' });
+    }
+});
 
 export default router;
