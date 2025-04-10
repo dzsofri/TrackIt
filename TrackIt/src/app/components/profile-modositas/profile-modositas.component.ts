@@ -45,6 +45,8 @@ export class ProfileModositasComponent {
   modalMessage = '';
   invalidFields: string[] = []
 
+  errorMessage: string = '';
+
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
 
@@ -66,47 +68,35 @@ export class ProfileModositasComponent {
         if (this.user.id) {
           this.api.updateUserData(this.user.id, this.user).subscribe({
             next: (res: any) => {
-              if (res.user) {
-                this.user = res.user;
-              }
+              console.log(res.message);
   
-              this.invalidFields = res.invalid || [];
-  
-              if (this.invalidFields.length === 0) {
-                this.modalMessage = res.message || 'Profile updated successfully';
-                this.modalType = 'success';
-                this.modalVisible = true;
-  
-                setTimeout(() => {
-                  this.modalVisible = false;
-                }, 2000);
-              } else {
-                this.modalMessage = `Hibás adatok! Ellenőrizze a következő mezőket: ${this.invalidFields.join(', ')}`;
-                this.modalType = 'error';
-                this.modalVisible = true;
-              }
-            },
-            error: (err) => {
-              if (err.status === 400) {
-                this.invalidFields = err.error?.invalid || [];
-                this.modalMessage = `Hibás adatok! Ellenőrizze a következő mezőket: ${this.invalidFields.join(', ')}`;
-              } else {
-                this.modalMessage = err.error?.message || 'Ismeretlen hiba történt!';
-              }
-  
-              this.modalType = 'error';
+              // Sikeres frissítés
               this.modalVisible = true;
+              this.modalType = 'success';
+              this.modalMessage = 'Felhasználó sikeresen frissítve!';
+              this.invalidFields = [];
+  
+              if (res.token) {
+                this.auth.login(res.token);
+              } else {
+                console.error('HIBA: A token hiányzik a válaszból');
+              }
+  
+              this.errorMessage = '';
+            },
+            error: (error: any) => {
+              console.log('Hiba történt:', error);
+  
+              // Hiba történt
+              this.modalVisible = true;
+              this.modalType = 'error';
+              this.modalMessage = error.error.message || 'Hiba történt a felhasználó frissítése során.';
+              this.invalidFields = error.error.invalid || [];
+  
+              this.errorMessage = error.error.message || 'Hiba történt a regisztráció során.';
             }
           });
-        } else {
-          this.modalMessage = 'User ID is missing!';
-          this.modalType = 'error';
-          this.modalVisible = true;
         }
-      } else {
-        this.modalMessage = 'User ID is missing!';
-        this.modalType = 'error';
-        this.modalVisible = true;
       }
     });
   }
