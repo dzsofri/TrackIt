@@ -8,6 +8,7 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from 'dotenv'; // dotenv importálása
 import { isAdmin } from "../utiles/adminUtils";
+import { Not } from "typeorm";
 const ejs = require("ejs");
 const path = require("path");
 
@@ -268,40 +269,47 @@ router.post("/reset-password", async (req: any, res: any) => {
 });
 
 router.patch('/:id', tokencheck, async (req: any, res: any) => {
-    const { id } = req.params;
+    const userId = req.params.id;
+    const invalidFields: string[] = [];
     const { name, email, password } = req.body;
-    const userId = req.user.id;
 
-    if (userId !== id) {
-        return res.status(403).json({ error: 'Nincs jogosultságod módosítani ezt a felhasználót.' });
+    if (!name) addInvalidField(invalidFields, 'name');
+    if (!email) addInvalidField(invalidFields, 'email');
+    if (!password) addInvalidField(invalidFields, 'password');
+
+    if (invalidFields.length) {
+        return res.status(400).json({ message: "Hiányzó adatok!", invalid: invalidFields });
     }
 
-    try {
-        const userRepository = AppDataSource.getRepository(Users);
-        const user = await userRepository.findOne({ where: { id } });
-
-        if (!user) {
-            return res.status(404).json({ error: 'Felhasználó nem található.' });
-        }
-
-        if (name) user.name = name;
-        if (email) user.email = email;
-        if (password) user.password = await bcrypt.hash(password, 10);
-
-        const updatedUser = await userRepository.save(user);
-
-        res.json({ 
-            message: 'Felhasználó adatai sikeresen frissítve.',
-            updatedUser: {
-                id: updatedUser.id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-            },
+    if (!validatePassword(password)) {
+        addInvalidField(invalidFields, 'password');
+        return res.status(400).json({ 
+            message: "A jelszó nem felel meg az erősségi követelményeknek!",
+            invalid: invalidFields
         });
-    } catch (error) {
-        console.error('Hiba a felhasználó adatainak frissítésekor:', error);
-        res.status(500).json({ error: 'Hiba történt, kérjük próbálja újra.' });
     }
+
+    const existingUser = await AppDataSource.getRepository(Users).findOne({ where: { id: userId } });
+    if (!existingUser) {
+        return res.status(404).json({ message: "Felhasználó nem található!" });
+    }
+
+    const emailConflict = await AppDataSource.getRepository(Users).findOne({ where: { email, id: Not(userId) } });
+    if (emailConflict) {
+        return res.status(400).json({ message: "Ez az e-mail már létezik!", invalid: ['email'] });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    existingUser.name = name;
+    existingUser.email = email;
+    existingUser.password = hashedPassword;
+
+    await AppDataSource.getRepository(Users).save(existingUser);
+
+    res.status(200).json({
+        message: "Felhasználó sikeresen frissítve!",
+        user: { name: existingUser.name, email: existingUser.email },
+    });
 });
 
 export default router;

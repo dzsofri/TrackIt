@@ -14,16 +14,16 @@
                 <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
                     <div class="mb-3">
                         <label for="name" class="form-label">Név módosítása</label>
-                        <input type="text" class="form-control" id="name" placeholder="pl. Somodi Konrád" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="pl. Somodi Konrád" required [(ngModel)]="user.name">
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email módosítása</label>
-                        <input type="email" class="form-control" id="email" placeholder="pl. somodikonrad@turr.hu" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="pl. somodikonrad@turr.hu" required [(ngModel)]="user.email">
                     </div>
                     <div class="mb-3 box">
                         <label for="password" class="form-label">Jelszó</label>
                         <div class="input-group">
-                            <input [type]="isPasswordVisible ? 'text' : 'password'" class="form-control" id="password" name="password" placeholder="Írja be az új jelszavát..." required [(ngModel)]="user.password">
+                            <input [type]="isPasswordVisible ? 'text' : 'password'" class="form-control" id="password" name="password" name="password" placeholder="Írja be az új jelszavát..." required [(ngModel)]="user.password">
                             <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
                                 <ng-container *ngIf="isPasswordVisible; else hiddenEye">
                                     <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
