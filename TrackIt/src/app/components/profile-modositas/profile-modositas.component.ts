@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'; 
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
@@ -24,20 +24,15 @@ export class ProfileModositasComponent {
     private message: MessageService
   ) {}
 
-  activeTab: string = 'statisztika';
-  setActiveTab(tabName: string) {
-    this.activeTab = tabName;
-  }
-
   user: User = {
-      id: '',
-      name: '',
-      email: '',
-      password: '',
-      role: '',
-      pictureId: '',
-      createdAt: '',
-      confirm: ''
+    id: '',
+    name: '',
+    email: '',
+    password: '',
+    role: '',
+    pictureId: '',
+    createdAt: '',
+    confirm: ''
   };
 
   modalVisible = false;
@@ -61,6 +56,24 @@ export class ProfileModositasComponent {
   onSubmit() {
     this.invalidFields = [];
   
+    if (!this.user.name) this.invalidFields.push('name');
+    if (!this.user.email) this.invalidFields.push('email');
+    if (!this.user.password) this.invalidFields.push('password');
+    if (this.user.password !== this.user.confirm) {
+      this.invalidFields.push('confirmPassword');
+      this.modalVisible = true;
+      this.modalType = 'error';
+      this.modalMessage = 'A jelszavak nem egyeznek!';
+      return;
+    }
+  
+    if (this.invalidFields.length > 0) {
+      this.modalVisible = true;
+      this.modalType = 'error';
+      this.modalMessage = 'Hiányzó vagy érvénytelen mezők:';
+      return;
+    }
+  
     this.auth.user$.pipe(take(1)).subscribe(user => {
       if (user) {
         this.user.id = user.id;
@@ -70,11 +83,11 @@ export class ProfileModositasComponent {
             next: (res: any) => {
               console.log(res.message);
   
-              // Sikeres frissítés
               this.modalVisible = true;
               this.modalType = 'success';
               this.modalMessage = 'Felhasználó sikeresen frissítve!';
               this.invalidFields = [];
+              this.autoCloseModal();
   
               if (res.token) {
                 this.auth.login(res.token);
@@ -83,21 +96,36 @@ export class ProfileModositasComponent {
               }
   
               this.errorMessage = '';
+
+              this.user.name = '';
+              this.user.email = '';
+              this.user.password = '';
+              this.user.confirm = '';
             },
             error: (error: any) => {
               console.log('Hiba történt:', error);
   
-              // Hiba történt
               this.modalVisible = true;
               this.modalType = 'error';
-              this.modalMessage = error.error.message || 'Hiba történt a felhasználó frissítése során.';
-              this.invalidFields = error.error.invalid || [];
+              this.modalMessage = error.error.message || 'Hiba történt az adatok frissítése során.';
+              this.invalidFields = error.error.invalid || "";
   
-              this.errorMessage = error.error.message || 'Hiba történt a regisztráció során.';
+              this.errorMessage = error.error.message || 'Hiba történt az adatok frissítése során.';
             }
           });
         }
       }
     });
+  }
+  
+
+  onSaveTime() {
+    console.log('Időpont mentése gomb kattintva');
+  }
+
+  autoCloseModal() {
+    setTimeout(() => {
+      this.modalVisible = false;
+    }, 5000);
   }
 }

@@ -271,7 +271,7 @@ router.post("/reset-password", async (req: any, res: any) => {
 router.patch('/:id', tokencheck, async (req: any, res: any) => {
     const userId = req.params.id;
     const invalidFields: string[] = [];
-    const { name, email, password } = req.body;
+    const { name, email, password, confirm } = req.body;
 
     if (!name) addInvalidField(invalidFields, 'name');
     if (!email) addInvalidField(invalidFields, 'email');
