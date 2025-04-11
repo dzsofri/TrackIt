@@ -1,88 +1,211 @@
 .feed-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 2rem;
-    gap: 0.5rem;
-    background: transparent;
-  }
-  
-  .feed-wrapper {
-    background: #f0f0f0;        /* Világos szürke háttér csak középen */
-    padding: 2rem;
-    max-width: 1000px;          /* Szélesség limit */
-    margin: 0 auto;             /* Középre igazítás */
-    border-radius: 1rem;        /* Opcionális: lekerekítés a doboznak */
-  }
-  
-  
-  /* Egy poszt */
-  .post {
-    background-color: #ffffff;
-    border-radius: 1rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    max-width: 100%; /* Posztok mérete */
-    width: 100%;
-    text-align: center;
-    height: auto;
-    min-height: 500px;
-    position: relative;
-    z-index: 1;
-  }
-  
-  /* Posztok mögött elhelyezett árnyék hatás */
-  .feed-container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.05); /* Sötétebb árnyalat */
-    z-index: -1; /* Háttérbe helyezés */
-    border-radius: 1rem;
-  }
-  
-  .post-with-image {
-    min-height: 500px;
-    padding: 3rem;
-    border: 2px solid #f1f1f1;
-    background-color: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Képhez egy erősebb árnyék */
-  }
-  
-  .post-with-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.75rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Kép körüli erősebb árnyék */
-  }
-  
-  .post-title h3 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 1rem;
-  }
-  
-  .post-body p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 1.5rem;
-  }
-  
-  .post-status {
-    font-size: 1rem;
-    color: #999;
-  }
-  
-  .no-image-text {
-    color: #bbb;
-    font-style: italic;
-    margin-bottom: 1.5rem;
-  }
-  
-  
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 2rem;
+  gap: 0.5rem;
+  background: transparent;
+}
+
+.feed-wrapper {
+  background: #f0f0f0; /* Világos szürke háttér csak középen */
+  padding: 2rem;
+  max-width: 1000px; /* Szélesség limit */
+  margin: 0 auto; /* Középre igazítás */
+  border-radius: 1rem; /* Opcionális: lekerekítés a doboznak */
+}
+
+.post,
+.post-with-image {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 5rem 2rem 2rem 2rem; /* fent: 5rem → több hely az avatar és kép között */
+  max-width: 100%;
+  width: 100%;
+  text-align: center;
+  min-height: 600px; /* Egységes posztmagasság */
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+/* Posztok mögött elhelyezett árnyék hatás */
+.feed-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.05); /* Sötétebb árnyalat */
+  z-index: -1; /* Háttérbe helyezés */
+  border-radius: 1rem;
+}  
+
+.post-image-wrapper {
+  margin-top: 2rem; /* Ez tolja le a képet, az avatar alá */
+}
+
+.post-with-image img {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.post-title h3 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.post-body p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.post-status {
+  font-size: 1rem;
+  color: #999;
+}
+
+.no-image-text {
+  color: #bbb;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.post-author {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+.author-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+/* Menü pozicionálása és stílusa */
+/* Menü pozicionálása és stílusa */
+/* Menü gomb stílusok és pozicionálás */
+.post-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.menu-btn:hover {
+  color: #007BFF; /* Kék szín aktív állapotban */
+}
+
+/* Menü konténer */
+.menu-options {
+  position: absolute;
+  top: 30px; /* Növeljük a távolságot a gomb alatt, hogy ne lógjon rá */
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden; /* Kezdetben el van rejtve */
+  transition: opacity 0.2s, visibility 0s linear 0.2s;
+}
+
+.post-menu:hover .menu-options {
+  opacity: 1;
+  visibility: visible; /* Ha a menüre húzunk, láthatóvá válik */
+  transition: opacity 0.2s;
+}
+
+/* Menü gombok */
+.menu-options button {
+  background: #f1f1f1;
+  border: none;
+  padding: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.menu-options button:last-child {
+  margin-bottom: 0;
+}
+
+/* Hover állapot */
+.menu-options button:hover {
+  background-color: #007BFF;
+  color: #fff; /* Fehér szöveg */
+  transform: scale(1.05);
+}
+
+/* Nyomott állapot */
+.menu-options button:active {
+  transform: scale(1); /* Visszaáll normál méret */
+}
+
+/* Törlés gomb */
+.menu-options button.delete {
+  background-color: #ff4d4d; /* Törléshez piros háttér */
+  color: white;
+}
+
+.menu-options button.delete:hover {
+  background-color: #ff3333; /* Aktív törlés gomb színe */
+}
+
+/* Módosítás gomb */
+.menu-options button.edit {
+  background-color: #ffc107; /* Módosításhoz sárga háttér */
+  color: white;
+}
+
+.menu-options button.edit:hover {
+  background-color: #e0a800; /* Aktív módosítás gomb színe */
+}

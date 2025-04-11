@@ -6,16 +6,16 @@ import { MessageService } from '../../services/message.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-
 @Component({
   selector: 'app-profile-bejegyzes',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './profile-bejegyzes.component.html',
-  styleUrl: './profile-bejegyzes.component.scss'
+  styleUrls: ['./profile-bejegyzes.component.scss']
 })
 export class ProfileBejegyzesComponent {
   posts: any[] = []; // A posztok tárolása
+
   constructor(
     private apiService: ApiService,
     private auth: AuthService,
@@ -28,7 +28,6 @@ export class ProfileBejegyzesComponent {
     this.activeTab = tabName;
   }
 
-
   ngOnInit() {
     this.loadPosts(); // A posztok betöltése
   }
@@ -40,5 +39,18 @@ export class ProfileBejegyzesComponent {
       console.error('Hiba a posztok betöltésekor:', error);
     });
   }
-}
 
+  toggleMenu(post: any) {
+    post.showMenu = !post.showMenu;  // Menü megjelenítése/eltüntetése
+  }
+
+  editPost(post: any) {
+    console.log('Módosítás: ', post);
+    // Módosítás logika ide
+  }
+
+  deletePost(post: any) {
+    console.log('Törlés: ', post);
+    // Törlés logika ide
+  }
+}
