@@ -232,13 +232,37 @@ export class ApiService {
   }
 
   updateStatus(status: string): Observable<any> {
-    const body = { status: status };
-    return this.http.put<any>(`${this.server}/status`, body, this.tokenHeader()).pipe(
+    const url = `${this.server}/users/status`;
+    console.log('Kérés URL:', url); // <- EZT ITT
+
+    const body = { status };
+
+    return this.http.patch<any>(url, body, this.tokenHeader()).pipe(
+      map(response => {
+        console.log('Státusz frissítve:', response);
+        return response;
+      }),
       catchError(error => {
         console.error('Hiba a státusz frissítésekor:', error);
         return of({ message: 'A státusz frissítése sikertelen' });
       })
     );
   }
+  getStatus(): Observable<any> {
+    const url = `${this.server}/users/status`;
+    console.log('Kérés URL:', url); // Ellenőrizd, hogy helyes-e az URL
+
+    return this.http.get<any>(url, this.tokenHeader()).pipe(
+        map(response => {
+            console.log('Felhasználó státusza:', response.status);
+            return response.status;  // Visszaadjuk a státuszt
+        }),
+        catchError(error => {
+            console.error('Hiba a státusz lekérésekor:', error);
+            return of('Hiba történt a státusz lekérésekor');
+        })
+    );
+}
+
 
 }

@@ -306,5 +306,24 @@ router.patch("/status", tokencheck, async (req: any, res: any) => {
 });
 
 
+// Felhasználó státuszának lekérése
+router.get("/status", tokencheck, async (req: any, res: any) => {
+    try {
+        const userRepository = AppDataSource.getRepository(Users);
+        const user = await userRepository.findOne({ where: { id: req.user.id } });
+
+        if (!user) {
+            return res.status(404).json({ message: "Felhasználó nem található." });
+        }
+
+        // Visszaadjuk a felhasználó státuszát
+        res.status(200).json({
+            status: user.status
+        });
+    } catch (error) {
+        console.error("Hiba a státusz lekérésekor:", error);
+        res.status(500).json({ message: "Hiba történt a státusz lekérése közben." });
+    }
+});
 
 export default router;

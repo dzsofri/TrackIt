@@ -68,7 +68,7 @@ updateUserStatus(newStatus: string): void {
         }
         this.errorMessage = ''; // Töröljük a hibát a sikeres regisztráció után
         this.router.navigateByUrl('/welcome');
-        this.updateUserStatus('online');
+        this.updateUserStatus("online");
       },
       error: (error: any) => {
         console.log('Hiba történt:', error);

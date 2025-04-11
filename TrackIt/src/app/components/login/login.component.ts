@@ -69,7 +69,7 @@ updateUserStatus(newStatus: string): void {
             this.modalType = 'success';
             this.modalVisible = true;
 
-            this.updateUserStatus('online');
+            this.updateUserStatus("online");
 
             setTimeout(() => {
               this.modalVisible = false;

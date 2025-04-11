@@ -137,9 +137,10 @@ updateUserStatus(newStatus: string): void {
 }
 
 
-  logout() {
-    this.authService.logout();
-    this.updateUserStatus ('offline');
-    this.router.navigate(['/login']);
-  }
-}
+logout() {
+  this.updateUserStatus("offline");
+  this.authService.logout();
+ // Nézd meg, mi marad a tokenből
+  this.router.navigate(['/login']);
+
+}}
