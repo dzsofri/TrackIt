@@ -11,11 +11,12 @@ import { ProfileBejegyzesComponent } from '../profile-bejegyzes/profile-bejegyze
 import { ProfileJelvenyComponent } from '../profile-jelveny/profile-jelveny.component';
 import { ProfileModositasComponent } from '../profile-modositas/profile-modositas.component';
 import { ProfileStatComponent } from '../profile-stat/profile-stat.component';
+import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProfileBaratComponent, ProfileBejegyzesComponent, ProfileJelvenyComponent, ProfileModositasComponent, ProfileStatComponent],
+  imports: [CommonModule, FormsModule, ProfileBaratComponent, ProfileBejegyzesComponent, ProfileJelvenyComponent, ProfileModositasComponent, ProfileStatComponent, AlertModalComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
@@ -27,6 +28,11 @@ export class ProfileComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private message: MessageService
   ) {}
+
+  modalVisible = true;
+  modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
+  modalMessage = '';
+  invalidFields: string[] = [];
 
   currentUserId: string | null = null;
   userNames: { [key: string]: string } = {};

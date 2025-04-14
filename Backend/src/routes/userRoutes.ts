@@ -108,7 +108,8 @@ router.post("/login", async (req: any, res: any) => {
             id: user.id,
             email: user.email,
             name: user.name,
-            role: user.role
+            role: user.role,
+            reminderAt: user.reminderAt
         }
     });
 });
@@ -311,6 +312,40 @@ router.patch('/:id', tokencheck, async (req: any, res: any) => {
         user: { name: existingUser.name, email: existingUser.email },
     });
 });
+
+
+router.post('/reminder/:id', tokencheck, async (req: any, res: any) => {
+    const { reminderAt } = req.body;
+    const userId = req.params.id;
+    const invalidFields: string[] = [];
+ 
+    if (!reminderAt) invalidFields.push('reminderAt');
+ 
+    if (invalidFields.length > 0) {
+        return res.status(400).json({
+            message: "Hiányzó időpont az emlékeztetőhöz!",
+            invalid: invalidFields
+        });
+    }
+ 
+    try {
+        const userRepo = AppDataSource.getRepository(Users);
+        const user = await userRepo.findOne({ where: { id: userId } });
+ 
+        if (!user) {
+            return res.status(404).json({ message: "Felhasználó nem található." });
+        }
+ 
+        user.reminderAt = new Date(reminderAt);
+        await userRepo.save(user);
+ 
+        res.status(200).json({
+            message: "Emlékeztető sikeresen beállítva!",
+            reminderAt: user.reminderAt
+        });
+    } catch (error) {
+        console.error("Hiba emlékeztető mentésekor:", error);
+        res.status(500).json({ message: "Hiba történt az emlékeztető mentése során." });
 
 
 // Frissíti a felhasználó státuszát (online/offline)
