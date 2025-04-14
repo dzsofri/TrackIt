@@ -14,7 +14,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./profile-bejegyzes.component.scss']
 })
 export class ProfileBejegyzesComponent {
-  posts: any[] = []; // A posztok tárolása
+  posts: any[] = []; // Csak a saját posztok kerülnek ide
+  currentUser: any = null; // Bejelentkezett user
 
   constructor(
     private apiService: ApiService,
@@ -24,33 +25,44 @@ export class ProfileBejegyzesComponent {
   ) {}
 
   activeTab: string = 'statisztika';
+
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
   }
 
   ngOnInit() {
-    this.loadPosts(); // A posztok betöltése
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.currentUser = user;
+        this.loadUserPosts(user._id || user.id); // Meghívjuk a posztokat a user ID alapján
+      }
+    });
   }
 
-  loadPosts() {
-    this.apiService.getPosts().subscribe(response => {
-      this.posts = response.posts || [];
-    }, error => {
-      console.error('Hiba a posztok betöltésekor:', error);
+  loadUserPosts(userId: string) {
+    this.apiService.getPosts().subscribe({
+      next: response => {
+        const allPosts = response.posts || [];
+        // Szűrés: Csak a saját posztokat mutatjuk
+        this.posts = allPosts.filter(post => post.user?._id === userId || post.user?.id === userId);
+      },
+      error: err => {
+        console.error('Hiba a posztok betöltésekor:', err);
+      }
     });
   }
 
   toggleMenu(post: any) {
-    post.showMenu = !post.showMenu;  // Menü megjelenítése/eltüntetése
+    post.showMenu = !post.showMenu;
   }
 
   editPost(post: any) {
     console.log('Módosítás: ', post);
-    // Módosítás logika ide
+    // Módosítás logika
   }
 
   deletePost(post: any) {
     console.log('Törlés: ', post);
-    // Törlés logika ide
+    // Törlés logika
   }
 }

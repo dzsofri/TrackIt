@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-newpostmodal',
@@ -24,7 +25,17 @@ export class NewpostmodalComponent {
 
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
+
+
+  ngOnInit() {
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.post = { user }; // itt már lesz pl. user.name vagy user.email stb.
+      }
+    });
+  }
+
 
   closeModal() {
     this.closePopup.emit();
@@ -42,6 +53,8 @@ export class NewpostmodalComponent {
       reader.readAsDataURL(this.selectedFile);
     }
   }
+  
+
   
 
   submitPost() {

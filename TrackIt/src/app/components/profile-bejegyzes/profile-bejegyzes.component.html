@@ -9,35 +9,39 @@
 
       <!-- Minden poszt megjelenítése -->
       <div *ngFor="let post of posts" class="post" [ngClass]="{'post-with-image': post.imageUrl && post.imageUrl !== ''}">
-        
         <!-- Felhasználó neve a bal felső sarokban -->
-        <div class="post-author">
-          <img [src]="post.user?.avatarUrl" alt="Profilkép" class="avatar" />
-          <span class="author-name">{{ post.user?.name || 'Név nem elérhető' }}</span>
-        </div>
+        <!-- Profilkép -->
+          <div class="post-author">
+            <img 
+              [src]="post.user?.avatarUrl || 'assets/default-avatar.jpg'" 
+              alt="Profilkép" 
+              class="avatar" 
+            />
+            <span class="author-name">{{ post.user?.name || 'Név nem elérhető' }}</span>
+          </div>
 
+      
         <!-- Menü gomb (három pont) a poszt jobb felső sarkában -->
         <div class="post-menu">
           <button class="menu-btn" (click)="toggleMenu(post)">&#8226;&#8226;&#8226;</button>
           <div *ngIf="post.showMenu" class="menu-options">
             <button class="edit" (click)="editPost(post)">Módosítás</button>
             <button class="delete" (click)="deletePost(post)">Törlés</button>
-
           </div>
         </div>
-
+      
         <!-- Ha van kép, megjelenítjük -->
         <ng-container *ngIf="post.imageUrl && post.imageUrl !== ''">
           <div class="post-image-wrapper">
             <img [src]="post.imageUrl" alt="Bejegyzés képpel" />
           </div>
         </ng-container>
-
+      
         <!-- Ha nincs kép, akkor üzenetet jelenítünk meg -->
         <ng-container *ngIf="!post.imageUrl || post.imageUrl === ''">
           <p class="no-image-text">Ehhez a poszthoz nem tartozik kép.</p>
         </ng-container>
-
+      
         <!-- Poszt cím és szöveg -->
         <div class="post-title">
           <h3>{{ post.title }}</h3>
@@ -46,6 +50,7 @@
           <p>{{ post.body }}</p>
         </div>
       </div>
+      
     </div>
   </div>
 </div>
