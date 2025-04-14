@@ -210,25 +210,77 @@ export class ApiService {
             return of(error);
         })
     );
+  }
 
+  createPost(postData: { title: string; body: string; status: string }): Observable<any> {
+    return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a bejegyzés létrehozásakor:', error);
+        return of({ message: 'Bejegyzés létrehozása sikertelen' });
+      })
+    );
+  }
+
+  postCompletedTask(userId: string, taskId: string): Observable<any> {
+    return this.http.post(`${this.server}/user_statistics/completedTask`, { userId, taskId }, this.tokenHeader());
+  }
+
+  postMissedTask(userId: string, taskId: string): Observable<any> {
+    return this.http.post(`${this.server}/user_statistics/missedTask`, { userId, taskId }, this.tokenHeader());
+  }
+
+  sendMessage(senderId: string, receiverId: string, message: string): Observable<any> {
+    return this.http.post<any>(`${this.server}/chat/send`, {
+      senderId,
+      receiverId,
+      message
+    }, this.tokenHeader());
+  }
+
+
+  getMessagesBetweenUsers(user1Id: string, user2Id: string): Observable<any> {
+    return this.http.get<any>(`${this.server}/chat/messages/${user1Id}/${user2Id}`, this.tokenHeader());
+  }
+
+
+  getUserById(userId: string): Observable<User> {
+    return this.http.get<User>(`${this.server}/users/${userId}`, this.tokenHeader()).pipe(
+
+    );
+  }
+
+  updateStatus(status: string): Observable<any> {
+    const url = `${this.server}/users/status`;
+    console.log('Kérés URL:', url); // <- EZT ITT
+
+    const body = { status };
+
+    return this.http.patch<any>(url, body, this.tokenHeader()).pipe(
+      map(response => {
+        console.log('Státusz frissítve:', response);
+        return response;
+      }),
+      catchError(error => {
+        console.error('Hiba a státusz frissítésekor:', error);
+        return of({ message: 'A státusz frissítése sikertelen' });
+      })
+    );
+  }
+  getStatus(): Observable<any> {
+    const url = `${this.server}/users/status`;
+    console.log('Kérés URL:', url); // Ellenőrizd, hogy helyes-e az URL
+
+    return this.http.get<any>(url, this.tokenHeader()).pipe(
+        map(response => {
+            console.log('Felhasználó státusza:', response.status);
+            return response.status;  // Visszaadjuk a státuszt
+        }),
+        catchError(error => {
+            console.error('Hiba a státusz lekérésekor:', error);
+            return of('Hiba történt a státusz lekérésekor');
+        })
+    );
 }
 
-createPost(postData: { title: string; body: string; status: string }): Observable<any> {
-  return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
-    catchError(error => {
-      console.error('Hiba a bejegyzés létrehozásakor:', error);
-      return of({ message: 'Bejegyzés létrehozása sikertelen' });
-    })
-  );
-}
-
-
-postCompletedTask(userId: string, taskId: string): Observable<any> {
-  return this.http.post(`${this.server}/user_statistics/completedTask`, { userId, taskId }, this.tokenHeader());
-}
-
-postMissedTask(userId: string, taskId: string): Observable<any> {
-  return this.http.post(`${this.server}/user_statistics/missedTask`, { userId, taskId }, this.tokenHeader());
-}
 
 }
