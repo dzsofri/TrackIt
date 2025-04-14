@@ -161,6 +161,15 @@ export class ApiService {
     );
   }
 
+  setReminder(id: string, data: { reminderAt: any }): Observable<any> {
+    return this.http.post<any>(`${this.server}/users/reminder/${id}`, data, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Emlékeztető beállítása sikertelen:', error);
+        return of({ message: 'Emlékeztető beállítása sikertelen' });
+      })
+    );
+  }
+
   readUserStatistics(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/statistics/${userId}`, this.tokenHeader());
   }

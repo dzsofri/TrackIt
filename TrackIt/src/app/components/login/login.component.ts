@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -21,15 +22,17 @@ export class LoginComponent {
   user: User = { email: '', password: '' };
 
   // Modal változók
-  modalVisible = false;
+  modalVisible = true;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
   invalidFields: string[] = [];
+  reminderAt: string | null = null;
 
   constructor(
     private api: ApiService,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   togglePasswordVisibility() {
@@ -52,6 +55,9 @@ export class LoginComponent {
             // Ha van érvényes token
             this.auth.login(res.token);
 
+            // Tároljuk a reminderAt mezőt
+            this.reminderAt = res.user.reminderAt;
+
             // Modal beállítása sikeres bejelentkezéshez
             this.modalMessage = res.message || 'Sikeres bejelentkezés!';
             this.modalType = 'success';
@@ -59,14 +65,15 @@ export class LoginComponent {
 
             setTimeout(() => {
               this.modalVisible = false;
-              this.router.navigateByUrl('/profile'); // Redirect to profile page
+              this.router.navigateByUrl('/profile').then(() => {
+                this.checkReminder(); // Ellenőrizzük a reminderAt mezőt a navigáció után
+              });
             }, 2000);
           } else {
             // Ha nem érkezik token a válaszban
             this.modalMessage = res.message || 'Hiba történt a bejelentkezés során!';
             this.modalType = 'error';
             this.modalVisible = true;
-            this.invalidFields = this.invalidFields;
           }
         } else {
           // Ha vannak hibás mezők
@@ -76,7 +83,6 @@ export class LoginComponent {
           this.modalMessage = 'Hibás bejelentkezési adatok! Kérjük ellenőrizze a következő mezőket: ';
           this.modalType = 'error'; // Hibás bejelentkezési adatok esetén error
           this.modalVisible = true;
-          this.invalidFields = this.invalidFields;
         }
       },
       error: (err) => {
@@ -84,12 +90,24 @@ export class LoginComponent {
         this.modalMessage = err.error?.message || 'Ismeretlen hiba történt!';
         this.modalType = 'error';
         this.modalVisible = true;
-        this.invalidFields = this.invalidFields;
       }
     });
   }
 
+  checkReminder() {
+    if (this.reminderAt) {
+      const reminderDate = new Date(this.reminderAt).toDateString();
+      const currentDate = new Date().toDateString();
+  
+      if (reminderDate === currentDate) {
+        this.modalMessage = 'Csináld meg a maradék kihívásokat!';
+        this.modalType = 'info';
+        this.modalVisible = true;
+      }
+    }
+  }
+
   isInvalid(field: string) {
-    return this.invalidFields.includes(field); // Visszaadja, hogy a mező hibás-e
+    return this.invalidFields.includes(field);
   }
 }
