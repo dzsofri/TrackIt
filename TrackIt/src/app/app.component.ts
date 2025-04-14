@@ -10,7 +10,7 @@ import { NewpostComponent } from './components/newpost/newpost.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, SidebarComponent, RouterModule],
+  imports: [CommonModule, HttpClientModule, SidebarComponent, RouterModule, ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

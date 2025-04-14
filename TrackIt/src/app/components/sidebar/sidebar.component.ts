@@ -4,6 +4,7 @@ import { routes } from '../../app.routes';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
+import { ApiService } from '../../services/api.service';
 
 interface MenuItem {
   label: string;
@@ -32,7 +33,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private api: ApiService,
   ) {}
 
   ngOnInit() {
@@ -123,8 +125,22 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
+  // Feltételezve, hogy van egy gomb a státusz frissítésére
+updateUserStatus(newStatus: string): void {
+  this.api.updateStatus(newStatus).subscribe(response => {
+    if (response.message === 'Státusz sikeresen frissítve.') {
+      console.log('Státusz sikeresen frissítve');
+    } else {
+      console.error('Hiba történt a státusz frissítésekor', response.message);
+    }
+  });
 }
+
+
+logout() {
+  this.updateUserStatus("offline");
+  this.authService.logout();
+ // Nézd meg, mi marad a tokenből
+  this.router.navigate(['/login']);
+
+}}
