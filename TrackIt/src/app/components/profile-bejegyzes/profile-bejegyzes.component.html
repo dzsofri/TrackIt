@@ -12,11 +12,13 @@
         <!-- Felhasználó neve a bal felső sarokban -->
         <!-- Profilkép -->
           <div class="post-author">
-            <img 
-              [src]="post.user?.avatarUrl || 'assets/default-avatar.jpg'" 
-              alt="Profilkép" 
-              class="avatar" 
-            />
+                  <img 
+                  [src]="post.user?.avatarUrl && post.user.avatarUrl.trim() !== '' ? post.user.avatarUrl : 'assets/default-avatar.jpg'"
+
+        alt="Profilkép" 
+        class="avatar"
+      />
+
             <span class="author-name">{{ post.user?.name || 'Név nem elérhető' }}</span>
           </div>
 

@@ -19,18 +19,11 @@ export class ProfileBejegyzesComponent {
 
   constructor(
     private apiService: ApiService,
-    private auth: AuthService,
-    private activatedRoute: ActivatedRoute,
-    private message: MessageService
+    private auth: AuthService
   ) {}
 
-  activeTab: string = 'statisztika';
-
-  setActiveTab(tabName: string) {
-    this.activeTab = tabName;
-  }
-
   ngOnInit() {
+    // Bejelentkezett felhasználó adatainak betöltése
     this.auth.user$.subscribe(user => {
       if (user) {
         this.currentUser = user;
@@ -53,16 +46,22 @@ export class ProfileBejegyzesComponent {
   }
 
   toggleMenu(post: any) {
-    post.showMenu = !post.showMenu;
+    post.showMenu = !post.showMenu;  // Menü megjelenítése/elrejtése
   }
 
   editPost(post: any) {
     console.log('Módosítás: ', post);
-    // Módosítás logika
+    // Itt implementálhatod a poszt módosítási logikát (pl. modális ablak megnyitása)
+    // Hívj egy modális komponenst vagy navigálj egy szerkesztő oldalra
   }
 
   deletePost(post: any) {
-    console.log('Törlés: ', post);
-    // Törlés logika
+    if (confirm('Biztosan törölni szeretnéd ezt a posztot?')) {
+      this.apiService.deletePost(post.id).subscribe(response => {
+        this.loadUserPosts(this.currentUser._id || this.currentUser.id);  // Frissítjük a posztok listáját a törlés után
+      }, error => {
+        console.error('Hiba a poszt törlésekor:', error);
+      });
+    }
   }
 }

@@ -14,24 +14,21 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./newpost.component.scss']
 })
 export class NewpostComponent {
-  postTitle: string = ''; // A poszt címe
-  postContent: string = ''; // A poszt tartalma
-  isPopupOpen: boolean = false; // Popup állapot (nyitva vagy zárva)
-  postStatus: string = 'published'; // Alapértelmezett státusz
+  postTitle: string = '';
+  postContent: string = '';
+  isPopupOpen: boolean = false;
+  postStatus: string = 'published';
 
   constructor(private apiService: ApiService) {}
 
-  // Popup műveletek
   openPopup() {
     this.isPopupOpen = true;
   }
 
-  // Popup bezárása
   closePopup() {
     this.isPopupOpen = false;
   }
 
-  // A poszt tartalmának elmentése
   submitPost() {
     if (this.postContent.trim()) {
       if (!this.postTitle.trim()) {
@@ -56,12 +53,8 @@ export class NewpostComponent {
     }
   }
   
-  // Amikor a modálban a posztot elküldik
   handlePostSubmit(postContent: string) {
-    // this.postContent = postContent;
-    // this.submitPost(); <-- EZT TÖRÖLD!
-  
-    // Ha kellene bármi másra a postContent, azt még megőrizheted
+
     console.log('Poszt létrejött, ID:', postContent);
   }
   

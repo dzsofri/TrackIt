@@ -184,6 +184,8 @@ export class ApiService {
     return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
   }
 
+
+
   updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
     const body = { status: newStatus };
     return this.http.patch<any>(`${this.server}/tasks/${taskId}/status`, body, this.tokenHeader()).pipe(
@@ -205,7 +207,25 @@ export class ApiService {
   );
 }
 
+// Poszt módosítása
+updatePost(postId: string, postData: { title: string; body: string; status: string }): Observable<any> {
+  return this.http.put<any>(`${this.server}/posts/${postId}`, postData, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a bejegyzés frissítésekor:', error);
+      return of({ message: 'Bejegyzés frissítése sikertelen' });
+    })
+  );
+}
 
 
+// Poszt törlése
+deletePost(postId: string): Observable<any> {
+  return this.http.delete(`${this.server}/posts/${postId}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a poszt törlésekor:', error);
+      return of({ message: 'Poszt törlése sikertelen' });
+    })
+  );
+}
 
 }

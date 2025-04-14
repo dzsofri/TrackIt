@@ -5,19 +5,16 @@
       <h3 class="post-title">Új poszt</h3> <!-- Cím -->
     </div>
 
-    <!-- Felhasználó információk megjelenítése -->
-    <div class="user-info" *ngIf="post?.user">
-      <!-- Avatar kép -->
-      <img [src]="post.user.imageUrl || 'assets/avatar.png'" alt="Avatar" class="avatar" />
-      <div>
-        <!-- Felhasználó neve -->
-        <strong>{{ post.user.name || 'Név nem elérhető' }}</strong>
-      </div>
+    <!-- Cím mező -->
+    <div class="input-section">
+      <label for="title">Cím:</label>
+      <input [(ngModel)]="postTitle" id="title" placeholder="Cím" class="post-input" />
     </div>
 
-    <!-- Bejegyzés szöveg -->
-    <div>
-      <input [(ngModel)]="postContent" placeholder="Mi jár a fejedben..." class="post-input" />
+    <!-- Leírás mező -->
+    <div class="input-section">
+      <label for="body">Leírás:</label>
+      <textarea [(ngModel)]="postContent" id="body" placeholder="Mi jár a fejedben..." class="post-input"></textarea>
     </div>
 
     <!-- Kép feltöltése -->
