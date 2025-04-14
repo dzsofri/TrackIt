@@ -140,7 +140,7 @@ router.get('/users/:id', tokencheck, async (req: any, res: any) => {
 // Felhasználó adatainak módosítása
 router.put('/:id', tokencheck, isAdmin, async (req: any, res: any) => {
     const { id } = req.params;
-    const { role } = req.body;  // Csak role változása
+    const { role } = req.body; 
     const invalidFields: string[] = [];
 
     try {
@@ -153,12 +153,12 @@ router.put('/:id', tokencheck, isAdmin, async (req: any, res: any) => {
 
         if (role) user.role = role;
 
-        const updatedUser = await userRepository.save(user);  // A frissített felhasználó mentése
-        console.log("Frissített felhasználó:", updatedUser);  // Debug üzenet
+        const updatedUser = await userRepository.save(user); 
+        console.log("Frissített felhasználó:", updatedUser);  
 
         res.json({ message: 'Felhasználó sikeresen frissítve.', updatedUser });
     } catch (error) {
-        console.error("Hiba a felhasználó frissítésekor:", error);  // Hibakezelés
+        console.error("Hiba a felhasználó frissítésekor:", error); 
         res.status(500).json({ error: 'Hiba történt a felhasználó adatainak frissítése közben.' });
     }
 });
@@ -310,6 +310,44 @@ router.patch('/:id', tokencheck, async (req: any, res: any) => {
         message: "Felhasználó sikeresen frissítve!",
         user: { name: existingUser.name, email: existingUser.email },
     });
+});
+
+
+// Frissíti a felhasználó státuszát (online/offline)
+router.patch("/status", tokencheck, async (req: any, res: any) => {
+    const { status } = req.body;
+
+    // Ellenőrzés, hogy a státusz online vagy offline
+    if (!status || (status !== "online" && status !== "offline")) {
+       
+        return res.status(400).json({ message: "Érvénytelen státusz! Csak 'online' vagy 'offline' értékek megengedettek." });
+    }
+
+    try {
+        const userRepository = AppDataSource.getRepository(Users);
+        const user = await userRepository.findOne({ where: { id: req.user.id } });
+
+        if (!user) {
+            return res.status(404).json({ message: "Felhasználó nem található." });
+        }
+
+        // Státusz frissítése
+        user.status = status;
+        await userRepository.save(user);
+
+        res.status(200).json({
+            message: "Státusz sikeresen frissítve.",
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                status: user.status
+            }
+        });
+    } catch (error) {
+        console.error("Hiba a státusz frissítésekor:", error);
+        res.status(500).json({ message: "Hiba történt a státusz frissítése közben." });
+    }
 });
 
 export default router;

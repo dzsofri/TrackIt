@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
+import { Base64 } from 'js-base64';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class AuthService {
   isLoggedIn$: Observable<boolean> = this.isLoggedIn.asObservable();
   private userSubject = new BehaviorSubject<any>(this.loggedUser());
   user$: Observable<any> = this.userSubject.asObservable();
-  
+
   // Az admin státusz figyelése observable-ként
   private isAdminSubject = new BehaviorSubject<boolean>(this.isAdmin());
   isAdmin$: Observable<boolean> = this.isAdminSubject.asObservable();
@@ -35,13 +36,14 @@ export class AuthService {
     this.userSubject.next(null);
     this.isAdminSubject.next(false); // Admin státusz frissítése
   }
-
   loggedUser() {
     const token = localStorage.getItem(this.tokenName);
     if (token) {
       try {
         console.log('Token found:', token);
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        const payload = JSON.parse(Base64.decode(token.split('.')[1])); // Token dekódolása
+
+        // Az ékezetekkel kapcsolatos problémák elkerülése érdekében megpróbálhatod az UTF-8 kódolást használni.
         return payload;
       } catch (error) {
         console.error("Hibás token formátum!", error);
@@ -51,6 +53,8 @@ export class AuthService {
     console.log('No token found');
     return null;
   }
+
+
 
   isLoggedUser(): boolean {
     return this.hasToken();
