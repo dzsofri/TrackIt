@@ -11,6 +11,7 @@ import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
 import { ChatComponent } from './components/chat/chat.component';
+import { HaviPlannerComponent } from './components/havi-planner/havi-planner.component';
 
 export const routes: Routes = [
   {
@@ -58,6 +59,12 @@ export const routes: Routes = [
     component: ChatComponent,
     canActivate: [AuthGuard],
     data: { label: 'Üzenetek', icon: '/assets/icons/messages_logo.png' }
+  },
+  {
+    path: 'haviplanner',
+    component: HaviPlannerComponent,
+    canActivate: [AuthGuard],
+    data: { label: 'Havi planner', icon: '/assets/icons/planner_logo.png' }
   },
 
 

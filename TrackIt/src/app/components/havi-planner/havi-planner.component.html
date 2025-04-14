@@ -1,0 +1,51 @@
+<div class="calendar-container">
+  <!-- Bal oldali panel -->
+  <div class="sidebar">
+    <label for="eventName">Esemény:</label>
+    <input id="eventName" type="text" [(ngModel)]="newEvent.name" placeholder="esemény neve" />
+
+    <div class="date-fields">
+      <div class="small">
+        <label for="startDate">Kezdés:</label>
+        <input id="startDate" type="date" [(ngModel)]="newEvent.startDate" />
+      </div>
+
+      <div class="small">
+        <label for="endDate">Befejezés:</label>
+        <input id="endDate" type="date" [(ngModel)]="newEvent.endDate" />
+      </div>
+    </div>
+
+    <button class="get-started-button" (click)="addEvent()">Hozzáadás</button>
+  </div>
+
+  <!-- Naptár -->
+  <div class="calendar">
+    <div class="header">
+      <button (click)="prevMonth()">&#8592;</button>
+      <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
+      <button (click)="nextMonth()">&#8594;</button>
+    </div>
+
+    <div class="weekdays">
+      <div *ngFor="let day of weekdays">{{ day }}</div>
+    </div>
+
+    <div class="days">
+      <div *ngFor="let day of calendarDays" class="day" [class.inactive]="day.inactive">
+        <div class="date">{{ day.date }}</div>
+        <div class="dots">
+          <span *ngFor="let dot of day.dots" class="dot" [style.backgroundColor]="dot.color"></span>
+        </div>
+        <div *ngIf="day.label" class="label">{{ day.label }}</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item" *ngFor="let legend of legends">
+        <span class="dot" [style.backgroundColor]="legend.color"></span>
+        {{ legend.label }}
+      </div>
+    </div>
+  </div>
+</div>
