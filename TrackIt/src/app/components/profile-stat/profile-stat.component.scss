@@ -91,11 +91,12 @@ img, span {
     width: 100%;
     padding: 5px;
 }
-.teljesitmeny_content3{
-    flex-direction: row;
+.teljesitmeny_content3 {
+    flex-direction: column;
     align-items: center;
     border-radius: 20px;
     padding: 5px;
+    gap: 10px;
 }
 .arany{
     display: flex;
@@ -169,6 +170,12 @@ img, span {
     flex: 1 1 25%;
     max-width: 25%;
 }
+.teljesitmeny_content3 .teljesitmeny_text{
+    flex-direction: column;
+    height: 100px;
+    align-items: center;
+    text-align: center;
+}
 @media (max-width: 600px) {
     #statisztika-tab-pane h3{
         text-align: start;
@@ -181,8 +188,11 @@ img, span {
         flex-direction: row;
     }
     .teljesitmeny_content3 {
-        flex-direction: row;
-        gap: 30px;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 20px;
+        padding: 5px;
+        gap: 10px;
     }
     .teljesitmeny_content3 .teljesitmeny_text{
         flex-direction: column;
@@ -218,8 +228,10 @@ img, span {
     }
     .teljesitmeny_content3 {
         flex-direction: column;
-        gap: 10px;
         align-items: center;
+        border-radius: 20px;
+        padding: 5px;
+        gap: 10px;
     }
     .teljesitmeny_box1, .teljesitmeny_box2, .teljesitmeny_box3 {
         width: 65%;
@@ -257,6 +269,12 @@ img, span {
     .teljesitmeny_item {
         flex: 1 1 25%;
         max-width: 25%;
+    }
+    .teljesitmeny_content3 .teljesitmeny_text{
+        flex-direction: column;
+        height: 150px;
+        align-items: center;
+        text-align: center;
     }
 }
 @media (max-width: 1024px) {

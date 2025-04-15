@@ -2,7 +2,6 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { MessageService } from '../../services/message.service';
 import { User_Challenge } from '../../interfaces/user_challenges';
 import { CommonModule } from '@angular/common';
 import * as bootstrap from 'bootstrap';
@@ -29,7 +28,7 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
     userRank: string = 'Újonc';
     nextRankPoints: number = 1000;
     highersRank: string = '';
-    highestWeeklyPerformance: number = 0; // Új változó a legmagasabb heti teljesítmény tárolására
+    highestWeeklyPerformance: number = 0;
 
     setActiveTab(tabName: string) {
       this.activeTab = tabName;
@@ -50,7 +49,7 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
               }
               this.user_challenges = res;
               this.calculatePointsAndRank();
-              this.highestWeeklyPerformance = this.calculateWeeklyProgress(this.user_challenges); // Legmagasabb heti teljesítmény kiszámítása
+              this.highestWeeklyPerformance = this.calculateWeeklyProgress(this.user_challenges);
             },
             error: (err) => {
               console.error('Error fetching user challenges:', err);
