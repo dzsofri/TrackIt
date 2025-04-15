@@ -22,6 +22,38 @@
   }
 }
 
+.dots {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.events {
+  display: flex;
+  flex-direction: column; /* Események sorban jelennek meg */
+  gap: 4px;
+}
+
+.event-bar {
+  color: white;
+  font-size: 15px;
+  padding: 0 1rem !important; /* Adjust padding for better alignment */
+  border-radius: 0px;
+  margin: 4px 0; /* Margin adjusted to prevent overflow */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%; /* Ensure the event bar takes up the full width of the day */
+  display: flex;
+  justify-content: center; /* Center the text inside the bar */
+}
+
 
 .sidebar {
   width: 30%;
@@ -32,16 +64,25 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-height: 80vh !important;
+
 
   @media (max-width: 768px) {
     width: 100%;
     padding: 1rem;
   }
-
-  input[type="text"],
-  input[type="date"] {
+  #eventColor{
+    width: 13rem!important;
+    box-shadow: 2px 2px 5px #999999;
     padding: 0.7rem;
-    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #eeeeee;
+
+  }
+
+  input[type="text"], input[type="datetime-local"], textarea{
+    padding: 0.7rem;
+    border: 1px solid #cccccc00;
     border-radius: 6px;
     font-size: 1rem;
     box-shadow: 2px 2px 5px #999999;

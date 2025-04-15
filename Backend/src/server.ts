@@ -15,6 +15,7 @@ import taskRoutes from "./routes/taskRoutes";
 import postRoutes from "./routes/postRoutes";
 import challengeRoutes from "./routes/challengeRoutes";
 import chatRoutes from "./routes/chatRoutes"; // import chatRoutes
+import eventRoutes from "./routes/eventRoutes";
 
 dotenv.config();
 
@@ -82,7 +83,8 @@ app.use("/friends", friendRoutes);
 app.use("/user_statistics", userStatisticsRoutes);
 app.use("/posts", postRoutes);
 app.use("/challenges", challengeRoutes);
-app.use("/chat", chatRoutes); // hozzáadjuk a chat routes-ot
+app.use("/chat", chatRoutes);
+app.use("/events", eventRoutes);
 
 // Start everything
 const PORT = process.env.PORT || 3000;

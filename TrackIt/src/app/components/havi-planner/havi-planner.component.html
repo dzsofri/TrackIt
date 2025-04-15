@@ -4,27 +4,45 @@
     <label for="eventName">Esemény:</label>
     <input id="eventName" type="text" [(ngModel)]="newEvent.name" placeholder="esemény neve" />
 
+    <label for="eventDescription">Leírás:</label>
+    <textarea id="eventDescription" [(ngModel)]="newEvent.description" placeholder="esemény leírása"></textarea>
+
     <div class="date-fields">
       <div class="small">
-        <label for="startDate">Kezdés:</label>
-        <input id="startDate" type="date" [(ngModel)]="newEvent.startDate" />
+        <label for="startDateTime">Kezdés:</label>
+        <input
+          id="startDateTime"
+          type="datetime-local"
+          [(ngModel)]="newEvent.startDateTime"
+          class="form-control"
+        />
       </div>
 
       <div class="small">
-        <label for="endDate">Befejezés:</label>
-        <input id="endDate" type="date" [(ngModel)]="newEvent.endDate" />
+        <label for="endDateTime">Befejezés:</label>
+        <input
+          id="endDateTime"
+          type="datetime-local"
+          [(ngModel)]="newEvent.endDateTime"
+          class="form-control"
+        />
       </div>
     </div>
+
+    <label for="eventColor">Szín:</label>
+    <p-colorpicker id="eventColor"  [(ngModel)]="newEvent.color" inputId="cp-hex" />
 
     <button class="get-started-button" (click)="addEvent()">Hozzáadás</button>
   </div>
 
+
+
   <!-- Naptár -->
   <div class="calendar">
     <div class="header">
-      <button (click)="prevMonth()">   <img src="./assets/icons/left_arrow.png" alt="előző"></button>
+      <button (click)="prevMonth()"><img src="./assets/icons/left_arrow.png" alt="előző"></button>
       <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
-      <button (click)="nextMonth()"><img src="./assets/icons/right_arrow.png" alt="előző"></button>
+      <button (click)="nextMonth()"><img src="./assets/icons/right_arrow.png" alt="következő"></button>
     </div>
 
     <div class="weekdays">
@@ -32,14 +50,21 @@
     </div>
 
     <div class="days">
-      <div *ngFor="let day of calendarDays" class="day" [class.inactive]="day.inactive">
+      <div *ngFor="let day of calendarDays"
+      class="day"
+      [class.inactive]="day.inactive"
+      (click)="showDayDetails(day)">
+
         <div class="date">{{ day.date }}</div>
-        <div class="dots">
-          <span *ngFor="let dot of day.dots" class="dot" [style.backgroundColor]="dot.color"></span>
+        <div class="events">
+          <div *ngFor="let dot of day.dots" class="event-bar" [style.backgroundColor]="dot.color">
+            {{ dot.title }}
+          </div>
         </div>
         <div *ngIf="day.label" class="label">{{ day.label }}</div>
       </div>
     </div>
+
 
     <div class="legend">
       <div class="legend-item" *ngFor="let legend of legends">
@@ -48,4 +73,34 @@
       </div>
     </div>
   </div>
+
+  <app-alert-modal
+  *ngIf="detailsModalVisible"
+  [visible]="true"
+  [type]="'info'"
+  [message]="'Események ezen a napon: ' + selectedDayDate"
+  [invalidFields]="[]"
+  (close)="detailsModalVisible = false">
+  <ng-container *ngIf="selectedDayEvents.length > 0; else noEvents">
+    <ul>
+      <li *ngFor="let event of selectedDayEvents">
+        <span [style.color]="event.color">■</span> {{ event.title }}
+      </li>
+    </ul>
+  </ng-container>
+  <ng-template #noEvents>
+    <p>Nincs esemény erre a napra.</p>
+  </ng-template>
+</app-alert-modal>
+
 </div>
+
+
+
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
+  [invalidFields]="invalidFields"
+  [message]="modalMessage"
+  (close)="modalVisible = false">
+</app-alert-modal>
