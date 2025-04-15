@@ -1,4 +1,5 @@
-<div class="welcome-wrapper">
+<div class="welcome-wrapper" [class.kanban-active]="isKanbanVisible">
+
   <div class="content">
     <!-- Bevezető szöveg -->
     <div class="text" *ngIf="textVisible" [@fadeOut]="textState">
@@ -9,22 +10,39 @@
         pillanattól hatékonyan használhasd. – <strong>indulhatunk?</strong>
       </p>
     </div>
-
+    
     <!-- Lépések -->
     <div class="steps-container" [class.minimized]="isMinimized" [@moveRight]="stepState">
       <div class="steps">
-        <div class="step" [ngClass]="getStepClass(1)">
-          <span class="step-number">1</span> Üdvözlünk!
-        </div>
-        <div class="step" [ngClass]="getStepClass(2)">
-          <span class="step-number">2</span> ToDo lista és Kanban tábla létrehozása
-        </div>
-        <div class="step" [ngClass]="getStepClass(3)">
-          <span class="step-number">3</span> TrackIt funkciók felfedezése
+        <div *ngFor="let step of steps" class="step" [ngClass]="getStepClass(step)">
+          <span class="step-number">{{ step.id }}</span> {{ step.text }}
         </div>
       </div>
-      
-      <button class="get-started-button" (click)="startApp()">Get Started</button>
+
+      <!-- Szövegdoboz csak kanban-nál -->
+      <div *ngIf="isKanbanVisible" class="step-info-box">
+        <p>
+          A Kanban tábla segít a feladatok
+          nyomon követésében.
+          A feladatokat három oszlopba 
+          rendezheted:
+          Teendők,
+          Folyamatban,
+          Befejezett.
+          Az új feladatokat hozzáadhatod
+          a <strong>ToDo</strong>-val, majd a <strong>Drag and
+          Drop módszerrel
+          áthelyezheted őket</strong> a megfelelő
+          oszlopba. A <strong>Befejezett
+          feladatokat törölheted a
+          tábláról</strong> a Törlés gombbal!</p>
+      </div>
+
+      <!-- "Tovább" gomb csak kanban-nál -->
+      <button *ngIf="isKanbanVisible" class="get-started-button" (click)="goToNextStep()">Tovább</button>
+
+      <!-- Első lépéshez tartozó "Get Started" -->
+      <button class="get-started-button" (click)="startApp()" *ngIf="!isKanbanVisible">Get Started</button>
     </div>
 
     <!-- Kanban Tábla -->

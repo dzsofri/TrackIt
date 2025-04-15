@@ -1,16 +1,17 @@
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
 
   .welcome-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 98.3vh;
-    width: 99vw;
+    height: 98.3vh;
+    width: 100vw;
     overflow: hidden;
     background: #FFFFFF;
     padding: 5vw;
@@ -155,17 +156,43 @@
     line-height: 1.5;
   }
 
-  // Lépések
   .steps-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; // ne legyen center, ha változó tartalom van
     width: 100%;
+    max-height: -20vw;
     max-width: 500px;
     margin: 0 auto;
     padding: 1rem;
-    
+    position: relative;
+    box-sizing: border-box;
+  }
+  
+
+  
+  .step.completed {
+    background-color: #ddd;  // Szürke háttér a befejezett lépéshez
+    color: #333;  // Sötét szöveg
+  }
+  
+
+  :host ::ng-deep .todo-creator {
+    /* A Todo Creator stílusai a Welcome oldalon */
+    width: 50%;
+    max-width: 300px;
+
+  }
+  
+  :host ::ng-deep .kanban-container {
+    /* A Kanban Tábla stílusai a Welcome oldalon */
+    display: flex;
+    width: 10%;
+    max-width: 75vw;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
   }
 
   .steps {
@@ -186,31 +213,29 @@
     cursor: pointer;
     transition: 0.3s;
     background-color: #f9f9f9;
-    width: 100%;
+    width: 90%;
     color: #333;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
     font-size: clamp(1rem, 2vw, 1.2rem);
-
+  
     &.active {
       background-color: #627966;
       color: white;
     }
-
+  
     &.completed {
       background-color: #ddd;
       color: #333;
     }
-
+  
     &:hover {
       background-color: #eef7ee;
       box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
     }
 
-    &:first-child {
-      background-color: #627966;
-      color: white;
-    }
-
+  }
+  
+  
     .step-number {
       width: 2.5rem;
       height: 2.5rem;
@@ -224,7 +249,10 @@
       border-radius: 50%;
       font-size: 1.2rem;
     }
-  }
+  
+    .step-number.completed{
+      background-color: white;
+    }
 
   // "Get Started" gomb
   .get-started-button {
@@ -242,7 +270,7 @@
     min-width: 200px;
     max-width: 400px;
     box-sizing: border-box;
-
+    font-weight: bold;
     &:hover {
       background-color: #627966;
       color: white;
@@ -267,3 +295,32 @@
 
 
 
+  .step-info-box {
+    width: 100%;
+    background-color: #f5f7fa;
+    padding: 1rem;
+    margin-top: 6rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .next-button {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: #3b78c2;
+    }
+  } 
+
+
+  
+  

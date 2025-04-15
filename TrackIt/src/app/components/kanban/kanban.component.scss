@@ -98,14 +98,13 @@
 }
 
 .kanban-board {
-    display: flex;
-    gap: 15px;
-    justify-content:flex-start;
-    align-items: stretch;
-    flex-grow: 1;
-    flex-wrap: wrap; /* Törjön új sorba, ha nincs hely */
-    width: 100%;
-    height: 100%;
+  display: flex;
+  gap: 15px;
+  justify-content:flex-start;
+  align-items: stretch;
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
 }
 
 /* Kanban oszlop beállítása */
@@ -308,6 +307,12 @@ input, textarea {
     border-radius: 5px;
   }
   
+  :host {
+    display: block;
+    width: 100%;
+  }
+  
+
   .menu-button:hover {
     background: rgba(0, 0, 0, 0.1);
   }
