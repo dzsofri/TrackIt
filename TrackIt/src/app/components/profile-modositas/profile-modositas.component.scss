@@ -109,12 +109,15 @@ span {
     border-radius: 20px;
     padding: 20px;
 }
-input {
-    background-color: #F8F8F8;
-    border-radius: 25px;
-    width: 100%;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-    height: 60px;
+.modositas {
+    display: flex;
+    background-color: #488853;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: white;
+    font-size: 17px;
+    margin-left: auto;
 }
 .mentes {
     display: flex;
@@ -125,6 +128,13 @@ input {
     color: white;
     font-size: 17px;
     margin-left: auto;
+}
+input {
+    background-color: #F8F8F8;
+    border-radius: 25px;
+    width: 100%;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
+    height: 60px;
 }
 .profilekep_modositas {
     border-radius: 100px;

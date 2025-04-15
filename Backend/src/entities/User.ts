@@ -8,9 +8,6 @@ import { UserChallenges } from "./UserChallenge";
 import { UserStatistics } from "./UserStatistic";
 import { Feedbacks } from "./Feedback";
 import { Habits } from "./Habit";
-
- 
-=======
 import { Chat } from "./Chat";
 
 
@@ -59,8 +56,6 @@ export class Users {
     @Column({ type: "timestamp", nullable: true, default: null })
     resetPasswordExpires: Date | null;
 
- 
-
 
     @Column({ type: "enum", enum: UserStatus, default: UserStatus.OFFLINE })
     status: UserStatus;  // New status column to track whether user is online or offline
@@ -95,9 +90,6 @@ export class Users {
  
     @OneToMany(() => Feedbacks, (feedback) => feedback.user, { onDelete: "CASCADE" })
     feedbacks: Feedbacks[];
-
-}
-=======
 
     @OneToMany(() => Chat, (chat) => chat.sender, { onDelete: "CASCADE" })
     sentMessages: Chat[]; // A felhasználó által küldött üzenetek

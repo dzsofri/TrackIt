@@ -346,6 +346,8 @@ router.post('/reminder/:id', tokencheck, async (req: any, res: any) => {
     } catch (error) {
         console.error("Hiba emlékeztető mentésekor:", error);
         res.status(500).json({ message: "Hiba történt az emlékeztető mentése során." });
+    }
+});
 
 
 // Frissíti a felhasználó státuszát (online/offline)

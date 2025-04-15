@@ -48,10 +48,11 @@
     </div>
 </div>
 
-<app-alert-modal 
-  [visible]="modalVisible" 
-  [type]="modalType" 
-  [message]="modalMessage" 
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
+  [message]="modalMessage"
   [invalidFields]="invalidFields"
-  (close)="modalVisible = false">
+  [buttons]="modalButtons"
+  (close)="onModalClose()">
 </app-alert-modal>
