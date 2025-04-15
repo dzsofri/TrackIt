@@ -184,6 +184,8 @@ export class ApiService {
     return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
   }
 
+
+
   updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
     const body = { status: newStatus };
     return this.http.patch<any>(`${this.server}/tasks/${taskId}/status`, body, this.tokenHeader()).pipe(
@@ -195,8 +197,9 @@ export class ApiService {
 
 }
 
-createPost(postData: { title: string; body: string; status: string }): Observable<any> {
-  return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
+ // Poszt létrehozása
+ createPost(postData: { title: string; body: string, status: string}): Observable<any> {
+  return this.http.post<any>(`${this.server}/posts`, postData, this.tokenHeader()).pipe(
     catchError(error => {
       console.error('Hiba a bejegyzés létrehozásakor:', error);
       return of({ message: 'Bejegyzés létrehozása sikertelen' });
@@ -204,13 +207,25 @@ createPost(postData: { title: string; body: string; status: string }): Observabl
   );
 }
 
-
-postCompletedTask(userId: string, taskId: string): Observable<any> {
-  return this.http.post(`${this.server}/user_statistics/completedTask`, { userId, taskId }, this.tokenHeader());
+// Poszt módosítása
+updatePost(postId: string, postData: { title: string; body: string; status: string }): Observable<any> {
+  return this.http.put<any>(`${this.server}/posts/${postId}`, postData, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a bejegyzés frissítésekor:', error);
+      return of({ message: 'Bejegyzés frissítése sikertelen' });
+    })
+  );
 }
 
-postMissedTask(userId: string, taskId: string): Observable<any> {
-  return this.http.post(`${this.server}/user_statistics/missedTask`, { userId, taskId }, this.tokenHeader());
+
+// Poszt törlése
+deletePost(postId: string): Observable<any> {
+  return this.http.delete(`${this.server}/posts/${postId}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a poszt törlésekor:', error);
+      return of({ message: 'Poszt törlése sikertelen' });
+    })
+  );
 }
 
 }

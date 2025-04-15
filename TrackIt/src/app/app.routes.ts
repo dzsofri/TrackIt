@@ -10,6 +10,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
+import { FeedComponent } from './components/feed/feed.component';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,12 @@ export const routes: Routes = [
     component: ProfileComponent,
     canActivate: [AuthGuard],
     data: { label: 'Profile', icon: '/assets/icons/profile_logo.png' }
+  },
+  {
+    path: 'feed',
+    component: FeedComponent, // <-- Ezt adtuk hozzá
+    canActivate: [AuthGuard], // Opcionális, ha bejelentkezés kell
+    data: { label: 'Feed', icon: '/assets/icons/feed_logo.png' }
   },
   {
     path: '',

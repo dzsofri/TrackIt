@@ -41,7 +41,6 @@ export class KanbanComponent implements OnInit {
   popupTimeout: any;
 
 
-  modalVisible = false;
   isModalVisible = false;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
@@ -214,7 +213,7 @@ export class KanbanComponent implements OnInit {
   
       // **POST request to update UserStatistics**
       if (targetColumn.status === 'done') {
-        this.api.postCompletedTask(task.userId!, task.id!).subscribe(response => {
+        this.api.updateTaskStatus(task.userId!, task.id!).subscribe(response => {
           console.log('UserStatistics frissítve', response);
         });
       }
@@ -299,7 +298,7 @@ export class KanbanComponent implements OnInit {
                     this.updateTaskCount();
                     
                     if(task.status != 'done'){
-                      this.api.postMissedTask(task.userId!, task.id!).subscribe(response => {
+                      this.api.updateTaskStatus(task.userId!, task.id!).subscribe(response => {
                         console.log('UserStatistics frissítve (missed task)', response);
                     });
                     }
@@ -320,4 +319,9 @@ export class KanbanComponent implements OnInit {
   isInvalid(field: string) {
     return this.invalidFields.includes(field); // Visszaadja, hogy a mező hibás-e
   }
+
+  closeModal() {
+    this.isModalVisible = false;
+  }
 }
+
