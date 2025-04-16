@@ -162,7 +162,7 @@ html, body {
     align-items: center;
     justify-content: flex-start; // ne legyen center, ha változó tartalom van
     width: 100%;
-    max-height: -20vw;
+    max-height: 100vw;
     max-width: 500px;
     margin: 0 auto;
     padding: 1rem;
@@ -323,4 +323,97 @@ html, body {
 
 
   
+  @media (max-width: 1024px) {
+    .welcome-wrapper {
+      flex-direction: column;
+      padding: 3vw;
+    }
+  
+    .content {
+      flex-direction: column;
+      gap: 2vw;
+    }
+  
+    .kanban-container {
+      flex-direction: column;
+      gap: 2vw;
+      padding: 2vw;
+    }
+  
+    .steps-container {
+      transform: none !important;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .steps-container {
+      padding: 1rem;
+      max-width: 90%;
+    }
+  
+    .text {
+      font-size: 1.2rem;
+      max-width: 90%;
+    }
+  
+    .step-info-box {
+      margin-top: 3rem;
+      font-size: 0.95rem;
+    }
+  
+    .get-started-button {
+      width: 60%;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .text {
+      font-size: 1.1rem;
+    }
+  
+    h1 {
+      font-size: 1.6rem;
+    }
+  
+    .get-started-button {
+      width: 80%;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+    }
+  
+    .step {
+      padding: 0.8rem;
+      font-size: 1rem;
+    }
+  
+    .step-number {
+      width: 2rem;
+      height: 2rem;
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .steps {
+      gap: 0.5rem;
+    }
+  
+    .step {
+      width: 100%;
+    }
+  
+    .text {
+      font-size: 1rem;
+    }
+  
+    .step-info-box {
+      font-size: 0.9rem;
+    }
+  
+    .get-started-button {
+      min-width: unset;
+      width: 90%;
+      font-size: 0.95rem;
+    }
+  }
   

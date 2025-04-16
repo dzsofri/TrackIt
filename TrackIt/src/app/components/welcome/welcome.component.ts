@@ -51,6 +51,15 @@
   export class WelcomeComponent {
     constructor(private cdr: ChangeDetectorRef, private zone: NgZone) {}
 
+    ngOnInit() {
+      if (window.innerWidth <= 1076) {
+        this.isKanbanVisible = false; // vagy true, attól függ mit akarsz
+        this.textVisible = true; // fontos!
+      }
+    }
+    
+
+    
     steps = [
       { id: 1, text: 'Üdvözlünk!', active: true, completed: false },
       { id: 2, text: 'ToDo lista és Kanban tábla létrehozása', active: false, completed: false },
