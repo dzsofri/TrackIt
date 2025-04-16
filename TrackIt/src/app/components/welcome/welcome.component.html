@@ -1,6 +1,7 @@
 <div class="welcome-wrapper" [class.kanban-active]="isKanbanVisible">
 
   <div class="content">
+    
     <!-- Bevezető szöveg -->
     <div class="text" *ngIf="textVisible" [@fadeOut]="textState">
       <h1>Üdvözlünk a <span class="highlight">TrackIt</span> világában!</h1>
@@ -27,7 +28,7 @@
           A feladatokat három oszlopba 
           rendezheted:
           Teendők,
-          Folyamatban,
+          Folyamatban,  
           Befejezett.
           Az új feladatokat hozzáadhatod
           a <strong>ToDo</strong>-val, majd a <strong>Drag and

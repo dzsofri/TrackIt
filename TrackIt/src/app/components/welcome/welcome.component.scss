@@ -1,9 +1,3 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
 
 
   .welcome-wrapper {
@@ -22,7 +16,7 @@ html, body {
     position: relative;
   }
 
-  // Blob animáció és alapstílus
+  /* Blob animáció és alapstílus */
   .blob {
     position: absolute;
     width: min(40vw, 400px);
@@ -34,33 +28,91 @@ html, body {
     pointer-events: none;
     opacity: 0.7;
     animation: circular-motion 15s linear infinite;
-
-    &-left {
-      top: -10vh;
-      left: -6vw;
-    }
-
-    &-right {
-      bottom: -8vh;
-      right: -8vw;
-    }
   }
 
-  // Reszponzív blob méretezés
+  .blob-left {
+    top: -10vh;
+    left: -6vw;
+  }
+
+  .blob-right {
+    bottom: -8vh;
+    right: -8vw;
+  }
+
+  @media (max-width: 1024px) {
+    html, body {
+      overflow: auto;
+      height: auto;
+    }
+  
+    .welcome-wrapper {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 3vw;
+      overflow: visible;
+      height: auto;
+      min-height: 100vh;
+    }
+  
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+      gap: 2rem;
+    }
+  
+    .kanban-container {
+      position: relative !important;
+      width: 100%;
+      flex-direction: column;
+      gap: 2vw;
+      padding: 2vw;
+      order: 1; /* Kanban container elöl */
+      height: auto;
+      overflow: visible;
+    }
+  
+    .steps-container {
+      transform: none !important;
+      position: relative !important;
+      width: 100%;
+      margin-top: 2rem;
+      order: 2; /* Steps container alulra kerül */
+      z-index: 1; /* Biztosítja, hogy a steps container alul legyen */
+    }
+  
+    .todo-creator {
+      width: 100%;
+      max-width: 700px;
+    }
+  }
+  
+  
+  
+  :host ::ng-deep .todo-creator {
+    width: 100%;
+    max-width: 700px;
+  }
+  
+
+
+  /* Reszponzív blob méretezés */
   @media (max-width: 700px) {
     .blob {
       width: min(30vw, 250px);
       height: min(30vw, 250px);
+    }
 
-      &-left {
-        top: -8vh;
-        left: -12vw;
-      }
+    .blob-left {
+      top: -8vh;
+      left: -12vw;
+    }
 
-      &-right {
-        bottom: -8vh;
-        right: -12vw;
-      }
+    .blob-right {
+      bottom: -8vh;
+      right: -12vw;
     }
   }
 
@@ -69,16 +121,16 @@ html, body {
       width: min(25vw, 200px);
       height: min(25vw, 200px);
       opacity: 0.6;
+    }
 
-      &-left {
-        top: -5vh;
-        left: -15vw;
-      }
+    .blob-left {
+      top: -5vh;
+      left: -15vw;
+    }
 
-      &-right {
-        bottom: -5vh;
-        right: -15vw;
-      }
+    .blob-right {
+      bottom: -5vh;
+      right: -15vw;
     }
   }
 
@@ -87,20 +139,20 @@ html, body {
       width: 150px;
       height: 150px;
       opacity: 0.5;
+    }
 
-      &-left {
-        top: -3vh;
-        left: -18vw;
-      }
+    .blob-left {
+      top: -3vh;
+      left: -18vw;
+    }
 
-      &-right {
-        bottom: -3vh;
-        right: -18vw;
-      }
+    .blob-right {
+      bottom: -3vh;
+      right: -18vw;
     }
   }
 
-  // Animációk
+  /* Animációk */
   @keyframes circular-motion {
     0% {
       transform: rotate(0deg) scale(1) translate(5px, 5px);
@@ -119,7 +171,7 @@ html, body {
     }
   }
 
-  // Tartalom elrendezése
+  /* Tartalom elrendezése */
   .content {
     display: flex;
     flex-wrap: wrap;
@@ -144,10 +196,10 @@ html, body {
     font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: bold;
     margin-bottom: 1rem;
+  }
 
-    .highlight {
-      color: #627966;
-    }
+  h1 .highlight {
+    color: #627966;
   }
 
   p {
@@ -156,43 +208,30 @@ html, body {
     line-height: 1.5;
   }
 
+
   .steps-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; // ne legyen center, ha változó tartalom van
+    position: relative;
+    z-index: 10;
     width: 100%;
-    max-height: 100vw;
     max-width: 500px;
     margin: 0 auto;
     padding: 1rem;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     box-sizing: border-box;
-  }
-  
+  } 
 
-  
   .step.completed {
-    background-color: #ddd;  // Szürke háttér a befejezett lépéshez
-    color: #333;  // Sötét szöveg
+    background-color: #ddd;
+    color: #333;
   }
-  
 
-  :host ::ng-deep .todo-creator {
-    /* A Todo Creator stílusai a Welcome oldalon */
+  /* Angular deep selector csak SCSS-ben működik, natív CSS-ben ez nem fog! */
+  .todo-creator {
     width: 50%;
     max-width: 300px;
-
-  }
-  
-  :host ::ng-deep .kanban-container {
-    /* A Kanban Tábla stílusai a Welcome oldalon */
-    display: flex;
-    width: 10%;
-    max-width: 75vw;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
   }
 
   .steps {
@@ -217,44 +256,42 @@ html, body {
     color: #333;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
     font-size: clamp(1rem, 2vw, 1.2rem);
-  
-    &.active {
-      background-color: #627966;
-      color: white;
-    }
-  
-    &.completed {
-      background-color: #ddd;
-      color: #333;
-    }
-  
-    &:hover {
-      background-color: #eef7ee;
-      box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
   }
-  
-  
-    .step-number {
-      width: 2.5rem;
-      height: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 0.75rem;
-      font-weight: bold;
-      background-color: #37533c;
-      color: white;
-      border-radius: 50%;
-      font-size: 1.2rem;
-    }
-  
-    .step-number.completed{
-      background-color: white;
-    }
 
-  // "Get Started" gomb
+  .step.active {
+    background-color: #627966;
+    color: white;
+  }
+
+  .step.completed {
+    background-color: #ddd;
+    color: #333;
+  }
+
+  .step:hover {
+    background-color: #eef7ee;
+    box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .step-number {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    font-weight: bold;
+    background-color: #37533c;
+    color: white;
+    border-radius: 50%;
+    font-size: 1.2rem;
+  }
+
+  .step-number.completed {
+    background-color: white;
+  }
+
+  /* "Get Started" gomb */
   .get-started-button {
     margin: 1.5rem;
     padding: 1rem 2rem;
@@ -271,29 +308,28 @@ html, body {
     max-width: 400px;
     box-sizing: border-box;
     font-weight: bold;
-    &:hover {
-      background-color: #627966;
-      color: white;
+  }
+
+  .get-started-button:hover {
+    background-color: #627966;
+    color: white;
+  }
+
+  /* Kanban konténer */
+    .kanban-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      padding: 2vw;
+      box-sizing: border-box;
+      gap: 2vw;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
-  }
-
-  // Kanban konténer
-  .kanban-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    overflow: auto;
-    padding: 2vw;
-    box-sizing: border-box;
-    gap: 2vw;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-
 
   .step-info-box {
     width: 100%;
@@ -315,105 +351,130 @@ html, body {
     border-radius: 0.4rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  
-    &:hover {
-      background-color: #3b78c2;
-    }
-  } 
-
-
-  
-  @media (max-width: 1024px) {
-    .welcome-wrapper {
-      flex-direction: column;
-      padding: 3vw;
-    }
-  
-    .content {
-      flex-direction: column;
-      gap: 2vw;
-    }
-  
-    .kanban-container {
-      flex-direction: column;
-      gap: 2vw;
-      padding: 2vw;
-    }
-  
-    .steps-container {
-      transform: none !important;
-    }
   }
-  
+
+  .next-button:hover {
+    background-color: #3b78c2;
+  }
+
+  /* Reszponzív média lekérdezések */
+  /* 1024px-nél a flex irányt úgy módosítjuk, hogy a steps-container alul legyen */
+@media (max-width: 1024px) {
+  .welcome-wrapper {
+    flex-direction: column;
+    padding: 3vw;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .kanban-container {
+    flex-direction: column;
+    gap: 2vw;
+    padding: 2vw;
+    order: 2;  /* Kanban konténer alatt legyen */
+  }
+
+
+  .steps-container {
+    transform: none !important;
+    position: relative !important; /* fontos! */
+    width: 100%;
+    order: 1; /* ha flexboxban vagy */
+    margin-top: 1rem;
+  }
+
+  .todo-creator {
+    width: 100%; /* Ha van ilyen elem, biztosítsuk, hogy a szélessége a konténerhez igazodjon */
+  }
+}
+
+  :host ::ng-deep .todo-creator {
+    /* A Todo Creator stílusai a Welcome oldalon */
+    width: 100%;
+    max-width: 700px;
+
+  }
+
   @media (max-width: 768px) {
     .steps-container {
       padding: 1rem;
       max-width: 90%;
     }
-  
+
     .text {
       font-size: 1.2rem;
       max-width: 90%;
     }
-  
+
     .step-info-box {
       margin-top: 3rem;
       font-size: 0.95rem;
     }
-  
+
     .get-started-button {
       width: 60%;
     }
   }
+
+
   
   @media (max-width: 600px) {
     .text {
       font-size: 1.1rem;
     }
-  
+
     h1 {
       font-size: 1.6rem;
     }
-  
+
     .get-started-button {
       width: 80%;
       padding: 0.8rem 1.5rem;
       font-size: 1rem;
     }
-  
+
+    .content{
+      display: flex;
+      flex-direction: column;
+    }
+
     .step {
       padding: 0.8rem;
       font-size: 1rem;
     }
-  
+
     .step-number {
       width: 2rem;
       height: 2rem;
       font-size: 1rem;
     }
   }
-  
+
   @media (max-width: 480px) {
     .steps {
       gap: 0.5rem;
     }
-  
+
     .step {
       width: 100%;
     }
-  
+
     .text {
       font-size: 1rem;
     }
-  
+
     .step-info-box {
       font-size: 0.9rem;
     }
-  
+
     .get-started-button {
       min-width: unset;
       width: 90%;
       font-size: 0.95rem;
     }
   }
-  
