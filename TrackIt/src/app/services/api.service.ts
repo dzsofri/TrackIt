@@ -170,6 +170,15 @@ export class ApiService {
     );
   }
 
+  postUserPicture(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.server}/users/picture`, formData, this.tokenHeader()).pipe(
+      catchError((error) => {
+        console.error("Profile picture upload failed:", error);
+        return of({ message: "Profile picture upload failed" });
+      })
+    );
+  }
+
   readUserStatistics(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/statistics/${userId}`, this.tokenHeader());
   }

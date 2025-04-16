@@ -1,12 +1,21 @@
 <div class="row">
-    <div class="col-12 col-sm-12 col-md-6 mb-4">
-      <div class="profile_box1">
-        <div class="profile_content1">
-          <img id="profilekep">
-          <button class="profilekep_modositas">Profilkép módosítása</button>
+  <div class="col-12 col-sm-12 col-md-6 mb-4">
+    <div class="profile_box1">
+      <div class="profile_content1">
+        <div class="upload-section">
+          <div
+            id="profilekep"
+            [ngStyle]="{'background-image': imagePreviewUrl ? 'url(' + imagePreviewUrl + ')' : ''}"
+            class="circle-image"
+          >
+            <img *ngIf="imagePreviewUrl" [src]="imagePreviewUrl" alt="Profilkép előnézet" hidden />
+          </div>
+          <input type="file" #fileInput accept="image/*" hidden (change)="onFileSelected($event)" required [(ngModel)]="user.pictureId" />
+          <button class="profilekep_modositas" (click)="fileInput.click()">Profilkép módosítása</button>
         </div>
       </div>
     </div>
+  </div>
   
     <div class="col-12 col-sm-12 col-md-6 mb-4">
       <h3>Adatok módosítása</h3>
@@ -90,3 +99,5 @@
   [message]="modalMessage"
   (close)="modalVisible = false">
 </app-alert-modal>
+
+<!--<img id="profilekep">-->

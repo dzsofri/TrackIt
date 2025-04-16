@@ -162,6 +162,9 @@ input {
     border-radius: 50%;
     margin: auto;
 }
+.circle-image img {
+    display: none; /* Ensure the hidden img tag does not interfere with the design */
+}
 @media screen and (max-width: 768px) {
     .profile_box2 {
         width: 80vw;
