@@ -6,11 +6,12 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
+import { DayDetailsModalComponent } from '../day-details-modal/day-details-modal.component';
 
 @Component({
   selector: 'app-havi-planner',
   standalone: true,
-  imports: [CommonModule, FormsModule,ColorPickerModule, AlertModalComponent],
+  imports: [CommonModule, FormsModule,ColorPickerModule, DayDetailsModalComponent, AlertModalComponent],
   templateUrl: './havi-planner.component.html',
   styleUrls: ['./havi-planner.component.scss']
 })
@@ -18,9 +19,16 @@ export class HaviPlannerComponent {
   startDateType: string = 'text';
   endDateType: string = 'text';
 
-  selectedDayEvents: any[] = [];
-  selectedDayDate: string = '';
-  detailsModalVisible = false;
+  eventRows: any[][] = [];
+
+  selectedDay: any = null;
+  dayDetailsVisible: boolean = false;
+
+  showDayDetails(day: any): void {
+    this.selectedDay = day;
+    this.dayDetailsVisible = true;
+  }
+
 
 
   modalVisible = false;
@@ -40,8 +48,8 @@ export class HaviPlannerComponent {
   newEvent = {
     name: '',
     description: '',
-    startDateTime: '',
-    endDateTime: '',
+    startTime: '',
+    endTime: '',
     color: '#ff0000'  // alapértelmezett szín (piros)
   };
 
@@ -70,15 +78,7 @@ export class HaviPlannerComponent {
     });
   }
 
-  showDayDetails(day: any) {
-    if (day.inactive) return; // ne csináljon semmit, ha inaktív
 
-    const date = new Date(this.currentYear, this.currentMonth, day.date);
-    this.selectedDayDate = `${date.getFullYear()}. ${date.getMonth() + 1}. ${date.getDate()}.`;
-
-    this.selectedDayEvents = day.dots;
-    this.detailsModalVisible = true;
-  }
 
 
   generateCalendar() {
@@ -116,7 +116,66 @@ export class HaviPlannerComponent {
         dots: [], // Nincs esemény
       });
     }
+    this.eventRows = this.calculateEventRows();
+
   }
+  getEventGridColumn(event: any): string {
+    const startDay = new Date(event.startTime).getDate();
+    const endDay = new Date(event.endTime).getDate();
+    const offset = this.getDayOffset(startDay);
+    const span = endDay - startDay + 1;
+
+    return `${offset + 1} / span ${span}`;
+  }
+
+  getDayOffset(day: number): number {
+    const firstDayOfMonth = new Date(this.currentYear, this.currentMonth, 1);
+    const startDay = (firstDayOfMonth.getDay() + 6) % 7; // hétfő az első
+    return startDay + day - 1;
+  }
+  calculateEventRows() {
+    const rows: any[][] = [];
+
+    for (const event of this.events) {
+      const start = new Date(event.startTime);
+      const end = new Date(event.endTime);
+
+      // Esemény tartománya napok szerint
+      const eventDays = [];
+      let current = new Date(start);
+
+      while (current <= end) {
+        if (current.getMonth() === this.currentMonth && current.getFullYear() === this.currentYear) {
+          eventDays.push(current.getDate());
+        }
+        current.setDate(current.getDate() + 1);
+      }
+
+      // Próbáljuk hozzáadni egy meglévő sorhoz, ha nincs átfedés
+      let placed = false;
+      for (const row of rows) {
+        const overlaps = row.some((e: any) => {
+          const es = new Date(e.startTime);
+          const ee = new Date(e.endTime);
+          return (start <= ee && end >= es); // van átfedés
+        });
+
+        if (!overlaps) {
+          row.push({ ...event, days: eventDays });
+          placed = true;
+          break;
+        }
+      }
+
+      // Ha nem tudtuk elhelyezni egy sorban, új sort nyitunk
+      if (!placed) {
+        rows.push([{ ...event, days: eventDays }]);
+      }
+    }
+
+    return rows;
+  }
+
 
   getEventDots(day: number) {
     const currentDate = new Date(this.currentYear, this.currentMonth, day);
@@ -139,9 +198,13 @@ export class HaviPlannerComponent {
       return {
         title: event.title,
         color: event.color || 'deepskyblue', // fallback szín, ha nincs
-        isStart,
+        isStart: isStart,
+        eventStart: eventStart,
+        eventEnd:eventEnd,
         isEnd
       };
+
+
     });
 
   }
@@ -177,14 +240,14 @@ export class HaviPlannerComponent {
     this.invalidFields = [];
 
     if (!this.newEvent.name) this.invalidFields.push('Név');
-    if (!this.newEvent.startDateTime) this.invalidFields.push('Kezdés dátuma');
-    if (!this.newEvent.endDateTime) this.invalidFields.push('Befejezés dátuma');
+    if (!this.newEvent.startTime) this.invalidFields.push('Kezdés dátuma');
+    if (!this.newEvent.endTime) this.invalidFields.push('Befejezés dátuma');
 
     // Ellenőrzés, hogy a dátum tartalmaz-e időpontot (óra:perc) is
-    if (this.newEvent.startDateTime && this.newEvent.startDateTime.length <= 10) {
+    if (this.newEvent.startTime && this.newEvent.startTime.length <= 10) {
       this.invalidFields.push('Kezdés időpont (óra:perc is szükséges)');
     }
-    if (this.newEvent.endDateTime && this.newEvent.endDateTime.length <= 10) {
+    if (this.newEvent.endTime && this.newEvent.endTime.length <= 10) {
       this.invalidFields.push('Befejezés időpont (óra:perc is szükséges)');
     }
 
@@ -195,9 +258,9 @@ export class HaviPlannerComponent {
       return;
     }
 
-    const startDate = new Date(this.newEvent.startDateTime);
+    const startDate = new Date(this.newEvent.startTime);
     const startTime = startDate.toISOString();
-    const endDate = new Date(this.newEvent.endDateTime);
+    const endDate = new Date(this.newEvent.endTime);
     const endTime = endDate.toISOString();
 
     if (startDate > endDate) {
@@ -232,8 +295,8 @@ export class HaviPlannerComponent {
           this.newEvent = {
             name: '',
             description: '',
-            startDateTime: '',
-            endDateTime: '',
+            startTime: '',
+            endTime: '',
             color: '#ff0000'
           };
         } else {

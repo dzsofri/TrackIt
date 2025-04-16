@@ -13,7 +13,7 @@
         <input
           id="startDateTime"
           type="datetime-local"
-          [(ngModel)]="newEvent.startDateTime"
+          [(ngModel)]="newEvent.startTime"
           class="form-control"
         />
       </div>
@@ -23,7 +23,7 @@
         <input
           id="endDateTime"
           type="datetime-local"
-          [(ngModel)]="newEvent.endDateTime"
+          [(ngModel)]="newEvent.endTime"
           class="form-control"
         />
       </div>
@@ -73,25 +73,13 @@
       </div>
     </div>
   </div>
+<!-- Nap részletei modal -->
+<app-day-details-modal
+  [visible]="dayDetailsVisible"
+  [day]="selectedDay"
+  (close)="dayDetailsVisible = false">
+</app-day-details-modal>
 
-  <app-alert-modal
-  *ngIf="detailsModalVisible"
-  [visible]="true"
-  [type]="'info'"
-  [message]="'Események ezen a napon: ' + selectedDayDate"
-  [invalidFields]="[]"
-  (close)="detailsModalVisible = false">
-  <ng-container *ngIf="selectedDayEvents.length > 0; else noEvents">
-    <ul>
-      <li *ngFor="let event of selectedDayEvents">
-        <span [style.color]="event.color">■</span> {{ event.title }}
-      </li>
-    </ul>
-  </ng-container>
-  <ng-template #noEvents>
-    <p>Nincs esemény erre a napra.</p>
-  </ng-template>
-</app-alert-modal>
 
 </div>
 
