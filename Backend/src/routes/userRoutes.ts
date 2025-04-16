@@ -11,10 +11,24 @@ import { isAdmin } from "../utiles/adminUtils";
 import { Not } from "typeorm";
 const ejs = require("ejs");
 const path = require("path");
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 
 dotenv.config(); 
 
 const router = Router();
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "uploads/");
+    },
+    filename: (req, file, cb) => {
+      const uniqueName = uuidv4() + path.extname(file.originalname);
+      cb(null, uniqueName);
+    },
+  });
+  const upload = multer({ storage });
+  router.use("/uploads", express.static("uploads"));
 
 // Hibás mezők tárolása
 const addInvalidField = (fields: string[], fieldName: string) => {
@@ -348,6 +362,119 @@ router.post('/reminder/:id', tokencheck, async (req: any, res: any) => {
         res.status(500).json({ message: "Hiba történt az emlékeztető mentése során." });
     }
 });
+
+router.post("/users/picture", upload.single("picture"), async (req: any, res: any) => {
+    try {
+      const userRepository = AppDataSource.getRepository(Users);
+  
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({ message: "User not authenticated." });
+      }
+  
+      console.log("Uploaded file details:", req.file);
+  
+      if (!req.file) {
+        return res.status(400).json({ message: "No picture uploaded." });
+      }
+  
+      const databaseUser = await userRepository.findOne({ where: { id: user.id } });
+      if (!databaseUser) {
+        return res.status(404).json({ message: "User not found." });
+      }
+  
+      databaseUser.pictureId = req.file.filename;
+  
+      console.log(`Updating user ${user.id} with pictureId: ${req.file.filename}`);
+  
+      await userRepository.save(databaseUser);
+  
+      const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+      return res.status(200).json({
+        message: "Profile picture uploaded successfully!",
+        user: {
+          ...databaseUser,
+          imageUrl,
+        },
+      });
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      return res.status(500).json({ message: "Server error." });
+    }
+  });
+  
+  // Update user's profile picture
+  router.put("/users/:id/picture", tokencheck, upload.single("picture"), async (req: any, res: any) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        const userRepository = AppDataSource.getRepository(Users);
+
+        // Fetch the user
+        const user = await userRepository.findOne({ where: { id } });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Check if the user is authorized to update their profile picture
+        if (user.id !== userId) {
+            return res.status(403).json({ message: "You are not authorized to update this user's profile picture." });
+        }
+
+        // If a new picture is uploaded
+        if (req.file) {
+            // Update user's pictureId with the new picture filename
+            user.pictureId = req.file.filename;
+
+            // Save the updated user entity
+            await userRepository.save(user);
+
+            const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+
+            return res.status(200).json({
+                message: "Profile picture updated successfully!",
+                user: {
+                    ...user,
+                    imageUrl,
+                },
+            });
+        } else {
+            return res.status(400).json({ message: "No picture uploaded." });
+        }
+    } catch (error) {
+        console.error("Error updating user's profile picture:", error);
+        return res.status(500).json({ message: "Server error." });
+    }
+});
+  
+  // Get user's profile picture
+  router.get("/:id/picture", async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+  
+      const userRepository = AppDataSource.getRepository(Users);
+  
+      const user = await userRepository.findOne({ where: { id } });
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+  
+      const imageUrl = user.pictureId
+        ? `http://localhost:3000/uploads/${user.pictureId}`
+        : null;
+  
+      return res.status(200).json({
+        message: "User profile picture fetched successfully!",
+        imageUrl,
+      });
+    } catch (error) {
+      console.error("Error fetching user's profile picture:", error);
+      return res.status(500).json({ message: "Server error." });
+    }
+  });
 
 
 // Frissíti a felhasználó státuszát (online/offline)

@@ -37,6 +37,10 @@ export class ProfileModositasComponent {
 
   minDate: string = '';
 
+  selectedFile: File | null = null;
+  selectedFileName: string | null = null;
+  imagePreviewUrl: string | null = null;
+
   constructor(
     private api: ApiService,
     private auth: AuthService,
@@ -58,6 +62,49 @@ export class ProfileModositasComponent {
 
   toggleConfirmPasswordVisibility() {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+  
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+  
+      const reader = new FileReader();
+  
+      // Generálja az előnézet URL-jét
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.imagePreviewUrl = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+  
+      // FormData előkészítése a feltöltéshez
+      const formData = new FormData();
+      formData.append("picture", file);
+  
+      // Kép feltöltése az API-n keresztül
+      this.api.postUserPicture(formData).subscribe({
+        next: (res: any) => {
+          console.log("Profile picture uploaded successfully:", res);
+  
+          // Frissítse az előnézet URL-jét a szerver válasza alapján
+          if (res.user && res.user.imageUrl) {
+            this.imagePreviewUrl = res.user.imageUrl;
+          }
+  
+          // Frissítse a pictureId mezőt
+          if (res.user && res.user.pictureId) {
+            this.user.pictureId = res.user.pictureId;
+            console.log("Picture ID updated:", this.user.pictureId);
+          }
+        },
+        error: (error: any) => {
+          console.error("Error uploading profile picture:", error);
+        },
+      });
+    } else {
+      console.error("No file selected for upload.");
+    }
   }
 
   onSubmit() {

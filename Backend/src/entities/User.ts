@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, Index } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, Index, ManyToOne, JoinColumn } from "typeorm";
 import { Follows } from "./Follow";
 import { FriendRequests } from "./FriendRequest";
 import { Pictures } from "./Picture";
@@ -41,7 +41,7 @@ export class Users {
     @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
     role: UserRole;
  
-    @Column({ type: "varchar", length: 40, nullable: true })
+    @Column({ type: "varchar", length: 255, nullable: true })
     pictureId: string;
  
     @CreateDateColumn()
@@ -96,5 +96,9 @@ export class Users {
 
     @OneToMany(() => Chat, (chat) => chat.receiver, { onDelete: "CASCADE" })
     receivedMessages: Chat[]; // A felhasználó által fogadott üzenetek
+
+    @ManyToOne(() => Pictures, { nullable: true })
+    @JoinColumn({ name: "pictureId" })
+    picture: Pictures;
 }
 
