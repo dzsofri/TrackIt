@@ -13,7 +13,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   private tokenName = environment.tokenName;
-  private server = environment.serverUrl;
+  public server = environment.serverUrl;
 
   getToken(): String | null {
     return localStorage.getItem(this.tokenName);
@@ -166,15 +166,6 @@ export class ApiService {
       catchError(error => {
         console.error('Emlékeztető beállítása sikertelen:', error);
         return of({ message: 'Emlékeztető beállítása sikertelen' });
-      })
-    );
-  }
-
-  postUserPicture(formData: FormData): Observable<any> {
-    return this.http.post<any>(`${this.server}/users/picture`, formData, this.tokenHeader()).pipe(
-      catchError((error) => {
-        console.error("Profile picture upload failed:", error);
-        return of({ message: "Profile picture upload failed" });
       })
     );
   }

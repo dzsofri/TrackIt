@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { take } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
  
 @Component({
   selector: 'app-profile-modositas',
@@ -44,6 +45,7 @@ export class ProfileModositasComponent {
   constructor(
     private api: ApiService,
     private auth: AuthService,
+    private http: HttpClient
   ) {
     this.setMinDate();
   }
@@ -64,47 +66,127 @@ export class ProfileModositasComponent {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
   }
 
-  onFileSelected(event: Event) {
+  ngOnInit(): void {
+    this.auth.user$.subscribe(user => {
+        if (user) {
+            this.user.id = user.id;
+            this.fetchUserProfilePicture(); // Fetch the profile picture on initialization
+        }
+    });
+}
+  
+fetchUserProfilePicture(): void {
+  const token = localStorage.getItem('trackit');
+  if (!token) {
+      console.error('No valid token found!');
+      return;
+  }
+
+  this.http.get<{ imageUrl: string }>(`http://localhost:3000/users/profile-picture`, {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  }).subscribe({
+      next: (response) => {
+          if (response.imageUrl) {
+              console.log('Fetched image URL:', response.imageUrl); // Debugging log
+              this.imagePreviewUrl = response.imageUrl;
+          } else {
+              console.warn('No image URL found, using default image.');
+              this.imagePreviewUrl = '/assets/images/profileKep.png'; // Default image
+          }
+      },
+      error: (error) => {
+          console.error('Error fetching profile picture:', error);
+          this.imagePreviewUrl = '/assets/images/profileKep.png'; // Default image in case of error
+      }
+  });
+}
+
+  onFileSelectedAndUpload(event: Event) {
     const input = event.target as HTMLInputElement;
   
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+      this.selectedFile = file;
   
       const reader = new FileReader();
-  
-      // Generálja az előnézet URL-jét
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.imagePreviewUrl = e.target?.result as string;
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
   
-      // FormData előkészítése a feltöltéshez
       const formData = new FormData();
-      formData.append("picture", file);
   
-      // Kép feltöltése az API-n keresztül
-      this.api.postUserPicture(formData).subscribe({
-        next: (res: any) => {
-          console.log("Profile picture uploaded successfully:", res);
+      if (this.selectedFile) {
+        formData.append('picture', this.selectedFile, this.selectedFile.name);
+      }
   
-          // Frissítse az előnézet URL-jét a szerver válasza alapján
-          if (res.user && res.user.imageUrl) {
-            this.imagePreviewUrl = res.user.imageUrl;
-          }
+      const token = localStorage.getItem('trackit');
+      if (!token) {
+        console.error('Nincs érvényes token!');
+        alert('Nincs bejelentkezve! Kérem jelentkezzen be!');
+        return;
+      }
   
-          // Frissítse a pictureId mezőt
-          if (res.user && res.user.pictureId) {
-            this.user.pictureId = res.user.pictureId;
-            console.log("Picture ID updated:", this.user.pictureId);
-          }
+      this.http.post<any>(`http://localhost:3000/users/add-picture`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).subscribe({
+        next: (response) => {
+          this.modalVisible = true;
+          this.modalType = 'success';
+          this.modalMessage = 'Profilkép sikeresen beállítva/frissítve!';
+          this.autoCloseModal();
         },
-        error: (error: any) => {
-          console.error("Error uploading profile picture:", error);
-        },
+        error: (error) => {
+          console.error('Hiba a kép feltöltésekor:', error);
+          if (error.status === 401) {
+            alert('Nincs bejelentkezve! Kérem jelentkezzen be!');
+          }
+        }
       });
     } else {
-      console.error("No file selected for upload.");
+      console.error('Nem választottál ki fájlt a feltöltéshez.');
     }
+  }
+  
+  updateUserPicture() {
+    if (!this.selectedFile) {
+      console.error('Nincs kiválasztott fájl frissítéshez.');
+      alert('Kérlek, válassz egy képet frissítéshez!');
+      return;
+    }
+  
+    const token = localStorage.getItem('trackit');
+    if (!token) {
+      console.error('Nincs érvényes token!');
+      alert('Nincs bejelentkezve! Kérem jelentkezzen be!');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('picture', this.selectedFile, this.selectedFile.name);
+  
+    this.http.put<any>(`http://localhost:3000/users/${this.user.id}/picture`, formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }).subscribe({
+      next: (response) => {
+        console.log('Kép sikeresen frissítve:', response);
+  
+        // Modal alert megjelenítése
+        this.modalVisible = true;
+        this.modalType = 'success';
+        this.modalMessage = 'Profilkép sikeresen frissítve!';
+        this.autoCloseModal();
+      },
+      error: (error) => {
+        console.error('Hiba a kép frissítésekor:', error);
+      }
+    });
   }
 
   onSubmit() {
