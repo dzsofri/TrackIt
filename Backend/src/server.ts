@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import { AppDataSource } from "./data-source";
 import { seedDatabase } from "./utiles/DatabaseSeedUtils";
 
-import userRoutes from "./routes/userRoutes";
+import userRoutes, { uploadsMiddleware } from "./routes/userRoutes";
 import feedbackRoutes from "./routes/feedbackRoutes";
 import friendRoutes from "./routes/friendRoutes";
 import userStatisticsRoutes from "./routes/userStatisticsRoutes";
@@ -20,6 +20,8 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+app.use('/uploads', uploadsMiddleware);
 
 // 🔥 Attach socket.io to this server
 const io = new Server(server, {

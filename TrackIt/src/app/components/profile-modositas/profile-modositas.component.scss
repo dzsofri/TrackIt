@@ -1,28 +1,3 @@
-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-@media (max-width: 480px) {
-    header {
-        display: block;
-    }
-}
-#felhasznalo{
-    background: url('/assets/images/profileKep.png') no-repeat center/cover;
-    display: block;
-    justify-content: center;
-    align-items: center;
-    width: 70vw;
-    max-width: 150px;
-    height: 50vw;
-    max-height: 150px;
-    padding: 0.3px;
-    border-radius: 50%;
-    margin: 0 auto;
-}
 //Linkek
 .nav-link.active {
     color: #627966;
@@ -149,21 +124,12 @@ input {
     align-items: center;
     width: 250px;
 }
-#profilekep {
-    background: url('/assets/images/profileKep.png') no-repeat center/cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    max-width: 150px;
-    height: 100vw;
-    max-height: 150px;
-    padding: 0.3px;
-    border-radius: 50%;
-    margin: auto;
-}
 .circle-image img {
-    display: none; /* Ensure the hidden img tag does not interfere with the design */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
 }
 @media screen and (max-width: 768px) {
     .profile_box2 {
@@ -217,21 +183,6 @@ input {
         justify-content: center;
         align-items: center;
     }
-    #profilekep{
-        background-image: url('/assets/images/profileKep.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100vw;
-        max-width: 150px;
-        height: 100vw;
-        max-height: 150px;
-        padding: 0.3px;
-        border-radius: 50%;
-        margin: auto;
-    }
 }
 @media (max-width: 480px) {
     .profile_box2 {
@@ -256,20 +207,14 @@ input {
         font-weight: bold;
         padding: 10px;
         display: flex;
-        width: 150px;
+        width: 135px;
     }
-    #profilekep{
-        background-image: url('/assets/images/profileKep.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        display: flex;
-        width: 75vw;
-        max-width: 80px;
-        height: 75vw;
-        max-height: 80px;
-        padding: 0.3px;
+    .circle-image img {
+        width: 130px;
+        height: 130px;
         border-radius: 50%;
-        margin-left: 0 auto;
+        object-fit: cover;
+        border: 2px solid #ccc;
     }
 }
 @media (max-width: 380px) {
@@ -295,17 +240,12 @@ input {
         display: flex;
         width: 210px;
     }
-    #profilekep{
-        background-image: url('/assets/images/profileKep.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        display: flex;
-        width: 75vw;
-        max-width: 150px;
-        margin-left: 30px;
-        height: 75vw;
-        max-height: 150px;
-        padding: 0.3px;
+    .circle-image img {
+        width: 150px;
+        height: 150px;
+        margin-left: 140px;
         border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ccc;
     }
 }
