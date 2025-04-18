@@ -22,20 +22,23 @@ const router = Router();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const uploadPath = path.join(__dirname, '../uploads'); // Az uploads mappa útvonala
+      const uploadPath = path.join(__dirname, "..", "uploads"); // biztosan a gyökérben lévő uploads-ba töltsön
       if (!fs.existsSync(uploadPath)) {
         fs.mkdirSync(uploadPath, { recursive: true });
       }
       cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
       cb(null, `${uniqueSuffix}-${file.originalname}`);
     },
   });
   
   const upload = multer({ storage });
-  router.use("/uploads", express.static("uploads"));
+  
+  export const uploadsMiddleware = express.static(
+    path.join(__dirname, "..", "uploads")
+  );
 
 // Hibás mezők tárolása
 const addInvalidField = (fields: string[], fieldName: string) => {
@@ -385,7 +388,6 @@ router.post('/add-picture', tokencheck, upload.single('picture'), async (req: an
       const userRepository = AppDataSource.getRepository(Users);
       const pictureRepository = AppDataSource.getRepository(Pictures);
   
-      // Új kép mentése az adatbázisba
       const newPicture = pictureRepository.create({
         id: uuidv4(),
         filename: req.file.filename,
@@ -393,7 +395,6 @@ router.post('/add-picture', tokencheck, upload.single('picture'), async (req: an
       });
       const savedPicture = await pictureRepository.save(newPicture);
   
-      // Felhasználó frissítése a kép azonosítójával
       const user = await userRepository.findOne({ where: { id: userId } });
   
       if (!user) {
@@ -459,32 +460,43 @@ router.put("/users/:id/picture", tokencheck, upload.single("picture"), async (re
     }
 });
   
-  // Get user's profile picture
-  router.get("/:id/picture", async (req: any, res: any) => {
+router.get("/profile-picture", tokencheck, async (req: any, res: any) => {
     try {
-      const { id } = req.params;
+      const userId = req.user.id;
+  
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized: User ID missing in token." });
+      }
   
       const userRepository = AppDataSource.getRepository(Users);
-  
-      const user = await userRepository.findOne({ where: { id } });
+      const user = await userRepository.findOne({
+        where: { id: userId },
+        relations: ["picture"],
+      });
   
       if (!user) {
         return res.status(404).json({ message: "User not found." });
       }
   
-      const imageUrl = user.pictureId
-        ? `http://localhost:3000/uploads/${user.pictureId}`
+      const imageUrl = user.picture?.filename
+        ? `http://localhost:3000/uploads/${user.picture.filename}`
         : null;
   
       return res.status(200).json({
-        message: "User profile picture fetched successfully!",
         imageUrl,
+        picture: user.picture
+          ? {
+              id: user.picture.id,
+              filename: user.picture.filename,
+              path: user.picture.path,
+            }
+          : null,
       });
     } catch (error) {
-      console.error("Error fetching user's profile picture:", error);
+      console.error("Error fetching profile picture:", error);
       return res.status(500).json({ message: "Server error." });
     }
-  });
+});
 
 
 // Frissíti a felhasználó státuszát (online/offline)

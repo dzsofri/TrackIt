@@ -67,40 +67,36 @@ export class ProfileModositasComponent {
   }
 
   ngOnInit(): void {
-    this.auth.user$.subscribe(user => {
+    this.auth.user$.subscribe((user) => {
         if (user) {
             this.user.id = user.id;
-            this.fetchUserProfilePicture(); // Fetch the profile picture on initialization
+            this.fetchUserProfilePicture();
         }
     });
 }
-  
-fetchUserProfilePicture(): void {
-  const token = localStorage.getItem('trackit');
-  if (!token) {
-      console.error('No valid token found!');
-      return;
-  }
 
-  this.http.get<{ imageUrl: string }>(`http://localhost:3000/users/profile-picture`, {
-      headers: {
-          'Authorization': `Bearer ${token}`
-      }
-  }).subscribe({
-      next: (response) => {
-          if (response.imageUrl) {
-              console.log('Fetched image URL:', response.imageUrl); // Debugging log
-              this.imagePreviewUrl = response.imageUrl;
-          } else {
-              console.warn('No image URL found, using default image.');
-              this.imagePreviewUrl = '/assets/images/profileKep.png'; // Default image
-          }
-      },
-      error: (error) => {
-          console.error('Error fetching profile picture:', error);
-          this.imagePreviewUrl = '/assets/images/profileKep.png'; // Default image in case of error
-      }
-  });
+fetchUserProfilePicture(): void {
+    const token = localStorage.getItem('trackit');
+    if (!token) {
+        console.error('No valid token found!');
+        return;
+    }
+
+    this.http
+        .get<{ imageUrl: string | null }>('http://localhost:3000/users/profile-picture', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .subscribe({
+            next: (response) => {
+                this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
+            },
+            error: (error) => {
+                console.error('Error fetching profile picture:', error);
+                this.imagePreviewUrl = '/assets/images/profileKep.png';
+            },
+        });
 }
 
   onFileSelectedAndUpload(event: Event) {
@@ -177,7 +173,6 @@ fetchUserProfilePicture(): void {
       next: (response) => {
         console.log('Kép sikeresen frissítve:', response);
   
-        // Modal alert megjelenítése
         this.modalVisible = true;
         this.modalType = 'success';
         this.modalMessage = 'Profilkép sikeresen frissítve!';
