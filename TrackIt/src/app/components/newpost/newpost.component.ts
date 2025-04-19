@@ -1,7 +1,10 @@
+// newpost.component.ts
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NewpostmodalComponent } from '../newpostmodal/newpostmodal.component';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-newpost',
@@ -11,25 +14,49 @@ import { NewpostmodalComponent } from '../newpostmodal/newpostmodal.component';
   styleUrls: ['./newpost.component.scss']
 })
 export class NewpostComponent {
-  postContent: string = ''; // A poszt tartalma
-  isPopupOpen: boolean = false; // Popup állapot (nyitva vagy zárva)
+  postTitle: string = '';
+  postContent: string = '';
+  isPopupOpen: boolean = false;
+  postStatus: string = 'published';
 
-  // Popup megnyitása
+  constructor(private apiService: ApiService) {}
+
   openPopup() {
     this.isPopupOpen = true;
   }
 
-  // Popup bezárása
   closePopup() {
     this.isPopupOpen = false;
   }
 
-  // Poszt beküldése
   submitPost() {
     if (this.postContent.trim()) {
-      console.log('Új bejegyzés:', this.postContent); // Poszt tartalma
-      this.postContent = ''; // Mező ürítése a beküldés után
-      this.closePopup(); // Popup bezárása a posztolás után
+      if (!this.postTitle.trim()) {
+        this.postTitle = 'Név nélküli poszt'; // Alapértelmezett cím, ha nem adnak meg
+      }
+  
+      const postData = {
+        title: this.postTitle,  // A felhasználó által megadott cím
+        body: this.postContent, // A poszt tartalma
+        status: this.postStatus  // A státusz (pl. 'published')
+      };
+  
+      this.apiService.createPost(postData).subscribe(
+        response => {
+          console.log('Poszt sikeresen létrehozva:', response);
+          this.closePopup(); // Popup bezárása a posztolás után
+        },
+        error => {
+          console.error('Hiba a poszt mentésekor:', error);
+        }
+      );
     }
   }
+  
+  handlePostSubmit(postContent: string) {
+
+    console.log('Poszt létrejött, ID:', postContent);
+  }
+  
+  
 }

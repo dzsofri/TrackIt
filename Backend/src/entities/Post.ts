@@ -26,7 +26,7 @@ export class Posts {
     @Column({ type: "text" })
     body: string;
 
-    @ManyToOne(() => Users, (user) => user.posts)
+    @ManyToOne(() => Users, (user) => user.posts, {eager: true})
     @JoinColumn({ name: "userId" })
     user: Users;
 

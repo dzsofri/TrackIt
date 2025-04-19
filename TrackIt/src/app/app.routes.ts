@@ -11,6 +11,7 @@ import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
 import { ChatComponent } from './components/chat/chat.component';
+import { FeedComponent } from './components/feed/feed.component';
 
 export const routes: Routes = [
   {
@@ -61,7 +62,12 @@ export const routes: Routes = [
   },
 
 
-
+  {
+    path: 'feed',
+    component: FeedComponent, // <-- Ezt adtuk hozzá
+    canActivate: [AuthGuard], // Opcionális, ha bejelentkezés kell
+    data: { label: 'Feed', icon: '/assets/icons/feed_logo.png' }
+  },
   {
     path: '',
     redirectTo: 'login',
