@@ -11,6 +11,12 @@ header {
         display: block;
     }
 }
+@media (max-width: 360px) {
+    header {
+        display: block;
+        margin-left: 15%;
+    }
+}
 .circle-image img {
     width: 150px;
     height: 150px;
