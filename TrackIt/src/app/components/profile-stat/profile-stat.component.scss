@@ -51,7 +51,7 @@ html, body {
 h3{
     padding: 20px;
 }
-img, span {
+span {
     margin-right: 20px;
 }
 #statisztika-tab-pane {
@@ -122,14 +122,20 @@ img, span {
     background-color: #173622;
     background-image: url('/assets/images/pipa.png');
     opacity: 0.8;
+    border: 2px solid #afe631;
+    margin-right: 30px;
 }
 #elmaradt {
     background-color: rgba(255, 0, 0, 0.2);
     background-image: url('/assets/images/kereszt.png');
+    border: 2px solid #ee0000;
+    margin-right: 30px;
 }
 #teljesitve {
     background-color: #000000;
     background-image: url('/assets/images/stat.png');
+    border: 2px solid #000000;
+    margin-right: 20px;
 }
 .folyamat{
     color: #709376;
