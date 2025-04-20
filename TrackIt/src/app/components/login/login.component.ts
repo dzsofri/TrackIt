@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReminderService } from '../../services/reminder.service';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +33,7 @@ export class LoginComponent {
     private api: ApiService,
     private auth: AuthService,
     private router: Router,
+    private reminderService: ReminderService
   ) {}
 
   private formatDateToYYYYMMDD(date: Date): string {
@@ -52,7 +54,7 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.invalidFields = []; // Reset the invalid fields
+    this.invalidFields = [];
   
     this.api.login(this.user.email, this.user.password).subscribe({
       next: (res: any) => {
@@ -64,31 +66,36 @@ export class LoginComponent {
             this.auth.login(res.token);
   
             const reminderAt = res.user?.reminderAt || null;
-            if (reminderAt && this.checkReminder(reminderAt)) {
-              this.showReminderModal(
-                "Felezd be a megmaradt kihívásaidat, mielőtt lejár a kihívásra szánt idő. Ne feledd, a határidő közeleg!",
-                () => {
-                  this.router.navigateByUrl('/profile');
-                }
-              );
-            } else {
-              this.router.navigateByUrl('/profile');
-            }
+            const shouldShowReminder = reminderAt && this.checkReminder(reminderAt);
+  
+            this.modalMessage = 'Sikeres bejelentkezés!';
+            this.modalType = 'success';
+            this.modalButtons = [];
+            this.modalVisible = true;
+  
+            setTimeout(() => {
+              this.modalVisible = false;
+              this.router.navigateByUrl('/feed');
+            
+              if (shouldShowReminder) {
+                this.reminderService.showReminder(
+                  "Felezd be a megmaradt kihívásaidat, mielőtt lejár a kihívásra szánt idő. Ne feledd, a határidő közeleg!"
+                );
+              }
+            }, 5000);
+  
           } else {
-            // Token hiányában hibaüzenet
             this.modalMessage = res.message || 'Hiba történt a bejelentkezés során!';
             this.modalType = 'error';
             this.modalVisible = true;
           }
         } else {
-          // Hibás mezők kezelése
           this.modalMessage = 'Hibás bejelentkezési adatok!';
           this.modalType = 'error';
           this.modalVisible = true;
         }
       },
       error: (err) => {
-        // API hiba esetén
         this.modalMessage = err.error?.message || 'Ismeretlen hiba történt!';
         this.modalType = 'error';
         this.modalVisible = true;
@@ -96,7 +103,7 @@ export class LoginComponent {
     });
   }
   
-  showReminderModal(reminderMessage: string, onCloseCallback: () => void) {
+  showReminderModal(reminderMessage: string) {
     this.modalMessage = reminderMessage;
     this.modalType = 'info';
     this.modalButtons = [
@@ -104,7 +111,6 @@ export class LoginComponent {
         label: 'OK',
         action: () => {
           this.onModalClose();
-          onCloseCallback();
         },
         class: 'btn-primary'
       }
@@ -114,5 +120,11 @@ export class LoginComponent {
   
   onModalClose() {
     this.modalVisible = false;
+  }
+
+  autoCloseModal() {
+    setTimeout(() => {
+      this.modalVisible = false;
+    }, 5000);
   }
 }

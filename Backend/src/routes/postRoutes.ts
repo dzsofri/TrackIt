@@ -7,7 +7,6 @@ import { Pictures } from "../entities/Picture";
 import { v4 as uuidv4 } from 'uuid';
 import path from "path";
 import multer from 'multer';
-import { db } from "../server";
 
 const router = Router();
 

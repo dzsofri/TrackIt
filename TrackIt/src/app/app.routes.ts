@@ -61,7 +61,7 @@ export const routes: Routes = [
     data: { label: 'Üzenetek', icon: '/assets/icons/messages_logo.png' }
   },
 
-
+  
   {
     path: 'feed',
     component: FeedComponent, // <-- Ezt adtuk hozzá
