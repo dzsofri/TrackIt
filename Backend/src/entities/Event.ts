@@ -3,6 +3,7 @@ import {
     PrimaryGeneratedColumn,
     Column,
     ManyToOne,
+    JoinColumn,
     CreateDateColumn
 } from "typeorm";
 import { Users } from "./User";
@@ -33,5 +34,6 @@ export class Events {
     @ManyToOne(() => Users, (user) => user.events, {
         onDelete: "CASCADE"
     })
+    @JoinColumn({ name: "userId" })
     user: Users;
 }

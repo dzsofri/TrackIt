@@ -11,12 +11,20 @@ import { FormsModule } from '@angular/forms';
 export class DayDetailsModalComponent  {
 
   @Input() visible: boolean = false;
-  @Input() day: any = null;
+  @Input() day: any;
   @Output() close = new EventEmitter<void>();
-
-
+  @Output() deleteEvent = new EventEmitter<any>();
+  @Output() editEvent = new EventEmitter<any>();
 
   closeModal() {
     this.close.emit();
+  }
+
+  onDelete(event: any) {
+    this.deleteEvent.emit(event);
+  }
+
+  onEdit(event: any) {
+    this.editEvent.emit(event);
   }
 }

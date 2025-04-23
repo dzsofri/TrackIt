@@ -11,25 +11,20 @@ import { DayDetailsModalComponent } from '../day-details-modal/day-details-modal
 @Component({
   selector: 'app-havi-planner',
   standalone: true,
-  imports: [CommonModule, FormsModule,ColorPickerModule, DayDetailsModalComponent, AlertModalComponent],
+  imports: [CommonModule, FormsModule, ColorPickerModule, DayDetailsModalComponent, AlertModalComponent],
   templateUrl: './havi-planner.component.html',
   styleUrls: ['./havi-planner.component.scss']
 })
 export class HaviPlannerComponent {
   startDateType: string = 'text';
   endDateType: string = 'text';
-
   eventRows: any[][] = [];
-
   selectedDay: any = null;
   dayDetailsVisible: boolean = false;
-
   showDayDetails(day: any): void {
     this.selectedDay = day;
     this.dayDetailsVisible = true;
   }
-
-
 
   modalVisible = false;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
@@ -37,10 +32,7 @@ export class HaviPlannerComponent {
   invalidFields: string[] = [];
 
   weekdays = ['H', 'K', 'Sz', 'Cs', 'P', 'Sz', 'V'];
-  months = [
-    'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
-    'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'
-  ];
+  months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
 
   currentYear = new Date().getFullYear();
   currentMonth = new Date().getMonth();
@@ -50,42 +42,37 @@ export class HaviPlannerComponent {
     description: '',
     startTime: '',
     endTime: '',
-    color: '#ff0000'  // alapértelmezett szín (piros)
+    color: '#ff0000' // alapértelmezett szín (piros)
   };
-
 
   calendarDays: any[] = [];
   events: any[] = []; // Események tárolása
-
   legends = [
     { color: 'deepskyblue', label: '30 napos víz kihívás' },
     { color: 'mediumseagreen', label: 'Történelem beadandó' },
     { color: 'red', label: 'Vizsganap' },
   ];
 
-  constructor(private apiService: ApiService) {}
+  editingEvent: any = null; // Az esemény, amelyet szerkesztünk
 
+  constructor(private apiService: ApiService) {}
 
   ngOnInit() {
     this.apiService.getEvents().subscribe(events => {
       if (events.length > 0) {
-        console.log('Események sikeresen lekérve:', events);  // Kiírjuk az eseményeket, ha sikerült
-        this.events = events;  // Események tárolása
-        this.generateCalendar();  // Naptár generálása
+        console.log('Események sikeresen lekérve:', events); // Kiírjuk az eseményeket
+        this.events = events; // Események tárolása
+        this.generateCalendar(); // Naptár generálása
       } else {
-        console.log('Nincsenek események');  // Ha nincs esemény, akkor ezt írja ki
+        console.log('Nincsenek események'); // Ha nincs esemény, akkor ezt írja ki
       }
     });
   }
-
-
-
 
   generateCalendar() {
     const firstDayOfMonth = new Date(this.currentYear, this.currentMonth, 1);
     const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
     const startDay = (firstDayOfMonth.getDay() + 6) % 7; // hétfő az első nap
-
     this.calendarDays = [];
 
     // Előző hónap napjai kitöltéshez (ha kell)
@@ -101,7 +88,6 @@ export class HaviPlannerComponent {
     // Aktuális hónap napjai
     for (let i = 1; i <= daysInMonth; i++) {
       const eventsForDay = this.getEventDots(i); // Események keresése a napon
-
       this.calendarDays.push({
         date: i,
         dots: eventsForDay, // Események hozzáadása
@@ -117,14 +103,13 @@ export class HaviPlannerComponent {
       });
     }
     this.eventRows = this.calculateEventRows();
-
   }
+
   getEventGridColumn(event: any): string {
     const startDay = new Date(event.startTime).getDate();
     const endDay = new Date(event.endTime).getDate();
     const offset = this.getDayOffset(startDay);
     const span = endDay - startDay + 1;
-
     return `${offset + 1} / span ${span}`;
   }
 
@@ -133,6 +118,7 @@ export class HaviPlannerComponent {
     const startDay = (firstDayOfMonth.getDay() + 6) % 7; // hétfő az első
     return startDay + day - 1;
   }
+
   calculateEventRows() {
     const rows: any[][] = [];
 
@@ -176,45 +162,32 @@ export class HaviPlannerComponent {
     return rows;
   }
 
-
   getEventDots(day: number) {
     const currentDate = new Date(this.currentYear, this.currentMonth, day);
     currentDate.setHours(0, 0, 0, 0);
 
     return this.events
-    .filter(event => {
-      const eventStart = new Date(event.startTime);
-      const eventEnd = new Date(event.endTime);
+      .filter(event => {
+        const eventStart = new Date(event.startTime);
+        const eventEnd = new Date(event.endTime);
+        return eventStart <= currentDate && currentDate <= eventEnd;
+      })
+      .map(event => {
+        const eventStart = new Date(event.startTime);
+        const eventEnd = new Date(event.endTime);
+        const isStart = eventStart.toDateString() === currentDate.toDateString();
+        const isEnd = eventEnd.toDateString() === currentDate.toDateString();
 
-      return eventStart <= currentDate && currentDate <= eventEnd;
-    })
-    .map(event => {
-      const eventStart = new Date(event.startTime);
-      const eventEnd = new Date(event.endTime);
-
-      const isStart = eventStart.toDateString() === currentDate.toDateString();
-      const isEnd = eventEnd.toDateString() === currentDate.toDateString();
-
-      return {
-        title: event.title,
-        color: event.color || 'deepskyblue', // fallback szín, ha nincs
-        isStart: isStart,
-        eventStart: eventStart,
-        eventEnd:eventEnd,
-        isEnd
-      };
-
-
-    });
-
+        return {
+          title: event.title,
+          color: event.color || 'deepskyblue', // fallback szín, ha nincs
+          isStart: isStart,
+          eventStart: eventStart,
+          eventEnd: eventEnd,
+          isEnd,
+        };
+      });
   }
-
-
-
-
-
-
-
 
   prevMonth() {
     if (this.currentMonth === 0) {
@@ -270,6 +243,59 @@ export class HaviPlannerComponent {
       return;
     }
 
+    if (this.editingEvent) {
+      this.apiService.updateEvent({
+        original: this.editingEvent,
+        updated: {
+          title: this.newEvent.name,
+          description: this.newEvent.description,
+          startTime,
+          endTime,
+          color: this.newEvent.color
+        }
+      }).subscribe({
+        next: (response) => {
+          this.modalMessage = 'Esemény sikeresen frissítve.';
+          this.modalType = 'success';
+          this.modalVisible = true;
+
+          const index = this.events.findIndex(e =>
+            e.title === this.editingEvent.title &&
+            e.startTime === this.editingEvent.startTime &&
+            e.endTime === this.editingEvent.endTime
+          );
+
+          if (index !== -1) {
+            this.events[index] = {
+              title: this.newEvent.name,
+              startTime,
+              endTime,
+              color: this.newEvent.color
+            };
+          }
+
+          this.generateCalendar();
+          this.editingEvent = null;
+
+          this.newEvent = {
+            name: '',
+            description: '',
+            startTime: '',
+            endTime: '',
+            color: '#ff0000'
+          };
+        },
+        error: (err) => {
+          this.modalMessage = 'Nem sikerült frissíteni az eseményt.';
+          this.modalType = 'error';
+          this.modalVisible = true;
+          console.error(err);
+        }
+      });
+
+      return;
+    }
+
     this.apiService.createEvent({
       title: this.newEvent.name,
       description: this.newEvent.description,
@@ -314,10 +340,7 @@ export class HaviPlannerComponent {
     });
   }
 
-
-
   visibleWeekdayStartIndex = 0;
-
   get visibleWeekdays() {
     return window.innerWidth <= 500
       ? this.weekdays.slice(this.visibleWeekdayStartIndex, this.visibleWeekdayStartIndex + 3)
@@ -333,6 +356,25 @@ export class HaviPlannerComponent {
   prevWeekdaySet() {
     if (this.visibleWeekdayStartIndex - 3 >= 0) {
       this.visibleWeekdayStartIndex -= 3;
+    }
+  }
+
+  deleteEvent(event: any, showConfirmation: boolean = true) {
+    const index = this.events.findIndex(e =>
+      e.startTime === event.startTime &&
+      e.endTime === event.endTime &&
+      e.title === event.title
+    );
+
+    if (index !== -1) {
+      this.events.splice(index, 1);
+      this.generateCalendar();
+
+      if (showConfirmation) {
+        this.modalMessage = 'Esemény törölve.';
+        this.modalType = 'info';
+        this.modalVisible = true;
+      }
     }
   }
 }

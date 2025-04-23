@@ -8,6 +8,7 @@ const router = Router();
 const eventRepo = AppDataSource.getRepository(Events);
 
 // Új esemény létrehozása
+// Új esemény létrehozása
 router.post("/", tokencheck, async (req: any, res: any) => {
     try {
         const { title, description, startTime, endTime, color } = req.body;
@@ -19,22 +20,23 @@ router.post("/", tokencheck, async (req: any, res: any) => {
             return res.status(404).json({ message: "Felhasználó nem található." });
         }
 
-        // Az esemény létrehozása
+        // Az esemény létrehozása és user hozzárendelése
         const event = eventRepo.create({
             title,
             description,
             startTime: new Date(startTime),
             endTime: new Date(endTime),
             color,
+            user // 🔧 itt történik a kapcsolat beállítása
         });
 
-        // Esemény mentése az adatbázisba
         await eventRepo.save(event);
         res.status(201).json({ message: "Esemény létrehozva.", event });
     } catch (err) {
         res.status(500).json({ message: "Hiba az esemény létrehozásakor.", error: err });
     }
 });
+
 
 
 // Összes esemény lekérdezése

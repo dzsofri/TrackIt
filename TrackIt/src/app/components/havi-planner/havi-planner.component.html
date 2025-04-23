@@ -77,8 +77,11 @@
 <app-day-details-modal
   [visible]="dayDetailsVisible"
   [day]="selectedDay"
-  (close)="dayDetailsVisible = false">
+  (close)="dayDetailsVisible = false"
+  (edit)="editEvent($event)"
+  (remove)="deleteEvent($event)">
 </app-day-details-modal>
+
 
 
 </div>
