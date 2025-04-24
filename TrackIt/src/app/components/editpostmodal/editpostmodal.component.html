@@ -1,0 +1,31 @@
+<div class="modal-backdrop" *ngIf="showModal">
+    <!-- Modal üzenet, ha működik -->
+  
+    <!-- Modal tartalma -->
+    <div class="modal">
+      <h2>Bejegyzés szerkesztése</h2>
+  
+      <!-- Cím mező -->
+      <label for="title">Cím:</label>
+      <input id="title" type="text" [(ngModel)]="post.title" />
+  
+      <!-- Szöveg mező -->
+      <label for="body">Szöveg:</label>
+      <textarea id="body" [(ngModel)]="post.body"></textarea>
+  
+        <!-- Státusz mező -->
+        <label for="status">Státusz:</label>
+        <select id="status" [(ngModel)]="post.status">
+        <option value="published">Publikált</option>
+        <option value="archived">Archivált</option>
+        </select>
+
+
+      <!-- Akciók -->
+      <div class="actions">
+        <button (click)="savePost()">Mentés</button>
+        <button (click)="cancel()">Mégse</button>
+      </div>
+    </div>
+  </div>
+  
