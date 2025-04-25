@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
 import { Users } from "./User";
+import { UserChallenges } from "./UserChallenge";
 
 
 @Entity()
@@ -23,6 +24,10 @@ export class FriendRequests {
 
     @Column({ type: "enum", enum: ["pending", "accepted"], default: "pending" })
     status: string;
+
+    @ManyToOne(() => UserChallenges, (challenge) => challenge.statistics, { nullable: true })
+    @JoinColumn({ name: "activeChallengeId" })
+    activeChallenge: UserChallenges | null;
 
     @CreateDateColumn()
     createdAt: Date;

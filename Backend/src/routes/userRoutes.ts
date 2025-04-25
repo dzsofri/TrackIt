@@ -417,7 +417,7 @@ router.post('/add-picture', tokencheck, upload.single('picture'), async (req: an
       console.error("Hiba a kép feltöltésekor:", error);
       return res.status(500).json({ message: "Hiba történt a kép feltöltésekor." });
     }
-  });
+});
 
   
 router.put("/users/:id/picture", tokencheck, upload.single("picture"), async (req: any, res: any) => {

@@ -10,4 +10,5 @@ export interface User_Challenge {
     finalDate: string;
     challengeName: string;
     challengeDescription: string;
+    badgeId: string;
 }
