@@ -1,3 +1,20 @@
+// === MIXINEK ===
+@mixin soft-box {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+@mixin input-style {
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-color: #eeeeee;
+  box-shadow: 2px 2px 5px #999999;
+}
+
+// === FŐ KONTAINER ===
 .calendar-container {
   display: flex;
   flex-wrap: wrap;
@@ -5,10 +22,8 @@
   padding: 2rem;
   height: 93vh !important;
   margin-left: 1.5vw !important;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 2px 2px 5px #999999;
   font-family: 'Segoe UI', sans-serif;
+  @include soft-box;
 
   label {
     font-weight: bold;
@@ -26,31 +41,22 @@
 .sidebar {
   width: 30%;
   padding: 1.5rem;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 2px 2px 5px #ccc;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   max-height: 80vh !important;
+  background-color: #f9f9f9;
+  @include soft-box;
 
   input[type="text"],
   input[type="datetime-local"],
   textarea {
-    padding: 0.7rem;
-    font-size: 1rem;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    background-color: #eeeeee;
-    box-shadow: 2px 2px 5px #999999;
+    @include input-style;
   }
 
   #eventColor {
     width: 13rem !important;
-    padding: 0.7rem;
-    border-radius: 6px;
-    background-color: #eeeeee;
-    box-shadow: 2px 2px 5px #999999;
+    @include input-style;
   }
 
   .date-fields {
@@ -64,8 +70,7 @@
       width: 100%;
     }
 
-    @media (max-width: 1400px),
-    (max-width: 500px) {
+    @media (max-width: 1400px), (max-width: 500px) {
       flex-direction: column;
     }
   }
@@ -76,7 +81,23 @@
   }
 }
 
-// === CALENDAR ===
+// === ÚJ ESEMÉNY NÉZET ===
+.add-event-view {
+  width: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+
+  input[type="text"],
+  input[type="datetime-local"],
+  textarea {
+    @include input-style;
+  }
+}
+
+// === NAPTÁR ===
 .calendar {
   flex: 1;
   max-width: 70%;
@@ -134,7 +155,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
- max-height: 70vh;
+  max-height: 70vh;
 
   @media (max-width: 500px) {
     font-size: 0.75rem;
@@ -149,7 +170,6 @@
   position: relative;
   font-size: 0.85rem;
   transition: transform 0.3s;
-
 
   &:hover {
     transform: scale(1.1);
@@ -189,20 +209,20 @@
   }
 }
 
-// === BUTTON ===
+// === GOMBOK ===
 .get-started-button {
   align-self: flex-end;
   width: 50%;
   max-width: 400px !important;
-  padding: 0.5rem 1rem;
-  font-size: 100%;
   font-weight: bold;
+  font-size: 100%;
   color: #627966;
   background-color: transparent;
   border: 2px solid #627966;
   border-radius: 30px;
   cursor: pointer;
-  box-shadow: 2px 2px 5px #999999;
+  padding: 0.5rem 1rem;
+  @include soft-box;
   transition: 0.3s;
 
   &:hover {
@@ -221,7 +241,24 @@
   }
 }
 
-// === LEGEND ===
+.simple-button {
+  padding: 0.5rem 1rem;
+  background-color: #ffffff;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 2px 2px 5px #999999;
+  margin-right: 0.5rem;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+// === LEGENDA ===
 .legend {
   margin-top: 2rem;
   display: flex;
@@ -239,6 +276,93 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
+    }
+  }
+}
+
+// === ESEMÉNYLISTA ===
+.event-list-view {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #f9f9fb;
+  transition: background 0.3s;
+  @include soft-box;
+
+  &:hover {
+    background: #f1f1f7;
+  }
+}
+
+.event-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.event-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.event-time {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+// === CHECKBOX STÍLUSOK ===
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    margin-left: 1rem;
+    position: relative;
+    transition: all 0.2s;
+
+    &:checked {
+      background-color: #007bff;
+      border-color: #007bff;
+
+      &::after {
+        display: block;
+      }
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      display: none;
+      left: 5px;
+      top: 2px;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
     }
   }
 }

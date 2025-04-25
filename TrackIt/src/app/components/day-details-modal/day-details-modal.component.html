@@ -24,8 +24,6 @@
                 <p><strong>Kezdés:</strong> {{ event.eventStart | date:'yyyy.MM.dd HH:mm' }}</p>
                 <p><strong>Befejezés:</strong> {{ event.eventEnd | date:'yyyy.MM.dd HH:mm' }}</p>
                 <div class="actions">
-                  <button class="edit-btn" (click)="onEdit(event)">Módosítás</button>
-                  <button class="delete-btn" (click)="onDelete(event)">Törlés</button>
                 </div>                
               </div>
             </li>
