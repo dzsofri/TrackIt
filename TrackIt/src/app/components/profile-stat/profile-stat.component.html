@@ -15,27 +15,27 @@
       <div class="col-12 col-sm-12 col-md-4 mb-4">
         <h3>Eredményeim</h3>
         <div class="teljesitmeny_box2">
-          <div class="teljesitmeny_content2" *ngIf="user_challenges.length > 0; else noChallenge">
-            <div *ngFor="let user_challenge of user_challenges">
-              <p class="teljesitmeny_text">
-                {{user_challenge.completedAt < user_challenge.createdAt ? 'Feladat' : user_challenge.challengeName}}: <br>
-                <b class="folyamat">{{getCompletedDays(user_challenge)}}</b>
-              </p>
+            <div class="teljesitmeny_content2" *ngIf="user_challenges.length > 0 && allChallengesCompleted; else noChallenge">
+                <div *ngFor="let user_challenge of user_challenges">
+                    <p class="teljesitmeny_text">
+                        {{user_challenge.completedAt < user_challenge.createdAt ? 'Feladat' : user_challenge.challengeName}}: <br>
+                        <b class="folyamat">{{getCompletedDays(user_challenge)}}</b>
+                    </p>
+                </div>
+                <div class="arany">
+                    <p class="teljesitmeny_text">
+                        Heti teljesítési arány: <b class="folyamat">{{weeklyProgressPercentage}}%</b>
+                    </p>
+                    <p class="teljesitmeny_text">
+                        Havi teljesítési arány: <b class="folyamat">{{monthlyProgressPercentage}}%</b>
+                    </p>
+                </div>
             </div>
-            <div class="arany">
-              <p class="teljesitmeny_text">
-                Heti teljesítési arány: <b class="folyamat">{{weeklyProgressPercentage}}%</b>
-              </p>
-              <p class="teljesitmeny_text">
-                Havi teljesítési arány: <b class="folyamat">{{monthlyProgressPercentage}}%</b>
-              </p>
-            </div>
-          </div>
-          <ng-template #noChallenge>
-            <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
-          </ng-template>
+            <ng-template #noChallenge>
+                <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
+            </ng-template>
         </div>
-      </div>
+    </div>
     <div class="col-12 col-sm-12 col-md-4 mb-4">
       <h3>Szokásaim</h3>
       <div class="teljesitmeny_box3">

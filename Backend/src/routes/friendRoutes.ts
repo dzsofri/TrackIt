@@ -8,6 +8,7 @@ import { Brackets } from "typeorm";
 import fs from 'fs';
 const path = require("path");
 import multer from "multer";
+import { UserChallenges } from "../entities/UserChallenge";
 
 const router = Router();
 
@@ -143,6 +144,7 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
             .andWhere(new Brackets(qb => {
                 qb.where("friendRequest.status = :pendingStatus", { pendingStatus: "pending" })
                   .orWhere("friendRequest.status = :acceptedStatus", { acceptedStatus: "accepted" })
+                  .orWhere("friendRequest.activeChallenge IS NOT NULL")
             }))
             .getMany();
 
@@ -150,6 +152,32 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
     } catch (error) {
         console.error("Error fetching friend requests:", error);
         res.status(500).json({ error: "Hiba történt a barátkérések lekérése közben." });
+    }
+});
+
+router.patch("/update-active-challenge/:id", tokencheck, async (req: any, res: any) => {
+    const { id } = req.params;
+    const { activeChallengeId } = req.body;
+  
+    try {
+      const friendRequest = await AppDataSource.getRepository(FriendRequests).findOne({
+        where: { id },
+      });
+  
+      if (!friendRequest) {
+        return res.status(404).json({ message: "A barátkérés nem található." });
+      }
+  
+      friendRequest.activeChallenge = activeChallengeId 
+        ? await AppDataSource.getRepository(UserChallenges).findOne({ where: { id: activeChallengeId } })
+        : null;
+  
+      await AppDataSource.getRepository(FriendRequests).save(friendRequest);
+  
+      res.status(200).json({ message: "A barát aktív kihívása sikeresen frissítve!" });
+    } catch (error) {
+      console.error("Hiba az activeChallenge frissítése során:", error);
+      res.status(500).json({ message: "Szerverhiba történt." });
     }
 });
 
