@@ -13,6 +13,7 @@ import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUAR
 import { ChatComponent } from './components/chat/chat.component';
 import { FeedComponent } from './components/feed/feed.component';
 import { ChallengeComponent } from './components/challenge/challenge.component';
+import { TrackerComponent } from './components/tracker/tracker.component';
 
 export const routes: Routes = [
   {
@@ -74,6 +75,12 @@ export const routes: Routes = [
     component: ChallengeComponent,
     canActivate: [AuthGuard],
     data: { label: 'Kihívások', icon: '/assets/icons/feed_logo.png' }
+  },
+  {
+    path: 'tracker', // <<< ÚJ TRACKER ROUTE
+    component: TrackerComponent,
+    canActivate: [AuthGuard],
+    data: { label: 'Tracker', icon: '/assets/icons/tracker_logo.png' } // Tetszés szerint módosítható
   },
   {
     path: '',

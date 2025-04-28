@@ -1,0 +1,77 @@
+<div class="mt-3 mb-5">
+    <header>
+      <div class="circle-image">
+        <img [src]="imagePreviewUrl"/>
+      </div>
+      <ng-container *ngIf="user && user.id && userNames[user.id]">
+        <h1>{{ userNames[user.id] || 'Ismeretlen felhasználó' }}</h1>
+      </ng-container>
+    </header>
+  </div>
+  
+  <div class="col-12 col-xs-12 col-sm-12 col-md-10 col-lg-12">
+      <ul class="nav nav-tabs">
+          <li class="nav-item" role="presentation">
+              <button 
+                class="nav-link" 
+                [class.active]="activeTab === 'watertracker'"
+                (click)="setActiveTab('watertracker')"
+              >
+                Vízkövető
+              </button>
+          </li>
+          <li class="nav-item" role="presentation">
+              <button 
+                class="nav-link" 
+                [class.active]="activeTab === 'gymtracker'"
+                (click)="setActiveTab('gymtracker')"
+              >
+                Edzéskövető
+              </button>
+          </li>
+          <li class="nav-item" role="presentation">
+              <button 
+                class="nav-link" 
+                [class.active]="activeTab === 'sleeptracker'"
+                (click)="setActiveTab('sleeptracker')"
+              >
+                Alváskövető
+              </button>
+          </li>
+          <li class="nav-item" role="presentation">
+              <button 
+                class="nav-link" 
+                [class.active]="activeTab === 'customtracker'"
+                (click)="setActiveTab('customtracker')"
+              >
+                Egyéni tracker létrehozó
+              </button>
+          </li>
+      </ul>
+  </div>
+  
+  <div class="tab-content" id="myTabContent">
+      <div class="tab-pane show active" [class.d-none]="activeTab !== 'watertracker'" id="watertracker-tab-pane" role="tabpanel" tabindex="0">
+        <app-watertracker></app-watertracker>
+      </div>
+  
+      <div class="tab-pane" [class.d-none]="activeTab !== 'gymtracker'" id="gymtracker-tab-pane" role="tabpanel" tabindex="0">
+        <app-gymtracker></app-gymtracker>
+      </div>
+  
+      <div class="tab-pane" [class.d-none]="activeTab !== 'sleeptracker'" id="sleeptracker-tab-pane" role="tabpanel" tabindex="0">
+        <app-sleeptracker></app-sleeptracker>
+      </div>
+  
+      <div class="tab-pane" [class.d-none]="activeTab !== 'customtracker'" id="customtracker-tab-pane" role="tabpanel" tabindex="0">
+        <app-customtracker></app-customtracker>
+      </div>
+  </div>
+  
+  <app-alert-modal 
+    [visible]="modalVisible" 
+    [type]="modalType" 
+    [message]="modalMessage"
+    (close)="modalVisible = false">
+  </app-alert-modal>
+  
