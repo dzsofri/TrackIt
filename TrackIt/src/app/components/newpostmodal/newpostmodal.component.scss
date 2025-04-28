@@ -21,6 +21,8 @@
   gap: 15px;
   width: 30%;
   min-width: 300px;
+  max-height: 80vh; /* <<< EZ: max magasság */
+  overflow-y: auto; /* <<< EZ: görgethetővé teszi ha szükséges */
   text-align: left;
   position: relative;
 }
@@ -146,14 +148,11 @@ button {
 }
 
 
-.image-preview {
-  margin-top: 10px;
-  img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-}
 
+.image-preview img {
+  width: 100%; /* <<< EZ: legyen maximum a szülő szélessége */
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
 
