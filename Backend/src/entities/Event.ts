@@ -31,9 +31,7 @@ export class Events {
     @Column({ type: "varchar", length: 255 })
     color: string;
 
-    @ManyToOne(() => Users, (user) => user.events, {
-        onDelete: "CASCADE"
-    })
-    @JoinColumn({ name: "userId" })
-    user: Users;
+    @ManyToOne(() => Users, (user) => user.tasks)
+    @JoinColumn({ name: "id" })
+    userId: Users;
 }

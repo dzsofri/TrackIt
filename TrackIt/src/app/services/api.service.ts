@@ -274,7 +274,7 @@ export class ApiService {
 }
 
 
- createEvent(data: { title: string; description: string; startTime: string; endTime: string; color: string;}): Observable<any> {
+ createEvent(data: { title: string; description: string; startTime: string; endTime: string; color: string; userId: string;}): Observable<any> {
   return this.http.post<any>(`${this.server}/events`, data, this.tokenHeader()).pipe(
     catchError(error => {
       console.error('Event creation failed', error);

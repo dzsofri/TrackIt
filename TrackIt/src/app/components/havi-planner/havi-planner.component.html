@@ -3,7 +3,7 @@
   <div class="sidebar">
     <!-- Nézetváltó gombok -->
     <div class="sidebar-header">
-      <button  class="simple-button" (click)="currentSidebarView = 'add'" [class.active]="currentSidebarView === 'add'">➕ Új esemény</button>
+      <button class="simple-button" (click)="currentSidebarView = 'add'" [class.active]="currentSidebarView === 'add'">➕ Új esemény</button>
       <button class="simple-button" (click)="currentSidebarView = 'list'" [class.active]="currentSidebarView === 'list'">📋 Események</button>
     </div>
 
@@ -33,33 +33,31 @@
     </div>
 
     <!-- Meglévő események listája -->
-  <!-- Kijelölés mód gomb -->
- 
-  
+    <div *ngIf="currentSidebarView === 'list'" class="event-list-view">
+      <button class="simple-button" (click)="toggleSelectMode()">
+        {{ selectMode ? 'Kijelölés bezárása' : 'Kijelölés mód' }}
+      </button>
 
-<!-- Meglévő események listája -->
-<div *ngIf="currentSidebarView === 'list'" class="event-list-view">
-  <button class="simple-button" (click)="toggleSelectMode()">
-    {{ selectMode ? 'Kijelölés bezárása' : 'Kijelölés mód' }}
-  </button>
-  <div *ngFor="let event of eventss" class="event-item">
-    <div class="event-content">
-      <div class="event-info">
-        <div class="event-title">{{ event.name }}</div>
-        <div class="event-time">
-          {{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}
+      <div *ngFor="let event of eventss" class="event-item">
+        <div class="event-content">
+          <div class="event-info">
+            <div class="event-title">{{ event.name }}</div>
+            <div class="event-time">
+              {{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}
+            </div>
+          </div>
+          <label *ngIf="selectMode" class="checkbox-wrapper">
+            <input type="checkbox" [(ngModel)]="event.selected" />
+            <span class="checkmark"></span>
+          </label>
         </div>
       </div>
-      <label *ngIf="selectMode" class="checkbox-wrapper">
-        <input type="checkbox" [(ngModel)]="event.selected" />
-        <span class="checkmark"></span>
-      </label>
+
+      <!-- Szerkesztés gomb, ha van kijelölt esemény -->
+      <div *ngIf="selectMode && selectedEvents.length > 0" class="edit-button-container">
+        <button class="get-started-button" (click)="editSelectedEvent()">Szerkesztés</button>
+      </div>
     </div>
-  </div>
-</div>
-
-
-    
   </div>
 
   <!-- Naptár -->
