@@ -1,0 +1,381 @@
+// Alap doboz stílus
+@mixin soft-box {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+  }
+  
+  // Beúszási animáció eseménykártyákhoz
+  @keyframes fadeSlideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Finom fade animáció szerkesztő mezőkhöz
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: row;
+    height: 93vh;
+    padding: 2rem;
+    gap: 2rem;
+  }
+  
+  // Bal oldali eseménylista
+  .event-list-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+    overflow-y: auto;
+  }
+  .event-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 600px;
+    padding: 1rem;
+    background: #f9f9fb;
+    @include soft-box;
+    transition: background 0.3s, transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeSlideIn 0.4s ease forwards;
+  
+    &:hover {
+      background: #f1f1f7;
+    }
+  
+    &.editing {
+        background: #f9f9fb;
+      transform: scale(1.02);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+    }
+    .editing &:hover {
+        background: #f1f1f7;
+      }
+  }
+  
+  .event-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+  }
+  
+  .event-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .event-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+  
+  .event-time {
+    font-size: 0.85rem;
+    color: #666;
+  }
+  
+  .event-input {
+    margin-bottom: 0.4rem;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  
+    &:focus {
+      border-color: #4caf50;
+      box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+      outline: none;
+    }
+  }
+  
+  // Edit gombok a kártyán belül
+  .edit-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  
+  // Jobb oldali oldalsáv
+  .search-sidebar {
+    width: 300px;
+    height: 100%;
+    @include soft-box;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    
+    position: fixed; /* Fixált pozíció */
+    right: 0; /* A jobb szélhez igazítjuk */
+    top: 0; /* A képernyő tetejéhez igazítjuk */
+    z-index: 10; /* Biztosítja, hogy a más elemek fölött legyen */
+    
+    input {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    
+      &:focus {
+        border-color: #2196f3;
+        box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+        outline: none;
+      }
+    }
+  }
+  
+  // Alap gombstílus animációval
+  .simple-button {
+    width: 90% !important;
+    padding: 0.5rem 0.7rem;
+    background-color: #ffffff;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 2px 2px 5px #999999;
+    margin-right: 0.5rem;
+  
+    &:hover {
+      background-color: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  // Mégse gomb (piros) animációval
+  .cancel {
+    color: white;
+    background-color: #f44336 !important;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  
+    &:hover {
+      background-color: #e53935 !important;
+      transform: scale(1.05);
+    }
+  }
+  
+  // Mentés gomb (zöld) animációval
+  .save {
+    color: white;
+    background-color: #4caf50 !important;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  
+    &:hover {
+      background-color: #45a049 !important;
+      transform: scale(1.05);
+    }
+  }
+  // Jobb oldali oldalsáv
+.search-sidebar {
+    width: 300px;
+    height: 100%;
+    @include soft-box;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 10;
+  
+    input {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      transition: all 0.3s ease;
+  
+      &:focus {
+        border-color: #2196f3;
+        box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+        outline: none;
+        transform: scale(1.05);
+      }
+  
+      &::placeholder {
+        color: #999;
+        transition: color 0.3s ease;
+      }
+  
+      &:focus::placeholder {
+        color: #2196f3;
+      }
+    }
+    
+    // Keresési állapot animáció
+    .search-status {
+      font-size: 1rem;
+      color: #2196f3;
+      font-weight: bold;
+      animation: fadeIn 1s ease;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  }
+  
+  // Egyszerű animált keresés
+  .search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+    
+    .result-item {
+      background-color: #f9f9fb;
+      padding: 0.8rem;
+      border-radius: 5px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: #e3f2fd;
+        transform: scale(1.03);
+      }
+    }
+  }
+  .left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #fafafa;
+    @include soft-box;
+    height: 100%;
+    
+    .search-input {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  
+    .category-filter {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      
+      label {
+        font-size: 1rem;
+        color: #444;
+      }
+  
+      .category-dropdown {
+        padding: 0.6rem;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+    }
+    
+    .simple-button {
+      width: 100%;
+      padding: 0.5rem 0.7rem;
+      background-color: #ffffff;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 2px 2px 5px #999999;
+      
+      &:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+  .info-box {
+    @include soft-box;
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: left;
+  
+    h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #333;
+    }
+  
+    p {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0.5rem 0 0;
+    }
+  }
+  
+  .calendar-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  
+    label {
+      font-size: 0.9rem;
+      color: #444;
+    }
+  
+    input[type="date"] {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+  
+      &:focus {
+        border-color: #2196f3;
+        box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+        outline: none;
+        transform: scale(1.02);
+      }
+    }
+  }
+  
+  .quick-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  

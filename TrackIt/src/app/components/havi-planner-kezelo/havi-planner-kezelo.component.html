@@ -1,1 +1,58 @@
-<p>havi-planner-kezelo works!</p>
+<div class="left-panel">
+    <!-- Rövid bemutató -->
+    <div class="info-box">
+      <h3>Planner Kezelő</h3>
+      <p>Egyszerű eseménykezelő naptár. Itt szerkesztheted, keresheted és rendszerezheted az eseményeket.</p>
+    </div>
+  
+    <!-- Mini naptár (dátum szűrő) -->
+    <div class="calendar-widget">
+      <label for="calendar">Dátumra ugrás:</label>
+      <input type="date" id="calendar" [(ngModel)]="calendarDate" (change)="onCalendarChange()" />
+    </div>
+  
+    <!-- Gyorsgombok -->
+    <div class="quick-filters">
+      <button class="simple-button" (click)="filterFutureEvents()">🔮 Jövőbeli események</button>
+      <button class="simple-button" (click)="resetFilters()">♻️ Alapértelmezett nézet</button>
+    </div>
+  
+    <!-- Események keresése és szűrése -->
+    <!-- (Ha van külön kereső itt, ide jöhet) -->
+  
+    <!-- Kategóriák szűrése -->
+    <!-- (Ha később akarsz szűrni típus szerint, ide tehető) -->
+  
+    <!-- Új esemény hozzáadása -->
+    <button class="simple-button" (click)="onAddNewEvent()">Új esemény</button>
+  
+    <!-- Események listázása -->
+    <div *ngFor="let event of filteredEvents" class="event-item" [ngClass]="{'editing': event.editing}">
+      <div class="event-content">
+        <!-- Bal oldal: esemény adatok -->
+        <div class="event-info" *ngIf="!event.editing">
+          <div class="event-title">{{ event.name }}</div>
+          <div class="event-time">
+            {{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}
+          </div>
+        </div>
+  
+        <!-- Szerkesztő mód -->
+        <div class="event-info" *ngIf="event.editing">
+          <input [(ngModel)]="event.name" class="event-input" />
+          <input type="datetime-local" [(ngModel)]="event.startTime" class="event-input" />
+          <input type="datetime-local" [(ngModel)]="event.endTime" class="event-input" />
+        </div>
+  
+        <!-- Jobb oldal: gombok -->
+        <div class="edit-buttons">
+          <button *ngIf="!event.editing" (click)="onEdit(event)" class="simple-button">Szerkesztés</button>
+          <ng-container *ngIf="event.editing">
+            <button (click)="saveEvent(event)" class="save simple-button">Mentés</button>
+            <button (click)="cancelEdit(event)" class="cancel simple-button">Mégse</button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -12,6 +12,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
 import { ChatComponent } from './components/chat/chat.component';
 import { HaviPlannerComponent } from './components/havi-planner/havi-planner.component';
+import { HaviPlannerKezeloComponent } from './components/havi-planner-kezelo/havi-planner-kezelo.component';
 
 export const routes: Routes = [
   {
@@ -66,6 +67,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { label: 'Havi planner', icon: '/assets/icons/planner_logo.png' }
   },
+  {
+    path: 'haviplannerideiglenes',
+    component: HaviPlannerKezeloComponent,
+    canActivate: [AuthGuard],
+    data: { label: 'Havi planner atvezeto', icon: '/assets/icons/planner_logo.png' }
+  },
+
 
 
 
