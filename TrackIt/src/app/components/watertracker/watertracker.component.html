@@ -1,1 +1,19 @@
-<p>watertracker works!</p>
+<div class="water-tracker-card">
+    <h2>Vízfogyasztás követő</h2>
+  
+    <div class="form-group">
+      <label for="completed">Teljesítetted a napi vízcélt?</label>
+      <input type="checkbox" id="completed" [(ngModel)]="completed" />
+    </div>
+  
+    <div class="form-group">
+      <label for="amount">Elfogyasztott víz mennyisége (ml)</label>
+      <input type="number" id="amount" [(ngModel)]="waterAmount" placeholder="Pl. 2000" />
+    </div>
+  
+    <div class="button-row">
+      <button (click)="saveWater()">Felvétel</button>
+      <button (click)="openCalendar()">Naptár</button>
+    </div>
+  </div>
+  

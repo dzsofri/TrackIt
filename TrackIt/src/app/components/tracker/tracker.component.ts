@@ -27,6 +27,55 @@ export class TrackerComponent {
     private http: HttpClient
   ) {}
 
+  id: string = "";
+
+  ngOnInit(): void {
+    this.id = this.activatedRoute.snapshot.params['id'];
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.id = user.id;
+        this.api.getLoggedUser('users', this.id).subscribe({
+          next: (res: any) => {
+            this.user = res.user;
+            if (this.user && this.user.id) {
+              this.userNames[this.user.id] = this.user.name ?? 'Ismeretlen felhasználó';
+              //console.log('User fetched:', this.user);
+              //console.log('User names:', this.userNames);
+            }
+          },
+          error: (err) => {
+            console.error('Error fetching user data:', err);
+          }
+        });
+        this.user.id = user.id;
+        this.fetchUserProfilePicture();
+      }
+    });
+  }
+
+  fetchUserProfilePicture(): void {
+    const token = localStorage.getItem('trackit');
+    if (!token) {
+        console.error('No valid token found!');
+        return;
+    }
+
+    this.http
+        .get<{ imageUrl: string | null }>('http://localhost:3000/users/profile-picture', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .subscribe({
+            next: (response) => {
+                this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
+            },
+            error: (error) => {
+                console.error('Error fetching profile picture:', error);
+                this.imagePreviewUrl = '/assets/images/profileKep.png';
+            },
+        });
+  }
   
   
   activeTab: string = 'watertracker'; // alapértelmezett aktív tab
@@ -37,7 +86,7 @@ export class TrackerComponent {
   imagePreviewUrl = 'path-to-image.jpg'; // ha kellene alapértelmezett kép
   user: any; // típus pontosítása később
   userNames: any = {}; // pl. objektum formában felhasználónevek
-
+  
   setActiveTab(tab: string) {
     this.activeTab = tab;
   }

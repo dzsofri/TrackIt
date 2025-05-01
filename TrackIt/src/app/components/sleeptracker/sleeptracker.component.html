@@ -1,1 +1,19 @@
-<p>sleeptracker works!</p>
+<div class="sleep-tracker-card">
+    <h2>Alváskövető</h2>
+  
+    <div class="form-group">
+      <label for="completed">Teljesítetted a napi alvást?</label>
+      <input type="checkbox" id="completed" [(ngModel)]="completed" />
+    </div>
+  
+    <div class="form-group">
+      <label for="amount">Alvás mennyisége (óra)</label>
+      <input type="number" id="amount" [(ngModel)]="sleepAmount" placeholder="Pl. 5" />
+    </div>
+  
+    <div class="button-row">
+      <button (click)="saveSleep()">Felvétel</button>
+      <button (click)="openCalendar()">Naptár</button>
+    </div>
+  </div>
+  

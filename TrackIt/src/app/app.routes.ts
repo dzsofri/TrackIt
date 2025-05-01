@@ -80,7 +80,7 @@ export const routes: Routes = [
     path: 'tracker', // <<< ÚJ TRACKER ROUTE
     component: TrackerComponent,
     canActivate: [AuthGuard],
-    data: { label: 'Tracker', icon: '/assets/icons/tracker_logo.png' } // Tetszés szerint módosítható
+    data: { label: 'Tracker', icon: '/assets/icons/track.png' } // Tetszés szerint módosítható
   },
   {
     path: '',

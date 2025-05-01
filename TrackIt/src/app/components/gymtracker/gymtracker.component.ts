@@ -10,5 +10,5 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './gymtracker.component.scss'
 })
 export class GymtrackerComponent {
-
-}
+  
+} 
