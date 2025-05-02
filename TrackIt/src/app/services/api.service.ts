@@ -202,7 +202,14 @@ export class ApiService {
     return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
   }
 
-
+  updateFriendData(id: string, friendData: any): Observable<any> {
+    return this.http.patch<any>(`${this.server}/friends/update-active-challenge/${id}`, friendData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Update failed', error);
+        return of({ message: 'Update failed' });
+      })
+    );
+  }  
 
   updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
     const body = { status: newStatus };

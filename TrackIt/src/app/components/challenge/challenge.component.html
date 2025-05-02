@@ -38,11 +38,11 @@
                       <div class="row">
                         <div class="mb-3">
                             <label class="cim" for="createdAt">Kihívás kezdete</label>
-                            <input type="date" class="form-control challengeInput" id="createdAt" name="createdAt" placeholder="Kihívás kezdete" required [(ngModel)]="user_challenges.createdAt">
+                            <input type="date" class="form-control challengeInput" id="createdAt" name="createdAt" placeholder="Kihívás kezdete" required [(ngModel)]="user_challenges.createdAt" [min]="minDate">
                         </div>
                         <div class="mb-3">
                             <label class="cim" for="finalDate">Kihívás vége</label>
-                            <input type="date" class="form-control challengeInput" id="finalDate" name="finalDate" placeholder="Kihívás vége" required [(ngModel)]="user_challenges.finalDate">
+                            <input type="date" class="form-control challengeInput" id="finalDate" name="finalDate" placeholder="Kihívás vége" required [(ngModel)]="user_challenges.finalDate" [min]="minDate">
                         </div>
                       </div>
 
@@ -71,7 +71,7 @@
                       </div>
                   </form>
                   <ng-container *ngIf="user_challenges.id; else noChallenge">
-                    <form class="friendBox">
+                    <form (ngSubmit)="onFriendSubmit()" class="friendBox">
                       <div class="row">
                         <div class="mb-3">
                           <label class="cim">Barátok hozzáadása a kihíváshoz</label>
@@ -88,27 +88,27 @@
                               </mat-option>
                             </mat-select>
                           </mat-form-field>
-                          <button class="add-button" (click)="addSelectedFriends()">Hozzáadás</button>
+                          <button type="button" class="add-button" (click)="addSelectedFriends()">Hozzáadás</button>
                         </div>
                       </div>
                       <label class="cim">Barátok lista</label>
                       <div class="barat_box mb-3">
                         <div class="barat_content">
                           <ng-container *ngIf="addedFriends.length > 0; else noFriends">
-                            <ng-container *ngFor="let friend of addedFriends">
+                            <ng-container *ngFor="let friend_requests of addedFriends">
                               <p class="barat_text">
                                 <span class="circle-image">
-                                  <img id="profile" [src]="friend.imageUrl" />
+                                  <img id="profile" [src]="friend_requests.imageUrl" />
                                 </span>
-                                <span class="username">{{ friend.name }}</span>
-                                <input type="hidden" [(ngModel)]="friend.activeChallenge.id" name="activeChallenge-{{friend.id}}" required />
-                                <button class="del" (click)="openPopup('remove', friend.id)">Eltávolítás</button>
+                                <span class="username">{{ friend_requests.name }}</span>
+                                <input type="text" class="form-control" id="activeChallenge" name="activeChallenge" required [(ngModel)]="friend_requests.activeChallenge"[disabled]="!!friend_requests.activeChallenge"/>
+                                <button type="button" class="del" (click)="openPopup('remove', friend_requests.id)">Eltávolítás</button>
                               </p>
                             </ng-container>
                           </ng-container>
                         </div>
                       </div>
-                      <button class="mentes" (click)="saveActiveChallenge()">Mentés</button>
+                      <button type="submit" class="mentes">Mentés</button>
                       <ng-template #noFriends>
                         <h5 class="NO_DATA">A kihíváshoz még nincs barát hozzáadva!</h5>
                       </ng-template>

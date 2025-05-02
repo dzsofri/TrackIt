@@ -32,6 +32,12 @@ const storage = multer.diskStorage({
     path.join(__dirname, "..", "uploads")
   );
 
+  const addInvalidField = (fields: string[], fieldName: string) => {
+    if (!fields.includes(fieldName)) {
+        fields.push(fieldName);
+    }
+  };
+
 // Barátkérés küldése
 router.post("/send-friendrequest", tokencheck, async (req: any, res: any) => {
     const { receiverId } = req.body;
@@ -155,30 +161,33 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
     }
 });
 
-router.patch("/update-active-challenge/:id", tokencheck, async (req: any, res: any) => {
-    const { id } = req.params;
-    const { activeChallengeId } = req.body;
+router.patch('/update-active-challenge/:id', tokencheck, async (req: any, res: any) => {
+    const friendId = req.params.id;
+    const invalidFields: string[] = [];
+    const { activeChallenge } = req.body;
   
-    try {
-      const friendRequest = await AppDataSource.getRepository(FriendRequests).findOne({
-        where: { id },
+    if (!activeChallenge) invalidFields.push('activeChallenge');
+  
+    if (invalidFields.length) {
+      return res.status(400).json({ 
+        message: "Hiányzó adatok! Kérlek, töltsd ki a kötelező mezőket.", 
+        invalid: invalidFields 
       });
-  
-      if (!friendRequest) {
-        return res.status(404).json({ message: "A barátkérés nem található." });
-      }
-  
-      friendRequest.activeChallenge = activeChallengeId 
-        ? await AppDataSource.getRepository(UserChallenges).findOne({ where: { id: activeChallengeId } })
-        : null;
-  
-      await AppDataSource.getRepository(FriendRequests).save(friendRequest);
-  
-      res.status(200).json({ message: "A barát aktív kihívása sikeresen frissítve!" });
-    } catch (error) {
-      console.error("Hiba az activeChallenge frissítése során:", error);
-      res.status(500).json({ message: "Szerverhiba történt." });
     }
+  
+    const existingFriend = await AppDataSource.getRepository(FriendRequests).findOne({ where: { id: friendId } });
+    if (!existingFriend) {
+      return res.status(404).json({ message: "Felhasználó nem található!" });
+    }
+  
+    existingFriend.activeChallenge = activeChallenge;
+  
+    await AppDataSource.getRepository(FriendRequests).save(existingFriend);
+  
+    res.status(200).json({
+      message: "Felhasználó sikeresen frissítve!",
+      friend: { activeChallenge: existingFriend.activeChallenge },
+    });
 });
 
 router.get("/friend-picture", tokencheck, async (req: any, res: any) => {

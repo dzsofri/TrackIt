@@ -45,9 +45,6 @@ export class UserChallenges {
     @Column({ type: "varchar", length: 255, nullable: true }) // Engedélyezett a null
     badgeId: string | null;
 
-    @OneToMany(() => UserStatistics, (statistic) => statistic.activeChallenge)
-    statistics: UserStatistics[];
-
     @ManyToOne(() => Badges, { nullable: true })
     @JoinColumn({ name: "badgeId" })
     picture: Badges | null;
