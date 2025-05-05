@@ -314,4 +314,18 @@ deletePost(postId: string): Observable<any> {
   );
 }
 
+addHabitTrackingRecord(data: {
+  date: string,
+  achieved: boolean,
+  value: number,
+  habitId: string
+}): Observable<any> {
+  return this.http.post<any>(`${this.server}/habit_tracker`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a szokás mentésekor:', error);
+      return of({ message: 'Szokás mentése sikertelen' });
+    })
+  );
+}
+
 }
