@@ -1,19 +1,40 @@
-<div class="water-tracker-card">
+<div class="water-tracker-container" style="display: flex; gap: 2rem;">
+  <!-- Felvevő űrlap -->
+  <div class="water-tracker-card">
     <h2>Vízfogyasztás követő</h2>
-  
+
     <div class="form-group">
       <label for="completed">Teljesítetted a napi vízcélt?</label>
       <input type="checkbox" id="completed" [(ngModel)]="completed" />
     </div>
-  
+
     <div class="form-group">
       <label for="amount">Elfogyasztott víz mennyisége (ml)</label>
       <input type="number" id="amount" [(ngModel)]="waterAmount" placeholder="Pl. 2000" />
     </div>
-  
+
+    <div class="form-group">
+      <mat-form-field appearance="fill">
+        <mat-label>Dátum</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
     <div class="button-row">
       <button (click)="saveWater()">Felvétel</button>
-      <button (click)="openCalendar()">Naptár</button>
     </div>
   </div>
-  
+
+  <!-- Naptár (csak placeholder vagy lista most) -->
+  <div class="calendar-view">
+    <h3>Rögzített adatok</h3>
+    <!-- később ide jöhet pl. naptárnézet -->
+    <ul>
+      <li *ngFor="let entry of savedEntries">
+        {{ entry.date }} – {{ entry.value }} ml – {{ entry.achieved ? '✔' : '✘' }}
+      </li>
+    </ul>
+  </div>
+</div>

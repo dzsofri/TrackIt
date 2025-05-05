@@ -1,28 +1,47 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ApiService } from '../../services/api.service';
+
 
 @Component({
   selector: 'app-watertracker',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatNativeDateModule, MatDatepickerModule, MatFormFieldModule, MatInputModule],
   templateUrl: './watertracker.component.html',
   styleUrl: './watertracker.component.scss'
 })
 export class WatertrackerComponent {
   completed = false;
   waterAmount: number | null = null;
+  selectedDate: Date = new Date();
+  savedEntries: any[] = [];
+
+  constructor(private apiService: ApiService) {}
 
   saveWater() {
-    // Itt írd meg az adatmentés logikáját
-    console.log('Mentés:', {
-      completed: this.completed,
-      amount: this.waterAmount
-    });
-  }
+    if (!this.waterAmount || this.waterAmount <= 0) {
+      alert('Adj meg egy érvényes vízmennyiséget!');
+      return;
+    }
 
-  openCalendar() {
-    // Itt írd meg a naptár funkciót (pl. modal megnyitása)
-    console.log('Naptár megnyitása');
+    const data = {
+      date: this.selectedDate.toISOString().split('T')[0], // pl. 2024-05-05
+      achieved: this.completed,
+      value: this.waterAmount,
+      habitId: 'water-tracker'
+    };
+
+    this.apiService.addHabitTrackingRecord(data).subscribe((res) => {
+      console.log('Sikeres mentés:', res);
+      this.savedEntries.push(data);
+      // nullázás
+      this.waterAmount = null;
+      this.completed = false;
+    });
   }
 }
