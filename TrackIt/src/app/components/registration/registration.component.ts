@@ -55,25 +55,50 @@ updateUserStatus(newStatus: string): void {
   }
 
   onSubmit() {
-
-
     this.api.registration(this.user).subscribe({
       next: (res: any) => {
+        // ✅ TELJES válasz logolása a hibakereséshez
+        console.log('Teljes válasz:', res);
+        console.log('Token:', res.token);
+        console.log('UserId:', res.userId);
+  
         console.log(res.message);
-        if (res.token) {
-          this.auth.login(res.token);  // Csak a tokent adjuk át az AuthService-nek
-          this.router.navigateByUrl('/profile');
+  
+        if (res.token && res.userId) {
+          this.auth.login(res.token);
+  
+          // 🎯 Itt hozzuk létre az alap trackereket
+          const defaultTrackers = [
+            { habitName: 'Vízfogyasztás', targetValue: 2000, currentValue: 0, frequency: 'daily', userId: res.userId },
+            { habitName: 'Edzés', targetValue: 30, currentValue: 0, frequency: 'daily', userId: res.userId },
+            { habitName: 'Alvás', targetValue: 8, currentValue: 0, frequency: 'daily', userId: res.userId }
+          ];
+  
+          // Trackerek létrehozása
+          defaultTrackers.forEach(tracker => {
+            this.api.createHabit(tracker).subscribe(result => {
+              console.log(`${tracker.habitName} létrehozva:`, result);
+            });
+          });
+  
+          // Felhasználó státusza online-ra változtatása
+          this.updateUserStatus("online");
+  
+          // Hibaüzenet törlése, navigálás a welcome oldalra
+          this.errorMessage = '';
+          this.router.navigateByUrl('/welcome');
         } else {
-          console.error('HIBA: A token hiányzik a válaszból');
+          // Ha a válaszban nincs token vagy userId
+          console.error('HIBA: A token vagy userId hiányzik a válaszból');
+          this.errorMessage = 'A regisztrációs folyamat során hiba történt. Kérem próbálja újra.';
         }
-        this.errorMessage = ''; // Töröljük a hibát a sikeres regisztráció után
-        this.router.navigateByUrl('/welcome');
-        this.updateUserStatus("online");
       },
       error: (error: any) => {
+        // Regisztrációs hiba kezelése
         console.log('Hiba történt:', error);
         this.errorMessage = error.message || 'Hiba történt a regisztráció során.';
       }
     });
   }
+  
 }
