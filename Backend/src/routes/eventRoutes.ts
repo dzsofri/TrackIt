@@ -8,52 +8,55 @@ const router = Router();
 const eventRepo = AppDataSource.getRepository(Events);
 
 // Új esemény létrehozása (Token ellenőrzéssel)
-// Új esemény létrehozása (Token ellenőrzéssel)
-
-
-// Új esemény létrehozása (Token ellenőrzéssel)
 router.post("/", tokencheck, async (req: any, res: any) => {
     try {
         const { title, description, startTime, endTime, color } = req.body;
 
-        // Ellenőrizzük, hogy minden szükséges adat megvan-e
         if (!title || !startTime || !endTime || !color) {
-            return res.status(400).json({ message: "Hiányzó adatok!" });
+            return res.status(400).json({ message: "Hiányzó mezők: title, startTime, endTime, color" });
         }
 
-        // Az új esemény létrehozása
+        const start = new Date(startTime);
+        const end = new Date(endTime);
+
+        if (isNaN(start.getTime()) || isNaN(end.getTime()) || start >= end) {
+            return res.status(400).json({ message: "Érvénytelen időpontok" });
+        }
+
+        if (!req.user?.id) {
+            return res.status(401).json({ message: "Nincs hitelesített felhasználó" });
+        }
+
+        const user = await AppDataSource.getRepository(Users).findOneBy({ id: req.user.id });
+
+        if (!user) {
+            return res.status(400).json({ message: "Felhasználó nem található" });
+        }
+
         const event = new Events();
         event.title = title;
         event.description = description || null;
-        event.startTime = new Date(startTime);
-        event.endTime = new Date(endTime);
+        event.startTime = start;
+        event.endTime = end;
         event.color = color;
         event.createdAt = new Date();
-        event.userId = req.user.id; // Beállítjuk a userId-t (nem szükséges lekérni a teljes felhasználót)
+        event.user = user;
 
-        // Az esemény mentése az adatbázisba
-        await AppDataSource.getRepository(Events).save(event);
+        await eventRepo.save(event);
 
-        // Válasz visszaküldése
-        return res.status(201).json({ message: "Esemény létrehozva!", event });
+        return res.status(201).json({ message: "Esemény létrehozva!"});
 
-    } catch (error) {
-        console.error("Hiba történt:", error);
-        return res.status(500).json({ message: "Szerverhiba.", error: error.message || error });
+    } catch (error: any) {
+        console.error("Hiba:", error);
+        return res.status(500).json({ message: "Szerverhiba", error: error.message || error });
     }
 });
-
-
-
 
 // Bejelentkezett felhasználó saját eseményeinek lekérdezése
 router.get("/", tokencheck, async (req: any, res: any) => {
     try {
-        const { userId } = req;
-
-        // Az események lekérdezése a felhasználó ID-ja alapján
         const events = await eventRepo.find({
-            where: { userId: { id: userId } },
+            where: { user: { id: req.user.id } },
             relations: ["user"]
         });
 
@@ -71,9 +74,6 @@ router.get("/", tokencheck, async (req: any, res: any) => {
 // Egy adott esemény lekérdezése (csak ha a sajátja)
 router.get("/:id", tokencheck, async (req: any, res: any) => {
     try {
-        const { userId } = req;
-
-        // Esemény lekérdezése a megadott ID alapján
         const event = await eventRepo.findOne({
             where: { id: req.params.id },
             relations: ["user"]
@@ -81,7 +81,7 @@ router.get("/:id", tokencheck, async (req: any, res: any) => {
 
         if (!event) return res.status(404).json({ message: "Esemény nem található." });
 
-        if (event.userId.id !== userId) {
+        if (event.user.id !== req.user.id) {
             return res.status(403).json({ message: "Nincs jogosultságod ehhez az eseményhez." });
         }
 
@@ -92,12 +92,32 @@ router.get("/:id", tokencheck, async (req: any, res: any) => {
     }
 });
 
+// Események lekérdezése tetszőleges felhasználóhoz (pl. admin nézet)
+router.get("/user/:userId", tokencheck, async (req: any, res: any) => {
+    try {
+        const { userId } = req.params;
+
+        const user = await AppDataSource.getRepository(Users).findOneBy({ id: userId });
+        if (!user) {
+            return res.status(404).json({ message: "Felhasználó nem található." });
+        }
+
+        const events = await eventRepo.find({
+            where: { user: { id: userId } },
+            relations: ["user"]
+        });
+
+        res.json(events);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Hiba az események lekérdezésekor.", error: err.message || err });
+    }
+});
+
+
 // Esemény frissítése (csak saját)
 router.put("/:id", tokencheck, async (req: any, res: any) => {
     try {
-        const { userId } = req;
-
-        // Esemény lekérdezése az ID alapján
         const event = await eventRepo.findOne({
             where: { id: req.params.id },
             relations: ["user"]
@@ -105,20 +125,18 @@ router.put("/:id", tokencheck, async (req: any, res: any) => {
 
         if (!event) return res.status(404).json({ message: "Esemény nem található." });
 
-        if (event.userId.id !== userId) {
+        if (event.user.id !== req.user.id) {
             return res.status(403).json({ message: "Nincs jogosultságod módosítani ezt az eseményt." });
         }
 
         const { title, description, startTime, endTime, color } = req.body;
 
-        // Az esemény adatainak frissítése
         event.title = title ?? event.title;
         event.description = description ?? event.description;
         event.startTime = startTime ? new Date(startTime) : event.startTime;
         event.endTime = endTime ? new Date(endTime) : event.endTime;
         event.color = color ?? event.color;
 
-        // Esemény mentése az adatbázisba
         await eventRepo.save(event);
         res.json({ message: "Esemény frissítve.", event });
     } catch (err) {
@@ -130,9 +148,6 @@ router.put("/:id", tokencheck, async (req: any, res: any) => {
 // Esemény törlése (csak saját)
 router.delete("/:id", tokencheck, async (req: any, res: any) => {
     try {
-        const { userId } = req;
-
-        // Esemény lekérdezése az ID alapján
         const event = await eventRepo.findOne({
             where: { id: req.params.id },
             relations: ["user"]
@@ -140,11 +155,10 @@ router.delete("/:id", tokencheck, async (req: any, res: any) => {
 
         if (!event) return res.status(404).json({ message: "Esemény nem található." });
 
-        if (event.userId.id !== userId) {
+        if (event.user.id !== req.user.id) {
             return res.status(403).json({ message: "Nincs jogosultságod törölni ezt az eseményt." });
         }
 
-        // Esemény törlése az adatbázisból
         await eventRepo.remove(event);
         res.json({ message: "Esemény törölve." });
     } catch (err) {

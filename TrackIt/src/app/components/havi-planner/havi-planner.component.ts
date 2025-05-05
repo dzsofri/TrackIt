@@ -6,6 +6,7 @@ import { ColorPickerModule } from 'primeng/colorpicker';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { DayDetailsModalComponent } from '../day-details-modal/day-details-modal.component';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-havi-planner',
@@ -30,7 +31,7 @@ export class HaviPlannerComponent {
   currentMonth = new Date().getMonth();
   calendarDays: any[] = [];
   eventRows: any[][] = [];
-  selectedEvents = []; 
+  selectedEvents = [];
 
   // Event-related properties
   events: any[] = [];
@@ -59,40 +60,43 @@ export class HaviPlannerComponent {
   selectedDay: any = null;
   loading: boolean = true;
 
-  constructor(private apiService: ApiService, private authService: AuthService) {}
+  constructor(private apiService: ApiService, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.initializeUser();
   }
-
+  NavigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
   // User initialization + Event fetch
   private initializeUser() {
     const user = this.authService.loggedUser();
     this.userId = user.id;
 
     if (this.userId) {
-      this.apiService.getEvents().subscribe(events => {
+      this.apiService.getEventByUserId(this.userId).subscribe(events => {
         this.loading = false;
-        const filteredEvents = events.filter(event => event.userId === this.userId);
-        if (filteredEvents.length > 0) {
-          this.events = filteredEvents;
-          this.eventss = filteredEvents.map(event => ({
+        if (events.length > 0) {
+          this.events = events;
+          this.eventss = events.map((event: { title: string; startTime: string; endTime: string; color?: string }) => ({
             name: event.title,
             startTime: new Date(event.startTime),
             endTime: new Date(event.endTime),
             color: event.color || '#000000',
             selected: false
           }));
-          this.generateCalendar();
+
         } else {
           console.log('Nincsenek események');
         }
+        this.generateCalendar();
       });
     } else {
       this.loading = false;
       console.error('Nincs felhasználói azonosító');
     }
   }
+
 
   // Calendar generation
   generateCalendar() {
@@ -122,20 +126,26 @@ export class HaviPlannerComponent {
 
     return calendarDays;
   }
-
   getEventDots(day: number) {
     const currentDate = new Date(this.currentYear, this.currentMonth, day);
-    currentDate.setHours(0, 0, 0, 0);
+    currentDate.setHours(0, 0, 0, 0); // nap eleje
 
     return this.events.filter(event => {
       const eventStart = new Date(event.startTime);
       const eventEnd = new Date(event.endTime);
-      return eventStart <= currentDate && currentDate <= eventEnd;
+      eventStart.setHours(0, 0, 0, 0); // nap eleje
+      eventEnd.setHours(0, 0, 0, 0);   // nap eleje
+
+      return eventStart.getTime() <= currentDate.getTime() && currentDate.getTime() <= eventEnd.getTime();
     }).map(event => {
       const eventStart = new Date(event.startTime);
       const eventEnd = new Date(event.endTime);
-      const isStart = eventStart.toDateString() === currentDate.toDateString();
-      const isEnd = eventEnd.toDateString() === currentDate.toDateString();
+      eventStart.setHours(0, 0, 0, 0);
+      eventEnd.setHours(0, 0, 0, 0);
+
+      const isStart = eventStart.getTime() === currentDate.getTime();
+      const isEnd = eventEnd.getTime() === currentDate.getTime();
+
       return {
         title: event.title,
         color: event.color || 'deepskyblue',
@@ -146,6 +156,7 @@ export class HaviPlannerComponent {
       };
     });
   }
+
 
   calculateEventRows() {
     const rows: any[][] = [];
@@ -283,9 +294,9 @@ export class HaviPlannerComponent {
   createEvent(startTime: string, endTime: string) {
     const user = this.authService.loggedUser(); // Minden híváskor újra lekérni
     const userId = user.id; // A helyes userId közvetlen lekérése
-    
+
     console.log('User ID:', userId);
-  
+
     this.apiService.createEvent({
       title: this.newEvent.name,
       description: this.newEvent.description,
@@ -296,7 +307,7 @@ export class HaviPlannerComponent {
     })
     .subscribe({
       next: (response) => {
-        if (response.message === 'Esemény létrehozva.') {
+        if (response.message === 'Esemény létrehozva!') {
           this.modalMessage = 'Esemény sikeresen hozzáadva';
           this.modalType = 'success';
           this.modalVisible = true;
@@ -324,7 +335,7 @@ export class HaviPlannerComponent {
       }
     });
   }
-  
+
   updateEvent(startTime: string, endTime: string) {
     this.apiService.updateEvent(this.editingEvent.id, {
       title: this.newEvent.name,

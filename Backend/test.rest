@@ -208,20 +208,21 @@ Content-Type: application/json
 
 ###  Esemény létrehozása
 POST http://localhost:{{PORT}}/events
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDY5ODEwMiwiZXhwIjoxNzQ0Nzg0NTAyfQ.ik-RSIPY8LuIH0uRrAV0LlEOY8x6euyzoLVyjJRaLus
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUyMDRkNTA4LTI2NjktNDljOS1hMWVlLTY2MmE3OWY3YmQ2OSIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NjQ1NzMyMiwiZXhwIjoxNzQ2NTQzNzIyfQ.DQ983CCiaStT4PJ-2GAjjhVSqoCH2gqUNb5TKhhEHqg
 Content-Type: application/json
 
 {
   "title": "Nyaralás",
   "description": "Tengerparti nyaralás",
   "startTime": "2025-04-17T07:00:00",
-  "endTime": "2025-04-19T07:20:00"
+  "endTime": "2025-04-19T07:20:00",
+  "color": "#FF5733"
 }
 
 
 ###  Összes esemény lekérdezése
-GET http://localhost:{{PORT}}/events
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDY5ODEwMiwiZXhwIjoxNzQ0Nzg0NTAyfQ.ik-RSIPY8LuIH0uRrAV0LlEOY8x6euyzoLVyjJRaLus
+GET http://localhost:{{PORT}}/events/user/e204d508-2669-49c9-a1ee-662a79f7bd69
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUyMDRkNTA4LTI2NjktNDljOS1hMWVlLTY2MmE3OWY3YmQ2OSIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NjQ1NzMyMiwiZXhwIjoxNzQ2NTQzNzIyfQ.DQ983CCiaStT4PJ-2GAjjhVSqoCH2gqUNb5TKhhEHqg
 
 
 ### Egy adott esemény lekérdezése

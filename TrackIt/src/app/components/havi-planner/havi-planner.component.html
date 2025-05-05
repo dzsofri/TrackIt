@@ -3,8 +3,9 @@
   <div class="sidebar">
     <!-- Nézetváltó gombok -->
     <div class="sidebar-header">
-      <button class="simple-button" (click)="currentSidebarView = 'add'" [class.active]="currentSidebarView === 'add'">➕ Új esemény</button>
-      <button class="simple-button" (click)="currentSidebarView = 'list'" [class.active]="currentSidebarView === 'list'">📋 Események</button>
+      <button class="simple-button" (click)="currentSidebarView = 'add'" [class.active]="currentSidebarView === 'add'">Új esemény</button>
+      <button class="simple-button" (click)="currentSidebarView = 'list'" [class.active]="currentSidebarView === 'list'">Események</button>
+      <button class="simple-button" (click)="NavigateTo('/haviplannerideiglenes')"> Eseménykezelő</button>
     </div>
 
     <!-- Új esemény felvitele -->

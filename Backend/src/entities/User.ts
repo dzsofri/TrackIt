@@ -89,7 +89,9 @@ export class Users {
     @OneToMany(() => Chat, (chat) => chat.receiver, { onDelete: "CASCADE" })
     receivedMessages: Chat[]; // A felhasználó által fogadott üzenetek
 
-    @OneToMany(() => Events, (event) => event.userId, { onDelete: "CASCADE" })
+    @OneToMany(() => Events, (event) => event.user, { onDelete: "CASCADE" })
     events: Events[];
+
+
 
 }

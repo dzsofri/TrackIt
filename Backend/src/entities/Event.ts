@@ -32,6 +32,7 @@ export class Events {
     color: string;
 
     @ManyToOne(() => Users, (user) => user.tasks)
-    @JoinColumn({ name: "id" })
-    userId: Users;
+    @JoinColumn({ name: "userId" }) // ez lesz a foreign key oszlop az Events táblában
+    user: Users;
+     
 }

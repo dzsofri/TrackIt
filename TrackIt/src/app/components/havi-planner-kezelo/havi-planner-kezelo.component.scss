@@ -1,381 +1,375 @@
-// Alap doboz stílus
+@use "sass:color";
+// ---------------------------
+// Alap változók
+// ---------------------------
+$primary-color: #2196f3;
+$success-color: #4caf50;
+$error-color: #f44336;
+$light-bg: #f9f9fb;
+$hover-blue: #e3f2fd;
+$box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+$border-radius: 10px;
+
+// ---------------------------
+// Mixinek
+// ---------------------------
 @mixin soft-box {
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+}
+
+@mixin button-style($bg: #ffffff, $color: black, $hover-bg: #f0f0f0) {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  background-color: $bg;
+  color: $color;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 2px 2px 5px #999999;
+
+  &:hover {
+    background-color: $hover-bg;
+    transform: translateY(-2px);
+    box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.2);
   }
-  
-  // Beúszási animáció eseménykártyákhoz
-  @keyframes fadeSlideIn {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+}
+
+// ---------------------------
+// Animációk
+// ---------------------------
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  
-  // Finom fade animáció szerkesztő mezőkhöz
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .container {
-    display: flex;
-    flex-direction: row;
-    height: 93vh;
-    padding: 2rem;
-    gap: 2rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
   }
-  
-  // Bal oldali eseménylista
-  .event-list-view {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    align-items: center;
-    overflow-y: auto;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  .event-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 80%;
-    max-width: 600px;
-    padding: 1rem;
-    background: #f9f9fb;
-    @include soft-box;
-    transition: background 0.3s, transform 0.3s ease, box-shadow 0.3s ease;
-    animation: fadeSlideIn 0.4s ease forwards;
-  
-    &:hover {
-      background: #f1f1f7;
-    }
-  
-    &.editing {
-        background: #f9f9fb;
-      transform: scale(1.02);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-    }
-    .editing &:hover {
-        background: #f1f1f7;
-      }
+}
+
+// ---------------------------
+// Layout
+// ---------------------------
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 93vh;
+  padding: 2rem;
+  gap: 2rem;
+  margin-right: 300px; // hely a fix oldalsávnak
+}
+
+// ---------------------------
+// Eseménylista (bal oldal)
+// ---------------------------
+.event-list-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  overflow-y: auto;
+}
+
+.event-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  max-width: 600px;
+  padding: 1rem;
+  background: $light-bg;
+  @include soft-box;
+  transition: background 0.3s, transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeSlideIn 0.4s ease forwards;
+  margin: 0 auto;
+
+  &:hover {
+    background: #f1f1f7;
   }
-  
-  .event-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    gap: 1rem;
+
+  &.editing {
+    background: $light-bg;
+    transform: scale(1.02);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
   }
-  
-  .event-info {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    animation: fadeIn 0.3s ease;
+
+  .editing &:hover {
+    background: #f1f1f7;
   }
-  
-  .event-title {
-    font-weight: 600;
+}
+
+.event-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  animation: fadeIn 0.3s ease;
+}
+
+.event-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.event-time {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.event-input {
+  margin-bottom: 0.4rem;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: $success-color;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    outline: none;
+  }
+}
+
+.edit-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+// ---------------------------
+// Oldalsáv (jobb oldal)
+// ---------------------------
+.search-sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 300px;
+  padding: 1rem;
+  @include soft-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 10;
+
+  input {
+    padding: 0.6rem;
     font-size: 1rem;
-    margin-bottom: 2px;
-  }
-  
-  .event-time {
-    font-size: 0.85rem;
-    color: #666;
-  }
-  
-  .event-input {
-    margin-bottom: 0.4rem;
-    padding: 0.5rem;
-    font-size: 0.9rem;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  
+    border-radius: 6px;
+    transition: all 0.3s ease;
+
     &:focus {
-      border-color: #4caf50;
-      box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+      border-color: $primary-color;
+      box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
       outline: none;
+      transform: scale(1.05);
+    }
+
+    &::placeholder {
+      color: #999;
+      transition: color 0.3s ease;
+    }
+
+    &:focus::placeholder {
+      color: $primary-color;
     }
   }
-  
-  // Edit gombok a kártyán belül
-  .edit-buttons {
+
+  .search-status {
+    font-size: 1rem;
+    color: $primary-color;
+    font-weight: bold;
+    animation: fadeIn 1s ease;
+  }
+}
+
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+
+  .result-item {
+    background-color: $light-bg;
+    padding: 0.8rem;
+    border-radius: 5px;
+    box-shadow: $box-shadow;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $hover-blue;
+      transform: scale(1.03);
+    }
+  }
+}
+
+// ---------------------------
+// Bal oldali panel (pl. szűrők)
+// ---------------------------
+.left-panel {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; // teljes szélességű gombok
+  gap: 1rem;
+  padding: 2rem 1rem; // kisebb padding a tetején
+  background-color: #fafafa;
+  @include soft-box;
+  height: 100%;
+
+
+
+  .category-filter {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    align-items: flex-end;
-    justify-content: center;
-  }
-  
-  // Jobb oldali oldalsáv
-  .search-sidebar {
-    width: 300px;
-    height: 100%;
-    @include soft-box;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-    
-    position: fixed; /* Fixált pozíció */
-    right: 0; /* A jobb szélhez igazítjuk */
-    top: 0; /* A képernyő tetejéhez igazítjuk */
-    z-index: 10; /* Biztosítja, hogy a más elemek fölött legyen */
-    
-    input {
-      padding: 0.6rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    
-      &:focus {
-        border-color: #2196f3;
-        box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
-        outline: none;
-      }
-    }
-  }
-  
-  // Alap gombstílus animációval
-  .simple-button {
-    width: 90% !important;
-    padding: 0.5rem 0.7rem;
-    background-color: #ffffff;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 2px 2px 5px #999999;
-    margin-right: 0.5rem;
-  
-    &:hover {
-      background-color: #f0f0f0;
-      transform: translateY(-2px);
-      box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.2);
-    }
-  }
-  
-  // Mégse gomb (piros) animációval
-  .cancel {
-    color: white;
-    background-color: #f44336 !important;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  
-    &:hover {
-      background-color: #e53935 !important;
-      transform: scale(1.05);
-    }
-  }
-  
-  // Mentés gomb (zöld) animációval
-  .save {
-    color: white;
-    background-color: #4caf50 !important;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  
-    &:hover {
-      background-color: #45a049 !important;
-      transform: scale(1.05);
-    }
-  }
-  // Jobb oldali oldalsáv
-.search-sidebar {
-    width: 300px;
-    height: 100%;
-    @include soft-box;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-    position: fixed;
-    right: 0;
-    top: 0;
-    z-index: 10;
-  
-    input {
-      padding: 0.6rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-      transition: all 0.3s ease;
-  
-      &:focus {
-        border-color: #2196f3;
-        box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
-        outline: none;
-        transform: scale(1.05);
-      }
-  
-      &::placeholder {
-        color: #999;
-        transition: color 0.3s ease;
-      }
-  
-      &:focus::placeholder {
-        color: #2196f3;
-      }
-    }
-    
-    // Keresési állapot animáció
-    .search-status {
-      font-size: 1rem;
-      color: #2196f3;
-      font-weight: bold;
-      animation: fadeIn 1s ease;
-    }
-    
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-  }
-  
-  // Egyszerű animált keresés
-  .search-results {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-top: 1rem;
-    
-    .result-item {
-      background-color: #f9f9fb;
-      padding: 0.8rem;
-      border-radius: 5px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      cursor: pointer;
-  
-      &:hover {
-        background-color: #e3f2fd;
-        transform: scale(1.03);
-      }
-    }
-  }
-  .left-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: #fafafa;
-    @include soft-box;
-    height: 100%;
-    
-    .search-input {
-      padding: 0.6rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-  
-    .category-filter {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      
-      label {
-        font-size: 1rem;
-        color: #444;
-      }
-  
-      .category-dropdown {
-        padding: 0.6rem;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-      }
-    }
-    
-    .simple-button {
-      width: 100%;
-      padding: 0.5rem 0.7rem;
-      background-color: #ffffff;
-      color: black;
-      border: none;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 2px 2px 5px #999999;
-      
-      &:hover {
-        background-color: #f0f0f0;
-        transform: translateY(-2px);
-        box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.2);
-      }
-    }
-  }
-  .info-box {
-    @include soft-box;
-    background-color: #f5f5f5;
-    padding: 1rem;
-    border-radius: 10px;
-    text-align: left;
-  
-    h3 {
-      margin-top: 0;
-      font-size: 1.1rem;
-      color: #333;
-    }
-  
-    p {
-      font-size: 0.9rem;
-      color: #666;
-      margin: 0.5rem 0 0;
-    }
-  }
-  
-  .calendar-widget {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  
+
     label {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: #444;
     }
-  
-    input[type="date"] {
-      padding: 0.5rem;
-      border-radius: 6px;
+
+    .category-dropdown {
+      padding: 0.6rem;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-  
-      &:focus {
-        border-color: #2196f3;
-        box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
-        outline: none;
-        transform: scale(1.02);
-      }
     }
   }
-  
-  .quick-filters {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+
+  .simple-button {
+    @include button-style;
   }
-  
+}
+
+// ---------------------------
+// Infóbox
+// ---------------------------
+.info-box {
+  @include soft-box;
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: left;
+
+  h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0.5rem 0 0;
+  }
+}
+
+// ---------------------------
+// Naptár widget
+// ---------------------------
+.calendar-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  label {
+    font-size: 0.9rem;
+    color: #444;
+  }
+
+  input[type="date"] {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+      outline: none;
+      transform: scale(1.02);
+    }
+  }
+}
+
+.quick-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// ---------------------------
+// Gomb stílusok
+// ---------------------------
+.simple-button {
+  @include button-style;
+}
+
+.cancel {
+  @include button-style($error-color, white, color.adjust($error-color, $lightness: -10%));
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.save {
+  @include button-style($success-color, white, color.adjust($success-color, $lightness: -10%));
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+.cancel {
+  @include button-style(
+    $error-color,
+    white,
+    color.adjust($error-color, $lightness: -10%)
+  );
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.save {
+  @include button-style(
+    $success-color,
+    white,
+    color.adjust($success-color, $lightness: -10%)
+  );
+  &:hover {
+    transform: scale(1.05);
+  }
+}

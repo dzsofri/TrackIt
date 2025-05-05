@@ -1,6 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-havi-planner-kezelo',
@@ -11,8 +12,9 @@ import { FormsModule } from '@angular/forms';
   providers: [DatePipe]
 })
 export class HaviPlannerKezeloComponent {
-  searchTerm = '';
+  searchQuery = '';
   calendarDate: string = '';
+
 
   eventss = [
     {
@@ -40,16 +42,13 @@ export class HaviPlannerKezeloComponent {
 
   filteredEvents = this.eventss;
 
-  constructor(private datePipe: DatePipe) {}
-
-  // 🔍 Keresés szöveg alapján
+  constructor(private datePipe: DatePipe, private router: Router) {}
   onSearchChange() {
-    this.filteredEvents = this.eventss.filter(event => 
-      event.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    this.filteredEvents = this.eventss.filter(event =>
+      event.name.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 
-  // ✏️ Szerkesztés elindítása
   onEdit(event: any) {
     event.editing = true;
     event._backup = {
@@ -59,13 +58,24 @@ export class HaviPlannerKezeloComponent {
     };
   }
 
-  // 💾 Mentés
   saveEvent(event: any) {
     delete event._backup;
     event.editing = false;
   }
+  deleteEvent(event: any) {
+    if (confirm(`Biztosan törölni szeretnéd a "${event.name}" eseményt?`)) {
+      // Esemény törlése mindkét listából (ha van teljes lista)
+      this.eventss = this.eventss.filter(e => e !== event);
+      this.filteredEvents = this.filteredEvents.filter(e => e !== event);
+    }
+  }
 
-  // ❌ Mégse
+  onBack(): void {
+    // Navigálás vissza (például főoldalra)
+    this.router.navigate(['/']); // vagy más útvonal
+  }
+
+
   cancelEdit(event: any) {
     if (event._backup) {
       event.name = event._backup.name;
@@ -76,7 +86,6 @@ export class HaviPlannerKezeloComponent {
     event.editing = false;
   }
 
-  // ➕ Új esemény hozzáadása
   onAddNewEvent() {
     const newEvent = {
       name: 'Új esemény',
@@ -85,12 +94,10 @@ export class HaviPlannerKezeloComponent {
       selected: false,
       editing: true
     };
-
     this.eventss.push(newEvent);
     this.filteredEvents = this.eventss;
   }
 
-  // 📅 Dátum szűrés mini naptárral
   onCalendarChange() {
     if (!this.calendarDate) {
       this.filteredEvents = this.eventss;
@@ -103,7 +110,6 @@ export class HaviPlannerKezeloComponent {
     );
   }
 
-  // ⏩ Jövőbeli események szűrése
   filterFutureEvents() {
     const now = new Date();
     this.filteredEvents = this.eventss.filter(event =>
@@ -111,10 +117,21 @@ export class HaviPlannerKezeloComponent {
     );
   }
 
-  // 🔄 Szűrők alaphelyzetbe
   resetFilters() {
-    this.searchTerm = '';
+    this.searchQuery = '';
     this.calendarDate = '';
     this.filteredEvents = this.eventss;
+  }
+
+  scrollToEvent(event: any) {
+    const id = this.generateEventId(event);
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  generateEventId(event: any): string {
+    return 'event-' + btoa(event.name + event.startTime).replace(/=/g, '');
   }
 }

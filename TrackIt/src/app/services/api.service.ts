@@ -301,6 +301,16 @@ getEventById(id: string): Observable<any> {
   );
 }
 
+getEventByUserId(userId: string): Observable<any> {
+  return this.http.get<any>(`${this.server}/events/user/${userId}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching events for user:', error);
+      return of(null);
+    })
+  );
+}
+
+
 updateEvent(id: string, data: { title?: string; description?: string; startTime?: string; endTime?: string }): Observable<any> {
   return this.http.put<any>(`${this.server}/events/${id}`, data, this.tokenHeader()).pipe(
     catchError(error => {
