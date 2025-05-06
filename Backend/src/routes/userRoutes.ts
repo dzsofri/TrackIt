@@ -97,7 +97,7 @@ router.post("/register", async (req: any, res: any) => {
 
     res.status(201).json({
         message: "Sikeres regisztráció!",
-        user: { name: user.name, email: user.email },
+        user: {id: user.id, name: user.name, email: user.email },
         token: generateToken(user)
     });
 });

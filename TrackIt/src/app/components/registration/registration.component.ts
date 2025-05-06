@@ -57,38 +57,31 @@ updateUserStatus(newStatus: string): void {
   onSubmit() {
     this.api.registration(this.user).subscribe({
       next: (res: any) => {
-        // ✅ TELJES válasz logolása a hibakereséshez
         console.log('Teljes válasz:', res);
         console.log('Token:', res.token);
-        console.log('UserId:', res.userId);
-  
-        console.log(res.message);
-  
-        if (res.token && res.userId) {
+        console.log('UserId:', res.user?.id); // <<< MÓDOSÍTVA
+      
+        if (res.token && res.user?.id) {
+          const userId = res.user.id;
+      
           this.auth.login(res.token);
-  
-          // 🎯 Itt hozzuk létre az alap trackereket
+      
           const defaultTrackers = [
-            { habitName: 'Vízfogyasztás', targetValue: 2000, currentValue: 0, frequency: 'daily', userId: res.userId },
-            { habitName: 'Edzés', targetValue: 30, currentValue: 0, frequency: 'daily', userId: res.userId },
-            { habitName: 'Alvás', targetValue: 8, currentValue: 0, frequency: 'daily', userId: res.userId }
+            { habitName: 'Vízfogyasztás', targetValue: 2000, currentValue: 0, frequency: 'daily', userId },
+            { habitName: 'Edzés', targetValue: 30, currentValue: 0, frequency: 'daily', userId },
+            { habitName: 'Alvás', targetValue: 8, currentValue: 0, frequency: 'daily', userId }
           ];
-  
-          // Trackerek létrehozása
+      
           defaultTrackers.forEach(tracker => {
             this.api.createHabit(tracker).subscribe(result => {
               console.log(`${tracker.habitName} létrehozva:`, result);
             });
           });
-  
-          // Felhasználó státusza online-ra változtatása
+      
           this.updateUserStatus("online");
-  
-          // Hibaüzenet törlése, navigálás a welcome oldalra
           this.errorMessage = '';
           this.router.navigateByUrl('/welcome');
         } else {
-          // Ha a válaszban nincs token vagy userId
           console.error('HIBA: A token vagy userId hiányzik a válaszból');
           this.errorMessage = 'A regisztrációs folyamat során hiba történt. Kérem próbálja újra.';
         }
