@@ -62,4 +62,21 @@
       }
     }
   }
+
+}
+
+
+
+  
+.sleep-tracker-layout {
+  display: flex;
+  gap: 2rem; // térköz a két oszlop között
+  align-items: flex-start;
+}
+
+.calendar-container {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }

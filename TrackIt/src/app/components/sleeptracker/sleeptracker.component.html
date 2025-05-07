@@ -1,26 +1,35 @@
-<div class="tracker-card sleep-tracker-card">
-  <h2>Alváskövető</h2>
+<div class="sleep-tracker-layout">
+  <!-- Bal oszlop: Űrlap -->
+  <div class="tracker-card sleep-tracker-card">
+    <h2>Alváskövető</h2>
 
-  <div class="form-group">
-    <label for="sleep-completed">Teljesítetted a napi alvást?</label>
-    <input type="checkbox" id="sleep-completed" [(ngModel)]="sleepCompleted" />
+    <div class="form-group">
+      <label for="sleep-completed">Teljesítetted a napi alvást?</label>
+      <input type="checkbox" id="sleep-completed" [(ngModel)]="sleepCompleted" />
+    </div>
+
+    <div class="form-group">
+      <label for="sleep-amount">Alvás mennyisége (óra)</label>
+      <input type="number" id="sleep-amount" [(ngModel)]="sleepAmount" placeholder="Pl. 7.5" />
+    </div>
+
+    <div class="form-group">
+      <mat-form-field appearance="fill" class="wide-date">
+        <mat-label>Dátum</mat-label>
+        <input matInput [matDatepicker]="sleepPicker" [(ngModel)]="sleepDate" />
+        <mat-datepicker-toggle matSuffix [for]="sleepPicker"></mat-datepicker-toggle>
+        <mat-datepicker #sleepPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="button-row">
+      <button (click)="saveSleep()">Felvétel</button>
+    </div>
   </div>
 
-  <div class="form-group">
-    <label for="sleep-amount">Alvás mennyisége (óra)</label>
-    <input type="number" id="sleep-amount" [(ngModel)]="sleepAmount" placeholder="Pl. 7.5" />
-  </div>
-
-  <div class="form-group">
-    <mat-form-field appearance="fill" class="wide-date">
-      <mat-label>Dátum</mat-label>
-      <input matInput [matDatepicker]="sleepPicker" [(ngModel)]="sleepDate" />
-      <mat-datepicker-toggle matSuffix [for]="sleepPicker"></mat-datepicker-toggle>
-      <mat-datepicker #sleepPicker></mat-datepicker>
-    </mat-form-field>
-  </div>
-
-  <div class="button-row">
-    <button (click)="saveSleep()">Felvétel</button>
+  <!-- Jobb oszlop: Naptár -->
+  <div class="calendar-container">
+    <h3>Naptár</h3>
+    <mat-calendar [(selected)]="selectedDate" (selectedChange)="onDateSelected($event)"></mat-calendar>
   </div>
 </div>
