@@ -7,5 +7,5 @@ export interface Friend_Request {
     status: string;
     sender?: User;
     receiver?: User;
-    activeChallenge: string;
+    imageUrl?: string;
 }

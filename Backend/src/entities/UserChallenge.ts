@@ -8,6 +8,9 @@ export class UserChallenges {
     @PrimaryColumn({ type: "varchar", length: 40 })
     id: string;
 
+    @Column({ type: "varchar", length: 40 })
+    secondaryId: string;
+
     @ManyToOne(() => Users, (user) => user.challenges)
     @JoinColumn({ name: "userId" })
     user: Users;

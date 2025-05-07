@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column } from "typeorm";
+import { Entity, PrimaryColumn, Column, OneToMany } from "typeorm";
+import { UserChallenges } from "./UserChallenge";
 
 @Entity()
 export class Badges {
@@ -10,4 +11,7 @@ export class Badges {
 
     @Column({ type: "varchar", length: 255 })
     path: string;
+
+    @OneToMany(() => UserChallenges, (challenge) => challenge.picture)
+    userChallenges: UserChallenges[];
 }
