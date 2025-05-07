@@ -1,0 +1,210 @@
+@media (max-width: 600px) {
+    .NO_DATA{
+        height: 100%;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 25px;
+        text-align: center;
+        width: 300px;
+    }
+}
+.NO_DATA{
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+    text-align: center;
+    width: 300px;
+}
+//Linkek
+.nav-link.active {
+    color: #627966;
+    background-color: #F5F5F7;
+}
+.nav-link {
+    color: #9F9FA1;
+}
+.nav-item-tab, .nav-item {
+    display: flex;
+    background-color: #F5F5F7;
+    justify-content: center;
+}
+.nav-item-tab {
+    border-radius: 0px 30px 0px 0px;
+}
+.nav-item {
+    width: 100px;
+}
+.d-none {
+    display: none;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+}
+.tab-content, html, body {
+    width: auto;
+    height: auto;
+}
+h3 {
+    padding: 20px;
+    font-size: 24px;
+    border-bottom: 2px solid #e1e4e8;
+}
+span {
+    margin-left: 20px;
+}
+.circle-image img {
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+.kihivas{
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    width: 30vw;
+}
+.kihivasBox{
+    display: flex;
+    background-color: #F8F8F8;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0px 7px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    transition: transform 0.2s ease;
+}
+.kihivasBox:hover {
+    transform: scale(1.01);
+}
+.kihivas_content {
+    width: 100%;
+}
+.kihivas_text {
+    display: flex;
+    flex-wrap: wrap;
+    font-weight: bold;
+    margin: 4px 0;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+.del{
+    display: flex;
+    background-color: #B01515;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 50px;
+    padding: 8px 16px;
+    border: none;
+}
+.details {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 70%;
+}
+.other {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    gap: 5px;
+}
+.row {
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+}
+img{
+    margin: 0 auto;
+    width: 60px;
+}
+.point{
+    text-align: center;
+    color: #9298A0;
+    font-weight: bold;
+}
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+}
+.popup p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+.confirm-button {
+    background-color: #4caf50;
+    color: white;
+    margin-right: 10px;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+}
+.confirm-button:hover {
+    background-color: #45a049;
+}
+.cancel-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+}
+.cancel-button:hover {
+    background-color: #e53935;
+}
+.modal-container {
+    width: 20%;
+    padding: 20px;
+    border-radius: 15px;
+    background: #fff;
+}
+.confirm-button {
+    background-color: #4CAF50;
+    color: white;
+    margin-right: 10px;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+}
+.cancel-button {
+    background-color: #E53935;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+}
+.confirm-button:hover {
+    background: linear-gradient(145deg, #66bb6a, #388e3c);
+    transform: scale(1.07);
+    box-shadow: 0 8px 16px rgba(76, 175, 80, 0.3);
+    cursor: pointer;
+}
+.cancel-button:hover {
+    background: linear-gradient(145deg, #f44336, #b71c1c);
+    transform: scale(1.07);
+    box-shadow: 0 8px 16px rgba(244, 67, 54, 0.3);
+    cursor: pointer;
+}

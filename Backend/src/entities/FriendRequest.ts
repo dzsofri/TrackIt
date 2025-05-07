@@ -25,10 +25,6 @@ export class FriendRequests {
     @Column({ type: "enum", enum: ["pending", "accepted"], default: "pending" })
     status: string;
 
-    @ManyToOne(() => UserChallenges, { nullable: true })
-    @JoinColumn({ name: "activeChallenge" })
-    activeChallenge: string;
-
     @CreateDateColumn()
     createdAt: Date;
 }

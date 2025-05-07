@@ -209,7 +209,7 @@ export class ApiService {
         return of({ message: 'Update failed' });
       })
     );
-  }  
+  }
 
   updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
     const body = { status: newStatus };
