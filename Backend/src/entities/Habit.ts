@@ -26,6 +26,9 @@ export class Habits {
     @CreateDateColumn()
     createdAt: Date;
 
+    @Column({ default: 'inactive' })
+    status: string;
+
     @OneToMany(() => HabitTrackings, (habitTrack) => habitTrack.habit)
     habitTrackings: HabitTrackings[];
 }
