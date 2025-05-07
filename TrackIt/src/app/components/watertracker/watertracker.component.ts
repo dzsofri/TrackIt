@@ -30,7 +30,7 @@ export class WatertrackerComponent {
     }
 
     const data = {
-      date: this.selectedDate.toISOString().split('T')[0], // pl. 2024-05-05
+      date: this.selectedDate.toISOString().split('T')[0],
       achieved: this.completed,
       value: this.waterAmount,
       habitId: 'water-tracker'
@@ -39,7 +39,6 @@ export class WatertrackerComponent {
     this.apiService.addHabitTrackingRecord(data).subscribe((res) => {
       console.log('Sikeres mentés:', res);
       this.savedEntries.push(data);
-      // nullázás
       this.waterAmount = null;
       this.completed = false;
     });

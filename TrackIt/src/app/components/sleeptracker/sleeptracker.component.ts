@@ -1,41 +1,42 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+  
 @Component({
   selector: 'app-sleeptracker',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatDatepickerModule, MatFormFieldModule, MatInputModule],
   templateUrl: './sleeptracker.component.html',
   styleUrl: './sleeptracker.component.scss'
 })
 export class SleeptrackerComponent {
-  completed: boolean = false;
+  sleepCompleted: boolean = false;
   sleepAmount: number | null = null;
+  sleepDate: Date = new Date();
 
   saveSleep(): void {
-    if (this.sleepAmount === null || this.sleepAmount <= 0) {
+    if (!this.sleepAmount || this.sleepAmount <= 0) {
       alert('Kérlek, adj meg érvényes alvásmennyiséget!');
       return;
     }
 
-    const sleepData = {
-      completed: this.completed,
-      sleepAmount: this.sleepAmount,
-      date: new Date().toISOString().split('T')[0] // pl. '2025-05-01'
+    const sleepEntry = {
+      date: this.sleepDate.toISOString().split('T')[0],
+      completed: this.sleepCompleted,
+      amount: this.sleepAmount
     };
 
-    // Itt később API-hívás történhetne
-    console.log('Alvás adatok mentve:', sleepData);
-
+    console.log('Alvás adat mentve:', sleepEntry);
     alert('Alvás adatok mentve!');
-    
-    // Alapállapot visszaállítása (opcionális)
-    this.completed = false;
+
+    this.sleepCompleted = false;
     this.sleepAmount = null;
   }
 
   openCalendar(): void {
-    alert('Naptár funkció még nem elérhető. Későbbi verzióban lesz implementálva.');
+    alert('A naptár funkció még fejlesztés alatt van.');
   }
 }

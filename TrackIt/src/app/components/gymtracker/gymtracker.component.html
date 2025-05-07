@@ -1,0 +1,27 @@
+<div class="tracker-card gym-tracker-card">
+    <h2>Edzéskövető</h2>
+  
+    <div class="form-group">
+      <label for="gym-completed">Teljesítetted a napi edzést?</label>
+      <input type="checkbox" id="gym-completed" [(ngModel)]="gymCompleted" />
+    </div>
+  
+    <div class="form-group">
+      <label for="gym-amount">Edzés mennyisége (óra)</label>
+      <input type="number" id="gym-amount" [(ngModel)]="gymAmount" placeholder="Pl. 1" />
+    </div>
+  
+    <div class="form-group">
+      <mat-form-field appearance="fill" class="wide-date">
+        <mat-label>Dátum</mat-label>
+        <input matInput [matDatepicker]="gymPicker" [(ngModel)]="gymDate" />
+        <mat-datepicker-toggle matSuffix [for]="gymPicker"></mat-datepicker-toggle>
+        <mat-datepicker #gymPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+  
+    <div class="button-row">
+      <button (click)="saveGym()">Felvétel</button>
+    </div>
+  </div>
+  
