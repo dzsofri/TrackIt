@@ -8,6 +8,17 @@ import { DayDetailsModalComponent } from '../day-details-modal/day-details-modal
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
+interface CalendarEvent {
+  id?: string;
+  title: string;
+  description: string;
+  startTime: Date;
+  endTime: Date;
+  color?: string;
+  selected?: boolean;
+  days?: number[]; // <-- Added days property
+}
+
 @Component({
   selector: 'app-havi-planner',
   standalone: true,
@@ -16,9 +27,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./havi-planner.component.scss']
 })
 export class HaviPlannerComponent {
-  // View-related properties
-  startDateType: string = 'text';
-  endDateType: string = 'text';
+  startDateType = 'text';
+  endDateType = 'text';
   modalVisible = false;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
@@ -26,19 +36,17 @@ export class HaviPlannerComponent {
   weekdays = ['H', 'K', 'Sz', 'Cs', 'P', 'Sz', 'V'];
   months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
 
-  // Calendar-related properties
   currentYear = new Date().getFullYear();
   currentMonth = new Date().getMonth();
   calendarDays: any[] = [];
-  eventRows: any[][] = [];
-  selectedEvents = [];
+  eventRows: CalendarEvent[][] = [];
+  selectedEvents: CalendarEvent[] = [];
 
-  // Event-related properties
-  events: any[] = [];
-  eventss: any[] = []; // Betöltés adatbázisból
-  editingEvent: any = null;
+  events: CalendarEvent[] = [];
+  eventss: CalendarEvent[] = [];
+  editingEvent: CalendarEvent | null = null;
   newEvent = {
-    name: '',
+    title: '',
     description: '',
     startTime: '',
     endTime: '',
@@ -51,54 +59,124 @@ export class HaviPlannerComponent {
     { color: 'red', label: 'Vizsganap' },
   ];
 
-  // UI State
-  selectMode: boolean = false;
+  selectMode = false;
   visibleWeekdayStartIndex = 0;
   currentSidebarView: 'add' | 'list' = 'add';
   userId = '';
-  dayDetailsVisible: boolean = false;
+  dayDetailsVisible = false;
   selectedDay: any = null;
-  loading: boolean = true;
+  loading = true;
+
+  touchStartX = 0; // Húzás kezdő pozíciója
 
   constructor(private apiService: ApiService, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.initializeUser();
   }
-  NavigateTo(route: string): void {
-    this.router.navigate([route]);
-  }
-  // User initialization + Event fetch
-  private initializeUser() {
-    const user = this.authService.loggedUser();
-    this.userId = user.id;
 
-    if (this.userId) {
-      this.apiService.getEventByUserId(this.userId).subscribe(events => {
-        this.loading = false;
-        if (events.length > 0) {
-          this.events = events;
-          this.eventss = events.map((event: { title: string; startTime: string; endTime: string; color?: string }) => ({
-            name: event.title,
-            startTime: new Date(event.startTime),
-            endTime: new Date(event.endTime),
-            color: event.color || '#000000',
-            selected: false
-          }));
+  // Bulk delete function
+  deleteSelectedEvents() {
+    const selectedEventIds = this.eventss.filter(event => event.selected).map(event => event.id);
 
-        } else {
-          console.log('Nincsenek események');
+    if (selectedEventIds.length > 0) {
+      selectedEventIds.forEach(id => {
+        if (id) {
+          this.apiService.deleteEvent(id).subscribe({
+            next: () => {
+              // Deletion successful, update the local event list
+              this.eventss = this.eventss.filter(event => event.id !== id);
+              this.generateCalendar(); // Refresh the calendar
+              this.selectMode = false; // Turn off selection mode
+              this.modalMessage = 'Események sikeresen törölve.';
+              this.modalType = 'success';
+              this.modalVisible = true;
+            },
+            error: () => {
+              this.modalMessage = 'Nem sikerült törölni a kijelölt eseményeket.';
+              this.modalType = 'error';
+              this.modalVisible = true;
+            }
+          });
         }
-        this.generateCalendar();
       });
-    } else {
-      this.loading = false;
-      console.error('Nincs felhasználói azonosító');
     }
   }
 
+  // Touch event handling for event deletion
+  onTouchStart(event: TouchEvent, day: any) {
+    this.touchStartX = event.touches[0].clientX;
+  }
 
-  // Calendar generation
+  onTouchEnd(event: TouchEvent, day: any) {
+    const touchEndX = event.changedTouches[0].clientX;
+
+    if (this.touchStartX - touchEndX > 50) { // Swipe left
+      this.deleteEventFromDay(day); // Delete the event
+    }
+  }
+
+  // Delete an individual event from the calendar and database
+  deleteEventFromDay(day: any) {
+    const eventToDelete = this.eventss.find(event => event.days?.includes(day.date));
+
+    if (eventToDelete && eventToDelete.id) {  // Check if ID exists
+      this.apiService.deleteEvent(eventToDelete.id).subscribe({
+        next: () => {
+          // Event deletion successful, refresh the event list and calendar
+          this.eventss = this.eventss.filter(event => event.id !== eventToDelete.id);
+          this.generateCalendar(); // Refresh the calendar
+          this.modalMessage = 'Esemény törölve!';
+          this.modalType = 'success';
+          this.modalVisible = true;
+        },
+        error: () => {
+          this.modalMessage = 'Nem sikerült törölni az eseményt.';
+          this.modalType = 'error';
+          this.modalVisible = true;
+        }
+      });
+    } else {
+      // If no event is found for the given date
+      this.modalMessage = 'Nem található esemény az adott dátummal.';
+      this.modalType = 'error';
+      this.modalVisible = true;
+    }
+  }
+
+  NavigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
+
+  private initializeUser() {
+    const user = this.authService.loggedUser();
+    this.userId = user?.id;
+
+    if (!this.userId) {
+      this.loading = false;
+      console.error('Nincs felhasználói azonosító');
+      return;
+    }
+
+    this.apiService.getEventByUserId(this.userId).subscribe(events => {
+      this.loading = false;
+      if (events.length > 0) {
+        this.events = events;
+        this.eventss = events.map((event: CalendarEvent) => ({
+          title: event.title,
+          description: event.description,
+          startTime: new Date(event.startTime),
+          endTime: new Date(event.endTime),
+          color: event.color ?? '#000000',
+          selected: false
+        }));
+      } else {
+        console.log('Nincsenek események');
+      }
+      this.generateCalendar();
+    });
+  }
+
   generateCalendar() {
     this.calendarDays = this.createCalendarDays();
     this.eventRows = this.calculateEventRows();
@@ -116,8 +194,7 @@ export class HaviPlannerComponent {
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
-      const eventsForDay = this.getEventDots(i);
-      calendarDays.push({ date: i, dots: eventsForDay });
+      calendarDays.push({ date: i, dots: this.getEventDots(i) });
     }
 
     while (calendarDays.length < 42) {
@@ -126,84 +203,77 @@ export class HaviPlannerComponent {
 
     return calendarDays;
   }
+
   getEventDots(day: number) {
     const currentDate = new Date(this.currentYear, this.currentMonth, day);
-    currentDate.setHours(0, 0, 0, 0); // nap eleje
+    currentDate.setHours(0, 0, 0, 0);
 
-    return this.events.filter(event => {
-      const eventStart = new Date(event.startTime);
-      const eventEnd = new Date(event.endTime);
-      eventStart.setHours(0, 0, 0, 0); // nap eleje
-      eventEnd.setHours(0, 0, 0, 0);   // nap eleje
+    return this.events
+      .filter(event => {
+        const eventStart = new Date(event.startTime);
+        const eventEnd = new Date(event.endTime);
+        eventStart.setHours(0, 0, 0, 0);
+        eventEnd.setHours(0, 0, 0, 0);
+        return eventStart <= currentDate && currentDate <= eventEnd;
+      })
+      .map(event => {
+        const start = new Date(event.startTime);
+        const end = new Date(event.endTime);
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
 
-      return eventStart.getTime() <= currentDate.getTime() && currentDate.getTime() <= eventEnd.getTime();
-    }).map(event => {
-      const eventStart = new Date(event.startTime);
-      const eventEnd = new Date(event.endTime);
-      eventStart.setHours(0, 0, 0, 0);
-      eventEnd.setHours(0, 0, 0, 0);
-
-      const isStart = eventStart.getTime() === currentDate.getTime();
-      const isEnd = eventEnd.getTime() === currentDate.getTime();
-
-      return {
-        title: event.title,
-        color: event.color || 'deepskyblue',
-        isStart,
-        isEnd,
-        eventStart,
-        eventEnd
-      };
-    });
+        return {
+          title: event.title,
+          color: event.color ?? 'deepskyblue',
+          isStart: start.getTime() === currentDate.getTime(),
+          isEnd: end.getTime() === currentDate.getTime()
+        };
+      });
   }
 
-
   calculateEventRows() {
-    const rows: any[][] = [];
+    const rows: CalendarEvent[][] = [];
 
     for (const event of this.events) {
       const start = new Date(event.startTime);
       const end = new Date(event.endTime);
-      const eventDays = this.getEventDays(start, end);
+      const days = this.getEventDays(start, end);
 
       let placed = false;
       for (const row of rows) {
-        const overlaps = row.some((e: any) => {
+        const overlaps = row.some(e => {
           const es = new Date(e.startTime);
           const ee = new Date(e.endTime);
-          return (start <= ee && end >= es);
+          return start <= ee && end >= es;
         });
 
         if (!overlaps) {
-          row.push({ ...event, days: eventDays });
+          row.push({ ...event, days });
           placed = true;
           break;
         }
       }
 
-      if (!placed) {
-        rows.push([{ ...event, days: eventDays }]);
-      }
+      if (!placed) rows.push([{ ...event, days }]);
     }
 
     return rows;
   }
 
   getEventDays(start: Date, end: Date) {
-    const eventDays = [];
+    const days = [];
     let current = new Date(start);
 
     while (current <= end) {
       if (current.getMonth() === this.currentMonth && current.getFullYear() === this.currentYear) {
-        eventDays.push(current.getDate());
+        days.push(current.getDate());
       }
       current.setDate(current.getDate() + 1);
     }
 
-    return eventDays;
+    return days;
   }
 
-  // Navigation
   prevMonth() {
     this.changeMonth(-1);
     this.generateCalendar();
@@ -243,14 +313,13 @@ export class HaviPlannerComponent {
       this.visibleWeekdayStartIndex -= 3;
     }
   }
+
   editSelectedEvent() {
     if (this.selectedEvents.length === 1) {
-      const event = this.selectedEvents[0];
-      // Esemény szerkesztésének logikája, pl. egy modal megnyitása
-      console.log('Szerkesztés:', event);
+      console.log('Szerkesztés:', this.selectedEvents[0]);
     }
   }
-  // Event form handling
+
   addEvent() {
     this.invalidFields = [];
     this.validateNewEvent();
@@ -262,63 +331,63 @@ export class HaviPlannerComponent {
       return;
     }
 
-    const startDate = new Date(this.newEvent.startTime);
-    const endDate = new Date(this.newEvent.endTime);
-
-    if (startDate > endDate) {
+    const start = new Date(this.newEvent.startTime);
+    const end = new Date(this.newEvent.endTime);
+    if (start > end) {
       this.modalMessage = 'A kezdési időpont nem lehet később, mint a befejezés!';
       this.modalType = 'error';
       this.modalVisible = true;
       return;
     }
 
-    const startTime = startDate.toISOString();
-    const endTime = endDate.toISOString();
+    const startTime = start.toISOString();
+    const endTime = end.toISOString();
 
-    if (this.editingEvent && this.editingEvent.id) {
+    if (this.editingEvent?.id) {
       this.updateEvent(startTime, endTime);
-      return;
+    } else {
+      this.createEvent(startTime, endTime);
     }
-
-    this.createEvent(startTime, endTime);
   }
 
   validateNewEvent() {
-    if (!this.newEvent.name) this.invalidFields.push('Név');
-    if (!this.newEvent.startTime) this.invalidFields.push('Kezdés dátuma');
-    if (!this.newEvent.endTime) this.invalidFields.push('Befejezés dátuma');
-    if (this.newEvent.startTime && this.newEvent.startTime.length <= 10) this.invalidFields.push('Kezdés időpont (óra:perc is szükséges)');
-    if (this.newEvent.endTime && this.newEvent.endTime.length <= 10) this.invalidFields.push('Befejezés időpont (óra:perc is szükséges)');
+    const { title, startTime, endTime } = this.newEvent;
+    if (!title) this.invalidFields.push('Név');
+    if (!startTime) this.invalidFields.push('Kezdés dátuma');
+    if (!endTime) this.invalidFields.push('Befejezés dátuma');
+    if (startTime?.length <= 10) this.invalidFields.push('Kezdés időpont (óra:perc is szükséges)');
+    if (endTime?.length <= 10) this.invalidFields.push('Befejezés időpont (óra:perc is szükséges)');
   }
 
   createEvent(startTime: string, endTime: string) {
-    const user = this.authService.loggedUser(); // Minden híváskor újra lekérni
-    const userId = user.id; // A helyes userId közvetlen lekérése
-
-    console.log('User ID:', userId);
+    const userId = this.authService.loggedUser()?.id;
+    if (!userId) return;
 
     this.apiService.createEvent({
-      title: this.newEvent.name,
+      title: this.newEvent.title,
       description: this.newEvent.description,
       startTime,
       endTime,
       color: this.newEvent.color,
-      userId: userId // Az aktuálisan lekért userId használata
-    })
-    .subscribe({
+      userId
+    }).subscribe({
       next: (response) => {
         if (response.message === 'Esemény létrehozva!') {
           this.modalMessage = 'Esemény sikeresen hozzáadva';
           this.modalType = 'success';
           this.modalVisible = true;
-          this.events.push(response.event);
-          this.eventss.push({
-            name: response.event.title,
+
+          const newEvent = {
+            id: response.event.id ?? '',
+            title: response.event.title,
+            description: response.event.description,
             startTime: new Date(response.event.startTime),
             endTime: new Date(response.event.endTime),
-            color: response.event.color || '#000000',
-            selected: false
-          });
+            color: response.event.color ?? '#000000'
+          };
+
+          this.events.push(newEvent);
+          this.eventss.push({ ...newEvent, selected: false });
           this.generateCalendar();
           this.resetNewEventForm();
         } else {
@@ -327,62 +396,60 @@ export class HaviPlannerComponent {
           this.modalVisible = true;
         }
       },
-      error: (err) => {
+      error: () => {
         this.modalMessage = 'Szerverhiba: nem sikerült az eseményt elmenteni.';
         this.modalType = 'error';
         this.modalVisible = true;
-        console.error(err);
       }
     });
   }
 
   updateEvent(startTime: string, endTime: string) {
-    this.apiService.updateEvent(this.editingEvent.id, {
-      title: this.newEvent.name,
+    this.apiService.updateEvent(this.editingEvent!.id!, {
+      title: this.newEvent.title,
       description: this.newEvent.description,
       startTime,
-      endTime,
+      endTime
     }).subscribe({
       next: (response) => {
         this.modalMessage = 'Esemény sikeresen frissítve.';
         this.modalType = 'success';
         this.modalVisible = true;
         this.updateEventInList(response);
+        this.resetNewEventForm();
       },
-      error: (err) => {
+      error: () => {
         this.modalMessage = 'Nem sikerült frissíteni az eseményt.';
         this.modalType = 'error';
         this.modalVisible = true;
-        console.error(err);
       }
     });
   }
 
-  updateEventInList(updatedEvent: any) {
+  updateEventInList(updatedEvent: CalendarEvent) {
     const index = this.events.findIndex(e => e.id === updatedEvent.id);
     if (index !== -1) {
       this.events[index] = updatedEvent;
-      this.generateCalendar();
     }
+
+    const listIndex = this.eventss.findIndex(e => e.id === updatedEvent.id);
+    if (listIndex !== -1) {
+      this.eventss[listIndex] = { ...updatedEvent, selected: false };
+    }
+
+    this.generateCalendar();
   }
 
   resetNewEventForm() {
-    this.newEvent = { name: '', description: '', startTime: '', endTime: '', color: '#ff0000' };
+    this.newEvent = { title: '', description: '', startTime: '', endTime: '', color: '#ff0000' };
     this.editingEvent = null;
   }
 
-  // Selection Mode
   toggleSelectMode() {
     this.selectMode = !this.selectMode;
-    if (!this.selectMode) {
-      this.eventss.forEach(event => event.selected = false);
-    }
   }
 
-  toggleSelection(event: any) {
-    event.selected = !event.selected;
-  }
-
+  
   showDayDetails(day: any): void {
     this.selectedDay = day;
     this.dayDetailsVisible = true;

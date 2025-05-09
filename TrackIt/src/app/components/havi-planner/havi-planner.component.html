@@ -11,7 +11,7 @@
     <!-- Új esemény felvitele -->
     <div *ngIf="currentSidebarView === 'add'" class="add-event-view">
       <label for="eventName">Esemény:</label>
-      <input id="eventName" type="text" [(ngModel)]="newEvent.name" placeholder="esemény neve" />
+      <input id="eventName" type="text" [(ngModel)]="newEvent.title" placeholder="esemény neve" />
 
       <label for="eventDescription">Leírás:</label>
       <textarea id="eventDescription" [(ngModel)]="newEvent.description" placeholder="esemény leírása"></textarea>
@@ -42,7 +42,7 @@
       <div *ngFor="let event of eventss" class="event-item">
         <div class="event-content">
           <div class="event-info">
-            <div class="event-title">{{ event.name }}</div>
+            <div class="event-title">{{ event.title }}</div>
             <div class="event-time">
               {{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}
             </div>
@@ -54,9 +54,10 @@
         </div>
       </div>
 
-      <!-- Szerkesztés gomb, ha van kijelölt esemény -->
-      <div *ngIf="selectMode && selectedEvents.length > 0" class="edit-button-container">
-        <button class="get-started-button" (click)="editSelectedEvent()">Szerkesztés</button>
+
+      <!-- Törlés gomb a kijelölt eseményekhez -->
+      <div *ngIf="selectMode && selectedEvents.length > 0" class="delete-button-container">
+        <button class="get-started-button" (click)="deleteSelectedEvents()">Kijelölt események törlése</button>
       </div>
     </div>
   </div>
@@ -77,7 +78,9 @@
       <div *ngFor="let day of calendarDays"
            class="day"
            [class.inactive]="day.inactive"
-           (click)="showDayDetails(day)">
+           (click)="showDayDetails(day)"
+           (touchstart)="onTouchStart($event, day)"
+           (touchend)="onTouchEnd($event, day)">
         <div class="date">{{ day.date }}</div>
         <div class="events">
           <div *ngFor="let dot of day.dots" class="event-bar" [style.backgroundColor]="dot.color">
