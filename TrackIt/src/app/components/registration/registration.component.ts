@@ -75,6 +75,7 @@ updateUserStatus(newStatus: string): void {
           defaultTrackers.forEach(tracker => {
             this.api.createHabit(tracker).subscribe(result => {
               console.log(`${tracker.habitName} létrehozva:`, result);
+
             });
           });
       
