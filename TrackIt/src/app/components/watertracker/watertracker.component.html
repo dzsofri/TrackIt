@@ -24,3 +24,38 @@
     <button (click)="saveWater()">Felvétel</button>
   </div>
 </div>
+
+<div class="calendar">
+  <div class="header">
+    <button (click)="prevMonth()">
+      <img src="./assets/icons/left_arrow.png" alt="előző">
+    </button>
+    <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
+    <button (click)="nextMonth()">
+      <img src="./assets/icons/right_arrow.png" alt="következő">
+    </button>
+  </div>
+
+  <div class="weekdays">
+    <div *ngFor="let day of weekdays">{{ day }}</div>
+  </div>
+
+  <div class="days">
+    <div *ngFor="let day of calendarDays"
+         class="day"
+         [class.inactive]="day.inactive"
+         (click)="showDayDetails(day)"
+         (touchstart)="onTouchStart($event, day)"
+         (touchend)="onTouchEnd($event, day)">
+      <span>{{ day.date }}</span>
+
+      <!-- Dots for events -->
+      <div class="dots">
+        <div *ngFor="let dot of day.dots"
+             class="dot"
+             [ngStyle]="{ 'background-color': dot.color }"
+             [title]="dot.title"></div>
+      </div>
+    </div>
+  </div>
+</div>
