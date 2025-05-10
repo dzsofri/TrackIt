@@ -1,6 +1,5 @@
-<div class="sleep-tracker-layout">
-  <!-- Bal oszlop: Űrlap -->
-  <div class="tracker-card sleep-tracker-card">
+<div class="tracker-container">
+  <div class="sleep-tracker-card">
     <h2>Alváskövető</h2>
 
     <div class="form-group">
@@ -27,9 +26,38 @@
     </div>
   </div>
 
-  <!-- Jobb oszlop: Naptár -->
-  <div class="calendar-container">
-    <h3>Naptár</h3>
-    <mat-calendar [(selected)]="selectedDate" (selectedChange)="onDateSelected($event)"></mat-calendar>
+
+<div class="calendar">
+    <div class="header">
+      <button (click)="prevMonth()">
+        <img src="./assets/icons/left_arrow.png" alt="előző">
+      </button>
+      <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
+      <button (click)="nextMonth()">
+        <img src="./assets/icons/right_arrow.png" alt="következő">
+      </button>
+    </div>
+
+    <div class="weekdays">
+      <div *ngFor="let day of weekdays">{{ day }}</div>
+    </div>
+
+    <div class="days">
+      <div *ngFor="let day of calendarDays"
+           class="day"
+           [class.inactive]="day.inactive"
+           (click)="showDayDetails(day)"
+           (touchstart)="onTouchStart($event, day)"
+           (touchend)="onTouchEnd($event, day)">
+        <span>{{ day.date }}</span>
+
+        <div class="dots">
+          <div *ngFor="let dot of day.dots"
+               class="dot"
+               [ngStyle]="{ 'background-color': dot.color }"
+               [title]="dot.title"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
