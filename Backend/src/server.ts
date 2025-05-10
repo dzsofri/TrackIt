@@ -23,6 +23,8 @@ import chatRoutes from "./routes/chatRoutes";
 // Entitások
 import { Badges } from "./entities/Badges";
 
+import eventRoutes from "./routes/eventRoutes";
+
 dotenv.config();
 
 // Alkalmazás létrehozása
@@ -129,6 +131,10 @@ async function seedPictures() {
 }
 
 // ========= App indítása =========
+app.use("/chat", chatRoutes);
+app.use("/events", eventRoutes);
+
+// Start everything
 const PORT = process.env.PORT || 3000;
 
 AppDataSource.initialize()

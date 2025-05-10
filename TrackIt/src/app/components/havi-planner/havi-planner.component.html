@@ -1,0 +1,117 @@
+<div class="calendar-container">
+  <!-- Bal oldali panel -->
+  <div class="sidebar">
+    <!-- Nézetváltó gombok -->
+    <div class="sidebar-header">
+      <button class="simple-button" (click)="currentSidebarView = 'add'" [class.active]="currentSidebarView === 'add'">Új esemény</button>
+      <button class="simple-button" (click)="currentSidebarView = 'list'" [class.active]="currentSidebarView === 'list'">Események</button>
+      <button class="simple-button" (click)="NavigateTo('/haviplannerideiglenes')"> Eseménykezelő</button>
+    </div>
+
+    <!-- Új esemény felvitele -->
+    <div *ngIf="currentSidebarView === 'add'" class="add-event-view">
+      <label for="eventName">Esemény:</label>
+      <input id="eventName" type="text" [(ngModel)]="newEvent.title" placeholder="esemény neve" />
+
+      <label for="eventDescription">Leírás:</label>
+      <textarea id="eventDescription" [(ngModel)]="newEvent.description" placeholder="esemény leírása"></textarea>
+
+      <div class="date-fields">
+        <div class="small">
+          <label for="startDateTime">Kezdés:</label>
+          <input id="startDateTime" type="datetime-local" [(ngModel)]="newEvent.startTime" class="form-control" />
+        </div>
+        <div class="small">
+          <label for="endDateTime">Befejezés:</label>
+          <input id="endDateTime" type="datetime-local" [(ngModel)]="newEvent.endTime" class="form-control" />
+        </div>
+      </div>
+
+      <label for="eventColor">Szín:</label>
+      <p-colorpicker id="eventColor" [(ngModel)]="newEvent.color" inputId="cp-hex" />
+
+      <button class="get-started-button" (click)="addEvent()">Hozzáadás</button>
+    </div>
+
+    <!-- Meglévő események listája -->
+    <div *ngIf="currentSidebarView === 'list'" class="event-list-view">
+      <button class="simple-button" (click)="toggleSelectMode()">
+        {{ selectMode ? 'Kijelölés bezárása' : 'Kijelölés mód' }}
+      </button>
+
+      <div *ngFor="let event of eventss" class="event-item">
+        <div class="event-content">
+          <div class="event-info">
+            <div class="event-title">{{ event.title }}</div>
+            <div class="event-time">
+              {{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}
+            </div>
+          </div>
+          <label *ngIf="selectMode" class="checkbox-wrapper">
+            <input type="checkbox" [(ngModel)]="event.selected" />
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+
+
+      <!-- Törlés gomb a kijelölt eseményekhez -->
+      <div *ngIf="selectMode && selectedEvents.length > 0" class="delete-button-container">
+        <button class="get-started-button" (click)="deleteSelectedEvents()">Kijelölt események törlése</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Naptár -->
+  <div class="calendar">
+    <div class="header">
+      <button (click)="prevMonth()"><img src="./assets/icons/left_arrow.png" alt="előző"></button>
+      <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
+      <button (click)="nextMonth()"><img src="./assets/icons/right_arrow.png" alt="következő"></button>
+    </div>
+
+    <div class="weekdays">
+      <div *ngFor="let day of weekdays">{{ day }}</div>
+    </div>
+
+    <div class="days">
+      <div *ngFor="let day of calendarDays"
+           class="day"
+           [class.inactive]="day.inactive"
+           (click)="showDayDetails(day)"
+           (touchstart)="onTouchStart($event, day)"
+           (touchend)="onTouchEnd($event, day)">
+        <div class="date">{{ day.date }}</div>
+        <div class="events">
+          <div *ngFor="let dot of day.dots" class="event-bar" [style.backgroundColor]="dot.color">
+            {{ dot.title }}
+          </div>
+        </div>
+        <div *ngIf="day.label" class="label">{{ day.label }}</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item" *ngFor="let legend of legends">
+        <span class="dot" [style.backgroundColor]="legend.color"></span>
+        {{ legend.label }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Nap részletei modal -->
+  <app-day-details-modal
+    [visible]="dayDetailsVisible"
+    [day]="selectedDay"
+    (close)="dayDetailsVisible = false">
+  </app-day-details-modal>
+</div>
+
+<!-- Figyelmeztető modal -->
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
+  [invalidFields]="invalidFields"
+  [message]="modalMessage"
+  (close)="modalVisible = false">
+</app-alert-modal>

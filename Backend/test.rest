@@ -196,7 +196,7 @@ DELETE http://localhost:{{PORT}}/tasks/e1c60327-27aa-43f5-81fe-0b2832f82478
 GET http://localhost:{{PORT}}/chat/messages/561dd7fc-c1f1-4202-97b6-5af9355e1cca/57cbaf48-b943-4393-a50a-6a2334d485f2
 Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDE5MzM5MiwiZXhwIjoxNzQ0Mjc5NzkyfQ.IT7BJGnwim27leIonv4fBsNTbocQLZP3AkgGIN_KuOA
 
-###
+### Felhasználó online satusanak frissítése
 PATCH   http://localhost:{{PORT}}/users/status
 Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMyNWQ3ZDk4LWMwMzMtNGQ3YS05NTBhLTZlOTU1ZWUxZGU4YyIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsIm5hbWUiOiJCZXLDqXRpIFpzw7NmaWEiLCJpYXQiOjE3NDQzNTU1MDAsImV4cCI6MTc0NDQ0MTkwMH0.0skunl5JE9P5i6QoNpzU7khd6JeKs7bESlMzhifuUVE
 Content-Type: application/json
@@ -205,3 +205,44 @@ Content-Type: application/json
  {
   "status": "online"
 }
+
+###  Esemény létrehozása
+POST http://localhost:{{PORT}}/events
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUyMDRkNTA4LTI2NjktNDljOS1hMWVlLTY2MmE3OWY3YmQ2OSIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NjQ1NzMyMiwiZXhwIjoxNzQ2NTQzNzIyfQ.DQ983CCiaStT4PJ-2GAjjhVSqoCH2gqUNb5TKhhEHqg
+Content-Type: application/json
+
+{
+  "title": "Nyaralás",
+  "description": "Tengerparti nyaralás",
+  "startTime": "2025-04-17T07:00:00",
+  "endTime": "2025-04-19T07:20:00",
+  "color": "#FF5733"
+}
+
+
+###  Összes esemény lekérdezése
+GET http://localhost:{{PORT}}/events/user/e204d508-2669-49c9-a1ee-662a79f7bd69
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUyMDRkNTA4LTI2NjktNDljOS1hMWVlLTY2MmE3OWY3YmQ2OSIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NjQ1NzMyMiwiZXhwIjoxNzQ2NTQzNzIyfQ.DQ983CCiaStT4PJ-2GAjjhVSqoCH2gqUNb5TKhhEHqg
+
+
+### Egy adott esemény lekérdezése
+GET http://localhost:{{PORT}}/events/f956d247-9be7-4951-b216-95b50743a741
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDY5ODEwMiwiZXhwIjoxNzQ0Nzg0NTAyfQ.ik-RSIPY8LuIH0uRrAV0LlEOY8x6euyzoLVyjJRaLus
+
+
+###  Esemény frissítése
+PUT http://localhost:{{PORT}}/events/f956d247-9be7-4951-b216-95b50743a741
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDY5ODEwMiwiZXhwIjoxNzQ0Nzg0NTAyfQ.ik-RSIPY8LuIH0uRrAV0LlEOY8x6euyzoLVyjJRaLus
+Content-Type: application/json
+
+{
+  "title": "Módosított jóga",
+  "description": "30 perces esti jóga",
+  "startTime": "2025-04-17T18:00:00",
+  "endTime": "2025-04-17T18:30:00"
+}
+
+
+###  Esemény törlése
+DELETE http://localhost:{{PORT}}/events/f956d247-9be7-4951-b216-95b50743a741
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDY5ODEwMiwiZXhwIjoxNzQ0Nzg0NTAyfQ.ik-RSIPY8LuIH0uRrAV0LlEOY8x6euyzoLVyjJRaLus

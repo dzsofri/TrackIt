@@ -11,6 +11,8 @@ import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
 import { ChatComponent } from './components/chat/chat.component';
+import { HaviPlannerComponent } from './components/havi-planner/havi-planner.component';
+import { HaviPlannerKezeloComponent } from './components/havi-planner-kezelo/havi-planner-kezelo.component';
 import { FeedComponent } from './components/feed/feed.component';
 import { ChallengeComponent } from './components/challenge/challenge.component';
 import { TrackerComponent } from './components/tracker/tracker.component';
@@ -62,6 +64,19 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { label: 'Üzenetek', icon: '/assets/icons/messages_logo.png' }
   },
+  {
+    path: 'haviplanner',
+    component: HaviPlannerComponent,
+    canActivate: [AuthGuard],
+    data: { label: 'Havi planner', icon: '/assets/icons/planner_logo.png' }
+  },
+  {
+    path: 'haviplannerideiglenes',
+    component: HaviPlannerKezeloComponent,
+    canActivate: [AuthGuard],
+    data: { label: 'Havi planner atvezeto', icon: '/assets/icons/planner_logo.png' }
+  },
+
 
   
   {
