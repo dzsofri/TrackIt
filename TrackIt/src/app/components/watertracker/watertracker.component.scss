@@ -9,6 +9,9 @@
   min-height: 700px;
 
 
+
+
+  
   h2 {
     font-size: 24px;
     margin-bottom: 1.5rem;
@@ -74,6 +77,15 @@
   @media (max-width: 768px) {
     max-width: 100%;
   }
+}
+
+.tracker-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 1rem;
 }
 
 .header {

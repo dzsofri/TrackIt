@@ -1,60 +1,61 @@
-<div class="water-tracker-card">
-  <h2>Vízkövető</h2>
+<div class="tracker-container">
+  <div class="water-tracker-card">
+    <h2>Vízkövető</h2>
 
-  <div class="form-group">
-    <label for="water-completed">Teljesítetted a napi vízcélt?</label>
-    <input type="checkbox" id="water-completed" [(ngModel)]="completed" />
+    <div class="form-group">
+      <label for="water-completed">Teljesítetted a napi vízcélt?</label>
+      <input type="checkbox" id="water-completed" [(ngModel)]="completed" />
+    </div>
+
+    <div class="form-group">
+      <label for="water-amount">Víz mennyisége (l)</label>
+      <input type="number" id="water-amount" [(ngModel)]="waterAmount" placeholder="Pl. 2.5" />
+    </div>
+
+    <div class="form-group">
+      <mat-form-field appearance="fill" class="wide-date">
+        <mat-label>Dátum</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="button-row">
+      <button (click)="saveWater()">Felvétel</button>
+    </div>
   </div>
 
-  <div class="form-group">
-    <label for="water-amount">Víz mennyisége (l)</label>
-    <input type="number" id="water-amount" [(ngModel)]="waterAmount" placeholder="Pl. 2.5" />
-  </div>
+  <div class="calendar">
+    <div class="header">
+      <button (click)="prevMonth()">
+        <img src="./assets/icons/left_arrow.png" alt="előző">
+      </button>
+      <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
+      <button (click)="nextMonth()">
+        <img src="./assets/icons/right_arrow.png" alt="következő">
+      </button>
+    </div>
 
-  <div class="form-group">
-    <mat-form-field appearance="fill" class="wide-date">
-      <mat-label>Dátum</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </div>
+    <div class="weekdays">
+      <div *ngFor="let day of weekdays">{{ day }}</div>
+    </div>
 
-  <div class="button-row">
-    <button (click)="saveWater()">Felvétel</button>
-  </div>
-</div>
+    <div class="days">
+      <div *ngFor="let day of calendarDays"
+           class="day"
+           [class.inactive]="day.inactive"
+           (click)="showDayDetails(day)"
+           (touchstart)="onTouchStart($event, day)"
+           (touchend)="onTouchEnd($event, day)">
+        <span>{{ day.date }}</span>
 
-<div class="calendar">
-  <div class="header">
-    <button (click)="prevMonth()">
-      <img src="./assets/icons/left_arrow.png" alt="előző">
-    </button>
-    <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
-    <button (click)="nextMonth()">
-      <img src="./assets/icons/right_arrow.png" alt="következő">
-    </button>
-  </div>
-
-  <div class="weekdays">
-    <div *ngFor="let day of weekdays">{{ day }}</div>
-  </div>
-
-  <div class="days">
-    <div *ngFor="let day of calendarDays"
-         class="day"
-         [class.inactive]="day.inactive"
-         (click)="showDayDetails(day)"
-         (touchstart)="onTouchStart($event, day)"
-         (touchend)="onTouchEnd($event, day)">
-      <span>{{ day.date }}</span>
-
-      <!-- Dots for events -->
-      <div class="dots">
-        <div *ngFor="let dot of day.dots"
-             class="dot"
-             [ngStyle]="{ 'background-color': dot.color }"
-             [title]="dot.title"></div>
+        <div class="dots">
+          <div *ngFor="let dot of day.dots"
+               class="dot"
+               [ngStyle]="{ 'background-color': dot.color }"
+               [title]="dot.title"></div>
+        </div>
       </div>
     </div>
   </div>
