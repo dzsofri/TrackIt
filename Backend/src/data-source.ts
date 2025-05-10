@@ -25,8 +25,7 @@ export const AppDataSource = new DataSource({
   database: "trackit", 
   synchronize: true, 
   logging: false, 
-  entities: [Feedbacks, Follows, FriendRequests, Habits, HabitTrackings, Pictures, Posts, Tasks, Users, UserChallenges, UserStatistics, FeedbackQuestions, Chat, Events], 
-  entities: [Feedbacks, Follows, FriendRequests, Habits, HabitTrackings, Pictures, Posts, Tasks, Users, UserChallenges, UserStatistics, FeedbackQuestions, Chat, Badges], 
+  entities: [Feedbacks, Follows, FriendRequests, Habits, HabitTrackings, Pictures, Posts, Tasks, Users, UserChallenges, UserStatistics, FeedbackQuestions, Chat, Events, Badges], 
   migrations: [],
   subscribers: [],
 });
