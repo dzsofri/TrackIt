@@ -47,12 +47,18 @@
               {{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}
             </div>
           </div>
+
+          <!-- Kijelölő checkbox -->
           <label *ngIf="selectMode" class="checkbox-wrapper">
             <input type="checkbox" [(ngModel)]="event.selected" />
             <span class="checkmark"></span>
           </label>
+
+          <!-- Egyéni törlés gomb minden eseményhez -->
+          <button class="delete-button" (click)="deleteEvent(event)">🗑️</button>
         </div>
       </div>
+
 
 
       <!-- Törlés gomb a kijelölt eseményekhez -->

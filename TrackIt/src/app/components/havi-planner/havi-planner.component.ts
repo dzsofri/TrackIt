@@ -373,29 +373,38 @@ export class HaviPlannerComponent {
     }).subscribe({
       next: (response) => {
         if (response.message === 'Esemény létrehozva!') {
-          this.modalMessage = 'Esemény sikeresen hozzáadva';
-          this.modalType = 'success';
-          this.modalVisible = true;
+          const start = new Date(response.event.startTime);
+          const end = new Date(response.event.endTime);
+          const days = this.getEventDays(start, end);
 
           const newEvent = {
             id: response.event.id ?? '',
             title: response.event.title,
             description: response.event.description,
-            startTime: new Date(response.event.startTime),
-            endTime: new Date(response.event.endTime),
-            color: response.event.color ?? '#000000'
+            startTime: start,
+            endTime: end,
+            color: response.event.color ?? '#000000',
+            days
           };
 
           this.events.push(newEvent);
           this.eventss.push({ ...newEvent, selected: false });
+
+
+          this.modalMessage = 'Esemény sikeresen hozzáadva';
+          this.modalType = 'success';
+          this.modalVisible = true;
+
+
           this.generateCalendar();
           this.resetNewEventForm();
         } else {
-          this.modalMessage = 'Hiba történt az esemény hozzáadásakor.';
+          this.modalMessage = 'Hiba: A szerver nem küldött vissza esemény adatokat.';
           this.modalType = 'error';
           this.modalVisible = true;
         }
-      },
+      }
+      ,
       error: () => {
         this.modalMessage = 'Szerverhiba: nem sikerült az eseményt elmenteni.';
         this.modalType = 'error';
@@ -426,6 +435,33 @@ export class HaviPlannerComponent {
     });
   }
 
+
+
+
+
+  deleteEvent(eventToDelete: any) {
+    if (!eventToDelete?.id) return;
+
+    this.apiService.deleteEvent(eventToDelete.id).subscribe({
+      next: () => {
+        // Ha sikeres a törlés az adatbázisban, akkor frissítjük a helyi listákat
+        this.eventss = this.eventss.filter(event => event.id !== eventToDelete.id);
+        this.events = this.events.filter(event => event.id !== eventToDelete.id);
+
+        this.generateCalendar();
+
+        this.modalMessage = 'Esemény sikeresen törölve.';
+        this.modalType = 'success';
+        this.modalVisible = true;
+      },
+      error: () => {
+        this.modalMessage = 'Nem sikerült törölni az eseményt az adatbázisból.';
+        this.modalType = 'error';
+        this.modalVisible = true;
+      }
+    });
+  }
+
   updateEventInList(updatedEvent: CalendarEvent) {
     const index = this.events.findIndex(e => e.id === updatedEvent.id);
     if (index !== -1) {
@@ -449,7 +485,7 @@ export class HaviPlannerComponent {
     this.selectMode = !this.selectMode;
   }
 
-  
+
   showDayDetails(day: any): void {
     this.selectedDay = day;
     this.dayDetailsVisible = true;
