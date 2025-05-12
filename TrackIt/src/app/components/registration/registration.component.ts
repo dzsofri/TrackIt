@@ -54,6 +54,10 @@ updateUserStatus(newStatus: string): void {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
   }
 
+private getRandomIntRounded(min: number, max: number): number {
+  return Math.round(Math.random() * (max - min) + min);
+}
+
   onSubmit() {
     this.api.registration(this.user).subscribe({
       next: (res: any) => {
@@ -67,10 +71,28 @@ updateUserStatus(newStatus: string): void {
           this.auth.login(res.token);
       
           const defaultTrackers = [
-            { habitName: 'Vízfogyasztás', targetValue: 2000, currentValue: 0, frequency: 'daily', userId },
-            { habitName: 'Edzés', targetValue: 30, currentValue: 0, frequency: 'daily', userId },
-            { habitName: 'Alvás', targetValue: 8, currentValue: 0, frequency: 'daily', userId }
-          ];
+          {
+            habitName: 'Vízfogyasztás',
+            targetValue: this.getRandomIntRounded(1500, 3000),
+            currentValue: 0,
+            frequency: 'daily',
+            userId
+          },
+          {
+            habitName: 'Edzés',
+            targetValue: this.getRandomIntRounded(15, 60), // perc
+            currentValue: 0,
+            frequency: 'daily',
+            userId
+          },
+          {
+            habitName: 'Alvás',
+            targetValue: this.getRandomIntRounded(6, 9), // óra
+            currentValue: 0,
+            frequency: 'daily',
+            userId
+          }
+        ];
       
           defaultTrackers.forEach(tracker => {
             this.api.createHabit(tracker).subscribe(result => {
