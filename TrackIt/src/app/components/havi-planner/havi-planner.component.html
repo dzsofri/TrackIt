@@ -38,6 +38,11 @@
       <button class="simple-button" (click)="toggleSelectMode()">
         {{ selectMode ? 'Kijelölés bezárása' : 'Kijelölés mód' }}
       </button>
+      <!-- Tömeges törlés gomb csak kijelölési módban -->
+<button class="simple-button danger" *ngIf="selectMode" (click)="deleteSelectedEvents()">
+  Kijelölt események törlése
+</button>
+
 
       <div *ngFor="let event of eventss" class="event-item">
         <div class="event-content">
@@ -57,13 +62,6 @@
           <!-- Egyéni törlés gomb minden eseményhez -->
           <button class="delete-button" (click)="deleteEvent(event)">🗑️</button>
         </div>
-      </div>
-
-
-
-      <!-- Törlés gomb a kijelölt eseményekhez -->
-      <div *ngIf="selectMode && selectedEvents.length > 0" class="delete-button-container">
-        <button class="get-started-button" (click)="deleteSelectedEvents()">Kijelölt események törlése</button>
       </div>
     </div>
   </div>

@@ -162,14 +162,16 @@ export class HaviPlannerComponent {
       this.loading = false;
       if (events.length > 0) {
         this.events = events;
-        this.eventss = events.map((event: CalendarEvent) => ({
-          title: event.title,
-          description: event.description,
-          startTime: new Date(event.startTime),
-          endTime: new Date(event.endTime),
-          color: event.color ?? '#000000',
-          selected: false
-        }));
+       this.eventss = events.map((event: CalendarEvent) => ({
+  id: event.id, // <--- EZ HIÁNYZOTT
+  title: event.title,
+  description: event.description,
+  startTime: new Date(event.startTime),
+  endTime: new Date(event.endTime),
+  color: event.color ?? '#000000',
+  selected: false
+}));
+
       } else {
         console.log('Nincsenek események');
       }
@@ -231,34 +233,50 @@ export class HaviPlannerComponent {
       });
   }
 
-  calculateEventRows() {
-    const rows: CalendarEvent[][] = [];
+calculateEventRows() {
+  const rows: CalendarEvent[][] = [];
 
-    for (const event of this.events) {
-      const start = new Date(event.startTime);
-      const end = new Date(event.endTime);
-      const days = this.getEventDays(start, end);
-
-      let placed = false;
-      for (const row of rows) {
-        const overlaps = row.some(e => {
-          const es = new Date(e.startTime);
-          const ee = new Date(e.endTime);
-          return start <= ee && end >= es;
-        });
-
-        if (!overlaps) {
-          row.push({ ...event, days });
-          placed = true;
-          break;
-        }
-      }
-
-      if (!placed) rows.push([{ ...event, days }]);
+  for (const event of this.events) {
+    if (!event || !event.startTime || !event.endTime) {
+      console.warn('Hiányos esemény kihagyva:', event);
+      continue;
     }
 
-    return rows;
+    const start = new Date(event.startTime);
+    const end = new Date(event.endTime);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      console.warn('Érvénytelen dátumú esemény kihagyva:', event);
+      continue;
+    }
+
+    const days = this.getEventDays(start, end);
+
+    let placed = false;
+    for (const row of rows) {
+      const overlaps = row.some(e => {
+        if (!e.startTime || !e.endTime) return true;
+
+        const es = new Date(e.startTime);
+        const ee = new Date(e.endTime);
+        return start <= ee && end >= es;
+      });
+
+      if (!overlaps) {
+        row.push({ ...event, days });
+        placed = true;
+        break;
+      }
+    }
+
+    if (!placed) {
+      rows.push([{ ...event, days }]);
+    }
   }
+
+  return rows;
+}
+
 
   getEventDays(start: Date, end: Date) {
     const days = [];
@@ -372,38 +390,46 @@ export class HaviPlannerComponent {
       userId
     }).subscribe({
       next: (response) => {
-        if (response.message === 'Esemény létrehozva!') {
-          const start = new Date(response.event.startTime);
-          const end = new Date(response.event.endTime);
-          const days = this.getEventDays(start, end);
+    if (response.message === 'Esemény létrehozva!') {
+      const start = new Date(response.event.startTime);
+      const end = new Date(response.event.endTime);
 
-          const newEvent = {
-            id: response.event.id ?? '',
-            title: response.event.title,
-            description: response.event.description,
-            startTime: start,
-            endTime: end,
-            color: response.event.color ?? '#000000',
-            days
-          };
-
-          this.events.push(newEvent);
-          this.eventss.push({ ...newEvent, selected: false });
-
-
-          this.modalMessage = 'Esemény sikeresen hozzáadva';
-          this.modalType = 'success';
-          this.modalVisible = true;
-
-
-          this.generateCalendar();
-          this.resetNewEventForm();
-        } else {
-          this.modalMessage = 'Hiba: A szerver nem küldött vissza esemény adatokat.';
-          this.modalType = 'error';
-          this.modalVisible = true;
-        }
+      // Érvényesség ellenőrzése
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        console.error('Érvénytelen dátum formátum a válaszban:', response.event);
+        this.modalMessage = 'Hiba: Érvénytelen dátum formátum érkezett a szervertől.';
+        this.modalType = 'error';
+        this.modalVisible = true;
+        return;
       }
+
+      const days = this.getEventDays(start, end);
+
+      const newEvent = {
+        id: response.event.id ?? '',
+        title: response.event.title,
+        description: response.event.description,
+        startTime: start,
+        endTime: end,
+        color: response.event.color ?? '#000000',
+        days
+      };
+
+      this.events.push(newEvent);
+      this.eventss.push({ ...newEvent, selected: false });
+
+      this.modalMessage = 'Esemény sikeresen hozzáadva';
+      this.modalType = 'success';
+      this.modalVisible = true;
+
+      this.generateCalendar();
+      this.resetNewEventForm();
+    } else {
+      this.modalMessage = 'Hiba: A szerver nem küldött vissza esemény adatokat.';
+      this.modalType = 'error';
+      this.modalVisible = true;
+    }
+  }
       ,
       error: () => {
         this.modalMessage = 'Szerverhiba: nem sikerült az eseményt elmenteni.';
@@ -440,6 +466,7 @@ export class HaviPlannerComponent {
 
 
   deleteEvent(eventToDelete: any) {
+    console.log('Törlésre kijelölt esemény:', eventToDelete); // ← Ez segít nyomozni
     if (!eventToDelete?.id) return;
 
     this.apiService.deleteEvent(eventToDelete.id).subscribe({
