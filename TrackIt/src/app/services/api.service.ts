@@ -10,9 +10,7 @@ import { User } from '../interfaces/user';
   providedIn: 'root'
 })
 export class ApiService {
-  createHabit(tracker: { habitName: string; targetValue: number; currentValue: number; frequency: string; userId: any; }) {
-    throw new Error('Method not implemented.');
-  }
+
   constructor(private http: HttpClient) { }
 
   private tokenName = environment.tokenName;
