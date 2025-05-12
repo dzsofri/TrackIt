@@ -1,103 +1,192 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden; /* <-- GÖRGETÉS TILTÁSA */
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 20px;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-header {
+.page-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 20px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.tracker-form {
+  width: 100%;
+  max-width: 400px;
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #f5f5f7;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  font-family: 'Segoe UI', sans-serif;
+  
+}
+
+.tracker-form label {
+  font-weight: 600;
+  color: #333;
+}
+
+.tracker-form input[type="number"],
+.tracker-form input[type="date"],
+.tracker-form select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: white;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.tracker-form input:focus,
+.tracker-form select:focus {
+  border-color: #627966;
+}
+
+.tracker-form input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-right: 10px;
+}
+
+.tracker-form button {
+  padding: 12px;
+  background-color: #627966;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tracker-form button:hover {
+  background-color: #4e6151;
+}
+
+h1{
+    font-size: 15px;   
+
+}
+
+
+// === NAPTÁR ===
+.calendar {
+  flex: 1;
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h2 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  button {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    img {
+      height: 30px;
+      width: 30px;
+      transition: height 0.3s, width 0.3s;
+
+      &:hover {
+        height: 40px;
+        width: 40px;
+      }
+    }
+  }
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+  }
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  max-height: 70vh;
+
+  @media (max-width: 500px) {
+    font-size: 0.75rem;
+  }
+}
+
+.day {
+  background: #f2f2f2;
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-height: 100px;
+  position: relative;
+  font-size: 0.85rem;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &.inactive {
+    opacity: 0.3;
+  }
+
+  @media (max-width: 500px) {
+    min-height: 50px;
+    padding: 0.3rem;
+    font-size: 0.7rem;
+  }
+
+  .date {
+    font-weight: bold;
+  }
+
+  .events {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin: 0 auto;
-    overflow-x: hidden;
-}
+    gap: 4px;
 
-@media (max-width: 480px) {
-    header {
-        display: block;
+    .event-bar {
+      color: white;
+      font-size: 15px;
+      border-radius: 0;
+      margin: 4px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+      display: flex;
+      justify-content: center;
     }
-}
-
-@media (max-width: 360px) {
-    header {
-        display: block;
-        margin-left: 15%;
-    }
-}
-
-.circle-image img {
-    width: 150px;
-    height: 150px;
-    margin-left: 25px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ccc;
-}
-
-/* NO_DATA: fix méret, ne okozzon túlcsordulást */
-.NO_DATA {
-    height: auto;
-    max-height: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FFFFFF;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 25px;
-    text-align: center;
-    width: 300px;
-    overflow: hidden;
-}
-
-.nav-link.active {
-    color: #627966;
-    background-color: #F5F5F7;
-}
-
-.nav-link {
-    color: #9F9FA1;
-}
-
-.nav-item-tab,
-.nav-item {
-    display: flex;
-    background-color: #F5F5F7;
-    justify-content: center;
-}
-
-.nav-item-tab {
-    border-radius: 0px 30px 0px 0px;
-}
-
-.nav-item {
-    width: 100px;
-}
-
-.d-none {
-    display: none;
-}
-
-.tab-content {
-    height: calc(100vh - 200px); /* kb. header + nav levonása */
-    overflow: hidden; /* ne lehessen belül se scrollozni */
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-h3 {
-    padding: 20px;
-}
-
-img,
-span {
-    margin-right: 20px;
-}
-
-span {
-    margin-left: 20px;
+  }
 }

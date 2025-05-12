@@ -1,87 +1,63 @@
+<h1 class="page-title">Szokáskövető</h1>
 
+<div class="page-layout">
+  <div class="tracker-form">
+    <label for="habit">Válassz trackert:</label>
+    <select [(ngModel)]="selectedHabit" (change)="onHabitChange()">
+      <option *ngFor="let habit of habitList" [value]="habit">{{ habit }}</option>
+    </select>
 
-<div class="col-12 col-xs-12 col-sm-12 col-md-10 col-lg-12">
-    <ul class="nav nav-tabs">
-        <li class="nav-item" role="presentation">
-            <button 
-              class="nav-link" 
-              [class.active]="activeTab === 'watertracker'"
-              (click)="setActiveTab('watertracker')"
-            >
-              Vízkövető
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button 
-              class="nav-link" 
-              [class.active]="activeTab === 'gymtracker'"
-              (click)="setActiveTab('gymtracker')"
-            >
-              Edzéskövető
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button 
-              class="nav-link" 
-              [class.active]="activeTab === 'sleeptracker'"
-              (click)="setActiveTab('sleeptracker')"
-            >
-              Alváskövető
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button 
-              class="nav-link" 
-              [class.active]="activeTab === 'customtracker'"
-              (click)="setActiveTab('customtracker')"
-            >
-              Egyéni tracker létrehozó
-            </button>
-        </li>
-    </ul>
-</div>
+    <label>
+      <input type="checkbox" [(ngModel)]="completed" />
+      Teljesítetted a napi célt?
+    </label>
 
-<div class="tab-content" id="myTabContent">
-  <div 
-    class="tab-pane show active" 
-    *ngIf="activeTab === 'watertracker'" 
-    id="watertracker-tab-pane" 
-    role="tabpanel" 
-    tabindex="0">
-    <app-watertracker></app-watertracker>
+    <label for="value">Érték:</label>
+    <input type="number" [(ngModel)]="value" placeholder="Pl. 2.5" />
+
+    <label for="unit">Mértékegység:</label>
+    <select [(ngModel)]="unit">
+      <option *ngFor="let u of units" [value]="u">{{ u }}</option>
+    </select>
+
+    <label for="date">Dátum:</label>
+    <input type="date" [(ngModel)]="date" />
+
+    <button (click)="submit()">Felvétel</button>
   </div>
 
-  <div 
-    class="tab-pane show active" 
-    *ngIf="activeTab === 'gymtracker'" 
-    id="gymtracker-tab-pane" 
-    role="tabpanel" 
-    tabindex="0">
-    <app-gymtracker></app-gymtracker>
-  </div>
+  <div class="calendar">
+    <div class="header">
+      <button (click)="prevMonth()">
+        <img src="./assets/icons/left_arrow.png" alt="előző">
+      </button>
+      <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
+      <button (click)="nextMonth()">
+        <img src="./assets/icons/right_arrow.png" alt="következő">
+      </button>
+    </div>
 
-  <div 
-    class="tab-pane show active" 
-    *ngIf="activeTab === 'sleeptracker'" 
-    id="sleeptracker-tab-pane" 
-    role="tabpanel" 
-    tabindex="0">
-    <app-sleeptracker></app-sleeptracker>
-  </div>
+    <div class="weekdays">
+      <div *ngFor="let day of weekdays">{{ day }}</div>
+    </div>
 
-  <div 
-    class="tab-pane show active" 
-    *ngIf="activeTab === 'customtracker'" 
-    id="customtracker-tab-pane" 
-    role="tabpanel" 
-    tabindex="0">
-    <app-customtracker></app-customtracker>
+    <div class="days">
+      <div *ngFor="let day of calendarDays"
+           class="day"
+           [class.inactive]="day.inactive"
+           (click)="showDayDetails(day)"
+           (touchstart)="onTouchStart($event, day)"
+           (touchend)="onTouchEnd($event, day)">
+        <span>{{ day.date }}</span>
+
+        <!-- Dots for events -->
+        <div class="dots">
+          <div *ngFor="let dot of day.dots"
+               class="dot"
+               [ngStyle]="{ 'background-color': dot.color }"
+               [title]="dot.title"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-<app-alert-modal 
-  [visible]="modalVisible" 
-  [type]="modalType" 
-  [message]="modalMessage"
-  (close)="modalVisible = false">
-</app-alert-modal>

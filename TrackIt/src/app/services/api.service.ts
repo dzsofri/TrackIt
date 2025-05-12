@@ -400,6 +400,20 @@ createHabit(habitData: {
   );
 }
 
+getHabitsForUser(userId: string) {
+  return this.http.get<any[]>(`http://localhost:3000/habits/user/${userId}`);
+}
 
+
+  saveHabitEntry(entry: {
+    habitName: string;
+    completed: boolean;
+    value: number | null;
+    unit: string;
+    date: string;
+    userId: string;
+  }): Observable<any> {
+    return this.http.post(`${this.server}/habits/entry`, entry);
+  }
 
 }
