@@ -205,7 +205,14 @@ export class ApiService {
     return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
   }
 
-
+  updateFriendData(id: string, friendData: any): Observable<any> {
+    return this.http.patch<any>(`${this.server}/friends/update-active-challenge/${id}`, friendData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Update failed', error);
+        return of({ message: 'Update failed' });
+      })
+    );
+  }  
 
   updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
     const body = { status: newStatus };
@@ -379,5 +386,22 @@ addHabitTrackingRecord(data: {
     })
   );
 }
+
+createHabit(habitData: {
+  habitName: string;
+  targetValue: number;
+  currentValue: number;
+  frequency: string;
+  userId: string;
+}): Observable<any> {
+  return this.http.post<any>(`${this.server}/habits`, habitData, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a szokás létrehozásakor:', error);
+      return of({ message: 'Szokás létrehozása sikertelen' });
+    })
+  );
+}
+
+
 
 }

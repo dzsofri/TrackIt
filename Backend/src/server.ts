@@ -22,6 +22,7 @@ import chatRoutes from "./routes/chatRoutes";
 
 // Entitások
 import { Badges } from "./entities/Badges";
+import habitRoutes from "./routes/habitRoutes";
 
 import eventRoutes from "./routes/eventRoutes";
 
@@ -97,6 +98,7 @@ app.use("/user_statistics", userStatisticsRoutes);
 app.use("/posts", postRoutes);
 app.use("/challenges", challengeRoutes);
 app.use("/chat", chatRoutes);
+app.use("/habits", habitRoutes);
 
 // ========= MySQL kapcsolat =========
 const db = mysql.createConnection({

@@ -23,6 +23,9 @@ export class Habits {
     @Column({ type: "varchar", length: 50, nullable: true })
     frequency: string;
 
+    @Column({ type: "varchar", length: 20, default: 'inactive' })
+    status: string; // <<< ÚJ MEZŐ
+
     @CreateDateColumn()
     createdAt: Date;
 
