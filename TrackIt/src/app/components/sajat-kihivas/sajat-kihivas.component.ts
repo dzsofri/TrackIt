@@ -314,7 +314,7 @@ export class SajatKihivasComponent {
                 console.error("Error fetching friends' profile pictures:", error);
             },
         });
-}
+  }
 
   FriendRequest() {
     this.api.readFriendRequests('friends', this.id).subscribe({

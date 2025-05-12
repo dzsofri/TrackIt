@@ -7,7 +7,6 @@ const path = require("path");
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { Badges } from "../entities/Badges";
-import { FriendRequests } from "../entities/FriendRequest";
 
 const router = Router();
 
@@ -196,6 +195,80 @@ router.get("/badge", tokencheck, async (req: any, res: any) => {
         console.error("Error fetching badge for challenge:", error);
         return res.status(500).json({ message: "Error fetching badge for challenge." });
     }
+});
+
+router.get("/user/:userId", async (req: any, res: any) => {
+  const { userId } = req.params;
+
+  try {
+    const userChallenges = await AppDataSource.getRepository(UserChallenges).find({
+      where: { userId },
+    });
+
+    if (!userChallenges || userChallenges.length === 0) {
+      return res.status(404).json({ message: "No challenges found for this user." });
+    }
+
+    const secondaryIds = [...new Set(userChallenges.map(ch => ch.secondaryId))];
+
+    const relatedChallenges = await AppDataSource.getRepository(UserChallenges).find({
+      where: secondaryIds.map(id => ({ secondaryId: id })),
+      relations: ["user"],
+    });
+
+    const userMap = new Map<string, string>();
+    for (const challenge of relatedChallenges) {
+      if (
+        challenge.user &&
+        challenge.user.id !== userId &&
+        !userMap.has(challenge.user.id)
+      ) {
+        userMap.set(challenge.user.id, challenge.user.name);
+      }
+    }
+
+    const userNames = Array.from(userMap.values());
+
+    return res.json({
+      message: "Users with matching secondaryIds",
+      users: userNames,
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.get("/:secondaryId", async (req: any, res: any) => {
+  const { secondaryId } = req.params;
+
+  try {
+    const challenges = await AppDataSource.getRepository(UserChallenges).find({
+      where: { secondaryId },
+      relations: ["user"],
+    });
+
+    if (!challenges || challenges.length === 0) {
+      return res.status(404).json({ message: "No users found for this challenge." });
+    }
+
+    const userNames = new Set<string>();
+    challenges.forEach(challenge => {
+      if (challenge.user && challenge.user.name) {
+        userNames.add(challenge.user.name);
+      }
+    });
+
+    return res.json({
+      secondaryId,
+      users: Array.from(userNames),
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 router.delete("/:id", async (req: any, res: any) => {

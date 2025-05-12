@@ -13,4 +13,7 @@ export interface User_Challenge {
     challengeDescription: string;
     badgeId: string;
     imagePreviewUrl?: string;
+    imageUrl?: string;
+    userImage?: string;
+    selectedSecondaryId?: string;
 }
