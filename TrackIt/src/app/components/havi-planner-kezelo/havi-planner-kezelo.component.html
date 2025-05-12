@@ -1,0 +1,80 @@
+<div class="container">
+  <!-- Bal oldali vezérlőpanel -->
+  <div class="left-panel">
+    <button class="simple-button back-button" (click)="onBack()">⬅️ Vissza</button>
+    <div class="info-box">
+      <h3>Planner Kezelő</h3>
+      <p>Egyszerű eseménykezelő naptár. Itt szerkesztheted, keresheted és rendszerezheted az eseményeket.</p>
+    </div>
+
+    <div class="calendar-widget">
+      <label for="calendar">Dátumra ugrás:</label>
+      <input type="date" id="calendar" [(ngModel)]="calendarDate" (change)="onCalendarChange()" />
+    </div>
+
+    <div class="quick-filters">
+      <button class="simple-button" (click)="filterFutureEvents()">🔮 Jövőbeli események</button>
+      <button class="simple-button" (click)="resetFilters()">♻️ Alapértelmezett nézet</button>
+    </div>
+
+    <button class="simple-button" (click)="onAddNewEvent()">Új esemény</button>
+  </div>
+
+  <!-- Események listája -->
+  <div class="event-list-view">
+    <div *ngFor="let event of filteredEvents" class="event-item" [ngClass]="{'editing': event.editing}">
+      <div class="event-content">
+        <!-- Megjelenítés -->
+        <div class="event-info" *ngIf="!event.editing">
+          <div class="event-title">{{ event.name }}</div>
+          <div class="event-time">{{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}</div>
+        </div>
+
+        <!-- Szerkesztés -->
+        <div class="event-info" *ngIf="event.editing">
+          <input [(ngModel)]="event.name" class="event-input" />
+          <input type="datetime-local" [(ngModel)]="event.startTime" class="event-input" />
+          <input type="datetime-local" [(ngModel)]="event.endTime" class="event-input" />
+        </div>
+
+        <!-- Gombok -->
+        <div class="edit-buttons">
+          <button *ngIf="!event.editing" (click)="onEdit(event)" class="simple-button">Szerkesztés</button>
+          <button (click)="deleteEvent(event)" class="cancel simple-button">Törlés</button>
+          <ng-container *ngIf="event.editing">
+            <button (click)="saveEvent(event)" class="save simple-button">Mentés</button>
+            <button (click)="cancelEdit(event)" class="cancel simple-button">Mégse</button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Keresősáv (fixen a jobb oldalon) -->
+<div class="search-sidebar">
+  <!-- Élő kereső -->
+  <input
+    type="text"
+    placeholder="🔍 Keresés eseményre..."
+    [(ngModel)]="searchQuery"
+    (input)="onSearchChange()"
+  />
+
+  <!-- Keresési állapot -->
+  <div class="search-status" *ngIf="searchQuery && filteredEvents.length === 0">
+    Nincs találat.
+  </div>
+
+  <!-- Keresési találatok -->
+  <div class="search-results" *ngIf="filteredEvents.length > 0">
+    <div
+      *ngFor="let result of filteredEvents"
+      class="result-item"
+      (click)="scrollToEvent(result)"
+    >
+      {{ result.name }}<br />
+      <small>{{ result.startTime | date: 'short' }}</small>
+    </div>
+  </div>
+</div>

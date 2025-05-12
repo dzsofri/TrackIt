@@ -10,6 +10,7 @@ import { User } from '../interfaces/user';
   providedIn: 'root'
 })
 export class ApiService {
+
   constructor(private http: HttpClient) { }
 
   private tokenName = environment.tokenName;
@@ -280,6 +281,62 @@ export class ApiService {
             return of('Hiba történt a státusz lekérésekor');
         })
     );
+}
+
+
+ createEvent(data: { title: string; description: string; startTime: string; endTime: string; color: string; userId: string;}): Observable<any> {
+  return this.http.post<any>(`${this.server}/events`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Event creation failed', error);
+      return of({ message: 'Event creation failed' });
+    })
+  );
+}
+
+getEvents(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.server}/events`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching events:', error);
+      return of([]);
+    })
+  );
+}
+
+getEventById(id: string): Observable<any> {
+  return this.http.get<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching event:', error);
+      return of(null);
+    })
+  );
+}
+
+getEventByUserId(userId: string): Observable<any> {
+  return this.http.get<any>(`${this.server}/events/user/${userId}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching events for user:', error);
+      return of(null);
+    })
+  );
+}
+
+
+updateEvent(id: string, data: { title?: string; description?: string; startTime?: string; endTime?: string }): Observable<any> {
+  return this.http.put<any>(`${this.server}/events/${id}`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error updating event:', error);
+      return of({ message: 'Event update failed' });
+    })
+  );
+}
+
+deleteEvent(id: string): Observable<any> {
+  return this.http.delete<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error deleting event:', error);
+      return of({ message: 'Event deletion failed' });
+    })
+  );
 }
 
 
