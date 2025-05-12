@@ -116,16 +116,22 @@ export class TrackerComponent {
   }
 
   fetchHabits(): void {
-    this.api.getHabitsForUser(this.id).subscribe({
-      next: (res: any[]) => {
-        this.habitList = res.map(h => h.habitName);
-        this.selectedHabit = this.habitList.length > 0 ? this.habitList[0] : '';
-      },
-      error: (err) => {
-        console.error('Error fetching habits:', err);
-      }
-    });
+  const token = localStorage.getItem('trackit');
+  if (!token) {
+    console.error('Nincs érvényes token!');
+    return;
   }
+
+  this.api.getHabitsForUser(this.id, token).subscribe({
+    next: (res: any[]) => {
+      this.habitList = res.map(h => h.habitName); // Ha a válasz helyes, beállítjuk a habitListet
+    },
+    error: (err) => {
+      console.error('Hiba a szokások betöltésekor:', err); // Itt nézd meg a konzolon a teljes hibát
+    }
+  });
+}
+
 
   setActiveTab(tab: string) {
     this.activeTab = tab;

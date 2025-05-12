@@ -400,9 +400,15 @@ createHabit(habitData: {
   );
 }
 
-getHabitsForUser(userId: string) {
-  return this.http.get<any[]>(`http://localhost:3000/habits/user/${userId}`);
+getHabitsForUser(userId: string, token: string) {
+  return this.http.get<any[]>(`http://localhost:3000/habits/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
 }
+
+
 
 
   saveHabitEntry(entry: {

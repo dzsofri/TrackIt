@@ -4,8 +4,11 @@
   <div class="tracker-form">
     <label for="habit">Válassz trackert:</label>
     <select [(ngModel)]="selectedHabit" (change)="onHabitChange()">
-      <option *ngFor="let habit of habitList" [value]="habit">{{ habit }}</option>
-    </select>
+  <option *ngFor="let habit of habitList" [value]="habit">{{ habit }}</option>
+</select>
+
+
+
 
     <label>
       <input type="checkbox" [(ngModel)]="completed" />
