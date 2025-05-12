@@ -54,13 +54,17 @@
           </div>
 
           <!-- Kijelölő checkbox -->
-          <label *ngIf="selectMode" class="checkbox-wrapper">
-            <input type="checkbox" [(ngModel)]="event.selected" />
-            <span class="checkmark"></span>
+          <label *ngIf="selectMode" class="checkbox-wrapper event-checkbox">
+            <input type="checkbox" class="event-checkbox" [(ngModel)]="event.selected" />
+            <span class="event-checkbox"></span>
           </label>
 
           <!-- Egyéni törlés gomb minden eseményhez -->
-          <button class="delete-button" (click)="deleteEvent(event)">🗑️</button>
+        <!-- Egyéni törlés gomb minden eseményhez -->
+<button class="simple-button" (click)="deleteEvent(event)">
+  <img src="./assets/icons/delete_button.png" alt="Törlés" />
+</button>
+
         </div>
       </div>
     </div>
@@ -95,12 +99,7 @@
       </div>
     </div>
 
-    <div class="legend">
-      <div class="legend-item" *ngFor="let legend of legends">
-        <span class="dot" [style.backgroundColor]="legend.color"></span>
-        {{ legend.label }}
-      </div>
-    </div>
+
   </div>
 
   <!-- Nap részletei modal -->

@@ -1,7 +1,11 @@
 <div class="container">
   <!-- Bal oldali vezérlőpanel -->
   <div class="left-panel">
-    <button class="simple-button back-button" (click)="onBack()">⬅️ Vissza</button>
+    <button class="simple-button back-button" (click)="onBack()">
+      <img src="assets/icons/left_arrow.png" alt="Vissza ikon" class="button-icon" />
+      Vissza
+    </button>
+
     <div class="info-box">
       <h3>Planner Kezelő</h3>
       <p>Egyszerű eseménykezelő naptár. Itt szerkesztheted, keresheted és rendszerezheted az eseményeket.</p>
@@ -13,11 +17,20 @@
     </div>
 
     <div class="quick-filters">
-      <button class="simple-button" (click)="filterFutureEvents()">🔮 Jövőbeli események</button>
-      <button class="simple-button" (click)="resetFilters()">♻️ Alapértelmezett nézet</button>
+      <button class="simple-button" (click)="filterFutureEvents()">
+        <img src="assets/icons/future.png" alt="Jövő ikon" class="button-icon" />
+        Jövőbeli események
+      </button>
+      <button class="simple-button" (click)="resetFilters()">
+        <img src="assets/icons/reset.png" alt="Alapértelmezett ikon" class="button-icon" />
+        Alapértelmezett nézet
+      </button>
     </div>
 
-    <button class="simple-button" (click)="onAddNewEvent()">Új esemény</button>
+    <button class="simple-button" (click)="onAddNewEvent()">
+      <img src="assets/icons/new.png" alt="Új esemény ikon" class="button-icon" />
+      Új esemény
+    </button>
   </div>
 
   <!-- Események listája -->
@@ -26,24 +39,36 @@
       <div class="event-content">
         <!-- Megjelenítés -->
         <div class="event-info" *ngIf="!event.editing">
-          <div class="event-title">{{ event.name }}</div>
+          <div class="event-title">{{ event.title }}</div>
           <div class="event-time">{{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}</div>
         </div>
 
         <!-- Szerkesztés -->
         <div class="event-info" *ngIf="event.editing">
-          <input [(ngModel)]="event.name" class="event-input" />
+          <input [(ngModel)]="event.title" class="event-input" />
           <input type="datetime-local" [(ngModel)]="event.startTime" class="event-input" />
           <input type="datetime-local" [(ngModel)]="event.endTime" class="event-input" />
         </div>
 
         <!-- Gombok -->
         <div class="edit-buttons">
-          <button *ngIf="!event.editing" (click)="onEdit(event)" class="simple-button">Szerkesztés</button>
-          <button (click)="deleteEvent(event)" class="cancel simple-button">Törlés</button>
+          <button *ngIf="!event.editing" (click)="onEdit(event)" class="simple-button">
+
+            Szerkesztés
+          </button>
+          <button (click)="deleteEvent(event)" class="cancel simple-button">
+
+            Törlés
+          </button>
           <ng-container *ngIf="event.editing">
-            <button (click)="saveEvent(event)" class="save simple-button">Mentés</button>
-            <button (click)="cancelEdit(event)" class="cancel simple-button">Mégse</button>
+            <button (click)="saveEvent(event)" class="save simple-button">
+
+              Mentés
+            </button>
+            <button (click)="cancelEdit(event)" class="cancel simple-button">
+
+              Mégse
+            </button>
           </ng-container>
         </div>
       </div>
@@ -54,12 +79,15 @@
 <!-- Keresősáv (fixen a jobb oldalon) -->
 <div class="search-sidebar">
   <!-- Élő kereső -->
-  <input
-    type="text"
-    placeholder="🔍 Keresés eseményre..."
-    [(ngModel)]="searchQuery"
-    (input)="onSearchChange()"
-  />
+  <div class="search-input-wrapper">
+    <img src="assets/icons/search.png" alt="Keresés ikon" class="button-icon" />
+    <input
+      type="text"
+      placeholder="Keresés eseményre..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearchChange()"
+    />
+  </div>
 
   <!-- Keresési állapot -->
   <div class="search-status" *ngIf="searchQuery && filteredEvents.length === 0">
@@ -73,7 +101,7 @@
       class="result-item"
       (click)="scrollToEvent(result)"
     >
-      {{ result.name }}<br />
+      {{ result.title }}<br />
       <small>{{ result.startTime | date: 'short' }}</small>
     </div>
   </div>
