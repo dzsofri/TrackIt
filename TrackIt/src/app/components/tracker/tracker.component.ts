@@ -61,7 +61,8 @@ export class TrackerComponent {
   modalType: 'error' | 'success' | 'warning' | 'info' = 'info';
   modalMessage = '';
 
-  habitList: string[] = [];
+  habitList: { id: string, habitName: string }[] = [];
+
   selectedHabit: string = '';
 
 
@@ -77,7 +78,7 @@ export class TrackerComponent {
         this.fetchUserProfilePicture();
       }
     });
-  }
+  } 
 
   fetchUser(): void {
     this.api.getLoggedUser('users', this.id).subscribe({
@@ -115,7 +116,7 @@ export class TrackerComponent {
     });
   }
 
-  fetchHabits(): void {
+ fetchHabits(): void {
   const token = localStorage.getItem('trackit');
   if (!token) {
     console.error('Nincs érvényes token!');
@@ -124,7 +125,12 @@ export class TrackerComponent {
 
   this.api.getHabitsForUser(this.id, token).subscribe({
     next: (res: any[]) => {
-      this.habitList = res.map(h => h.habitName); // Ha a válasz helyes, beállítjuk a habitListet
+      console.log(res)
+      // Itt most az objektumokat tároljuk
+      this.habitList = res.map(habit => ({
+        id: habit.id,        // A szokás ID-ja
+        habitName: habit.habitName // A szokás neve
+      }));
     },
     error: (err) => {
       console.error('Hiba a szokások betöltésekor:', err); // Itt nézd meg a konzolon a teljes hibát
@@ -133,14 +139,23 @@ export class TrackerComponent {
 }
 
 
+
   setActiveTab(tab: string) {
     this.activeTab = tab;
   }
 
-  onHabitChange(): void {
-    console.log('Kiválasztott tracker:', this.selectedHabit);
-    // Ide kerülhet a kiválasztott trackerhez tartozó adatok betöltése
+onHabitChange(): void {
+  // Kiválasztott habit keresése a habitList-ben
+  const selectedHabitData = this.habitList.find(habit => habit.habitName === this.selectedHabit);
+
+  if (selectedHabitData) {
+    console.log('Kiválasztott tracker:', selectedHabitData);
+    // Itt folytathatod a kiválasztott habit adatainak használatát
+  } else {
+    console.error('A kiválasztott szokás nem található!');
   }
+}
+
 
   submit(): void {
   const payload = {
@@ -165,6 +180,46 @@ export class TrackerComponent {
     }
   });
   }
+
+activateHabit(): void {
+  const token = localStorage.getItem('trackit');
+  if (!token) {
+    console.error('Nincs érvényes token!');
+    return;
+  }
+
+  // A kiválasztott szokás adatainak keresése a habitList-ben
+  const selectedHabitData = this.habitList.find(h => h.habitName === this.selectedHabit);
+
+  if (selectedHabitData) {
+    const payload = {
+      habitId: selectedHabitData.id,        // Az ID-t küldjük
+      habitName: selectedHabitData.habitName,  // A habitName-t is küldjük
+      status: 'active',
+      userId: this.id
+    };
+
+    this.api.updateHabitStatus(payload).subscribe({
+      next: (response) => {
+        console.log('Tracker státusz sikeresen frissítve:', response);
+        this.modalMessage = 'A tracker sikeresen aktiválva lett!';
+        this.modalType = 'success';
+        this.modalVisible = true;
+      },
+      error: (err) => {
+        console.error('Hiba a tracker státusz frissítésekor:', err);
+        this.modalMessage = 'Hiba történt a státusz frissítése közben.';
+        this.modalType = 'error';
+        this.modalVisible = true;
+      }
+    });
+  } else {
+    console.error('A kiválasztott szokás nem található!');
+    this.modalMessage = 'A kiválasztott szokás nem található!';
+    this.modalType = 'error';
+    this.modalVisible = true;
+  }
+}
 
 
   showDayDetails(day: any): void {

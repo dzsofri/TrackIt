@@ -422,4 +422,27 @@ getHabitsForUser(userId: string, token: string) {
     return this.http.post(`${this.server}/habits/entry`, entry);
   }
 
+updateHabitStatus(payload: { habitName: string, status: string, userId: string, habitId?: string }): Observable<any> {
+  const baseUrl = 'http://localhost:3000'; // A backend API URL-je
+  const token = localStorage.getItem('trackit');
+  
+  // Ha nincs token, kérj bejelentkezést
+  if (!token) {
+    console.error('Nincs érvényes token!');
+    // Visszaadunk egy Observable-t hibaüzenettel
+    return of({ message: 'Nincs érvényes token!' });
+  }
+
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.put<any>(`${baseUrl}/habits/${payload.habitId}/status`, payload, { headers });
+}
+
+
+
+
+
 }

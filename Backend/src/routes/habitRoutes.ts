@@ -32,11 +32,6 @@ router.get("/:userId", tokencheck, async (req: any, res: any) => {
 
 
 
-
-
-
-
-
 // POST /habits - új szokás létrehozása
 router.post("/", tokencheck, async (req: any, res: any) => {
   try {
@@ -78,5 +73,42 @@ router.post("/", tokencheck, async (req: any, res: any) => {
     return res.status(500).json({ message: "Szerverhiba történt a szokás mentése közben." });
   }
 });
+
+// PUT /habits/:habitId/status - szokás státuszának frissítése
+router.put("/:habitId/status", tokencheck, async (req: any, res: any) => {
+  try {
+    const { habitId } = req.params; // Az ID-t paraméterként várjuk
+    const { status } = req.body;   // A státuszt a kérés testjében kapjuk
+
+    // Ellenőrizzük, hogy a státusz megfelelő értéket kapott-e
+    if (!status || (status !== 'active' && status !== 'inactive')) {
+      return res.status(400).json({ message: "A státusznak 'active' vagy 'inactive' értéknek kell lennie." });
+    }
+
+    const habitRepo = AppDataSource.getRepository(Habits);
+
+    // Megkeressük a szokást az ID alapján
+    const habit = await habitRepo.findOne({ where: { id: habitId } });
+
+    if (!habit) {
+      return res.status(404).json({ message: "Szokás nem található." });
+    }
+
+    // Frissítjük a szokás státuszát
+    habit.status = status;
+
+    // Mentjük az új adatokat az adatbázisba
+    await habitRepo.save(habit);
+
+    return res.status(200).json({
+      message: "Szokás státusza sikeresen frissítve!",
+      habit: habit,
+    });
+  } catch (error) {
+    console.error("Hiba a szokás státuszának frissítésekor:", error);
+    return res.status(500).json({ message: "Szerverhiba történt a státusz frissítése közben." });
+  }
+});
+
 
 export default router;

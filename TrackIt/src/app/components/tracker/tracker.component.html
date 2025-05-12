@@ -3,8 +3,8 @@
 <div class="page-layout">
   <div class="tracker-form">
     <label for="habit">Válassz trackert:</label>
-    <select [(ngModel)]="selectedHabit" (change)="onHabitChange()">
-  <option *ngFor="let habit of habitList" [value]="habit">{{ habit }}</option>
+  <select [(ngModel)]="selectedHabit" (change)="onHabitChange()">
+  <option *ngFor="let habit of habitList" [value]="habit.habitName">{{ habit.habitName }}</option>
 </select>
 
 
@@ -27,6 +27,8 @@
     <input type="date" [(ngModel)]="date" />
 
     <button (click)="submit()">Felvétel</button>
+    <button *ngIf="selectedHabit" (click)="activateHabit()">Aktiválás</button>
+
   </div>
 
   <div class="calendar">
