@@ -8,6 +8,8 @@ import { AuthService } from '../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { User_Challenge } from '../../interfaces/user_challenges';
 import { Badge } from '../../interfaces/badges';
+import { Friend_Request } from '../../interfaces/friend_requests';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-folyamatban-levo-kihivas',
@@ -24,10 +26,33 @@ export class FolyamatbanLevoKihivasComponent {
     private http: HttpClient
   ) {}
 
-  user_challenges: User_Challenge[] = [];
+  user_challenges: User_Challenge = {
+    id: '',
+    secondaryId: '',
+    userId: 0,
+    progressPercentage: 0,
+    createdAt: '',
+    completedAt: '',
+    status: 0,
+    durationDays: 0,
+    rewardPoints: 0,
+    finalDate: '',
+    challengeName: '',
+    challengeDescription: '',
+    badgeId: '',
+  };
+  showUser_challenges: User_Challenge[] = [];
   selectedChallengeDetails: User_Challenge | null = null;
   senderNames: { [key: string]: string } = {};
   activeTab: string = 'statisztika';
+  challengeFriends: string[] = [];
+  challengeFriendsMap: { [key: string]: string[] } = {};
+
+  friend_requests: Friend_Request[] = [];
+  showFriendRequests: Friend_Request[] = [];
+  imagePreviewUrl: string | null = null;
+  addedFriends: { id: string; name: string; imageUrl: string;}[] = [];
+  selectedFriendIds: string[] = [];
 
   popupMessage: string | null = null;
   showPopup: boolean = false;
@@ -60,16 +85,59 @@ export class FolyamatbanLevoKihivasComponent {
       if (user) {
         this.id = user.id;
         this.Challenge();
+        this.loadChallengeFriends();
       }
     });
   }
 
+  loadChallengeFriends(): void {
+    this.api.readUserChallenges('user_statistics', this.id).subscribe({
+      next: (res: any) => {
+        const challenges = res?.user_challenges ?? res;
+  
+        if (!Array.isArray(challenges)) {
+          console.warn('No challenges found or challenges are not in expected format');
+          return;
+        }
+  
+        const secondaryIds = [...new Set(challenges.map((c: any) => c.secondaryId))];
+        if (secondaryIds.length === 0) {
+          console.warn('No secondaryIds found.');
+          return;
+        }
+
+        const requests = secondaryIds.map(id =>
+          this.api.readChallengeParticipants('challenges', id)
+        );
+  
+        forkJoin(requests).subscribe({
+        next: (responses: any[]) => {
+          responses.forEach((res: any) => {
+            const names: string[] = Array.from(new Set(res.users || []));
+            this.challengeFriendsMap[res.secondaryId] = names;
+      });
+    },
+    error: (err) => {
+      console.error('Error loading challenge participants:', err);
+    }
+  });
+      },
+      error: (err) => {
+        console.error('Error fetching user challenges:', err);
+      }
+    });
+  }
+  
+  get challengeIds(): string[] {
+    return Object.keys(this.challengeFriendsMap);
+  }
+
   PublicChallenge(): boolean {
-    return this.user_challenges.some(request => request.status === 1);
+    return this.showUser_challenges.some(request => request.status === 1);
   }
 
   PrivateChallenge(): boolean {
-    return this.user_challenges.some(request => request.status === 0);
+    return this.showUser_challenges.some(request => request.status === 0);
   }
 
   Challenge() {
@@ -82,19 +150,20 @@ export class FolyamatbanLevoKihivasComponent {
             const challenges = res?.user_challenges ?? res;
             if (!Array.isArray(challenges)) {
               console.warn('No user challenges found');
-              this.user_challenges = [];
+              this.showUser_challenges = [];
               return;
             }
 
-            this.user_challenges = challenges;
+            this.showUser_challenges = challenges;
 
-            this.user_challenges.forEach(challenge => {
+            this.showUser_challenges.forEach(challenge => {
               if (challenge.id) {
+                challenge.secondaryId = challenge.secondaryId || 'No secondary ID available';
                 this.fetchBadge(challenge);
               }
             });
 
-            this.user_challenges = this.user_challenges.filter((request: User_Challenge) =>
+            this.showUser_challenges = this.showUser_challenges.filter((request: User_Challenge) =>
               request.status === 1 || request.status === 0
             );
           },
@@ -130,7 +199,7 @@ export class FolyamatbanLevoKihivasComponent {
                 console.error('Error fetching badge:', error);
             },
         });
-}
+  }
 
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
