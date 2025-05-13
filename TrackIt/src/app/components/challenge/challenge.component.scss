@@ -1,0 +1,64 @@
+header {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+h1{
+    text-align: center;
+}
+//Linkek
+.nav-link.active {
+    color: #627966;
+    background-color: #F5F5F7;
+}
+.nav-link {
+    color: #9F9FA1;
+}
+.nav-item-tab, .nav-item {
+    display: flex;
+    background-color: #F5F5F7;
+    justify-content: center;
+}
+.nav-item-tab {
+    border-radius: 0px 30px 0px 0px;
+}
+.d-none {
+    display: none;
+}
+html, body {
+    margin: 0;
+}
+.tab-content, html, body {
+    width: auto;
+    height: auto;
+}
+#sajat_kihivasok-tab-pane {
+    display: flex;
+    flex-direction: column;
+    background-color: #F5F5F7;
+    padding: 3vh;
+    align-content: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+#folyamatbanLevo_kihivasok-tab-pane {
+    display: flex;
+    flex-direction: column;
+    background-color: #F5F5F7;
+    padding: 3vh;
+    align-content: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+#publikus_kihivasok-tab-pane {
+    display: flex;
+    flex-direction: column;
+    background-color: #F5F5F7;
+    padding: 3vh;
+    align-content: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}

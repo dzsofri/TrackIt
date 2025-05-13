@@ -24,10 +24,6 @@ export class UserStatistics {
     @CreateDateColumn()
     createdAt: Date;
 
-    @ManyToOne(() => UserChallenges, (challenge) => challenge.statistics, { nullable: true })
-    @JoinColumn({ name: "activeChallengeId" })
-    activeChallenge: UserChallenges;
-
     @ManyToOne(() => Tasks, (task) => task.statistics, { nullable: true, onDelete: "CASCADE" })
     @JoinColumn({ name: "activeTaskId" })
     activeTask: Tasks;

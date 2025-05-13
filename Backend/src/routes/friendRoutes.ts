@@ -8,6 +8,7 @@ import { Brackets } from "typeorm";
 import fs from 'fs';
 const path = require("path");
 import multer from "multer";
+import { UserChallenges } from "../entities/UserChallenge";
 
 const router = Router();
 
@@ -30,6 +31,12 @@ const storage = multer.diskStorage({
   export const uploadsMiddleware = express.static(
     path.join(__dirname, "..", "uploads")
   );
+
+  const addInvalidField = (fields: string[], fieldName: string) => {
+    if (!fields.includes(fieldName)) {
+        fields.push(fieldName);
+    }
+  };
 
 // Barátkérés küldése
 router.post("/send-friendrequest", tokencheck, async (req: any, res: any) => {
@@ -205,7 +212,7 @@ router.get("/friend-picture", tokencheck, async (req: any, res: any) => {
       console.error("Error fetching friends' profile pictures:", error);
       return res.status(500).json({ message: "Server error." });
   }
-});  
+}); 
 
 // Követők lekérése
 router.get("/followers", tokencheck, async (req: any, res: any) => {

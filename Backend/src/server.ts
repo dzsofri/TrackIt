@@ -2,101 +2,97 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
-import dotenv from 'dotenv';
-
+import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 import { AppDataSource } from "./data-source";
 import { seedDatabase } from "./utiles/DatabaseSeedUtils";
+import mysql from "mysql2";
+import { v4 as uuidv4 } from "uuid";
 
+// Route-ok és middleware-ek
 import userRoutes, { uploadsMiddleware } from "./routes/userRoutes";
 import feedbackRoutes from "./routes/feedbackRoutes";
-import mysql from 'mysql2';
 import friendRoutes from "./routes/friendRoutes";
 import userStatisticsRoutes from "./routes/userStatisticsRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import postRoutes from "./routes/postRoutes";
 import challengeRoutes from "./routes/challengeRoutes";
+
 import chatRoutes from "./routes/chatRoutes"; // import chatRoutes
-import path from "path";
+import eventRoutes from "./routes/eventRoutes";
+
+import chatRoutes from "./routes/chatRoutes";
+
+// Entitások
+import { Badges } from "./entities/Badges";
+import habitRoutes from "./routes/habitRoutes";
+
 
 dotenv.config();
 
+// Alkalmazás létrehozása
 const app = express();
 const server = http.createServer(app);
 
-app.use('/uploads', uploadsMiddleware);
+// ========= Statikus fájlkezelés =========
+const uploadsPath = path.join(__dirname, "..", "uploads");
+if (!fs.existsSync(uploadsPath)) {
+    fs.mkdirSync(uploadsPath, { recursive: true });
+}
+app.use("/uploads", express.static(uploadsPath));
+app.use("/uploads", uploadsMiddleware); // ha szükséges middleware hozzá
 
-// 🔥 Attach socket.io to this server
+// ========= Alap Middleware-ek =========
+app.use(express.json());
+app.use(
+    cors({
+        origin: "http://localhost:4200",
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+        allowedHeaders: ["Content-Type", "Authorization", "Origin"],
+        credentials: true,
+    })
+);
+
+// ========= Socket.IO =========
 const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:4200", // your Angular app origin
-    methods: ["GET", "POST"]
-  }
+    cors: {
+        origin: "http://localhost:4200",
+        methods: ["GET", "POST"],
+    },
 });
 
-// A felhasználó státuszának beállítása: online, offline
-const usersOnline = {}; // Online felhasználók
+const usersOnline: Record<string, string> = {};
 
-io.on('connection', (socket) => {
-  console.log('🟢 User connected:', socket.id);
+io.on("connection", (socket) => {
+    console.log("🟢 User connected:", socket.id);
 
-  // A felhasználó bejelentkezése és szobához való csatlakozás
-  socket.on('joinPrivateRoom', (userId) => {
-    socket.join(userId);
-    usersOnline[userId] = socket.id; // Felhasználó online státuszának tárolása
-    console.log(`User ${userId} joined the room`);
+    socket.on("joinPrivateRoom", (userId) => {
+        socket.join(userId);
+        usersOnline[userId] = socket.id;
+        console.log(`User ${userId} joined the room`);
+        io.emit("userStatusChanged", { userId, status: "online" });
+    });
 
-    // Frissítjük a felhasználó státuszát: online
-    io.emit('userStatusChanged', { userId, status: 'online' });
-  });
+    socket.on("privateMessage", (msg) => {
+        console.log("Private message received:", msg);
+        socket.to(msg.receiverId).emit("messageReceived", msg);
+        console.log("Message sent to room:", msg.receiverId, "by:", msg.senderId);
+    });
 
-  // Üzenet küldése
-  socket.on('privateMessage', (msg) => {
-    console.log('Private message received:', msg);
-
-    // Üzenet küldése a címzett szobájába
-    socket.to(msg.receiverId).emit('messageReceived', msg);
-    console.log('Message sent to room:', msg.receiverId, 'by:', msg.senderId);
-  });
-
-  // Felhasználó lecsatlakozása
-  socket.on('disconnect', () => {
-    for (const userId in usersOnline) {
-      if (usersOnline[userId] === socket.id) {
-        // Ha a felhasználó lecsatlakozik, offline státuszt küldünk
-        io.emit('userStatusChanged', { userId, status: 'offline' });
-        console.log(`User ${userId} is now offline`);
-        delete usersOnline[userId]; // Töröljük a felhasználót az online listából
-        break;
-      }
-    }
-  });
+    socket.on("disconnect", () => {
+        for (const userId in usersOnline) {
+            if (usersOnline[userId] === socket.id) {
+                io.emit("userStatusChanged", { userId, status: "offline" });
+                console.log(`User ${userId} is now offline`);
+                delete usersOnline[userId];
+                break;
+            }
+        }
+    });
 });
 
-
-
-// Middlewares
-app.use(cors());
-app.use(express.json());
-
-// Routes
-// CORS beállítások
-app.use(cors({
-  origin: 'http://localhost:4200',  // A frontend URL-je
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin'],
-  credentials: true,  // Fontos, ha session vagy cookie-kat használsz
-}));
-
-
-app.options("*", cors()); 
-
-app.use(express.json());
-
-// Képek statikus kiszolgálása
-// Backend oldali statikus fájlok kiszolgálása
-app.use('/uploads', express.static('uploads'))
-
-
+// ========= Route-ok =========
 app.use("/users", userRoutes);
 app.use("/feedbacks", feedbackRoutes);
 app.use("/tasks", taskRoutes);
@@ -104,27 +100,58 @@ app.use("/friends", friendRoutes);
 app.use("/user_statistics", userStatisticsRoutes);
 app.use("/posts", postRoutes);
 app.use("/challenges", challengeRoutes);
-app.use("/chat", chatRoutes); // hozzáadjuk a chat routes-ot
+app.use("/chat", chatRoutes);
 
-// Start everything
-const PORT = process.env.PORT || 3000;
+app.use("/events", eventRoutes);
 
+app.use("/habits", habitRoutes);
+
+// ========= MySQL kapcsolat =========
 const db = mysql.createConnection({
-  host: process.env.DBHOST,
-  user: process.env.DBUSER,
-  password: process.env.DBPASS,
-  database: process.env.DBNAME,
+    host: process.env.DBHOST,
+    user: process.env.DBUSER,
+    password: process.env.DBPASS,
+    database: process.env.DBNAME,
 });
 
-AppDataSource.initialize()
-  .then(async () => {
-    console.log("✅ Adatbázis sikeresen csatlakoztatva!");
-    await seedDatabase();
+// ========= Badge seedelés =========
+async function seedPictures() {
+    const pictureRepo = AppDataSource.getRepository(Badges);
+    const count = await pictureRepo.count();
+    if (count > 0) return;
 
-    server.listen(PORT, () => {
-      console.log(`🚀 Server running with Socket.IO at http://localhost:${PORT}`);
+    const filenames = [
+        "Csillag.png",
+        "Gyémánt.png",
+        "Kedvel.png",
+        "Kézfogás.png",
+        "Mosoly.png",
+        "Trófea.png",
+    ];
+
+    for (const filename of filenames) {
+        const newPicture = new Badges();
+        newPicture.id = uuidv4();
+        newPicture.filename = filename;
+        newPicture.path = `/uploads/${filename}`;
+        await pictureRepo.save(newPicture);
+    }
+}
+
+
+// ========= App indítása =========
+const PORT = process.env.PORT || 3000;
+
+AppDataSource.initialize()
+    .then(async () => {
+        console.log("✅ Adatbázis sikeresen csatlakoztatva!");
+        await seedDatabase();
+        await seedPictures();
+
+        server.listen(PORT, () => {
+            console.log(`🚀 Server running with Socket.IO at http://localhost:${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.error("❌ Hiba történt az adatbázis kapcsolat során:", err);
     });
-  })
-  .catch((err) => {
-    console.error("❌ Hiba történt az adatbázis kapcsolat során:", err);
-  });

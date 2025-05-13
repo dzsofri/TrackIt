@@ -36,6 +36,7 @@ export class ProfileBaratComponent {
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
   invalidFields: string[] = [];
+
   imagePreviewUrl: string | null = null;
 
   user: User = {
@@ -48,6 +49,7 @@ export class ProfileBaratComponent {
       createdAt: '',
       confirm: ''
   };
+
 
   id: string = "";
 

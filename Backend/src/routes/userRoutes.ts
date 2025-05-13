@@ -97,7 +97,7 @@ router.post("/register", async (req: any, res: any) => {
 
     res.status(201).json({
         message: "Sikeres regisztráció!",
-        user: { name: user.name, email: user.email },
+        user: {id: user.id, name: user.name, email: user.email },
         token: generateToken(user)
     });
 });
@@ -337,7 +337,6 @@ router.patch('/:id', tokencheck, async (req: any, res: any) => {
     });
 });
 
-
 router.post('/reminder/:id', tokencheck, async (req: any, res: any) => {
     const { reminderAt } = req.body;
     const userId = req.params.id;
@@ -417,7 +416,7 @@ router.post('/add-picture', tokencheck, upload.single('picture'), async (req: an
       console.error("Hiba a kép feltöltésekor:", error);
       return res.status(500).json({ message: "Hiba történt a kép feltöltésekor." });
     }
-  });
+});
 
   
 router.put("/users/:id/picture", tokencheck, upload.single("picture"), async (req: any, res: any) => {
@@ -499,7 +498,7 @@ router.get("/profile-picture", tokencheck, async (req: any, res: any) => {
 });
 
 
-// Frissíti a felhasználó státuszát (online/offline)
+
 router.patch("/status", tokencheck, async (req: any, res: any) => {
     const { status } = req.body;
 

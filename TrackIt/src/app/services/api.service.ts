@@ -161,6 +161,7 @@ export class ApiService {
     );
   }
 
+
   setReminder(id: string, data: { reminderAt: any }): Observable<any> {
     return this.http.post<any>(`${this.server}/users/reminder/${id}`, data, this.tokenHeader()).pipe(
       catchError(error => {
@@ -180,6 +181,10 @@ export class ApiService {
 
   readUserChallenges(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/challenges/${userId}`, this.tokenHeader());
+  }
+
+  readChallengeParticipants(table: string, secondaryId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/${secondaryId}`, this.tokenHeader());
   }
 
   readFriendRequests(table: string, userId: string): Observable<any> {
@@ -202,7 +207,14 @@ export class ApiService {
     return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
   }
 
-
+  updateFriendData(id: string, friendData: any): Observable<any> {
+    return this.http.patch<any>(`${this.server}/friends/update-active-challenge/${id}`, friendData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Update failed', error);
+        return of({ message: 'Update failed' });
+      })
+    );
+  }
 
   updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
     const body = { status: newStatus };
@@ -276,6 +288,7 @@ export class ApiService {
 }
 
 
+
  // Poszt létrehozása
  createPost(postData: { title: string; body: string, status: string}): Observable<any> {
   return this.http.post<any>(`${this.server}/posts`, postData, this.tokenHeader()).pipe(
@@ -305,6 +318,38 @@ deletePost(postId: string): Observable<any> {
       return of({ message: 'Poszt törlése sikertelen' });
     })
   );
+
 }
+
+addHabitTrackingRecord(data: {
+  date: string,
+  achieved: boolean,
+  value: number,
+  habitId: string
+}): Observable<any> {
+  return this.http.post<any>(`${this.server}/habit_tracker`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a szokás mentésekor:', error);
+      return of({ message: 'Szokás mentése sikertelen' });
+    })
+  );
+}
+
+createHabit(habitData: {
+  habitName: string;
+  targetValue: number;
+  currentValue: number;
+  frequency: string;
+  userId: string;
+}): Observable<any> {
+  return this.http.post<any>(`${this.server}/habits`, habitData, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a szokás létrehozásakor:', error);
+      return of({ message: 'Szokás létrehozása sikertelen' });
+    })
+  );
+}
+
+
 
 }
