@@ -8,11 +8,12 @@ import { ApiService } from '../../services/api.service';
 import { ActivatedRoute } from '@angular/router';
 import { SajatKihivasComponent } from '../sajat-kihivas/sajat-kihivas.component';
 import { FolyamatbanLevoKihivasComponent } from '../folyamatban-levo-kihivas/folyamatban-levo-kihivas.component';
+import { PublikusKihivasokComponent } from '../publikus-kihivasok/publikus-kihivasok.component';
 
 @Component({
   selector: 'app-challenge',
   standalone: true,
-  imports: [CommonModule, FormsModule, AlertModalComponent, SajatKihivasComponent, FolyamatbanLevoKihivasComponent],
+  imports: [CommonModule, FormsModule, AlertModalComponent, SajatKihivasComponent, FolyamatbanLevoKihivasComponent, PublikusKihivasokComponent],
   templateUrl: './challenge.component.html',
   styleUrl: './challenge.component.scss',
 })
