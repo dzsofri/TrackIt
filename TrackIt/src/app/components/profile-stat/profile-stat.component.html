@@ -15,6 +15,7 @@
       <div class="col-12 col-sm-12 col-md-4 mb-4">
         <h3>Eredményeim</h3>
         <div class="teljesitmeny_box2">
+
             <div class="teljesitmeny_content2" *ngIf="user_challenges.length > 0 && allChallengesCompleted; else noChallenge">
                 <div *ngFor="let user_challenge of user_challenges">
                     <p class="teljesitmeny_text">
@@ -35,7 +36,9 @@
                 <h5 class="NO_DATA">Még nincs feljegyzett adat!</h5>
             </ng-template>
         </div>
+
     </div>
+
     <div class="col-12 col-sm-12 col-md-4 mb-4">
       <h3>Szokásaim</h3>
       <div class="teljesitmeny_box3">

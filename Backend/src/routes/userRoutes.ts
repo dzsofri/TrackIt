@@ -337,7 +337,6 @@ router.patch('/:id', tokencheck, async (req: any, res: any) => {
     });
 });
 
-
 router.post('/reminder/:id', tokencheck, async (req: any, res: any) => {
     const { reminderAt } = req.body;
     const userId = req.params.id;
@@ -499,7 +498,7 @@ router.get("/profile-picture", tokencheck, async (req: any, res: any) => {
 });
 
 
-// Frissíti a felhasználó státuszát (online/offline)
+
 router.patch("/status", tokencheck, async (req: any, res: any) => {
     const { status } = req.body;
 

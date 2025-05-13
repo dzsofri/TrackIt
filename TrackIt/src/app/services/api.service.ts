@@ -161,6 +161,7 @@ export class ApiService {
     );
   }
 
+
   setReminder(id: string, data: { reminderAt: any }): Observable<any> {
     return this.http.post<any>(`${this.server}/users/reminder/${id}`, data, this.tokenHeader()).pipe(
       catchError(error => {
@@ -291,6 +292,7 @@ export class ApiService {
 }
 
 
+
  // Poszt létrehozása
  createPost(postData: { title: string; body: string, status: string}): Observable<any> {
   return this.http.post<any>(`${this.server}/posts`, postData, this.tokenHeader()).pipe(
@@ -320,6 +322,7 @@ deletePost(postId: string): Observable<any> {
       return of({ message: 'Poszt törlése sikertelen' });
     })
   );
+
 }
 
 addHabitTrackingRecord(data: {

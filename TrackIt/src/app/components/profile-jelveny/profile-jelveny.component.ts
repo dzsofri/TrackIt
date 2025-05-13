@@ -50,6 +50,7 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
               this.user_challenges = res;
               this.calculatePointsAndRank();
               this.highestWeeklyPerformance = this.calculateWeeklyProgress(this.user_challenges);
+
             },
             error: (err) => {
               console.error('Error fetching user challenges:', err);
