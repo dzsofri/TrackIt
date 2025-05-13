@@ -5,7 +5,7 @@
             <button type="button" class="rangom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-custom-class="custom-tooltip" data-bs-title="Újonc - 0-999 RangPont, Felfedező - 1,000-2,999 RP, Harcos - 3,000-5,999 RP, Bajnok - 6,000-9,999 RP, Szuper - 10,000-14,999 RP, Mester - 15,000-19,999 RP, Legenda - 20,000 + RP">*</button>
         </h3>
         <div class="jelveny_box1">
-            <div class="jelveny_content1" *ngIf="user_challenges.length > 0; else noRank">
+            <div class="jelveny_content1" *ngIf="user_challenges.length > 0 && hasAnyChallengeCompleted; else noRank">
                 <div class="achievement-box">
                     <h3>{{userRank}}</h3>
                     <p class="highest">{{highersRank}}</p>
@@ -25,10 +25,12 @@
     <div class="col-12 col-sm-12 col-md-6 mb-4">
         <h3>Jelvényeim</h3>
         <div class="jelveny_box2">
-          <div class="jelveny_content2" *ngIf="user_challenges.length > 0; else noBadges">
+          <div class="jelveny_content2" *ngIf="user_challenges.length > 0 && hasAnyChallengeCompleted; else noBadges">
             <div class="jelveny_grid">
               <div *ngFor="let user_challenge of user_challenges" class="jelveny_item">
-                <p class="jelveny_text"><img id="erem"/>{{user_challenge.challengeName}} {{user_challenge.rewardPoints}} RP</p>
+                <ng-container *ngIf="user_challenge.completedAt">
+                  <p class="jelveny_text"><img [src]="user_challenge.imagePreviewUrl"/><span class="details">{{user_challenge.challengeName}} {{user_challenge.rewardPoints}} RP</span></p>
+                </ng-container>
               </div>
             </div>
             <p class="sumPoints">Rang Ponts: <b class="folyamat">{{totalPoints}} RP</b></p>
