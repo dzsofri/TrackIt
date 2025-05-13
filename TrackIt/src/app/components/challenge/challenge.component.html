@@ -20,6 +20,13 @@
             (click)="setActiveTab('folyamatbanLevo_kihivasok')"
           >Folyamatban lévő kihívások</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button 
+            class="nav-link active" 
+            [class.active]="activeTab === 'publikus_kihivasok'"
+            (click)="setActiveTab('publikus_kihivasok')"
+          >Publikus kihívások</button>
+        </li>
       </ul>
   </div>
   
@@ -29,6 +36,9 @@
       </div>
       <div class="tab-pane show active" [class.d-none]="activeTab !== 'folyamatbanLevo_kihivasok'" id="folyamatbanLevo_kihivasok-tab-pane" role="tabpanel" aria-labelledby="folyamatbanLevo_kihivasok-tab" tabindex="0">
         <app-folyamatban-levo-kihivas></app-folyamatban-levo-kihivas>
+    </div>
+    <div class="tab-pane show active" [class.d-none]="activeTab !== 'publikus_kihivasok'" id="publikus_kihivasok-tab-pane" role="tabpanel" aria-labelledby="publikus_kihivasok-tab" tabindex="0">
+        <app-publikus-kihivasok></app-publikus-kihivasok>
     </div>
   </div>
   

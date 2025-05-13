@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { User } from '../../interfaces/user';
 import { ActivatedRoute } from '@angular/router';
@@ -10,15 +10,17 @@ import { User_Challenge } from '../../interfaces/user_challenges';
 import { Badge } from '../../interfaces/badges';
 import { Friend_Request } from '../../interfaces/friend_requests';
 import { forkJoin } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-folyamatban-levo-kihivas',
   standalone: true,
-  imports: [CommonModule, AlertModalComponent],
+  imports: [CommonModule, FormsModule, AlertModalComponent],
   templateUrl: './folyamatban-levo-kihivas.component.html',
   styleUrl: './folyamatban-levo-kihivas.component.scss'
 })
-export class FolyamatbanLevoKihivasComponent {
+export class FolyamatbanLevoKihivasComponent implements OnInit, AfterViewInit {
   constructor(
     private api: ApiService,
     private auth: AuthService,
@@ -42,7 +44,6 @@ export class FolyamatbanLevoKihivasComponent {
     badgeId: '',
   };
   showUser_challenges: User_Challenge[] = [];
-  selectedChallengeDetails: User_Challenge | null = null;
   senderNames: { [key: string]: string } = {};
   activeTab: string = 'statisztika';
   challengeFriends: string[] = [];
@@ -52,7 +53,6 @@ export class FolyamatbanLevoKihivasComponent {
   showFriendRequests: Friend_Request[] = [];
   imagePreviewUrl: string | null = null;
   addedFriends: { id: string; name: string; imageUrl: string;}[] = [];
-  selectedFriendIds: string[] = [];
 
   popupMessage: string | null = null;
   showPopup: boolean = false;
@@ -87,6 +87,39 @@ export class FolyamatbanLevoKihivasComponent {
         this.Challenge();
         this.loadChallengeFriends();
       }
+    });
+  }
+
+  ngAfterViewInit(): void {
+      const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+          tooltipTriggerList.forEach(tooltipTriggerEl => {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+          });
+  }
+
+  finishChallnge(challenge: User_Challenge): void {
+    const completedAt = new Date().toISOString();
+
+    this.http.post(`http://localhost:3000/challenges/completedAt/${challenge.id}`, { completedAt }).subscribe({
+      next: (response: any) => {
+        this.modalMessage = response.message;
+        this.modalType = 'success';
+        this.modalVisible = true;
+        this.autoCloseModal();
+
+        setTimeout(() => {
+          this.selectedChallengeId = challenge.id;
+          this.selectedAction = 'delete';
+          this.confirmAction();
+        }, 7 * 24 * 60 * 60 * 1000);
+      },
+      error: (error) => {
+        this.modalMessage = 'Hiba történt a kihívás mentésekor!';
+        this.modalType = 'error';
+        this.modalVisible = true;
+        console.error(error);
+        this.autoCloseModal();
+      },
     });
   }
 
@@ -257,14 +290,6 @@ export class FolyamatbanLevoKihivasComponent {
     this.popupMessage = null;
     this.selectedChallengeId = null;
     this.selectedAction = null;
-  }
-
-  showChallengeDetails(challenge: User_Challenge) {
-    this.selectedChallengeDetails = challenge;
-  }
-  
-  closeDetailsPopup() {
-    this.selectedChallengeDetails = null;
   }
 
   autoCloseModal() {
