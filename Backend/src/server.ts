@@ -22,8 +22,6 @@ import challengeRoutes from "./routes/challengeRoutes";
 import chatRoutes from "./routes/chatRoutes"; // import chatRoutes
 import eventRoutes from "./routes/eventRoutes";
 
-import chatRoutes from "./routes/chatRoutes";
-
 // Entitások
 import { Badges } from "./entities/Badges";
 import habitRoutes from "./routes/habitRoutes";
