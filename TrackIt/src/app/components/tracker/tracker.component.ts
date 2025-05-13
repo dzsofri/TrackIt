@@ -50,6 +50,10 @@ export class TrackerComponent {
   calendarDays: any[] = [];
   events: CalendarEvent[] = [];
   touchStartX: number = 0;
+  startDate: string = new Date().toISOString().split('T')[0];
+  intervalDays: number = 1;
+
+
 
   id: string = '';
   user: any;
@@ -63,7 +67,8 @@ export class TrackerComponent {
 
   habitList: { id: string, habitName: string }[] = [];
 
-  selectedHabit: string = '';
+  selectedHabit: { id: string, habitName: string, status: string } | null = null;
+
 
 
   
@@ -76,6 +81,7 @@ export class TrackerComponent {
         this.fetchUser();
         this.fetchHabits();
         this.fetchUserProfilePicture();
+        this.generateCalendar();
       }
     });
   } 
@@ -128,9 +134,11 @@ export class TrackerComponent {
       console.log(res)
       // Itt most az objektumokat tároljuk
       this.habitList = res.map(habit => ({
-        id: habit.id,        // A szokás ID-ja
-        habitName: habit.habitName // A szokás neve
+        id: habit.id,
+        habitName: habit.habitName,
+        status: habit.status // hozzáadjuk a státuszt is
       }));
+
     },
     error: (err) => {
       console.error('Hiba a szokások betöltésekor:', err); // Itt nézd meg a konzolon a teljes hibát
@@ -146,7 +154,8 @@ export class TrackerComponent {
 
 onHabitChange(): void {
   // Kiválasztott habit keresése a habitList-ben
-  const selectedHabitData = this.habitList.find(habit => habit.habitName === this.selectedHabit);
+  const selectedHabitData = this.habitList.find(habit => habit.id === this.selectedHabit?.id);
+
 
   if (selectedHabitData) {
     console.log('Kiválasztott tracker:', selectedHabitData);
@@ -158,68 +167,95 @@ onHabitChange(): void {
 
 
   submit(): void {
-  const payload = {
-    habitName: this.selectedHabit,
-    completed: this.completed,
-    value: this.value,
-    unit: this.unit,
-    date: this.date,
-    userId: this.id
-  };
-
-  this.api.saveHabitEntry(payload).subscribe({
-    next: () => {
-      this.modalMessage = 'Sikeresen elmentve!';
-      this.modalType = 'success';
-      this.modalVisible = true;
-    },
-    error: () => {
-      this.modalMessage = 'Hiba történt mentés közben.';
-      this.modalType = 'error';
-      this.modalVisible = true;
-    }
-  });
+  if (!this.selectedHabit) {
+    console.error('Nincs kiválasztott szokás!');
+    return;
   }
 
+  const start = new Date(this.startDate);
+  const payloads = [];
+
+  for (let i = 0; i < this.intervalDays; i++) {
+    const currentDate = new Date(start);
+    currentDate.setDate(start.getDate() + i);
+
+    const payload = {
+      habitName: this.selectedHabit.habitName,
+      completed: this.completed,
+      value: this.value,
+      unit: this.unit,
+      date: currentDate.toISOString().split('T')[0],
+      userId: this.id
+    };
+
+    payloads.push(payload);
+  }
+
+  let successCount = 0;
+  let errorCount = 0;
+
+  payloads.forEach((payload, index) => {
+    this.api.saveHabitEntry(payload).subscribe({
+      next: () => {
+        successCount++;
+        if (successCount + errorCount === payloads.length) {
+          this.modalMessage = `Sikeresen elmentve ${successCount} napra!`;
+          this.modalType = 'success';
+          this.modalVisible = true;
+        }
+      },
+      error: () => {
+        errorCount++;
+        if (successCount + errorCount === payloads.length) {
+          this.modalMessage = `Mentés során ${errorCount} hiba történt.`;
+          this.modalType = 'error';
+          this.modalVisible = true;
+        }
+      }
+    });
+  });
+}
+
+
+
 activateHabit(): void {
+  if (!this.selectedHabit) {
+    console.error('Nincs kiválasztva szokás!');
+    return;
+  }
+
   const token = localStorage.getItem('trackit');
   if (!token) {
     console.error('Nincs érvényes token!');
     return;
   }
 
-  // A kiválasztott szokás adatainak keresése a habitList-ben
-  const selectedHabitData = this.habitList.find(h => h.habitName === this.selectedHabit);
+  const payload = {
+    habitId: this.selectedHabit.id,
+    habitName: this.selectedHabit.habitName,
+    status: 'active',
+    userId: this.id
+  };
 
-  if (selectedHabitData) {
-    const payload = {
-      habitId: selectedHabitData.id,        // Az ID-t küldjük
-      habitName: selectedHabitData.habitName,  // A habitName-t is küldjük
-      status: 'active',
-      userId: this.id
-    };
+  this.api.updateHabitStatus(payload).subscribe({
+    next: (response) => {
+      console.log('Tracker státusz sikeresen frissítve:', response);
+      this.modalMessage = 'A tracker sikeresen aktiválva lett!';
+      this.modalType = 'success';
+      this.modalVisible = true;
 
-    this.api.updateHabitStatus(payload).subscribe({
-      next: (response) => {
-        console.log('Tracker státusz sikeresen frissítve:', response);
-        this.modalMessage = 'A tracker sikeresen aktiválva lett!';
-        this.modalType = 'success';
-        this.modalVisible = true;
-      },
-      error: (err) => {
-        console.error('Hiba a tracker státusz frissítésekor:', err);
-        this.modalMessage = 'Hiba történt a státusz frissítése közben.';
-        this.modalType = 'error';
-        this.modalVisible = true;
-      }
-    });
-  } else {
-    console.error('A kiválasztott szokás nem található!');
-    this.modalMessage = 'A kiválasztott szokás nem található!';
-    this.modalType = 'error';
-    this.modalVisible = true;
-  }
+      // Frissítsük a selectedHabit státuszát
+      this.selectedHabit!.status = 'active';
+    },
+    error: (err) => {
+      console.error('Hiba a tracker státusz frissítésekor:', err);
+      this.modalMessage = 'Hiba történt a státusz frissítése közben.';
+      this.modalType = 'error';
+      this.modalVisible = true;
+    }
+  });
 }
+
 
 
   showDayDetails(day: any): void {

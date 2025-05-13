@@ -19,7 +19,7 @@ router.get("/:userId", tokencheck, async (req: any, res: any) => {
     const habitRepo = AppDataSource.getRepository(Habits);
     const habits = await habitRepo.find({
       where: { user: { id: userId } },
-      select: ["id", "habitName"],
+      select: ["id", "habitName", "status"],
       order: { createdAt: "DESC" }
     });
 
