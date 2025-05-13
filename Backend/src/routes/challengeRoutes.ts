@@ -39,6 +39,7 @@ router.post("/challenge/:id", async (req: any, res: any) => {
             challengeName,
             challengeDescription,
             status,
+            completedAt,
             createdAt,
             finalDate,
             rewardPoints,
@@ -68,6 +69,7 @@ router.post("/challenge/:id", async (req: any, res: any) => {
         user_challenges.finalDate = finalDate || null;
         user_challenges.rewardPoints = rewardPoints;
         user_challenges.badgeId = badgeId || null;
+        user_challenges.completedAt = completedAt;
         user_challenges.durationDays = durationDays;
         user_challenges.progressPercentage = 0;
         user_challenges.completedAt = null;
@@ -141,6 +143,84 @@ router.post("/challenge/friend/:id", async (req: any, res: any) => {
     }
 });
 
+router.post("/completedAt/:id", async (req: any, res: any) => {
+    try {
+    const challengeRepo = AppDataSource.getRepository(UserChallenges);
+    const challenge = await challengeRepo.findOne({ where: { id: req.params.id } });
+
+    if (!challenge) {
+      return res.status(404).json({ message: "A kihívás nem található." });
+    }
+
+    challenge.completedAt = req.body.completedAt || null;
+
+    await challengeRepo.save(challenge);
+
+    res.status(200).json({
+      message: "Kihívás sikeresen befejezve.",
+      challenge
+    });
+
+  } catch (error) {
+    console.error("Hiba a kihívás frissítésekor:", error);
+    res.status(500).json({ message: "Szerverhiba." });
+  }
+});
+
+router.post("/fromPublic", async (req: any, res: any) => {
+    try {
+        console.log("Kérés érkezett:", req.params, req.body);
+
+        const {
+            userId,
+            secondaryId,
+            challengeName,
+            challengeDescription,
+            status,
+            completedAt,
+            createdAt,
+            finalDate,
+            rewardPoints,
+            badgeId,
+            durationDays
+        } = req.body;
+
+        const badgeRepo = AppDataSource.getRepository(Badges);
+        const badge = await badgeRepo.findOne({ where: { id: badgeId } });
+
+        if (!badge && badgeId) {
+            return res.status(404).json({ message: "A megadott jelvény nem található." });
+        }
+
+        const user_challenges = new UserChallenges();
+        user_challenges.id = uuidv4();
+        user_challenges.secondaryId = secondaryId;
+        user_challenges.userId = userId;
+        user_challenges.challengeName = challengeName;
+        user_challenges.challengeDescription = challengeDescription;
+        user_challenges.status = status;
+        user_challenges.createdAt = createdAt;
+        user_challenges.finalDate = finalDate;
+        user_challenges.rewardPoints = rewardPoints;
+        user_challenges.badgeId = badgeId;
+        user_challenges.completedAt = completedAt;
+        user_challenges.durationDays = durationDays;
+        user_challenges.progressPercentage = 0;
+        user_challenges.completedAt = null;
+        await AppDataSource.getRepository(UserChallenges).save(user_challenges);
+
+        console.log("Sikeres mentés:", user_challenges);
+
+        res.status(201).json({
+            message: "Sikeres kihívás létrehozása!",
+            user_challenges,
+        });
+    } catch (error) {
+        console.error("Hiba történt a kihívás létrehozása során:", error);
+        res.status(500).json({ message: "Hiba történt a kihívás létrehozása során." });
+    }
+});
+
 router.get("/all-badges", async (req: any, res: any) => {
     try {
         const badgeRepository = AppDataSource.getRepository(Badges);
@@ -197,46 +277,23 @@ router.get("/badge", tokencheck, async (req: any, res: any) => {
     }
 });
 
-router.get("/user/:userId", async (req: any, res: any) => {
-  const { userId } = req.params;
-
+router.get("/all", async (req: any, res: any) => {
   try {
-    const userChallenges = await AppDataSource.getRepository(UserChallenges).find({
-      where: { userId },
-    });
-
-    if (!userChallenges || userChallenges.length === 0) {
-      return res.status(404).json({ message: "No challenges found for this user." });
-    }
-
-    const secondaryIds = [...new Set(userChallenges.map(ch => ch.secondaryId))];
-
-    const relatedChallenges = await AppDataSource.getRepository(UserChallenges).find({
-      where: secondaryIds.map(id => ({ secondaryId: id })),
+    const challengeRepository = AppDataSource.getRepository(UserChallenges);
+    const challenges = await challengeRepository.find({
       relations: ["user"],
     });
 
-    const userMap = new Map<string, string>();
-    for (const challenge of relatedChallenges) {
-      if (
-        challenge.user &&
-        challenge.user.id !== userId &&
-        !userMap.has(challenge.user.id)
-      ) {
-        userMap.set(challenge.user.id, challenge.user.name);
-      }
+    if (!challenges || challenges.length === 0) {
+      return res.status(404).json({ message: "Challenge not found." });
     }
 
-    const userNames = Array.from(userMap.values());
-
-    return res.json({
-      message: "Users with matching secondaryIds",
-      users: userNames,
+    return res.status(200).json({
+      challenges,
     });
-
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    console.error("Hiba történt a kihívások lekérésekor:", error);
+    return res.status(500).json({ message: "Szerverhiba a kihívások lekérésekor." });
   }
 });
 
@@ -250,7 +307,7 @@ router.get("/:secondaryId", async (req: any, res: any) => {
     });
 
     if (!challenges || challenges.length === 0) {
-      return res.status(404).json({ message: "No users found for this challenge." });
+      return res.status(404).json({ message: "Challenge not found." });
     }
 
     const userNames = new Set<string>();

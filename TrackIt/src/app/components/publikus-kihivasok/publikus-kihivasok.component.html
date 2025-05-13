@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="kihivas">
+    <h3>
+      Publikus kihívások
+      <button type="button" class="rangom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-custom-class="custom-tooltip" data-bs-title="Itt kizárólag a mai nap folyamán létrehozott, nyilvánosan elérhető kihívások vehetők fel!">*</button>
+    </h3>
+    <div class="kihivas_content">
+      <ng-container *ngIf="showUser_challenges && showUser_challenges.length > 0; else noPublicChallenge">
+        <ng-container *ngFor="let showUser_challenge of showUser_challenges">
+          <div class="kihivasBox">
+            <div class="details">
+              <p class="kihivas_text">Kihívás neve: {{ showUser_challenge.challengeName }}</p>
+              <p class="kihivas_text">Rövid leírás: {{ showUser_challenge.challengeDescription }}</p>
+              <p class="kihivas_text">Időtartam: {{ showUser_challenge.durationDays }} nap</p>
+            </div>
+            <div class="other">
+              <button type="button" class="felvetel" (click)="takeChallenge(showUser_challenge)">Felvétel</button>
+              <img [src]="showUser_challenge.imagePreviewUrl" alt="Kihívás előnézeti képe" />
+              <p class="point">{{ showUser_challenge.rewardPoints }} RP</p>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <ng-template #noPublicChallenge>
+      <h5 class="NO_DATA">Nincsenek elérhető kihívás!</h5>
+    </ng-template>
+  </div>
+  
+  <div class="popup-container" *ngIf="showPopup">
+    <div class="popup">
+      <p>{{ popupMessage }}</p>
+      <button class="confirm-button" (click)="confirmAction()">Igen</button>
+      <button class="cancel-button" (click)="closePopup()">Mégse</button>
+    </div>
+  </div>
+
+  <app-alert-modal 
+    [visible]="modalVisible" 
+    [type]="modalType" 
+    [message]="modalMessage"
+    (close)="modalVisible = false">
+  </app-alert-modal>
+</div>
