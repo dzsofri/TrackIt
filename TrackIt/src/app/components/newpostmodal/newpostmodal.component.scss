@@ -1,214 +1,158 @@
 .popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 30%;
+  min-width: 300px;
+  max-height: 80vh; /* <<< EZ: max magasság */
+  overflow-y: auto; /* <<< EZ: görgethetővé teszi ha szükséges */
+  text-align: left;
+  position: relative;
+}
+
+/* Fejléc: Mégsem + Új poszt */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.popup-header .post-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.close-btn {
+  font-size: 1rem;
+  background-color: transparent;
+  border: none;
+  color: black;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  transition: 0.3s;
+}
+
+.close-btn:hover {
+  background-color: #ffe5e5;
+  border-radius: 8px;
+}
+
+/* Input mező */
+.post-input {
+  border: none; /* Border eltávolítása */
+  outline: none; /* Az outline eltávolítása (ha van) */
+  padding: 10px; /* Opcióként párnázd a belső teret */
+  width: 100%; /* Töltsön ki minden rendelkezésre álló helyet */
+  resize: none; /* Ha nem akarod, hogy a felhasználó átméretezze */
+  font-size: 14px; /* Beállíthatod a betűméretet is */
+  box-sizing: border-box; /* Ha paddingot adsz hozzá, akkor ne változtassa meg az elem teljes szélességét */
+}
+
+
+/* Gombok */
+button {
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.post-button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1.1rem;
+  color: black;
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  width: 50%;
+  max-width: 500px;
+  margin: 1.5rem auto 0 auto;
+  text-align: center;
+}
+
+.post-button:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.upload-btn {
+  font-size: 1.1rem;
+  background-color: #f8f9fa;
+  color: black;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: block;
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: fit-content;
+  margin-left: 9%;
+}
+
+/* Avatar + szöveg input együtt */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
   .popup-content {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
+    width: 80%;
+  }
+
+  .popup-header {
     flex-direction: column;
-    gap: 15px;
-    width: 30%;
-    min-width: 300px;
-    max-width: 400px;
-    position: relative;
-    text-align: left;
-  
-    h3 {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-  
-    label {
-      font-size: 1rem;
-      margin-bottom: 5px;
-    }
-  
-    input,
-    textarea {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      border: 2px solid #ccc;
-      border-radius: 12px;
-      background: #f9f9f9;
-      outline: none;
-      transition: border 0.3s, box-shadow 0.3s;
-  
-      &:focus {
-        border-color: #007bff;
-        background: #fff;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
-      }
-    }
-  
-    textarea {
-      min-height: 100px;
-    }
-  
-    .priority-buttons {
-      display: flex;
-      justify-content: space-around;
-      gap: 15px;
-  
-      button {
-          padding: 1% 3%; /* Gomb méretének beállítása */
-          font-size: 16px; /* Betűméret */
-          border: none;
-          cursor: pointer;
-          font-weight: bold;
-          border-radius: 5px;
-          transition: 0.3s;
-          color: white; /* Szöveg színe fehér */
-  
-          &.low {
-              background-color: #4caf50; /* Zöld */
-  
-              &.active {
-                  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.8); /* Neon zöld keret */
-              }
-          }
-  
-          &.medium {
-              background-color: #ff9800; /* Narancs */
-  
-              &.active {
-                  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.8); /* Neon narancs keret */
-              }
-          }
-  
-          &.high {
-              background-color: #f44336; /* Piros */
-  
-              &.active {
-                  box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.8); /* Neon piros keret */
-              }
-          }
-      }
-    }
-  
-    .saveChange {
-      margin: 1.5rem auto;
-      padding: 1rem 2rem;
-      font-size: 1.1rem;
-      color: #627966;
-      background-color: white;
-      border: 2px solid #627966;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: 0.3s;
-      width: 80%;
-      max-width: 400px;
-      text-align: center;
-  
-      &:hover {
-        background: #627966;
-        color: white
-      }
-    }
-  
-    .cancel {
-      margin: -0.2rem auto;
-      font-size: 1.1rem;
-      color: red;
-      background-color: white;
-      border: 2px solid red;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: 0.3s;
-      width: 80%;
-      max-width: 400px;
-      text-align: center;
-  
-      &:hover {
-        background-color: #d32f2f;
-        color: white;
-      }
-    }
+    align-items: flex-start;
+    gap: 10px;
   }
-  
-  @media (max-width: 768px) {
-    .popup-content {
-      width: 80%;
-    }
+
+  .post-title {
+    font-size: 1.2rem;
   }
-  
+
+  .close-btn {
+    align-self: flex-end;
+  }
 
   .post-button {
-    margin: 1.5rem auto;
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    color: #627966;
-    background-color: white;
-    border: 2px solid #627966;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 80%;
-    max-width: 400px;
-    text-align: center;
-  
-    &:hover {
-      background: #627966;
-      color: white;
-    }
+    width: 100%;
   }
-  
-  .close-btn {
-    position: absolute; /* A gombot pozicionáljuk */
-    top: 10px; /* Felülre igazítás */
-    left: 10px; /* Balra igazítás */
-    font-size: 1.5rem; /* Növelt betűméret */
-    color: red;
-    background-color: white;
-    border: 2px solid red;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-    padding: 0.5rem;
-    width: auto; /* Ne legyen fix szélessége */
-    height: auto; /* Ne legyen fix magassága */
-    text-align: center;
-  
-    &:hover {
-      background-color: #d32f2f;
-      color: white;
-    }
-  }
-  
+}
 
-  .upload-btn {
 
-    font-size: 1.1rem;
-    color: white;
-    background-color: white; /* Kék háttér */
-    border: 2px solid #627966;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 20%;
-    max-width: 400px;
-    text-align: center;
-    display: block; /* Alapértelmezett blokk elemet biztosít */
-    
-    &:hover {
-      background: #627966; /* Sötétebb kék háttér hover állapotban */
-      border-color: #627966;
-    }
-  }
-  
-  .upload-btn i {
-    margin-right: 10px; /* Bal oldali ikontól való távolság */
-  }
-  
+
+.image-preview img {
+  width: 100%; /* <<< EZ: legyen maximum a szülő szélessége */
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+

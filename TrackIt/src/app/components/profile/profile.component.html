@@ -1,6 +1,8 @@
 <div class="mt-3 mb-5">
   <header>
-    <img id="felhasznalo">
+    <div class="circle-image">
+      <img [src]="imagePreviewUrl"/>
+    </div>
     <ng-container *ngIf="user && user.id && userNames[user.id]">
       <h1>{{ userNames[user.id] || 'Ismeretlen felhasználó' }}</h1>
     </ng-container>
@@ -72,3 +74,10 @@
       <app-profile-modositas></app-profile-modositas>
     </div>
 </div>
+
+<app-alert-modal 
+  [visible]="modalVisible" 
+  [type]="modalType" 
+  [message]="modalMessage"
+  (close)="modalVisible = false">
+</app-alert-modal>

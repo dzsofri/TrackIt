@@ -11,10 +11,34 @@ import { isAdmin } from "../utiles/adminUtils";
 import { Not } from "typeorm";
 const ejs = require("ejs");
 const path = require("path");
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
+import { Pictures } from "../entities/Picture";
+import fs from 'fs';
 
 dotenv.config(); 
 
 const router = Router();
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      const uploadPath = path.join(__dirname, "..", "uploads"); // biztosan a gyökérben lévő uploads-ba töltsön
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+      }
+      cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+      cb(null, `${uniqueSuffix}-${file.originalname}`);
+    },
+  });
+  
+  const upload = multer({ storage });
+  
+  export const uploadsMiddleware = express.static(
+    path.join(__dirname, "..", "uploads")
+  );
 
 // Hibás mezők tárolása
 const addInvalidField = (fields: string[], fieldName: string) => {
@@ -73,7 +97,7 @@ router.post("/register", async (req: any, res: any) => {
 
     res.status(201).json({
         message: "Sikeres regisztráció!",
-        user: { name: user.name, email: user.email },
+        user: {id: user.id, name: user.name, email: user.email },
         token: generateToken(user)
     });
 });
@@ -108,7 +132,8 @@ router.post("/login", async (req: any, res: any) => {
             id: user.id,
             email: user.email,
             name: user.name,
-            role: user.role
+            role: user.role,
+            reminderAt: user.reminderAt
         }
     });
 });
@@ -312,6 +337,166 @@ router.patch('/:id', tokencheck, async (req: any, res: any) => {
     });
 });
 
+router.post('/reminder/:id', tokencheck, async (req: any, res: any) => {
+    const { reminderAt } = req.body;
+    const userId = req.params.id;
+    const invalidFields: string[] = [];
+ 
+    if (!reminderAt) invalidFields.push('reminderAt');
+ 
+    if (invalidFields.length > 0) {
+        return res.status(400).json({
+            message: "Hiányzó időpont az emlékeztetőhöz!",
+            invalid: invalidFields
+        });
+    }
+ 
+    try {
+        const userRepo = AppDataSource.getRepository(Users);
+        const user = await userRepo.findOne({ where: { id: userId } });
+ 
+        if (!user) {
+            return res.status(404).json({ message: "Felhasználó nem található." });
+        }
+ 
+        user.reminderAt = new Date(reminderAt);
+        await userRepo.save(user);
+ 
+        res.status(200).json({
+            message: "Emlékeztető sikeresen beállítva!",
+            reminderAt: user.reminderAt
+        });
+    } catch (error) {
+        console.error("Hiba emlékeztető mentésekor:", error);
+        res.status(500).json({ message: "Hiba történt az emlékeztető mentése során." });
+    }
+});
+
+router.post('/add-picture', tokencheck, upload.single('picture'), async (req: any, res: any) => {
+    try {
+      const userId = req.user.id;
+  
+      if (!userId) {
+        return res.status(401).json({ message: "Felhasználói azonosító nem található a tokenben." });
+      }
+  
+      if (!req.file) {
+        return res.status(400).json({ message: "Hiányzó kép!" });
+      }
+  
+      const userRepository = AppDataSource.getRepository(Users);
+      const pictureRepository = AppDataSource.getRepository(Pictures);
+  
+      const newPicture = pictureRepository.create({
+        id: uuidv4(),
+        filename: req.file.filename,
+        path: req.file.path,
+      });
+      const savedPicture = await pictureRepository.save(newPicture);
+  
+      const user = await userRepository.findOne({ where: { id: userId } });
+  
+      if (!user) {
+        return res.status(404).json({ message: "Felhasználó nem található." });
+      }
+  
+      user.pictureId = savedPicture.id;
+      await userRepository.save(user);
+  
+      const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+  
+      return res.status(200).json({
+        message: "Kép sikeresen feltöltve és hozzárendelve a felhasználóhoz.",
+        user: {
+          pictureId: user.pictureId,
+          imageUrl,
+        },
+      });
+    } catch (error) {
+      console.error("Hiba a kép feltöltésekor:", error);
+      return res.status(500).json({ message: "Hiba történt a kép feltöltésekor." });
+    }
+});
+
+  
+router.put("/users/:id/picture", tokencheck, upload.single("picture"), async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+      const userId = req.user.id;
+  
+      const userRepository = AppDataSource.getRepository(Users);
+  
+      const user = await userRepository.findOne({ where: { id } });
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+  
+      if (user.id !== userId) {
+        return res.status(403).json({ message: "You are not authorized to update this user's profile picture." });
+      }
+  
+      if (!req.file) {
+        return res.status(400).json({ message: "No picture uploaded." });
+      }
+  
+      user.pictureId = req.file.filename;
+  
+      await userRepository.save(user);
+  
+      const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+  
+      return res.status(200).json({
+        message: "Profile picture updated successfully!",
+        user: {
+          ...user,
+          imageUrl,
+        },
+      });
+    } catch (error) {
+      console.error("Error updating user's profile picture:", error);
+      return res.status(500).json({ message: "Server error." });
+    }
+});
+  
+router.get("/profile-picture", tokencheck, async (req: any, res: any) => {
+    try {
+      const userId = req.user.id;
+  
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized: User ID missing in token." });
+      }
+  
+      const userRepository = AppDataSource.getRepository(Users);
+      const user = await userRepository.findOne({
+        where: { id: userId },
+        relations: ["picture"],
+      });
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
+  
+      const imageUrl = user.picture?.filename
+        ? `http://localhost:3000/uploads/${user.picture.filename}`
+        : null;
+  
+      return res.status(200).json({
+        imageUrl,
+        picture: user.picture
+          ? {
+              id: user.picture.id,
+              filename: user.picture.filename,
+              path: user.picture.path,
+            }
+          : null,
+      });
+    } catch (error) {
+      console.error("Error fetching profile picture:", error);
+      return res.status(500).json({ message: "Server error." });
+    }
+});
+
 
 
 router.patch("/status", tokencheck, async (req: any, res: any) => {
@@ -349,4 +534,5 @@ router.patch("/status", tokencheck, async (req: any, res: any) => {
         res.status(500).json({ message: "Hiba történt a státusz frissítése közben." });
     }
 });
+
 export default router;

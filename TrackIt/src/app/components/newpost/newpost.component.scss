@@ -1,20 +1,21 @@
 .newpost-wrapper {
-    display: flex;
-    justify-content: center; /* Középre igazítás vízszintesen */
-    align-items: flex-start; /* Felülre igazítás */
-    width: 100%;
-    padding-top: 20px;
-  }
-  
-  .newpost-container {
-    display: flex;
-    align-items: center;
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    width: 100%;
-  }
+  display: flex;
+  justify-content: center;
+  padding: 10px 10px 0 10px; /* alul 0 */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.newpost-container {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 70vw;
+  background-color: white;
+}
   
   .avatar {
     width: 40px;
@@ -45,3 +46,16 @@
   }
   
   /* Modal (Popup) */
+
+  
+@media (min-width: 769px) {
+  .newpost-container {
+    width: 45vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .newpost-container {
+    width: 100vw !important;
+  }
+}

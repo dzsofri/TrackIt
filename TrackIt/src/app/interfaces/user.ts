@@ -6,5 +6,6 @@ export interface User {
   role?: string;
   pictureId?: string;
   createdAt?: string;
+  reminderAt?: string;
   confirm?: '';
 }

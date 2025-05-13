@@ -4,24 +4,26 @@ header {
     align-items: center;
     justify-content: center;
     text-align: center;
+    margin: 0 auto;
 }
 @media (max-width: 480px) {
     header {
         display: block;
     }
 }
-#felhasznalo{
-    background: url('/assets/images/profileKep.png') no-repeat center/cover;
-    display: block;
-    justify-content: center;
-    align-items: center;
-    width: 70vw;
-    max-width: 150px;
-    height: 50vw;
-    max-height: 150px;
-    padding: 0.3px;
+@media (max-width: 360px) {
+    header {
+        display: block;
+        margin-left: 15%;
+    }
+}
+.circle-image img {
+    width: 150px;
+    height: 150px;
+    margin-left: 25px;
     border-radius: 50%;
-    margin: 0 auto;
+    object-fit: cover;
+    border: 2px solid #ccc;
 }
 @media (max-width: 600px) {
     .NO_DATA{

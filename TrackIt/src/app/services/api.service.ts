@@ -13,7 +13,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   private tokenName = environment.tokenName;
-  private server = environment.serverUrl;
+  public server = environment.serverUrl;
 
   getToken(): String | null {
     return localStorage.getItem(this.tokenName);
@@ -161,6 +161,16 @@ export class ApiService {
     );
   }
 
+
+  setReminder(id: string, data: { reminderAt: any }): Observable<any> {
+    return this.http.post<any>(`${this.server}/users/reminder/${id}`, data, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Emlékeztető beállítása sikertelen:', error);
+        return of({ message: 'Emlékeztető beállítása sikertelen' });
+      })
+    );
+  }
+
   readUserStatistics(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/statistics/${userId}`, this.tokenHeader());
   }
@@ -171,6 +181,14 @@ export class ApiService {
 
   readUserChallenges(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/challenges/${userId}`, this.tokenHeader());
+  }
+
+  readUserChallengesFriends(table: string, userId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/${userId}`, this.tokenHeader());
+  }
+
+  readChallengeParticipants(table: string, secondaryId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/${secondaryId}`, this.tokenHeader());
   }
 
   readFriendRequests(table: string, userId: string): Observable<any> {
@@ -193,6 +211,15 @@ export class ApiService {
     return this.http.post(`${this.server}/${table}/friendrequests/${id}/accept`, {}, this.tokenHeader());
   }
 
+  updateFriendData(id: string, friendData: any): Observable<any> {
+    return this.http.patch<any>(`${this.server}/friends/update-active-challenge/${id}`, friendData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Update failed', error);
+        return of({ message: 'Update failed' });
+      })
+    );
+  }
+
   updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
     const body = { status: newStatus };
     return this.http.patch<any>(`${this.server}/tasks/${taskId}/status`, body, this.tokenHeader()).pipe(
@@ -200,15 +227,6 @@ export class ApiService {
             console.error('Feladat státuszának frissítése sikertelen', error);
             return of(error);
         })
-    );
-  }
-
-  createPost(postData: { title: string; body: string; status: string }): Observable<any> {
-    return this.http.post<any>(`${this.server}/posts/create`, postData, this.tokenHeader()).pipe(
-      catchError(error => {
-        console.error('Hiba a bejegyzés létrehozásakor:', error);
-        return of({ message: 'Bejegyzés létrehozása sikertelen' });
-      })
     );
   }
 
@@ -274,61 +292,68 @@ export class ApiService {
 }
 
 
- createEvent(data: { title: string; description: string; startTime: string; endTime: string; color: string; userId: string;}): Observable<any> {
-  return this.http.post<any>(`${this.server}/events`, data, this.tokenHeader()).pipe(
+
+ // Poszt létrehozása
+ createPost(postData: { title: string; body: string, status: string}): Observable<any> {
+  return this.http.post<any>(`${this.server}/posts`, postData, this.tokenHeader()).pipe(
     catchError(error => {
-      console.error('Event creation failed', error);
-      return of({ message: 'Event creation failed' });
+      console.error('Hiba a bejegyzés létrehozásakor:', error);
+      return of({ message: 'Bejegyzés létrehozása sikertelen' });
     })
   );
 }
 
-getEvents(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.server}/events`, this.tokenHeader()).pipe(
+// Poszt módosítása
+updatePost(postId: string, postData: { title: string; body: string; status: string }): Observable<any> {
+  return this.http.put<any>(`${this.server}/posts/${postId}`, postData, this.tokenHeader()).pipe(
     catchError(error => {
-      console.error('Error fetching events:', error);
-      return of([]);
-    })
-  );
-}
-
-getEventById(id: string): Observable<any> {
-  return this.http.get<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(
-    catchError(error => {
-      console.error('Error fetching event:', error);
-      return of(null);
-    })
-  );
-}
-
-getEventByUserId(userId: string): Observable<any> {
-  return this.http.get<any>(`${this.server}/events/user/${userId}`, this.tokenHeader()).pipe(
-    catchError(error => {
-      console.error('Error fetching events for user:', error);
-      return of(null);
+      console.error('Hiba a bejegyzés frissítésekor:', error);
+      return of({ message: 'Bejegyzés frissítése sikertelen' });
     })
   );
 }
 
 
-updateEvent(id: string, data: { title?: string; description?: string; startTime?: string; endTime?: string; color?: string }): Observable<any> {
-  return this.http.put<any>(`${this.server}/events/${id}`, data, this.tokenHeader()).pipe(
+// Poszt törlése
+deletePost(postId: string): Observable<any> {
+  return this.http.delete(`${this.server}/posts/${postId}`, this.tokenHeader()).pipe(
     catchError(error => {
-      console.error('Error updating event:', error);
-      return of({ message: 'Event update failed' });
+      console.error('Hiba a poszt törlésekor:', error);
+      return of({ message: 'Poszt törlése sikertelen' });
+    })
+  );
+
+}
+
+addHabitTrackingRecord(data: {
+  date: string,
+  achieved: boolean,
+  value: number,
+  habitId: string
+}): Observable<any> {
+  return this.http.post<any>(`${this.server}/habit_tracker`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a szokás mentésekor:', error);
+      return of({ message: 'Szokás mentése sikertelen' });
     })
   );
 }
 
-
-deleteEvent(id: string): Observable<any> {
-  return this.http.delete<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(
+createHabit(habitData: {
+  habitName: string;
+  targetValue: number;
+  currentValue: number;
+  frequency: string;
+  userId: string;
+}): Observable<any> {
+  return this.http.post<any>(`${this.server}/habits`, habitData, this.tokenHeader()).pipe(
     catchError(error => {
-      console.error('Error deleting event:', error);
-      return of({ message: 'Event deletion failed' });
+      console.error('Hiba a szokás létrehozásakor:', error);
+      return of({ message: 'Szokás létrehozása sikertelen' });
     })
   );
 }
+
 
 
 }

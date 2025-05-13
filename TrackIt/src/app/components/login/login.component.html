@@ -51,7 +51,8 @@
 <app-alert-modal
   [visible]="modalVisible"
   [type]="modalType"
-  [invalidFields]="invalidFields"
   [message]="modalMessage"
-  (close)="modalVisible = false">
+  [invalidFields]="invalidFields"
+  [buttons]="modalButtons"
+  (close)="onModalClose()">
 </app-alert-modal>

@@ -320,4 +320,9 @@ export class KanbanComponent implements OnInit {
   isInvalid(field: string) {
     return this.invalidFields.includes(field); // Visszaadja, hogy a mező hibás-e
   }
+
+  closeModal() {
+    this.isModalVisible = false;
+  }
 }
+

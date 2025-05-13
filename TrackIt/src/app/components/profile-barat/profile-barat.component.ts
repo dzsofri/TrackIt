@@ -6,6 +6,8 @@ import { MessageService } from '../../services/message.service';
 import { Friend_Request } from '../../interfaces/friend_requests';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { CommonModule } from '@angular/common';
+import { User } from '../../interfaces/user';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile-barat',
@@ -18,7 +20,7 @@ export class ProfileBaratComponent {
     private api: ApiService,
     private auth: AuthService,
     private activatedRoute: ActivatedRoute,
-    private message: MessageService
+    private http: HttpClient
   ) {}
 
   friend_requests: Friend_Request[] = [];
@@ -35,6 +37,20 @@ export class ProfileBaratComponent {
   modalMessage = '';
   invalidFields: string[] = [];
 
+  imagePreviewUrl: string | null = null;
+
+  user: User = {
+      id: '',
+      name: '',
+      email: '',
+      password: '',
+      role: '',
+      pictureId: '',
+      createdAt: '',
+      confirm: ''
+  };
+
+
   id: string = "";
 
   ngOnInit(): void {
@@ -43,9 +59,35 @@ export class ProfileBaratComponent {
       if (user) {
         this.id = user.id;
         this.FriendRequest();
+        this.user.id = user.id;
+        this.fetchFriendProfilePicture(); // új metódus
       }
     });
   }
+  
+  fetchFriendProfilePicture(): void {
+    const token = localStorage.getItem('trackit');
+    if (!token) {
+      console.error('No valid token found!');
+      return;
+    }
+  
+    this.http
+      .get<{ imageUrl: string | null }>('http://localhost:3000/friends/friend-picture', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .subscribe({
+        next: (response) => {
+          this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
+        },
+        error: (error) => {
+          console.error('Error fetching friend\'s profile picture:', error);
+          this.imagePreviewUrl = '/assets/images/profileKep.png';
+        },
+      });
+  }  
 
   setActiveTab(tabName: string) {
     this.activeTab = tabName;

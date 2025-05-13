@@ -1,22 +1,41 @@
 <div class="popup-overlay">
-    <div class="popup-content">
-      <span class="close-btn" (click)="closeModal()">Mégsem</span>
-  
-      <!-- Popup tartalom -->
-      <h3 class="post-title">Új poszt</h3>
-  
-      <div class="user-info">
-        <img src="assets/avatar.png" alt="Avatar" class="avatar" />
-        <div>
-          <input type="text" placeholder="Mi jár a fejedben..." [(ngModel)]="postContent" class="post-input" />
-        </div>
-      </div>
-  
-      <div class="upload-section">
-        <button class="upload-btn">📷</button>
-      </div>
-  
-      <button class="post-button" (click)="submitPost()">Közzététel</button>
+  <div class="popup-content">
+    <div class="popup-header">
+      <span class="close-btn" (click)="closeModal()">Mégsem</span> <!-- Bezáró gomb -->
+      <h3 class="post-title">Új poszt</h3> <!-- Cím -->
     </div>
+
+    <!-- Cím mező -->
+    <div class="input-section">
+      <label for="title">Cím:</label>
+      <input [(ngModel)]="postTitle" id="title" placeholder="Cím" class="post-input" />
+    </div>
+
+    <!-- Leírás mező -->
+    <div class="input-section">
+      <label for="body">Leírás:</label>
+      <textarea [(ngModel)]="postContent" id="body" placeholder="Mi jár a fejedben..." class="post-input"></textarea>
+    </div>
+
+    <!-- Kép feltöltése -->
+    <div class="upload-section">
+      <input
+        type="file"
+        #fileInput
+        accept="image/*"
+        hidden
+        (change)="onFileSelected($event)"
+      />
+      <button class="upload-btn" (click)="fileInput.click()">📷</button>
+      <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
+
+      <!-- Előnézeti kép -->
+      <div *ngIf="imagePreviewUrl" class="image-preview">
+        <img [src]="imagePreviewUrl" alt="Előnézet" />
+      </div>
+    </div>
+
+    <!-- Beküldés gomb -->
+    <button class="post-button" (click)="submitPost()">Közzététel</button>
   </div>
-  
+</div>

@@ -1,12 +1,42 @@
-import { Router } from "express";
+import express, { Request, Response, NextFunction, Router } from "express";
 import { AppDataSource } from "../data-source";
 import { FriendRequests } from "../entities/FriendRequest";
 import { Users } from "../entities/User";
 import { tokencheck } from "../utiles/tokenUtils";
 import { Follows } from "../entities/Follow";
 import { Brackets } from "typeorm";
+import fs from 'fs';
+const path = require("path");
+import multer from "multer";
+import { UserChallenges } from "../entities/UserChallenge";
 
 const router = Router();
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      const uploadPath = path.join(__dirname, "..", "uploads"); // biztosan a gyökérben lévő uploads-ba töltsön
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+      }
+      cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+      cb(null, `${uniqueSuffix}-${file.originalname}`);
+    },
+  });
+  
+  const upload = multer({ storage });
+  
+  export const uploadsMiddleware = express.static(
+    path.join(__dirname, "..", "uploads")
+  );
+
+  const addInvalidField = (fields: string[], fieldName: string) => {
+    if (!fields.includes(fieldName)) {
+        fields.push(fieldName);
+    }
+  };
 
 // Barátkérés küldése
 router.post("/send-friendrequest", tokencheck, async (req: any, res: any) => {
@@ -130,6 +160,59 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
     }
 });
 
+router.get("/friend-picture", tokencheck, async (req: any, res: any) => {
+  try {
+      const userId = req.user.id;
+
+      if (!userId) {
+          return res.status(401).json({ message: "Unauthorized: User ID missing in token." });
+      }
+
+      const friendRequestsRepository = AppDataSource.getRepository(FriendRequests);
+
+      const friendRequests = await friendRequestsRepository.find({
+          where: { receiverId: userId, status: 'accepted' },
+      });
+
+      if (!friendRequests || friendRequests.length === 0) {
+          return res.status(404).json({ message: "No accepted friend requests found." });
+      }
+
+      const userRepository = AppDataSource.getRepository(Users);
+
+      const friendDetails = await Promise.all(
+          friendRequests.map(async (friendRequest) => {
+              const senderUser = await userRepository.findOne({
+                  where: { id: friendRequest.senderId },
+                  relations: ["picture"],
+              });
+
+              if (!senderUser) {
+                  return null;
+              }
+
+              return {
+                  senderId: senderUser.id,
+                  name: senderUser.name,
+                  imageUrl: senderUser.picture?.filename
+                      ? `http://localhost:3000/uploads/${senderUser.picture.filename}`
+                      : null,
+              };
+          })
+      );
+
+      const filteredFriendDetails = friendDetails.filter((detail) => detail !== null);
+
+      if (filteredFriendDetails.length === 0) {
+          return res.status(404).json({ message: "No sender user details found." });
+      }
+
+      return res.status(200).json(filteredFriendDetails);
+  } catch (error) {
+      console.error("Error fetching friends' profile pictures:", error);
+      return res.status(500).json({ message: "Server error." });
+  }
+}); 
 
 // Követők lekérése
 router.get("/followers", tokencheck, async (req: any, res: any) => {

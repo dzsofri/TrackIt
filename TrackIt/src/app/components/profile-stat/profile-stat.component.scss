@@ -1,28 +1,3 @@
-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-@media (max-width: 480px) {
-    header {
-        display: block;
-    }
-}
-#felhasznalo{
-    background: url('/assets/images/profileKep.png') no-repeat center/cover;
-    display: block;
-    justify-content: center;
-    align-items: center;
-    width: 70vw;
-    max-width: 150px;
-    height: 50vw;
-    max-height: 150px;
-    padding: 0.3px;
-    border-radius: 50%;
-    margin: 0 auto;
-}
 @media (max-width: 600px) {
     .NO_DATA{
         height: 100%;
@@ -76,7 +51,9 @@ html, body {
 h3{
     padding: 20px;
 }
-img, span {
+
+span {
+
     margin-right: 20px;
 }
 #statisztika-tab-pane {
@@ -91,11 +68,14 @@ img, span {
     width: 100%;
     padding: 5px;
 }
-.teljesitmeny_content3{
-    flex-direction: row;
+
+.teljesitmeny_content3 {
+    flex-direction: column;
     align-items: center;
     border-radius: 20px;
     padding: 5px;
+    gap: 10px;
+
 }
 .arany{
     display: flex;
@@ -146,14 +126,20 @@ img, span {
     background-color: #173622;
     background-image: url('/assets/images/pipa.png');
     opacity: 0.8;
+    border: 2px solid #afe631;
+    margin-right: 30px;
 }
 #elmaradt {
     background-color: rgba(255, 0, 0, 0.2);
     background-image: url('/assets/images/kereszt.png');
+    border: 2px solid #ee0000;
+    margin-right: 30px;
 }
 #teljesitve {
     background-color: #000000;
     background-image: url('/assets/images/stat.png');
+    border: 2px solid #000000;
+    margin-right: 20px;
 }
 .folyamat{
     color: #709376;
@@ -169,20 +155,33 @@ img, span {
     flex: 1 1 25%;
     max-width: 25%;
 }
+
+.teljesitmeny_content3 .teljesitmeny_text{
+    flex-direction: column;
+    height: 100px;
+    align-items: center;
+    text-align: center;
+}
+
 @media (max-width: 600px) {
     #statisztika-tab-pane h3{
         text-align: start;
     }
     .teljesitmeny_box1 {
-        width: 300px;
+        width: 100%;
         margin: 0 auto;
     }
     .teljesitmeny_box3 {
         flex-direction: row;
     }
     .teljesitmeny_content3 {
-        flex-direction: row;
-        gap: 30px;
+
+        flex-direction: column;
+        align-items: center;
+        border-radius: 20px;
+        padding: 5px;
+        gap: 10px;
+
     }
     .teljesitmeny_content3 .teljesitmeny_text{
         flex-direction: column;
@@ -218,8 +217,12 @@ img, span {
     }
     .teljesitmeny_content3 {
         flex-direction: column;
-        gap: 10px;
+
         align-items: center;
+        border-radius: 20px;
+        padding: 5px;
+        gap: 10px;
+
     }
     .teljesitmeny_box1, .teljesitmeny_box2, .teljesitmeny_box3 {
         width: 65%;
@@ -258,6 +261,14 @@ img, span {
         flex: 1 1 25%;
         max-width: 25%;
     }
+
+    .teljesitmeny_content3 .teljesitmeny_text{
+        flex-direction: column;
+        height: 150px;
+        align-items: center;
+        text-align: center;
+    }
+
 }
 @media (max-width: 1024px) {
     .teljesitmeny_text{

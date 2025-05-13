@@ -1,0 +1,40 @@
+<div class="mt-3 mb-5">
+    <header>
+        <h1>Kihívások oldal</h1>
+    </header>
+  </div>
+  
+  <div class="col-12 col-xs-12 col-sm-12 col-md-10 col-lg-12">
+      <ul class="nav nav-tabs">
+          <li class="nav-item" role="presentation">
+              <button 
+              class="nav-link active" 
+              [class.active]="activeTab === 'sajat_kihivasok'"
+              (click)="setActiveTab('sajat_kihivasok')"
+            >Saját kihívások</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button 
+            class="nav-link active" 
+            [class.active]="activeTab === 'folyamatbanLevo_kihivasok'"
+            (click)="setActiveTab('folyamatbanLevo_kihivasok')"
+          >Folyamatban lévő kihívások</button>
+        </li>
+      </ul>
+  </div>
+  
+  <div class="tab-content" id="myTabContent">
+      <div class="tab-pane show active" [class.d-none]="activeTab !== 'sajat_kihivasok'" id="sajat_kihivasok-tab-pane" role="tabpanel" aria-labelledby="sajat_kihivasok-tab" tabindex="0">
+          <app-sajat-kihivas></app-sajat-kihivas>
+      </div>
+      <div class="tab-pane show active" [class.d-none]="activeTab !== 'folyamatbanLevo_kihivasok'" id="folyamatbanLevo_kihivasok-tab-pane" role="tabpanel" aria-labelledby="folyamatbanLevo_kihivasok-tab" tabindex="0">
+        <app-folyamatban-levo-kihivas></app-folyamatban-levo-kihivas>
+    </div>
+  </div>
+  
+  <app-alert-modal 
+    [visible]="modalVisible" 
+    [type]="modalType" 
+    [message]="modalMessage"
+    (close)="modalVisible = false">
+  </app-alert-modal>

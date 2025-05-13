@@ -31,6 +31,7 @@ export class ProfileStatComponent {
   user_challenges: User_Challenge[] = [];
   currentUserId: string | null = null;
   userNames: { [key: string]: string } = {};
+  allChallengesCompleted: boolean = false;
 
   // Default user
   user: User = {
@@ -91,6 +92,7 @@ export class ProfileStatComponent {
               return;
             }
             this.user_challenges = res;
+            this.allChallengesCompleted = this.user_challenges.every(challenge => challenge.completedAt != null);
             this.totalProgressPercentage = Math.round(this.user_challenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0));
             this.weeklyProgressPercentage = Math.round(this.calculateWeeklyProgress(this.user_challenges));
             this.monthlyProgressPercentage = Math.round(this.calculateMonthlyProgress(this.user_challenges));

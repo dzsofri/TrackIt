@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReminderService } from '../../services/reminder.service';
 
 @Component({
   selector: 'app-login',
@@ -25,85 +26,105 @@ export class LoginComponent {
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
   invalidFields: string[] = [];
+  reminderMessage: string | null = null;
+  modalButtons: { label: string, action: () => void, class?: string }[] = [];
 
   constructor(
     private api: ApiService,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private reminderService: ReminderService
   ) {}
+
+  private formatDateToYYYYMMDD(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
+  private checkReminder(reminderAt: string): boolean {
+    const reminderDate = this.formatDateToYYYYMMDD(new Date(reminderAt));
+    const currentDate = this.formatDateToYYYYMMDD(new Date());
+    return reminderDate === currentDate;
+  }
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
-  // Feltételezve, hogy van egy gomb a státusz frissítésére
-updateUserStatus(newStatus: string): void {
-  this.api.updateStatus(newStatus).subscribe(response => {
-    if (response.message === 'Státusz sikeresen frissítve.') {
-      console.log('Státusz sikeresen frissítve');
-    } else {
-      console.error('Hiba történt a státusz frissítésekor', response.message);
-    }
-  });
-}
-
-
   onSubmit() {
-    this.invalidFields = []; // Reset the invalid fields
-
-    // API kérés
+    this.invalidFields = [];
+  
     this.api.login(this.user.email, this.user.password).subscribe({
       next: (res: any) => {
-        // Ellenőrizzük, hogy van-e "invalid" mező
         this.invalidFields = res.invalid || [];
         console.log('API válasza:', res);
-
-        // Ha nincs hibás mező
+  
         if (this.invalidFields.length === 0) {
           if (res.token) {
-            // Ha van érvényes token
             this.auth.login(res.token);
-
-            // Modal beállítása sikeres bejelentkezéshez
-            this.modalMessage = res.message || 'Sikeres bejelentkezés!';
+  
+            const reminderAt = res.user?.reminderAt || null;
+            const shouldShowReminder = reminderAt && this.checkReminder(reminderAt);
+  
+            this.modalMessage = 'Sikeres bejelentkezés!';
             this.modalType = 'success';
+            this.modalButtons = [];
             this.modalVisible = true;
-
-            this.updateUserStatus("online");
-
+  
             setTimeout(() => {
               this.modalVisible = false;
-              this.router.navigateByUrl('/profile'); // Redirect to profile page
-            }, 2000);
+              this.router.navigateByUrl('/feed');
+            
+              if (shouldShowReminder) {
+                this.reminderService.showReminder(
+                  "Felezd be a megmaradt kihívásaidat, mielőtt lejár a kihívásra szánt idő. Ne feledd, a határidő közeleg!"
+                );
+              }
+            }, 5000);
+  
           } else {
-            // Ha nem érkezik token a válaszban
             this.modalMessage = res.message || 'Hiba történt a bejelentkezés során!';
             this.modalType = 'error';
             this.modalVisible = true;
-            this.invalidFields = this.invalidFields;
           }
         } else {
-          // Ha vannak hibás mezők
-          console.log('HIBA:', res.message);
-
-          // Modal beállítása a hibás mezők listájával
-          this.modalMessage = 'Hibás bejelentkezési adatok! Kérjük ellenőrizze a következő mezőket: ';
-          this.modalType = 'error'; // Hibás bejelentkezési adatok esetén error
+          this.modalMessage = 'Hibás bejelentkezési adatok!';
+          this.modalType = 'error';
           this.modalVisible = true;
-          this.invalidFields = this.invalidFields;
         }
       },
       error: (err) => {
-        // API hiba esetén
         this.modalMessage = err.error?.message || 'Ismeretlen hiba történt!';
         this.modalType = 'error';
         this.modalVisible = true;
-        this.invalidFields = this.invalidFields;
       }
     });
   }
+  
+  showReminderModal(reminderMessage: string) {
+    this.modalMessage = reminderMessage;
+    this.modalType = 'info';
+    this.modalButtons = [
+      {
+        label: 'OK',
+        action: () => {
+          this.onModalClose();
+        },
+        class: 'btn-primary'
+      }
+    ];
+    this.modalVisible = true;
+  }
+  
+  onModalClose() {
+    this.modalVisible = false;
+  }
 
-  isInvalid(field: string) {
-    return this.invalidFields.includes(field); // Visszaadja, hogy a mező hibás-e
+  autoCloseModal() {
+    setTimeout(() => {
+      this.modalVisible = false;
+    }, 5000);
   }
 }

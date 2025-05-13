@@ -11,8 +11,12 @@ import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
 import { ChatComponent } from './components/chat/chat.component';
+
 import { HaviPlannerComponent } from './components/havi-planner/havi-planner.component';
 import { HaviPlannerKezeloComponent } from './components/havi-planner-kezelo/havi-planner-kezelo.component';
+import { FeedComponent } from './components/feed/feed.component';
+import { ChallengeComponent } from './components/challenge/challenge.component';
+import { TrackerComponent } from './components/tracker/tracker.component';
 
 export const routes: Routes = [
   {
@@ -75,8 +79,25 @@ export const routes: Routes = [
   },
 
 
-
-
+  
+  {
+    path: 'feed',
+    component: FeedComponent, // <-- Ezt adtuk hozzá
+    canActivate: [AuthGuard], // Opcionális, ha bejelentkezés kell
+    data: { label: 'Feed', icon: '/assets/icons/feed_logo.png' }
+  },
+  {
+    path: 'challenge',
+    component: ChallengeComponent,
+    canActivate: [AuthGuard],
+    data: { label: 'Kihívások', icon: '/assets/icons/feed_logo.png' }
+  },
+  {
+    path: 'tracker', // <<< ÚJ TRACKER ROUTE
+    component: TrackerComponent,
+    canActivate: [AuthGuard],
+    data: { label: 'Tracker', icon: '/assets/icons/track.png' } // Tetszés szerint módosítható
+  },
   {
     path: '',
     redirectTo: 'login',
