@@ -36,6 +36,7 @@ export class ProfileBaratComponent {
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
   invalidFields: string[] = [];
+
   imagePreviewUrl: string | null = null;
 
   user: User = {
@@ -48,6 +49,7 @@ export class ProfileBaratComponent {
       createdAt: '',
       confirm: ''
   };
+
 
   id: string = "";
 
@@ -66,26 +68,36 @@ export class ProfileBaratComponent {
   fetchFriendProfilePicture(): void {
     const token = localStorage.getItem('trackit');
     if (!token) {
-      console.error('No valid token found!');
-      return;
+        console.error('No valid token found!');
+        return;
     }
-  
+
     this.http
-      .get<{ imageUrl: string | null }>('http://localhost:3000/friends/friend-picture', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .subscribe({
-        next: (response) => {
-          this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
-        },
-        error: (error) => {
-          console.error('Error fetching friend\'s profile picture:', error);
-          this.imagePreviewUrl = '/assets/images/profileKep.png';
-        },
-      });
-  }  
+        .get<{ senderId: number; name: string; imageUrl: string | null }[]>(
+            'http://localhost:3000/friends/friend-picture',
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        .subscribe({
+            next: (response) => {
+                response.forEach((friend) => {
+                    this.senderNames[friend.senderId] = friend.name || 'Ismeretlen felhasználó';
+                    const friendImage = friend.imageUrl || '/assets/images/profileKep.png';
+                    this.friend_requests.forEach((request) => {
+                        if (request.senderId === friend.senderId) {
+                            request['imageUrl'] = friendImage;
+                        }
+                    });
+                });
+            },
+            error: (error) => {
+                console.error("Error fetching friends' profile pictures:", error);
+            },
+        });
+  } 
 
   setActiveTab(tabName: string) {
     this.activeTab = tabName;

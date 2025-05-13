@@ -55,9 +55,6 @@ html, body {
 .tab-content{
     width: 0 auto;
 }
-img {
-    margin-right: 20px;
-}
 span{
     margin-right: 20px;
     margin-left: 20px;
@@ -257,6 +254,11 @@ span{
     border: none;
     font-weight: bolder;
     font-size: medium;
+    background-color: transparent;
+}
+.details{
+    color: gray;
+    font-weight: bold;
 }
 @media screen and (max-width: 1200px) {
     .jelveny_item {
