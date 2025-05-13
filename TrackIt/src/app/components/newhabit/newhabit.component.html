@@ -1,0 +1,20 @@
+<div class="popup-overlay">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h2 class="post-title">Új szokás létrehozása</h2>
+      <button class="close-btn" (click)="closePopup()">✕</button>
+    </div>
+
+    <label>Szokás neve:</label>
+    <input
+      type="text"
+      [(ngModel)]="newHabitName"
+      placeholder="Pl. Futás"
+      class="post-input"
+    />
+
+    <button class="post-button" (click)="createHabit()">
+      Szokás létrehozása
+    </button>
+  </div>
+</div>

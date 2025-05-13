@@ -9,27 +9,28 @@
 
 
     <label>
-      <input type="checkbox" [(ngModel)]="completed" />
-      Teljesítetted a napi célt?
-    </label>
+  <input type="checkbox" [(ngModel)]="completed" [disabled]="selectedHabit?.status !== 'active'" />
+  Teljesítetted a napi célt?
+</label>
 
-    <label for="value">Érték:</label>
-    <input type="number" [(ngModel)]="value" placeholder="Pl. 2.5" />
+<label for="value">Érték:</label>
+<input type="number" [(ngModel)]="value" placeholder="Pl. 2.5" [disabled]="selectedHabit?.status !== 'active'" />
 
-    <label for="unit">Mértékegység:</label>
-    <select [(ngModel)]="unit">
-      <option *ngFor="let u of units" [value]="u">{{ u }}</option>
-    </select>
+<label for="unit">Mértékegység:</label>
+<select [(ngModel)]="unit" [disabled]="selectedHabit?.status !== 'active'">
+  <option *ngFor="let u of units" [value]="u">{{ u }}</option>
+</select>
 
-    <label for="startDate">Kezdődátum:</label>
-    <input type="date" [(ngModel)]="startDate" />
+<label for="startDate">Kezdődátum:</label>
+<input type="date" [(ngModel)]="startDate" [disabled]="selectedHabit?.status !== 'active'" />
 
-    <label for="interval">Napok száma:</label>
-    <input type="number" [(ngModel)]="intervalDays" placeholder="Pl. 7" />
+<label for="interval">Napok száma:</label>
+<input type="number" [(ngModel)]="intervalDays" placeholder="Pl. 7" [disabled]="selectedHabit?.status !== 'active'" />
 
-
-    <button (click)="submit()">Felvétel</button>
+<!-- Submit gomb is legyen tiltva -->
+<button (click)="submit()" [disabled]="selectedHabit?.status !== 'active'">Felvétel</button>
     <button *ngIf="selectedHabit && selectedHabit.status !== 'active'" (click)="activateHabit()">Aktiválás</button>
+    <button (click)="isPopupOpen = true">Új szokás létrehozása</button>
 
 
   </div>
@@ -69,3 +70,12 @@
     </div>
   </div>
 </div>
+
+<app-newhabit
+  *ngIf="isPopupOpen"
+  [userId]="user.id"
+  [units]="units"
+  (habitCreated)="handleNewHabit($event)"
+  (close)="closeNewHabitModal()">
+</app-newhabit>
+

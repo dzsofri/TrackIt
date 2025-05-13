@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { CustomtrackerComponent } from '../customtracker/customtracker.component';
 
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
+import { NewhabitComponent } from '../newhabit/newhabit.component';
 
 interface CalendarEvent {
   id?: string;
@@ -25,7 +26,8 @@ interface CalendarEvent {
 
 @Component({
   selector: 'app-tracker',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, NewhabitComponent],
   templateUrl: './tracker.component.html',
   styleUrl: './tracker.component.scss'
 })
@@ -52,6 +54,7 @@ export class TrackerComponent {
   touchStartX: number = 0;
   startDate: string = new Date().toISOString().split('T')[0];
   intervalDays: number = 1;
+ isPopupOpen: boolean = false; // Hozzáadva az állapot a modális ablakhoz
 
 
 
@@ -69,7 +72,13 @@ export class TrackerComponent {
 
   selectedHabit: { id: string, habitName: string, status: string } | null = null;
 
+openNewHabitModal() {
+    this.isPopupOpen = true;
+  }
 
+  closeNewHabitModal() {
+    this.isPopupOpen = false;
+  }
 
   
   ngOnInit(): void {
@@ -194,6 +203,9 @@ onHabitChange(): void {
   let successCount = 0;
   let errorCount = 0;
 
+
+
+
   payloads.forEach((payload, index) => {
     this.api.saveHabitEntry(payload).subscribe({
       next: () => {
@@ -213,6 +225,18 @@ onHabitChange(): void {
         }
       }
     });
+  });
+}
+
+handleNewHabit(event: { habit: any }): void {
+  this.api.createHabit(event.habit).subscribe({
+    next: (res) => {
+      this.habitList.push(res.habit);
+      // opcionálisan ide jöhet visszajelzés vagy modal megjelenítése
+    },
+    error: () => {
+      // ide jöhet hiba visszajelzés
+    }
   });
 }
 
