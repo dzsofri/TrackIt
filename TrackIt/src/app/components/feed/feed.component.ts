@@ -24,7 +24,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit {
-  posts: any[] = []; // A posztok tárolása
+  posts: any[] = [];
 
   constructor(
     private apiService: ApiService,
@@ -44,17 +44,20 @@ export class FeedComponent implements OnInit {
   userNames: { [key: string]: string } = {};
 
   id: string = '';
-
   user: User = {
-      id: '',
-      name: '',
-      email: '',
-      password: '',
-      role: '',
-      pictureId: '',
-      createdAt: '',
-      confirm: ''
+    id: '',
+    name: '',
+    email: '',
+    password: '',
+    role: '',
+    pictureId: '',
+    createdAt: '',
+    confirm: ''
   };
+
+  // --- Poszt szerkesztéshez szükséges új mezők ---
+  selectedPost: any = null;
+  editModalVisible: boolean = false;
 
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.params['id'];
@@ -113,5 +116,24 @@ export class FeedComponent implements OnInit {
   onModalClose() {
     this.modalVisible = false;
     this.reminderService.clearReminder();
+  }
+
+  // === 💬 POSZT SZERKESZTÉS LOGIKA ===
+
+  editPost(post: any) {
+    this.selectedPost = post;
+    this.editModalVisible = true;
+  }
+
+  handleModalClose() {
+    this.editModalVisible = false;
+    this.selectedPost = null;
+  }
+
+  handlePostUpdate(updatedPost: any) {
+    const index = this.posts.findIndex(p => p.id === updatedPost.id);
+    if (index !== -1) {
+      this.posts[index] = updatedPost;
+    }
   }
 }

@@ -1,0 +1,41 @@
+<div class="modal-overlay" *ngIf="visible">
+  <div class="modal-content">
+    <button class="close-btn" (click)="closeModal()">
+      <img src="assets/icons/budos_nagy_x.png" alt="Bezárás">
+    </button> <!-- X gomb a jobb felső sarokban -->
+    <h2>
+      <img src="assets/icons/planner_logo.png" alt="Naptár ikon" class="header-icon"> Nap részletei
+    </h2>
+
+    <div class="modal-scroll-area">
+      <div *ngIf="day">
+        <p><strong>Dátum:</strong> {{ day.date }}</p>
+
+        <div *ngIf="day.dots?.length > 0; else noEvents">
+          <h3 class="section-title">Események:</h3>
+          <ul class="event-list">
+            <li *ngFor="let event of day.dots">
+              <div class="event-header">
+                <span class="color-dot" [style.backgroundColor]="event.color"></span>
+                <strong>{{ event.title }}</strong>
+              </div>
+              <div class="event-details">
+                <p *ngIf="event.description"><strong>Leírás:</strong> {{ event.description }}</p>
+                <p><strong>Kezdés:</strong> {{ event.eventStart | date:'yyyy.MM.dd HH:mm' }}</p>
+                <p><strong>Befejezés:</strong> {{ event.eventEnd | date:'yyyy.MM.dd HH:mm' }}</p>
+                <div class="actions">
+                </div>                
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <ng-template #noEvents>
+          <p class="no-events">
+            Nincs esemény ezen a napon.  <img src="assets/icons/happy.png" alt="Nincs esemény" class="empty-icon">
+          </p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
