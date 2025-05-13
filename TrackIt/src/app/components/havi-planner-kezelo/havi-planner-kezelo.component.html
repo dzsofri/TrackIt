@@ -35,49 +35,56 @@
 
   <!-- Események listája -->
   <div class="event-list-view">
-    <div *ngFor="let event of filteredEvents" class="event-item" [ngClass]="{'editing': event.editing}">
-      <div class="event-content">
-        <!-- Megjelenítés -->
-        <div class="event-info" *ngIf="!event.editing">
-          <div class="event-title">{{ event.title }}</div>
-          <div class="event-time">{{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}</div>
-        </div>
-
-        <!-- Szerkesztés -->
-        <div class="event-info" *ngIf="event.editing">
-          <input [(ngModel)]="event.title" class="event-input" />
-          <input type="datetime-local" [(ngModel)]="event.startTime" class="event-input" />
-          <input type="datetime-local" [(ngModel)]="event.endTime" class="event-input" />
-        </div>
-
-        <!-- Gombok -->
-        <div class="edit-buttons">
-          <button *ngIf="!event.editing" (click)="onEdit(event)" class="simple-button">
-
-            Szerkesztés
-          </button>
-          <button (click)="deleteEvent(event)" class="cancel simple-button">
-
-            Törlés
-          </button>
-          <ng-container *ngIf="event.editing">
-            <button (click)="saveEvent(event)" class="save simple-button">
-
-              Mentés
-            </button>
-            <button (click)="cancelEdit(event)" class="cancel simple-button">
-
-              Mégse
-            </button>
-          </ng-container>
-        </div>
+ <div *ngFor="let event of filteredEvents" class="event-item" [ngClass]="{'editing': event.editing}">
+  <div class="event-content">
+    <!-- Megjelenítés -->
+    <div class="event-info" *ngIf="!event.editing">
+      <div class="event-header">
+        <div class="event-title">{{ event.title }}</div>
+        <div class="color-indicator" [style.background]="event.color" title="Esemény színe"></div>
       </div>
+      <div class="event-time">{{ event.startTime | date: 'short' }} – {{ event.endTime | date: 'short' }}</div>
+      <div class="event-description">{{ event.description }}</div>
+    </div>
+
+    <!-- Szerkesztés -->
+    <div class="event-info" *ngIf="event.editing">
+      <div class="color-picker-wrapper">
+        <label for="eventColor">Szín:</label>
+        <p-colorpicker id="eventColor" [(ngModel)]="event.color" inputId="cp-hex" class="custom-colorpicker"></p-colorpicker>
+      </div>
+
+      <input [(ngModel)]="event.title" class="event-input" placeholder="Esemény címe" />
+      <input type="datetime-local" [(ngModel)]="event.startTime" class="event-input" />
+      <input type="datetime-local" [(ngModel)]="event.endTime" class="event-input" />
+      <textarea [(ngModel)]="event.description" class="event-input" placeholder="Esemény leírása"></textarea>
+    </div>
+
+    <!-- Gombok -->
+    <div class="edit-buttons">
+      <button *ngIf="!event.editing" (click)="onEdit(event)" class="simple-button">
+        Szerkesztés
+      </button>
+      <button *ngIf="!event.editing" (click)="deleteEvent(event)" class="cancel simple-button">
+        Törlés
+      </button>
+      <ng-container *ngIf="event.editing">
+        <button (click)="saveEvent(event)" class="save simple-button">
+          Mentés
+        </button>
+        <button (click)="cancelEdit(event)" class="cancel simple-button">
+          Mégse
+        </button>
+      </ng-container>
     </div>
   </div>
 </div>
 
+  </div>
+</div>
+
 <!-- Keresősáv (fixen a jobb oldalon) -->
-<div class="search-sidebar">
+<div class="search-sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed }">
   <!-- Élő kereső -->
   <div class="search-input-wrapper">
     <img src="assets/icons/search.png" alt="Keresés ikon" class="button-icon" />
@@ -105,4 +112,16 @@
       <small>{{ result.startTime | date: 'short' }}</small>
     </div>
   </div>
+
+  <!-- Toggle Button -->
+  <button class="toggle-sidebar" (click)="toggleSidebar()">☰</button>
 </div>
+
+<!-- Figyelmeztető modal -->
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
+  [invalidFields]="invalidFields"
+  [message]="modalMessage"
+  (close)="modalVisible = false">
+</app-alert-modal>

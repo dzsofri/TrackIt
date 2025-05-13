@@ -311,7 +311,7 @@ getEventByUserId(userId: string): Observable<any> {
 }
 
 
-updateEvent(id: string, data: { title?: string; description?: string; startTime?: string; endTime?: string }): Observable<any> {
+updateEvent(id: string, data: { title?: string; description?: string; startTime?: string; endTime?: string; color?: string }): Observable<any> {
   return this.http.put<any>(`${this.server}/events/${id}`, data, this.tokenHeader()).pipe(
     catchError(error => {
       console.error('Error updating event:', error);
@@ -319,6 +319,7 @@ updateEvent(id: string, data: { title?: string; description?: string; startTime?
     })
   );
 }
+
 
 deleteEvent(id: string): Observable<any> {
   return this.http.delete<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(

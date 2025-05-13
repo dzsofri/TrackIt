@@ -38,6 +38,11 @@
       <button class="simple-button" (click)="toggleSelectMode()">
         {{ selectMode ? 'Kijelölés bezárása' : 'Kijelölés mód' }}
       </button>
+      <!-- Csak kijelölési módban látszódik -->
+<button class="simple-button" *ngIf="selectMode" (click)="toggleSelectAll()">
+  {{ allSelected ? 'Összes kijelölés törlése' : 'Összes kijelölése' }}
+</button>
+
       <!-- Tömeges törlés gomb csak kijelölési módban -->
 <button class="simple-button danger" *ngIf="selectMode" (click)="deleteSelectedEvents()">
   Kijelölt események törlése
@@ -55,7 +60,8 @@
 
           <!-- Kijelölő checkbox -->
           <label *ngIf="selectMode" class="checkbox-wrapper event-checkbox">
-            <input type="checkbox" class="event-checkbox" [(ngModel)]="event.selected" />
+           <input type="checkbox" class="event-checkbox" [(ngModel)]="event.selected" (change)="updateSelectAllState()" />
+
             <span class="event-checkbox"></span>
           </label>
 

@@ -66,6 +66,17 @@ export class HaviPlannerComponent {
     this.initializeUser();
   }
 
+allSelected: boolean = false;
+
+toggleSelectAll() {
+  this.allSelected = !this.allSelected;
+  this.eventss.forEach(event => event.selected = this.allSelected);
+}
+updateSelectAllState() {
+  this.allSelected = this.eventss.every(event => event.selected);
+}
+
+
   private initializeUser() {
     const user = this.authService.loggedUser();
     this.userId = user?.id;
