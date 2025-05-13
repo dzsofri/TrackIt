@@ -154,51 +154,57 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
 });
 
 router.get("/friend-picture", tokencheck, async (req: any, res: any) => {
-    try {
+  try {
       const userId = req.user.id;
-  
+
       if (!userId) {
-        return res.status(401).json({ message: "Unauthorized: User ID missing in token." });
+          return res.status(401).json({ message: "Unauthorized: User ID missing in token." });
       }
-  
+
       const friendRequestsRepository = AppDataSource.getRepository(FriendRequests);
-  
-      const friendRequest = await friendRequestsRepository.findOne({
-        where: { receiverId: userId },
+
+      const friendRequests = await friendRequestsRepository.find({
+          where: { receiverId: userId, status: 'accepted' },
       });
-  
-      if (!friendRequest) {
-        return res.status(404).json({ message: "No accepted friend request found." });
+
+      if (!friendRequests || friendRequests.length === 0) {
+          return res.status(404).json({ message: "No accepted friend requests found." });
       }
-  
+
       const userRepository = AppDataSource.getRepository(Users);
-      const senderUser = await userRepository.findOne({
-        where: { id: friendRequest.senderId },
-        relations: ["picture"],
-      });
-  
-      if (!senderUser) {
-        return res.status(404).json({ message: "Sender user not found." });
+
+      const friendDetails = await Promise.all(
+          friendRequests.map(async (friendRequest) => {
+              const senderUser = await userRepository.findOne({
+                  where: { id: friendRequest.senderId },
+                  relations: ["picture"],
+              });
+
+              if (!senderUser) {
+                  return null;
+              }
+
+              return {
+                  senderId: senderUser.id,
+                  name: senderUser.name,
+                  imageUrl: senderUser.picture?.filename
+                      ? `http://localhost:3000/uploads/${senderUser.picture.filename}`
+                      : null,
+              };
+          })
+      );
+
+      const filteredFriendDetails = friendDetails.filter((detail) => detail !== null);
+
+      if (filteredFriendDetails.length === 0) {
+          return res.status(404).json({ message: "No sender user details found." });
       }
-  
-      const imageUrl = senderUser.picture?.filename
-        ? `http://localhost:3000/uploads/${senderUser.picture.filename}`
-        : null;
-  
-      return res.status(200).json({
-        imageUrl,
-        picture: senderUser.picture
-          ? {
-              id: senderUser.picture.id,
-              filename: senderUser.picture.filename,
-              path: senderUser.picture.path,
-            }
-          : null,
-      });
-    } catch (error) {
-      console.error("Error fetching friend's profile picture:", error);
+
+      return res.status(200).json(filteredFriendDetails);
+  } catch (error) {
+      console.error("Error fetching friends' profile pictures:", error);
       return res.status(500).json({ message: "Server error." });
-    }
+  }
 });  
 
 // Követők lekérése

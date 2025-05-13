@@ -7,4 +7,5 @@ export interface Friend_Request {
     status: string;
     sender?: User;
     receiver?: User;
+    imageUrl?: string;
 }
