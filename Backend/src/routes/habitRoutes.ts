@@ -33,35 +33,49 @@ router.get("/:userId", tokencheck, async (req: any, res: any) => {
 
 
 
-// POST /habits - új szokás létrehozása
-router.post("/", tokencheck, async (req: any, res: any) => {
-  try {
-    const { habitId, value, achieved, date } = req.body;
 
-    if (!habitId || !date) {
+// POST /habits/trackings - új habit tracking létrehozása
+router.post("/:habitId/habit_trackings", tokencheck, async (req: any, res: any) => {
+  try {
+    const { habitId } = req.params;  // A habitId az URL paraméterben jön
+    const { value, achieved, date } = req.body;  // A szokás adatai a kérés testjében
+
+    // Ellenőrizzük a kötelező mezőket
+    if (!value || achieved === undefined || !date) {
       return res.status(400).json({ message: "Hiányzó kötelező mezők!" });
     }
 
+    // Szokás lekérdezése
     const habitRepo = AppDataSource.getRepository(Habits);
-    const trackingRepo = AppDataSource.getRepository(HabitTrackings);
-
     const habit = await habitRepo.findOne({ where: { id: habitId } });
-    if (!habit) return res.status(404).json({ message: "Szokás nem található." });
 
+    if (!habit) {
+      return res.status(404).json({ message: "Szokás nem található." });
+    }
+
+    // Új tracking rekord létrehozása
+    const trackingRepo = AppDataSource.getRepository(HabitTrackings);
     const tracking = trackingRepo.create({
       habit,
       value,
       achieved,
-      date
+      date,
     });
 
+    // Tracking mentése az adatbázisba
     await trackingRepo.save(tracking);
-    return res.status(201).json({ message: "Tracking sikeresen elmentve!" });
+
+    return res.status(201).json({
+      message: "Szokás nyilvántartás sikeresen elmentve!",
+      tracking,
+    });
   } catch (error) {
-    console.error("Tracking mentési hiba:", error);
-    return res.status(500).json({ message: "Szerverhiba történt." });
+    console.error("Hiba a szokás nyilvántartás mentésekor:", error);
+    return res.status(500).json({ message: "Szerverhiba történt a nyilvántartás mentésekor." });
   }
 });
+
+
 
 // PUT /habits/:habitId/status - szokás státuszának frissítése
 router.put("/:habitId/status", tokencheck, async (req: any, res: any) => {

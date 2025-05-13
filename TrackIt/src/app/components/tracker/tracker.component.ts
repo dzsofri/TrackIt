@@ -23,6 +23,8 @@ interface CalendarEvent {
   days?: number[]; // <-- Added days property
 }
 
+let successCount = 0;  // változtasd `const`-ot `let`-re
+let errorCount = 0;    // változtasd `const`-ot `let`-re
 
 @Component({
   selector: 'app-tracker',
@@ -40,6 +42,8 @@ export class TrackerComponent {
     private http: HttpClient
   ) {}
 
+
+  
   completed: boolean = false;
   value: number | null = null;
   unit: string = 'liter';
@@ -182,7 +186,7 @@ onHabitChange(): void {
   }
 
   // ✅ Validációs blokk
-  if (this.value === null || !this.unit || !this.startDate || this.intervalDays <= 0) {
+  if (this.value === null || !this.startDate || this.intervalDays <= 0) {
     this.modalMessage = 'Kérlek, tölts ki minden mezőt!';
     this.modalType = 'warning';
     this.modalVisible = true;
@@ -190,49 +194,45 @@ onHabitChange(): void {
   }
 
   const start = new Date(this.startDate);
-  const payloads = [];
+  let successCount = 0;  // Használj `let`-et, nem `const`-ot
+  let errorCount = 0;    // Használj `let`-et, nem `const`-ot
 
   // Generáljuk a szükséges napi bejegyzéseket
   for (let i = 0; i < this.intervalDays; i++) {
     const currentDate = new Date(start);
     currentDate.setDate(start.getDate() + i);
 
-    const payload = {
-      habitName: this.selectedHabit.habitName, // hozzáadjuk a szokás nevét
-      completed: this.completed,               // a teljesítés állapota
-      value: this.value,                       // a bejegyzett érték
-      unit: this.unit,                         // mértékegység
-      date: currentDate.toISOString().split('T')[0], // ISO formátumú dátum
-      userId: this.id                          // a felhasználó ID-ja
-    };
-
-    payloads.push(payload);
+    // Közvetlenül az objektumot generáljuk és küldjük el a megfelelő mezőkkel
+    this.api.addHabitTrackingRecord({
+  habitId: this.selectedHabit.id,
+  achieved: this.completed,
+  value: this.value,
+  date: currentDate.toISOString().split('T')[0],
+}).subscribe({
+  next: (res) => {
+    successCount++;
+    console.log('Sikeres mentés:', res);
+    if (successCount + errorCount === this.intervalDays) {
+      this.modalMessage = `Sikeresen elmentve ${successCount} napra!`;
+      this.modalType = 'success';
+      this.modalVisible = true;
+    }
+  },
+  error: (err) => {
+    errorCount++;
+    console.error('Hiba történt a mentéskor:', err);
+    if (successCount + errorCount === this.intervalDays) {
+      this.modalMessage = `Mentés során ${errorCount} hiba történt.`;
+      this.modalType = 'error';
+      this.modalVisible = true;
+    }
   }
-
-  let successCount = 0;
-  let errorCount = 0;
-
-  payloads.forEach((payload) => {
-    this.api.saveHabitEntry(payload).subscribe({
-      next: () => {
-        successCount++;
-        if (successCount + errorCount === payloads.length) {
-          this.modalMessage = `Sikeresen elmentve ${successCount} napra!`;
-          this.modalType = 'success';
-          this.modalVisible = true;
-        }
-      },
-      error: () => {
-        errorCount++;
-        if (successCount + errorCount === payloads.length) {
-          this.modalMessage = `Mentés során ${errorCount} hiba történt.`;
-          this.modalType = 'error';
-          this.modalVisible = true;
-        }
-      }
-    });
-  });
+});
+  }
 }
+
+
+
 
 
 

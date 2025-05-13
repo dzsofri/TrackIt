@@ -372,18 +372,20 @@ deletePost(postId: string): Observable<any> {
 }
 
 addHabitTrackingRecord(data: {
-  date: string,
-  achieved: boolean,
-  value: number,
-  habitId: string
+  habitId: string;
+  value: number;
+  achieved: boolean;
+  date: string;
 }): Observable<any> {
-  return this.http.post<any>(`${this.server}/habit_tracker`, data, this.tokenHeader()).pipe(
+  return this.http.post<any>(`${this.server}/habits/${data.habitId}/habit_trackings`, data, this.tokenHeader()).pipe(
     catchError(error => {
       console.error('Hiba a szokás mentésekor:', error);
       return of({ message: 'Szokás mentése sikertelen' });
     })
   );
 }
+
+
 
 createHabit(habitData: {
   habitName: string;
@@ -412,18 +414,7 @@ getHabitsForUser(userId: string, token: string) {
 
 
 
-
-  saveHabitEntry(entry: {
-    habitName: string;
-    completed: boolean;
-    value: number | null;
-    unit: string;
-    date: string;
-    userId: string;
-  }): Observable<any> {
-    return this.http.post(`${this.server}/habits`, entry);
-  }
-
+// Habit status (active, inactive)
 updateHabitStatus(payload: { habitName: string, status: string, userId: string, habitId?: string }): Observable<any> {
   const baseUrl = 'http://localhost:3000'; // A backend API URL-je
   const token = localStorage.getItem('trackit');

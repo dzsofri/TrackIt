@@ -10,6 +10,7 @@ export class HabitTrackings {
     @JoinColumn({ name: "habitId" })
     habit: Habits;
 
+    
     @CreateDateColumn()
     date: Date;
 
