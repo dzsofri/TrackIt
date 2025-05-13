@@ -3,6 +3,7 @@ import { AppDataSource } from "../data-source";
 import { Habits } from "../entities/Habit";
 import { tokencheck } from "../utiles/tokenUtils";
 import { v4 as uuidv4 } from "uuid";
+import { HabitTrackings } from "../entities/HabitTracking";
 const jwt = require('jsonwebtoken');
 
 const router = Router();
@@ -35,42 +36,30 @@ router.get("/:userId", tokencheck, async (req: any, res: any) => {
 // POST /habits - új szokás létrehozása
 router.post("/", tokencheck, async (req: any, res: any) => {
   try {
-    const { habitName, targetValue, currentValue, frequency, userId } = req.body;
+    const { habitId, value, achieved, date } = req.body;
 
-    const invalidFields: string[] = [];
-
-    if (!habitName) invalidFields.push("habitName");
-    if (!targetValue && targetValue !== 0) invalidFields.push("targetValue");
-    if (!frequency) invalidFields.push("frequency");
-    if (!userId) invalidFields.push("userId");
-
-    if (invalidFields.length) {
-      return res.status(400).json({
-        message: "Hiányzó kötelező mezők!",
-        invalid: invalidFields,
-      });
+    if (!habitId || !date) {
+      return res.status(400).json({ message: "Hiányzó kötelező mezők!" });
     }
 
     const habitRepo = AppDataSource.getRepository(Habits);
+    const trackingRepo = AppDataSource.getRepository(HabitTrackings);
 
-    const newHabit = habitRepo.create({
-        habitName,
-        targetValue,
-        currentValue: currentValue || 0,
-        frequency,
-        user: { id: userId }, // csak az ID is elég, nem kell lekérni teljes objektumként
-        status: 'inactive',   // <<< ez automatikus is lehet, de így egyértelmű
-      });
+    const habit = await habitRepo.findOne({ where: { id: habitId } });
+    if (!habit) return res.status(404).json({ message: "Szokás nem található." });
 
-    await habitRepo.save(newHabit);
-
-    return res.status(201).json({
-      message: "Szokás sikeresen létrehozva!",
-      habit: newHabit,
+    const tracking = trackingRepo.create({
+      habit,
+      value,
+      achieved,
+      date
     });
+
+    await trackingRepo.save(tracking);
+    return res.status(201).json({ message: "Tracking sikeresen elmentve!" });
   } catch (error) {
-    console.error("Hiba a szokás létrehozásakor:", error);
-    return res.status(500).json({ message: "Szerverhiba történt a szokás mentése közben." });
+    console.error("Tracking mentési hiba:", error);
+    return res.status(500).json({ message: "Szerverhiba történt." });
   }
 });
 

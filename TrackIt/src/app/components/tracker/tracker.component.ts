@@ -181,20 +181,29 @@ onHabitChange(): void {
     return;
   }
 
+  // ✅ Validációs blokk
+  if (this.value === null || !this.unit || !this.startDate || this.intervalDays <= 0) {
+    this.modalMessage = 'Kérlek, tölts ki minden mezőt!';
+    this.modalType = 'warning';
+    this.modalVisible = true;
+    return;
+  }
+
   const start = new Date(this.startDate);
   const payloads = [];
 
+  // Generáljuk a szükséges napi bejegyzéseket
   for (let i = 0; i < this.intervalDays; i++) {
     const currentDate = new Date(start);
     currentDate.setDate(start.getDate() + i);
 
     const payload = {
-      habitName: this.selectedHabit.habitName,
-      completed: this.completed,
-      value: this.value,
-      unit: this.unit,
-      date: currentDate.toISOString().split('T')[0],
-      userId: this.id
+      habitName: this.selectedHabit.habitName, // hozzáadjuk a szokás nevét
+      completed: this.completed,               // a teljesítés állapota
+      value: this.value,                       // a bejegyzett érték
+      unit: this.unit,                         // mértékegység
+      date: currentDate.toISOString().split('T')[0], // ISO formátumú dátum
+      userId: this.id                          // a felhasználó ID-ja
     };
 
     payloads.push(payload);
@@ -203,10 +212,7 @@ onHabitChange(): void {
   let successCount = 0;
   let errorCount = 0;
 
-
-
-
-  payloads.forEach((payload, index) => {
+  payloads.forEach((payload) => {
     this.api.saveHabitEntry(payload).subscribe({
       next: () => {
         successCount++;
@@ -227,6 +233,8 @@ onHabitChange(): void {
     });
   });
 }
+
+
 
 handleNewHabit(event: { habit: any }): void {
   this.api.createHabit(event.habit).subscribe({

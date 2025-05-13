@@ -392,13 +392,15 @@ createHabit(habitData: {
   frequency: string;
   userId: string;
 }): Observable<any> {
-  return this.http.post<any>(`${this.server}/habits`, habitData, this.tokenHeader()).pipe(
+  return this.http.post<any>(`${this.server}/api/habits`, habitData, this.tokenHeader()).pipe(
     catchError(error => {
       console.error('Hiba a szokás létrehozásakor:', error);
       return of({ message: 'Szokás létrehozása sikertelen' });
     })
   );
 }
+
+
 
 getHabitsForUser(userId: string, token: string) {
   return this.http.get<any[]>(`http://localhost:3000/habits/${userId}`, {
@@ -419,7 +421,7 @@ getHabitsForUser(userId: string, token: string) {
     date: string;
     userId: string;
   }): Observable<any> {
-    return this.http.post(`${this.server}/habits/entry`, entry);
+    return this.http.post(`${this.server}/habits`, entry);
   }
 
 updateHabitStatus(payload: { habitName: string, status: string, userId: string, habitId?: string }): Observable<any> {
