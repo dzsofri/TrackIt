@@ -8,7 +8,7 @@
             <ng-container *ngFor="let friend_request of friend_requests">
               <p *ngIf="friend_request.status === 'accepted'" class="barat_text">
                 <span class="circle-image">
-                  <img id="profile" [src]="imagePreviewUrl"/>
+                  <img id="profile" [src]="friend_request.imageUrl || '/assets/images/profileKep.png'" />
                 </span>
                 <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
                 <button class="del1" (click)="openPopup('delete', friend_request.id)">Törlés</button>
@@ -32,7 +32,7 @@
             <ng-container *ngFor="let friend_request of friend_requests">
               <p *ngIf="friend_request.status === 'pending'" class="barat_text">
                 <span class="circle-image">
-                  <img id="profile2" [src]="imagePreviewUrl"/>
+                  <img id="profile" [src]="friend_request.imageUrl || '/assets/images/profileKep.png'" />
                 </span>
                 <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
                 <span class="buttons">
