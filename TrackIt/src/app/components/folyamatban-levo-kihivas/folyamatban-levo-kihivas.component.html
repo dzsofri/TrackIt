@@ -1,57 +1,71 @@
 <div class="row">
 <div class="kihivas">
-    <h3>Saját kihívások</h3>
-    <div class="kihivas_content">
-      <ng-container *ngIf="showUser_challenges && showUser_challenges.length > 0; else noChallenge">
-        <ng-container *ngIf="PrivateChallenge(); else noChallenge">
-          <ng-container *ngFor="let showUser_challenge of showUser_challenges">
-            <div *ngIf="showUser_challenge.status === 0" class="kihivasBox" (click)="showChallengeDetails(showUser_challenge)">
-              <div class="details">
-                <p class="kihivas_text">Kihívás neve: {{ showUser_challenge.challengeName }}</p>
-                <p class="kihivas_text">Rövid leírás: {{ showUser_challenge.challengeDescription }}</p>
-                <p class="kihivas_text">Időtartam: {{ showUser_challenge.durationDays }} nap</p>
-                <div *ngIf="challengeFriendsMap[showUser_challenge.secondaryId] && challengeFriendsMap[showUser_challenge.secondaryId].length > 0">
-                  <h5>Résztvevők:</h5>
-                  <ul>
-                    <li *ngFor="let name of challengeFriendsMap[showUser_challenge.secondaryId]">{{ name }}</li>
-                  </ul>
-                </div>
+  <h3>
+    Saját kihívások
+    <button type="button" class="rangom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-custom-class="custom-tooltip" data-bs-title="Egy kihívás befejezése után a kihívás 7 napon belül automatikusan törlésre kerül!">*</button>
+  </h3>
+  <div class="kihivas_content">
+    <ng-container *ngIf="showUser_challenges && showUser_challenges.length > 0; else noChallenge">
+      <ng-container *ngIf="PrivateChallenge(); else noChallenge">
+        <ng-container *ngFor="let showUser_challenge of showUser_challenges">
+          <div *ngIf="showUser_challenge.status === 0" class="kihivasBox">
+            <div class="details">
+              <p class="kihivas_text">Kihívás neve: {{ showUser_challenge.challengeName }}</p>
+              <p class="kihivas_text">Rövid leírás: {{ showUser_challenge.challengeDescription }}</p>
+              <p class="kihivas_text">Időtartam: {{ showUser_challenge.durationDays }} nap</p>
+
+              <div *ngIf="challengeFriendsMap[showUser_challenge.secondaryId] && challengeFriendsMap[showUser_challenge.secondaryId].length > 0">
+                <h5>Kihívástársak:</h5>
+                <ul>
+                  <li *ngFor="let name of challengeFriendsMap[showUser_challenge.secondaryId]">{{ name }}</li>
+                </ul>
               </div>
-              <div class="other">
-                <button class="del" (click)="openPopup('delete', showUser_challenge.id); $event.stopPropagation()">Törlés</button>
-                <img [src]="showUser_challenge.imagePreviewUrl"/>
-                <p class="point"> {{ showUser_challenge.rewardPoints }} RP</p>
-              </div>
+
+              <button type="button" class="befejezés"(click)="finishChallnge(showUser_challenge)">Kihívás befejezése
+              </button>
             </div>
-          </ng-container>
+
+            <div class="other">
+              <button type="button" class="del"(click)="openPopup('delete', showUser_challenge.id)">Törlés</button>
+              <img [src]="showUser_challenge.imagePreviewUrl"/>
+              <p class="point">{{ showUser_challenge.rewardPoints }} RP</p>
+            </div>
+          </div>
         </ng-container>
       </ng-container>
-    </div>
-    <ng-template #noChallenge>
-      <h5 class="NO_DATA">Még nem hoztál létre kihívást!</h5>
-    </ng-template>
+    </ng-container>
+  </div>
+
+  <ng-template #noChallenge>
+    <h5 class="NO_DATA">Még nem hoztál létre kihívást!</h5>
+  </ng-template>
 </div>
 
   <div class="kihivas">
-    <h3>Publikus kihívások</h3>
+    <h3>
+      Publikus kihívások
+      <button type="button" class="rangom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-custom-class="custom-tooltip" data-bs-title="Egy kihívás befejezése után a kihívás 7 napon belül automatikusan törlésre kerül!">*</button>
+    </h3>
     <div class="kihivas_content">
       <ng-container *ngIf="showUser_challenges && showUser_challenges.length > 0; else noPublicChallenge">
         <ng-container *ngIf="PublicChallenge(); else noPublicChallenge">
           <ng-container *ngFor="let showUser_challenge of showUser_challenges">
-            <div *ngIf="showUser_challenge.status === 1" class="kihivasBox" (click)="showChallengeDetails(showUser_challenge)">
+            <div *ngIf="showUser_challenge.status === 1" class="kihivasBox">
               <div class="details">
                 <p class="kihivas_text">Kihívás neve: {{ showUser_challenge.challengeName }}</p>
                 <p class="kihivas_text">Rövid leírás: {{ showUser_challenge.challengeDescription }}</p>
                 <p class="kihivas_text">Időtartam: {{ showUser_challenge.durationDays }} nap</p>
                 <div *ngIf="challengeFriendsMap[showUser_challenge.secondaryId] && challengeFriendsMap[showUser_challenge.secondaryId].length > 0">
-                  <h5>Résztvevők:</h5>
+                  <h5>Kihívástársak:</h5>
                   <ul>
                     <li *ngFor="let name of challengeFriendsMap[showUser_challenge.secondaryId]">{{ name }}</li>
                   </ul>
                 </div>
+                <button type="button" class="befejezés" (click)="finishChallnge(showUser_challenge)">Kihívás befejezése
+                </button>
               </div>
               <div class="other">
-                <button class="del" (click)="openPopup('delete', showUser_challenge.id); $event.stopPropagation()">Törlés</button>
+                <button type="button" class="del" (click)="openPopup('delete', showUser_challenge.id)">Törlés</button>
                 <img [src]="showUser_challenge.imagePreviewUrl"/>
                 <p class="point"> {{ showUser_challenge.rewardPoints }} RP</p>
               </div>
@@ -61,7 +75,7 @@
       </ng-container>
     </div>
     <ng-template #noPublicChallenge>
-      <h5 class="NO_DATA">Még nem csatlakoztás publikus kihíváshoz!</h5>
+      <h5 class="NO_DATA">Még nem vettél fel publikus kihívást!</h5>
     </ng-template>
   </div>
 
@@ -70,17 +84,6 @@
       <p>{{ popupMessage }}</p>
       <button class="confirm-button" (click)="confirmAction()">Igen</button>
       <button class="cancel-button" (click)="closePopup()">Mégse</button>
-    </div>
-  </div>
-
-  <div class="popup-container" *ngIf="selectedChallengeDetails">
-    <div class="popup">
-      <h4>{{ selectedChallengeDetails.challengeName }}</h4>
-      <p><strong>Leírás:</strong> {{ selectedChallengeDetails.challengeDescription }}</p>
-      <p><strong>Időtartam:</strong> {{ selectedChallengeDetails.durationDays }} nap</p>
-      <p><strong>Jutalom:</strong> {{ selectedChallengeDetails.rewardPoints }} RP</p>
-      <img *ngIf="selectedChallengeDetails.imagePreviewUrl" [src]="selectedChallengeDetails.imagePreviewUrl" alt="Badge" style="max-width: 100%;"/>
-      <button class="cancel-button" (click)="closeDetailsPopup()">Bezárás</button>
     </div>
   </div>
 </div>
