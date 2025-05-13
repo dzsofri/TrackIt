@@ -13,7 +13,7 @@
   Teljesítetted a napi célt?
 </label>
 
-<label for="value">Érték:</label>
+<label for="value">Érték: Mennyit kell teljesítened naponta DailyTarget</label>
 <input type="number" [(ngModel)]="value" placeholder="Pl. 2.5" [disabled]="selectedHabit?.status !== 'active'" />
 
 <label for="unit">Mértékegység:</label>
@@ -24,8 +24,12 @@
 <label for="startDate">Kezdődátum:</label>
 <input type="date" [(ngModel)]="startDate" [disabled]="selectedHabit?.status !== 'active'" />
 
-<label for="interval">Napok száma:</label>
+<label for="interval">Napok száma: Target Value</label>
 <input type="number" [(ngModel)]="intervalDays" placeholder="Pl. 7" [disabled]="selectedHabit?.status !== 'active'" />
+
+<label for="interval">Teljesített napok száma: Current Value</label>
+<input type="number" [(ngModel)]="intervalDays" placeholder="Pl. 7" [disabled]="selectedHabit?.status !== 'active'" />
+
 
 <!-- Submit gomb is legyen tiltva -->
 <button (click)="submit()" [disabled]="selectedHabit?.status !== 'active'">Felvétel</button>

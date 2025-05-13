@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { Users } from "./User";
-import { HabitTrackings } from "./HabitTracking";
+
 
 @Entity()
 export class Habits {
@@ -15,13 +15,13 @@ export class Habits {
     habitName: string;
 
     @Column({ type: "varchar", length: 50, nullable: true })
+    dailyTarget: string;
+
+    @Column({ type: "varchar", length: 50, nullable: true })
     targetValue: string;
 
     @Column({ type: "varchar", length: 50, nullable: true })
     currentValue: string;
-
-    @Column({ type: "varchar", length: 50, nullable: true })
-    frequency: string;
 
     @Column({ type: "varchar", length: 20, default: 'inactive' })
     status: string; // <<< ÚJ MEZŐ
@@ -29,7 +29,4 @@ export class Habits {
     @CreateDateColumn()
     createdAt: Date;
 
-
-    @OneToMany(() => HabitTrackings, (habitTrack) => habitTrack.habit)
-    habitTrackings: HabitTrackings[];
 }

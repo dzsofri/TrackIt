@@ -101,11 +101,9 @@ export class Users {
     @OneToMany(() => Events, (event) => event.user, { onDelete: "CASCADE" })
     events: Events[];
 
-
-
-
     @ManyToOne(() => Pictures, { nullable: true })
     @JoinColumn({ name: "pictureId" })
     picture: Pictures;
+
 }
 
