@@ -98,7 +98,7 @@ router.post("/missedTask", tokencheck, async (req: any, res: any) => {
     userStatistics.completedTasks = 0;
     userStatistics.missedTasks = 1;
     userStatistics.completionRate = 0;
-    userStatistics.activeTask = task;
+    userStatistics.activeTask = null;
     userStatistics.createdAt = new Date();
 
     await userStatisticsRepo.save(userStatistics);

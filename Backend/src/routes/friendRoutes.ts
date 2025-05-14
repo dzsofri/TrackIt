@@ -182,7 +182,12 @@ router.get("/friend-picture", tokencheck, async (req: any, res: any) => {
       return res.status(404).json({ message: "No accepted friends found." });
     }
 
+
     const userRepository = AppDataSource.getRepository(Users);
+
+      const friendRequests = await friendRequestsRepository.find({
+          where: { receiverId: userId },
+      });
 
     const friendDetails = await Promise.all(
       friendRequests.map(async (friendRequest) => {
