@@ -18,8 +18,8 @@ router.get("/:userId", tokencheck, async (req: any, res: any) => {
     const habitRepo = AppDataSource.getRepository(Habits);
     const habits = await habitRepo.find({
       where: { user: { id: userId } },
-      select: ["id", "habitName", "status", "targetValue", "currentValue", "dailyTarget", "completed", "createdAt", "unit"], // Added unit field
-      order: { createdAt: "DESC" }
+      select: ["id", "habitName", "status", "targetValue", "currentValue", "dailyTarget", "completed", "startDate", "unit", "isButtonDisabled"], // Added unit field
+      order: { startDate: "DESC" }
     });
 
     return res.status(200).json(habits);
@@ -32,10 +32,10 @@ router.get("/:userId", tokencheck, async (req: any, res: any) => {
 // POST /habits - új szokás létrehozása
 router.post("/", tokencheck, async (req: any, res: any) => {
   try {
-    const { habitName, userId, dailyTarget, targetValue, currentValue, unit, createdAt } = req.body;
+    const { habitName, userId, dailyTarget, targetValue, currentValue, unit, startDate, isButtonDisabled } = req.body;
 
-    if (!habitName || !userId || dailyTarget === undefined || targetValue === undefined || currentValue === undefined || unit === undefined) {
-      return res.status(400).json({ message: "A habitName, userId, dailyTarget, targetValue, unit és currentValue megadása kötelező." });
+    if (!habitName || !userId || dailyTarget === undefined || targetValue === undefined || currentValue === undefined || unit === undefined || isButtonDisabled === undefined) { 
+      return res.status(400).json({ message: "A habitName, userId, dailyTarget, targetValue, unit, isButtonDisabled és currentValue megadása kötelező." });
     }
 
     const habitRepo = AppDataSource.getRepository(Habits);
@@ -54,9 +54,10 @@ router.post("/", tokencheck, async (req: any, res: any) => {
     habit.targetValue = targetValue;
     habit.currentValue = currentValue;
     habit.status = "inactive";  // Alapértelmezett státusz
-    habit.createdAt = createdAt; 
+    habit.startDate = startDate; 
     habit.completed = false; // Létrehozás dátuma
     habit.unit = unit;  // Mértékegység beállítása
+    habit.isButtonDisabled = isButtonDisabled; // Gomb állapotának beállítása
   
     habit.user = user;  // A teljes User entitást rendeld hozzá a habit.user-hez
 

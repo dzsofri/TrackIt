@@ -7,6 +7,6 @@ export interface Habit {
     dailyTarget: number;
     status: string; 
     completed: boolean;
-    createdAt: Date;
+    startDate: Date;
     unit: string; // Mértékegység
 }

@@ -25,8 +25,8 @@ export class Habits {
     @Column({ type: "varchar", length: 20, default: 'inactive' })
     status: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+    @Column({ type: "date", nullable: true })
+    startDate: Date;
 
     // Új mező a checkbox állapotának tárolására
     @Column({ type: "boolean", default: false })
@@ -35,4 +35,8 @@ export class Habits {
     // Új mező a mértékegység tárolására
     @Column({ type: "varchar", length: 50, nullable: true })
     unit: string;  // Mértékegység (pl. liter, kilogramm, perc, stb.)
+
+    // Új mező a gomb állapotának tárolására (letiltott vagy nem)
+    @Column({ type: "boolean", default: false })
+    isButtonDisabled: boolean; // A gomb letiltásához
 }

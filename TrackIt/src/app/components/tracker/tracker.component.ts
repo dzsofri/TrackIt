@@ -56,7 +56,7 @@ completed: boolean = false;  // default value
        targetValue?: number, 
        currentValue?: number, 
        completed: boolean,
-       createdAt: string
+       startDate: string
      }[] = [];
 
     selectedHabit: {
@@ -70,8 +70,8 @@ completed: boolean = false;  // default value
       id: string, 
       habitName: string, 
       status: string,
-       completed: boolean,
-       createdAt: string,
+       completed: boolean
+  
   } | null = null;
     habitChart: Chart | undefined;
 
@@ -79,6 +79,10 @@ completed: boolean = false;  // default value
   modalButtons = [
     { label: 'OK', action: () => this.onModalClose() }
   ];
+
+today = new Date().toISOString().split('T')[0];
+
+
 
   onModalClose() {
     this.modalVisible = false;
@@ -140,20 +144,22 @@ fetchHabits(): void {
         currentValue: habit.currentValue,
         dailyTarget: habit.dailyTarget,
         completed: habit.completed,
-         createdAt: habit.createdAt,
-      }));
-      console.log(this.habitList); 
+        startDate: habit.startDate, // Lehet, hogy a startDate is elérhető a backendről
       
-      // Ha van már kiválasztott szokás, annak frissítése
+      }));
+
+      console.log(this.habitList);
+
       if (this.selectedHabit) {
         this.onHabitChange();
       }
 
-      this.loadHabitChart(); // A grafikon frissítése
+      this.loadHabitChart();
     },
     error: (err) => console.error('Hiba a szokások betöltésekor:', err)
   });
 }
+
 
 
     openNewHabitModal() { this.isPopupOpen = true; }
@@ -161,18 +167,14 @@ fetchHabits(): void {
 
 onHabitChange(): void {
   if (this.selectedHabit) {
-    // Az input mezők frissítése a kiválasztott szokás alapján
     this.value = this.selectedHabit.targetValue ?? null;
     this.unit = this.selectedHabit.unit ?? 'liter';
     this.startDate = this.selectedHabit.startDate ?? new Date().toISOString().split('T')[0];
     this.intervalDays = this.selectedHabit.intervalDays ?? 1;
-    this.completed = this.selectedHabit.completed;
-;
-    
-    // A checkbox állapotának frissítése
     this.completed = (this.selectedHabit.currentValue ?? 0) > 0;
   }
 }
+
 
 
 
@@ -264,62 +266,59 @@ onHabitChange(): void {
       });
     }
 
-  loadHabitChart(): void {
-    const canvas = document.getElementById('habitChart') as HTMLCanvasElement;
-    const ctx = canvas?.getContext('2d');
-    if (!ctx) return;
+ loadHabitChart(): void {
+  const canvas = document.getElementById('habitChart') as HTMLCanvasElement;
+  const ctx = canvas?.getContext('2d');
+  if (!ctx) return;
 
-    if (this.habitChart) {
-      this.habitChart.destroy();
-    }
+  if (this.habitChart) {
+    this.habitChart.destroy();
+  }
 
-    const habitNames = this.habitList.map(h => h.habitName);
-    const currentValues = this.habitList.map(h => h.currentValue ?? 0);
+  const habitNames = this.habitList.map(h => h.habitName);
+  const currentValues = this.habitList.map(h => h.currentValue ?? 0);
 
   const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, '#2f3e34');  // Sötétebb alsó szín
-  gradient.addColorStop(1, '#6f8372');  // Világosabb felső szín
+  gradient.addColorStop(0, '#2f3e34');
+  gradient.addColorStop(1, '#6f8372');
 
-
-
-
-
-    this.habitChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: habitNames,
-        datasets: [{
-          label: 'Aktuális érték',
-          data: currentValues,
-          backgroundColor: gradient,
-          borderColor: '#3367d6',
-          borderWidth: 1
-        }]
+  this.habitChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: habitNames,
+      datasets: [{
+        label: 'Aktuális érték',
+        data: currentValues,
+        backgroundColor: gradient,
+        borderColor: '#3367d6',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Érték'
+          }
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Érték'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Szokás'
-            }
+        x: {
+          title: {
+            display: true,
+            text: 'Szokás'
           }
         }
       }
-    });
-  }
+    }
+  });
+}
+
 
 scheduleMidnightReset(): void {
   const now = new Date();
@@ -358,7 +357,7 @@ updateHabit(habitId: string, completed: boolean) {
           targetValue: this.selectedHabit!.targetValue ?? undefined,
           currentValue: this.selectedHabit!.currentValue ?? undefined,
           completed: this.selectedHabit!.completed,
-          createdAt: this.selectedHabit!.createdAt
+          startDate: this.selectedHabit!.startDate
         };
       }
 
@@ -373,30 +372,23 @@ updateHabit(habitId: string, completed: boolean) {
     }
   });
 }
-
-
-
 onCheckboxChange() {
-  if (!this.selectedHabit) return;
+  if (!this.selectedHabit) return;  // Ellenőrizzük, hogy a selectedHabit nem null
 
   const currentDate = new Date().toISOString().split('T')[0];  // A mai nap dátuma (YYYY-MM-DD)
 
-  // Ellenőrizzük, hogy a szokás már frissítve lett-e ezen a napon
+  // Ha már be van pipálva a checkbox és a szokás frissítve lett erre a napra, akkor ne engedjünk új frissítést
   if (this.selectedHabit.completedToday === currentDate) {
     // Ha már frissítve lett a szokás erre a napra, nem engedjük újra frissíteni
     return;
   }
 
-  // Ensure currentValue is a number
   let currentValue = Number(this.selectedHabit.currentValue);
 
-  // Ha be van pipálva a checkbox, akkor a currentValue-t növeljük egyel
   if (this.completed) {
-    // Ha targetValue létezik, ne növeljük túl
     if (this.selectedHabit.targetValue != null) {
       currentValue = Math.min(currentValue + 1, parseInt(this.selectedHabit.targetValue as string, 10));
     } else {
-      // Ha nincs targetValue, egyszerűen növeljük currentValue-t
       currentValue = currentValue + 1;
     }
     this.selectedHabit.currentValue = currentValue;
@@ -408,19 +400,30 @@ onCheckboxChange() {
   this.api.updateHabit(this.selectedHabit.id, this.completed).subscribe({
     next: (res) => {
       console.log("Szokás állapota sikeresen frissítve:", res);
-      this.modalMessage = 'Szokás állapota sikeresen frissítve!';
-      this.modalType = 'success';
-      this.modalVisible = true;
 
-      // Frissítjük a habit listát és az aktuális szokás adatokat
-      this.selectedHabit!.completed = this.completed;
-      this.selectedHabit!.currentValue = res.updatedHabit.currentValue;  // <-- Frissítjük a currentValue-t a backend válaszából
+      // Ellenőrizzük, hogy van-e `habit` a válaszban, és ha igen, frissítjük
+      if (res && res.habit) {
+        this.selectedHabit = res.habit;
 
-      // Jelöljük, hogy a szokás frissítve lett ezen a napon
-      this.selectedHabit!.completedToday = currentDate;
+        // Frissítjük a habit adatokat
+        if (this.selectedHabit) {
+          this.selectedHabit.completed = this.completed;
+          this.selectedHabit.currentValue = res.habit.currentValue;
+          this.selectedHabit.completedToday = currentDate;
 
-      // A habit chart frissítése
-      this.loadHabitChart();
+          // A habit chart frissítése
+          this.loadHabitChart();
+
+          this.modalMessage = 'Szokás állapota sikeresen frissítve!';
+          this.modalType = 'success';
+          this.modalVisible = true;
+        }
+      } else {
+        console.error("Nem található frissített szokás a válaszban.");
+        this.modalMessage = 'Hiba történt a szokás frissítése közben.';
+        this.modalType = 'error';
+        this.modalVisible = true;
+      }
     },
     error: (err) => {
       console.error("Hiba történt a szokás frissítése közben:", err);
@@ -430,7 +433,6 @@ onCheckboxChange() {
     }
   });
 }
-
 
   deleteHabit(): void {
     if (!this.selectedHabit) return;

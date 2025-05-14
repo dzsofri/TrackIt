@@ -4,18 +4,24 @@
   <!-- Tracker form -->
   <div class="tracker-form">
     <label for="habit">Válassz trackert:</label>
-    <select [(ngModel)]="selectedHabit">
+  <select [(ngModel)]="selectedHabit" (ngModelChange)="onHabitChange()">
       <option *ngFor="let habit of habitList" [ngValue]="habit">{{ habit.habitName }}</option>
     </select>
 
 <label>
-  <input 
-    type="checkbox" 
-    [checked]="completed" 
-    [(ngModel)]="completed" 
-    (change)="onCheckboxChange()" />
+<input 
+  type="checkbox" 
+  [checked]="completed" 
+  [(ngModel)]="completed" 
+  (change)="onCheckboxChange()" 
+  [title]="selectedHabit?.completedToday === today ? 'Ezt a szokást ma már bejelölted' : ''" />
+
+
+
   Teljesítetted a napi célt?
 </label>
+
+
 
 
     <label for="value">Napi teljesítendő érték</label>
@@ -27,7 +33,7 @@
     </select>
 
     <label for="startDate">Kezdődátum:</label>
-    <input type="date"[value]="selectedHabit?.createdAt" disabled />
+    <input type="date"[value]="selectedHabit?.startDate" disabled />
 
     <label for="interval">Szokás hossza (nap)</label>
     <input type="number" [value]="selectedHabit?.targetValue" disabled />
@@ -52,7 +58,8 @@
       <div class="card-body">
         <h5 class="card-title mb-0">Statisztika</h5>
         <div class="chart-container">
-          <canvas id="habitChart"></canvas>
+       <canvas id="habitChart" width="400" height="300"></canvas>
+
         </div>
       </div>
     </div>
