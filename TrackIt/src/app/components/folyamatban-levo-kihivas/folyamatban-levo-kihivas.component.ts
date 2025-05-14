@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { User } from '../../interfaces/user';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +11,6 @@ import { Badge } from '../../interfaces/badges';
 import { Friend_Request } from '../../interfaces/friend_requests';
 import { forkJoin } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-folyamatban-levo-kihivas',
@@ -20,7 +19,7 @@ import * as bootstrap from 'bootstrap';
   templateUrl: './folyamatban-levo-kihivas.component.html',
   styleUrl: './folyamatban-levo-kihivas.component.scss'
 })
-export class FolyamatbanLevoKihivasComponent implements OnInit, AfterViewInit {
+export class FolyamatbanLevoKihivasComponent implements OnInit {
   constructor(
     private api: ApiService,
     private auth: AuthService,
@@ -90,13 +89,6 @@ export class FolyamatbanLevoKihivasComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-      const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-          tooltipTriggerList.forEach(tooltipTriggerEl => {
-            new bootstrap.Tooltip(tooltipTriggerEl);
-          });
-  }
-
   finishChallnge(challenge: User_Challenge): void {
     const completedAt = new Date().toISOString();
 
@@ -106,12 +98,6 @@ export class FolyamatbanLevoKihivasComponent implements OnInit, AfterViewInit {
         this.modalType = 'success';
         this.modalVisible = true;
         this.autoCloseModal();
-
-        setTimeout(() => {
-          this.selectedChallengeId = challenge.id;
-          this.selectedAction = 'delete';
-          this.confirmAction();
-        }, 7 * 24 * 60 * 60 * 1000);
       },
       error: (error) => {
         this.modalMessage = 'Hiba történt a kihívás mentésekor!';

@@ -87,7 +87,7 @@ export class PublikusKihivasokComponent implements OnInit, AfterViewInit {
       secondaryId: challenge.secondaryId,
       challengeName: challenge.challengeName,
       challengeDescription: challenge.challengeDescription,
-      status: challenge.status,
+      status: 1,
       createdAt: challenge.createdAt,
       finalDate: challenge.finalDate,
       rewardPoints: challenge.rewardPoints,

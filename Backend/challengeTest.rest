@@ -1,0 +1,85 @@
+@PORT = 3000
+
+### Kihívás létrehozása
+POST http://localhost:{{PORT}}/challenges/challenge/1
+Content-Type: application/json
+
+{
+  "challengeName": "Napi futás",
+  "challengeDescription": "Fuss minden nap 5 km-t egy héten át.",
+  "status": 1,
+  "createdAt": "2025-05-14T00:00:00.000Z",
+  "finalDate": "2025-05-21T00:00:00.000Z",
+  "rewardPoints": 1000,
+  "badgeId": "0235417f-5448-4663-8eaa-62c68dd73be4",
+  "durationDays": 7,
+  "userId": "c75b0a8e-fb26-4af0-93da-0b8379536113"
+}
+
+### Kihívás küldése barátnak
+POST http://localhost:{{PORT}}/challenges/challenge/friend/c75b0a8e-fb26-4af0-93da-0b8379536113
+Content-Type: application/json
+
+{
+  "secondaryId": "e132757c-ea86-4575-ab8e-229a554c014c",
+  "challengeName": "10 napos meditáció",
+  "challengeDescription": "Meditálj napi 10 percet 10 napon át.",
+  "status": 0,
+  "createdAt": "2025-05-14T00:00:00.000Z",
+  "finalDate": "2025-05-24T00:00:00.000Z",
+  "rewardPoints": 1500,
+  "badgeId": "0235417f-5448-4663-8eaa-62c68dd73be4",
+  "durationDays": 10,
+  "userId": "c75b0a8e-fb26-4af0-93da-0b8379536113"
+}
+
+### Kihívás befejezése
+POST http://localhost:{{PORT}}/challenges/completedAt/dcf6e033-c4fc-43a7-91ab-3e59acbadd30
+Content-Type: application/json
+
+{
+  "challengeName": "Napi futás",
+  "challengeDescription": "Fuss minden nap 5 km-t egy héten át.",
+  "status": 1,
+  "createdAt": "2025-05-14T00:00:00.000Z",
+  "finalDate": "2025-05-21T00:00:00.000Z",
+  "rewardPoints": 1000,
+  "badgeId": "0235417f-5448-4663-8eaa-62c68dd73be4",
+  "durationDays": 7,
+  "userId": "c75b0a8e-fb26-4af0-93da-0b8379536113",
+  "completedAt": "2025-05-15T00:00:00.000Z"
+}
+
+### Publikus kihívás felvétele
+POST http://localhost:{{PORT}}/challenges/fromPublic
+Content-Type: application/json
+
+{
+  "secondaryId": "c0ea7f4b-6450-42bc-b943-cd5a89993eae",
+  "challengeName": "Napi futás",
+  "challengeDescription": "Fuss minden nap 5 km-t egy héten át.",
+  "status": 1,
+  "createdAt": "2025-05-14T00:00:00.000Z",
+  "finalDate": "2025-05-21T00:00:00.000Z",
+  "rewardPoints": 1000,
+  "badgeId": "0235417f-5448-4663-8eaa-62c68dd73be4",
+  "durationDays": 7,
+  "userId": "0065ff09-5188-4591-b5de-1dc37c746658",
+  "completedAt": "null"
+}
+
+### Jelvények lekérése
+GET http://localhost:{{PORT}}/challenges/all-badges
+
+### Kihívás jelvény lekérése
+GET http://localhost:{{PORT}}/challenges/badge?id=74b712da-cf06-4a5d-af78-42a7191f7bd7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNjVmZjA5LTUxODgtNDU5MS1iNWRlLTFkYzM3Yzc0NjY1OCIsImVtYWlsIjoiZHVkYXNsZXZlbnRlQHR1cnIuaHUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJEdWTDoXMgTGV2ZW50ZSIsImlhdCI6MTc0NzIxMDM0NiwiZXhwIjoxNzQ3Mjk2NzQ2fQ.Z0d48rwtxJa_0hbXp2vh1HS9oDboEuONtbrSP3TmW7g
+
+### Összes kihívás lekérése
+GET http://localhost:{{PORT}}/challenges/all
+
+### Kihívás résztvevőinek lekérése secondaryId alapján
+GET http://localhost:{{PORT}}/challenges/c0ea7f4b-6450-42bc-b943-cd5a89993eae
+
+### Kihívás törlése
+DELETE http://localhost:{{PORT}}/challenges/8ef09a8b-4b76-4a80-90fb-1c22ce05d0d9

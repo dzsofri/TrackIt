@@ -2,7 +2,6 @@
 <div class="kihivas">
   <h3>
     Saját kihívások
-    <button type="button" class="rangom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-custom-class="custom-tooltip" data-bs-title="Egy kihívás befejezése után a kihívás 7 napon belül automatikusan törlésre kerül!">*</button>
   </h3>
   <div class="kihivas_content">
     <ng-container *ngIf="showUser_challenges && showUser_challenges.length > 0; else noChallenge">
@@ -44,7 +43,6 @@
   <div class="kihivas">
     <h3>
       Publikus kihívások
-      <button type="button" class="rangom" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-custom-class="custom-tooltip" data-bs-title="Egy kihívás befejezése után a kihívás 7 napon belül automatikusan törlésre kerül!">*</button>
     </h3>
     <div class="kihivas_content">
       <ng-container *ngIf="showUser_challenges && showUser_challenges.length > 0; else noPublicChallenge">
