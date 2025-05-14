@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { KanbanComponent } from '../kanban/kanban.component';
 import { trigger, state, style, transition, animate, query } from '@angular/animations';
 
@@ -49,7 +49,10 @@ import { trigger, state, style, transition, animate, query } from '@angular/anim
 })
 
 export class WelcomeComponent {
-  steps = [
+   constructor(private router: Router) {} // 🔹 Router injektálása
+
+
+   steps = [
     { id: 1, text: 'Üdvözlünk!', active: true, completed: false },
     { id: 2, text: 'ToDo lista és Kanban tábla létrehozása', active: false, completed: false },
     { id: 3, text: 'TrackIt funkciók felfedezése', active: false, completed: false },
@@ -63,33 +66,48 @@ export class WelcomeComponent {
   textVisible = true;
 
   startApp() {
-    // Az első lépés befejeződik, a második lépésre váltunk
-    this.steps[0].completed = true;   // Az első lépés befejeződött
-    this.steps[0].active = false;     // Az első lépés már nem aktív
-    this.steps[1].active = true;      // A második lépés aktívvá válik
+    // Állapot visszaállítás (ha szükséges)
+    this.steps = [
+      { id: 1, text: 'Üdvözlünk!', active: true, completed: false },
+      { id: 2, text: 'ToDo lista és Kanban tábla létrehozása', active: false, completed: false },
+      { id: 3, text: 'TrackIt funkciók felfedezése', active: false, completed: false },
+    ];
+    this.textVisible = true;
+    this.textState = 'visible';
+    this.stepState = 'default';
+    this.isMinimized = false;
+    this.isKanbanVisible = false;
+    this.kanbanState = null;
 
-    this.textState = 'hidden';
-    this.textVisible = false;
-    this.stepState = 'moved';  // A lépések elmozdítása jobbra
-
-    // Az animációk elindítása, és a Kanban tábla megjelenítése
+    // Elindítja az animációt
     setTimeout(() => {
-      this.isKanbanVisible = true;
-      this.kanbanState = 'visible';  // Kanban tábla animációja
+      this.textState = 'hidden';
+      this.textVisible = false;
+      this.stepState = 'moved';
 
-      // A lépések kisebbek lesznek és a jobb felső sarokba kerülnek
-      this.isMinimized = true;
-    }, 1000);
+      setTimeout(() => {
+        this.isKanbanVisible = true;
+        this.kanbanState = 'visible';
+        this.isMinimized = true;
+
+        // 🔹 Navigáció a profil oldalra animáció után
+        setTimeout(() => {
+          this.router.navigate(['/profile']);
+        }, 1000000000000000000000000); // tetszés szerint módosíthatod
+
+      }, 100000000000000000000000000);
+    }, 0);
   }
 
-  // GetStepClass metódus frissítése, hogy a lépéseket mindig az állapot alapján jelenítse meg
+  
+
   getStepClass(step: number): string {
     if (this.steps[step - 1].active) {
-      return 'active';  // Ha aktív a lépés, akkor 'active' osztály
+      return 'active';
     } else if (this.steps[step - 1].completed) {
-      return 'completed';  // Ha befejeződött a lépés, akkor 'completed' osztály
+      return 'completed';
     }
-    return '';  // Ha nem aktív és nem befejezett, nem adunk osztályt
+    return '';
   }
 }
 

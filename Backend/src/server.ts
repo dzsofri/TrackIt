@@ -31,7 +31,6 @@ import { Badges } from "./entities/Badges";
 import habitRoutes from "./routes/habitRoutes";
 import taskRoutes from "./routes/taskRoutes";
 
-import eventRoutes from "./routes/eventRoutes";
 
 dotenv.config();
 

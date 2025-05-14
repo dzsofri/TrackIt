@@ -242,6 +242,7 @@
     min-width: 200px;
     max-width: 400px;
     box-sizing: border-box;
+    z-index: 999999;
 
     &:hover {
       background-color: #627966;
@@ -254,7 +255,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 60vw;
     height: 100%;
     display: flex;
     overflow: auto;

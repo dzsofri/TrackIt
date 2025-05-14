@@ -373,28 +373,7 @@ updateSelectAllState() {
     return `${year}-${month}-${day} ${hours}:${minutes}:00`;  // `yyyy-mm-dd HH:mm:ss`
   }
 
-  updateEvent(startTime: string, endTime: string) {
-    this.apiService.updateEvent(this.editingEvent!.id!, {
-      title: this.newEvent.title,
-      description: this.newEvent.description,
-      startTime,
-      endTime
-    }).subscribe({
-      next: (response) => {
-        this.modalMessage = 'Esemény frissítve.';
-        this.modalType = 'success';
-        this.modalVisible = true;
-        this.updateEventInList(response);
-        this.resetNewEventForm();
-      },
-      error: () => {
-        this.modalMessage = 'Nem sikerült frissíteni az eseményt.';
-        this.modalType = 'error';
-        this.modalVisible = true;
-      }
-    });
 
-  }
 
   createEvent(startTime: string, endTime: string) {
     const userId = this.authService.loggedUser()?.id;
@@ -461,21 +440,6 @@ updateSelectAllState() {
       }
     });
   }
-
-  updateEventInList(updatedEvent: CalendarEvent) {
-    const index = this.events.findIndex(e => e.id === updatedEvent.id);
-    if (index !== -1) {
-      this.events[index] = updatedEvent;
-    }
-
-    const listIndex = this.eventss.findIndex(e => e.id === updatedEvent.id);
-    if (listIndex !== -1) {
-      this.eventss[listIndex] = { ...updatedEvent, selected: false };
-    }
-
-
-  }
-
 
   validateNewEvent() {
     const { title, startTime, endTime } = this.newEvent;
