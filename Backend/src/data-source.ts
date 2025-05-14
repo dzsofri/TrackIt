@@ -13,6 +13,8 @@ import { FeedbackQuestions } from "./entities/FeedbackQuestion";
 import { Chat } from "./entities/Chat";
 import { Events } from "./entities/Event";
 import { Badges } from "./entities/Badges";
+import { Comments } from "./entities/Comment";
+
 
 
 export const AppDataSource = new DataSource({
@@ -24,7 +26,7 @@ export const AppDataSource = new DataSource({
   database: "trackit", 
   synchronize: true, 
   logging: false, 
-  entities: [Feedbacks, Follows, FriendRequests, Habits, Pictures, Posts, Tasks, Users, UserChallenges, UserStatistics, FeedbackQuestions, Chat, Events, Badges], 
+  entities: [Feedbacks, Follows, FriendRequests, Habits, HabitTrackings, Pictures, Posts, Tasks, Users, UserChallenges, UserStatistics, FeedbackQuestions, Chat, Events, Badges, Comments], 
   migrations: [],
   subscribers: [],
 });

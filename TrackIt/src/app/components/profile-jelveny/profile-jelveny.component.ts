@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { User_Challenge } from '../../interfaces/user_challenges';
 import { CommonModule } from '@angular/common';
 import * as bootstrap from 'bootstrap';
+import { HttpClient } from '@angular/common/http';
+import { Badge } from '../../interfaces/badges';
 
 @Component({
   selector: 'app-profile-jelveny',
@@ -16,12 +18,16 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
   constructor(
       private api: ApiService,
       private auth: AuthService,
-      private activatedRoute: ActivatedRoute
+      private activatedRoute: ActivatedRoute,
+      private http: HttpClient
     ) {}
 
     user_challenges: User_Challenge[] = [];
     currentUserId: string | null = null;
     userNames: { [key: string]: string } = {};
+    badges: { [key: string]: Badge } = {};
+    allChallengesCompleted: boolean = false;
+    hasAnyChallengeCompleted: boolean = false;
 
     activeTab: string = 'statisztika';
     totalPoints: number = 0;
@@ -48,13 +54,17 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
                 return;
               }
               this.user_challenges = res;
+              this.allChallengesCompleted = this.user_challenges.every(challenge => challenge.completedAt != null);
+              this.hasAnyChallengeCompleted = this.user_challenges.some(challenge => challenge.completedAt != null);
               this.calculatePointsAndRank();
               this.highestWeeklyPerformance = this.calculateWeeklyProgress(this.user_challenges);
+
             },
             error: (err) => {
               console.error('Error fetching user challenges:', err);
             }
           });
+          this.Challenge();
         }
       });
     }
@@ -65,6 +75,67 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
         new bootstrap.Tooltip(tooltipTriggerEl);
       });
     }
+
+      Challenge() {
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.id = user.id;
+
+        this.api.readUserChallenges('user_statistics', user.id).subscribe({
+          next: (res: any) => {
+            const challenges = res?.user_challenges ?? res;
+            if (!Array.isArray(challenges)) {
+              console.warn('No user challenges found');
+              this.user_challenges = [];
+              return;
+            }
+
+            this.user_challenges = challenges;
+
+            this.user_challenges.forEach(challenge => {
+              if (challenge.id) {
+                challenge.secondaryId = challenge.secondaryId || 'No secondary ID available';
+                this.fetchBadge(challenge);
+              }
+            });
+
+            this.user_challenges = this.user_challenges.filter((request: User_Challenge) =>
+              request.status === 1 || request.status === 0
+            );
+          },
+          error: (err) => {
+            console.error('Error fetching user challenges:', err);
+          }
+        });
+      }
+    });
+  }
+
+  fetchBadge(challenge: User_Challenge): void {
+    const token = localStorage.getItem('trackit');
+    if (!token) {
+        console.error('No valid token found!');
+        return;
+    }
+
+    this.http
+        .get<{ imageUrl: string | null }>('http://localhost:3000/challenges/badge', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            params: {
+                id: challenge.id,
+            },
+        })
+        .subscribe({
+            next: (response) => {
+                challenge.imagePreviewUrl = response.imageUrl ?? undefined; 
+            },
+            error: (error) => {
+                console.error('Error fetching badge:', error);
+            },
+        });
+  }
 
     private calculatePointsAndRank(): void {
       this.totalPoints = this.calculateTotalPoints(this.user_challenges);
@@ -78,7 +149,13 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
     }
   
     private calculateTotalPoints(challenges: User_Challenge[]): number {
-      return challenges.reduce((acc, challenge) => acc + (challenge.rewardPoints || 0), 0);
+      if (!this.hasAnyChallengeCompleted) {
+        return 0;
+      }
+
+      return challenges
+        .filter(challenge => challenge.completedAt) // csak a befejezett kihívások
+        .reduce((acc, challenge) => acc + (challenge.rewardPoints || 0), 0);
     }
   
     private calculateUserRank(points: number): { rank: string, nextRankPoints: number } {
@@ -131,31 +208,28 @@ export class ProfileJelvenyComponent implements OnInit, AfterViewInit {
     }   
     
     private calculateWeeklyProgress(challenges: User_Challenge[]): number {
-      const currentDate = new Date();
-      let highestWeeklyPerformance = 0;
-    
-      const weeklyChallenges = challenges.filter(challenge => {
-        const createdAt = new Date(challenge.createdAt);
-        const futureDate = new Date(createdAt.getTime() + 7 * 24 * 60 * 60 * 1000);
-        const completedAt = new Date(challenge.completedAt);
-    
-        if (futureDate < currentDate) {
-          return false;
-        }
-    
-        if (completedAt < createdAt) {
-          challenge.progressPercentage = 0;
-          highestWeeklyPerformance = Math.max(highestWeeklyPerformance, challenge.progressPercentage);
-          return true;
-        }
-    
-        const totalDays = 7;
-        const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
-        challenge.progressPercentage = daysCompleted <= 1 ? 100 : Math.max(0, Math.min(100, ((totalDays - daysCompleted) / totalDays) * 100));
-        highestWeeklyPerformance = Math.max(highestWeeklyPerformance, challenge.progressPercentage);
+    const currentDate = new Date();
+    const weeklyChallenges = challenges.filter(challenge => {
+      const createdAt = new Date(challenge.createdAt);
+      const futureDate = new Date(createdAt.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const completedAt = new Date(challenge.completedAt);
+
+      if (futureDate < currentDate) {
+        return false;
+      }
+
+      if (completedAt < createdAt) {
+        challenge.progressPercentage = 0;
         return true;
-      });
-    
-      return highestWeeklyPerformance;
-    }
+      }
+
+      const totalDays = 7;
+      const daysCompleted = (completedAt.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+      challenge.progressPercentage = daysCompleted <= 1 ? 100 : Math.max(0, Math.min(100, ((totalDays - daysCompleted) / totalDays) * 100));
+      return true;
+    });
+
+    const totalProgress = weeklyChallenges.reduce((acc, challenge) => acc + challenge.progressPercentage, 0);
+    return weeklyChallenges.length > 0 ? totalProgress / weeklyChallenges.length : 0;
+  }
 }

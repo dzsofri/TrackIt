@@ -80,61 +80,60 @@ export class ProfileComponent implements OnInit {
           }
         });
         this.user.id = user.id;
-        this.fetchUserProfilePicture();
+        this.fetchUserProfilePicture(this.user.id);
       }
     });
   }
 
-  fetchUserProfilePicture(): void {
+  fetchUserProfilePicture(userid: any): void {
     const token = localStorage.getItem('trackit');
     if (!token) {
-        console.error('No valid token found!');
-        return;
+      console.error('No valid token found!');
+      return;
     }
+    console.log(userid)
+    console.log(token)
 
     this.http
-        .get<{ imageUrl: string | null }>('http://localhost:3000/users/profile-picture', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        .subscribe({
-            next: (response) => {
-                this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
-            },
-            error: (error) => {
-                console.error('Error fetching profile picture:', error);
-                this.imagePreviewUrl = '/assets/images/profileKep.png';
-            },
-        });
+      .get<{ imageUrl: string | null }>(`http://localhost:3000/users/profile-picture/${userid}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .subscribe({
+        next: (response) => {
+          this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
+        },
+        error: (error) => {
+          console.error('Error fetching profile picture:', error);
+          this.imagePreviewUrl = '/assets/images/profileKep.png';
+        },
+      });
   }
-
   onFileSelectedAndUpload(event: Event) {
     const input = event.target as HTMLInputElement;
-  
+
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedFile = file;
-  
+
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreviewUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
-  
+
       const formData = new FormData();
-  
+
       if (this.selectedFile) {
         formData.append('picture', this.selectedFile, this.selectedFile.name);
       }
-  
+
       const token = localStorage.getItem('trackit');
       if (!token) {
         console.error('Nincs érvényes token!');
         alert('Nincs bejelentkezve! Kérem jelentkezzen be!');
         return;
       }
-  
+
       this.http.post<any>(`http://localhost:3000/users/add-picture`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -157,24 +156,24 @@ export class ProfileComponent implements OnInit {
       console.error('Nem választottál ki fájlt a feltöltéshez.');
     }
   }
-  
+
   updateUserPicture() {
     if (!this.selectedFile) {
       console.error('Nincs kiválasztott fájl frissítéshez.');
       alert('Kérlek, válassz egy képet frissítéshez!');
       return;
     }
-  
+
     const token = localStorage.getItem('trackit');
     if (!token) {
       console.error('Nincs érvényes token!');
       alert('Nincs bejelentkezve! Kérem jelentkezzen be!');
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('picture', this.selectedFile, this.selectedFile.name);
-  
+
     this.http.put<any>(`http://localhost:3000/users/${this.user.id}/picture`, formData, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -182,7 +181,7 @@ export class ProfileComponent implements OnInit {
     }).subscribe({
       next: (response) => {
         console.log('Kép sikeresen frissítve:', response);
-  
+
         // Modal alert megjelenítése
         this.modalVisible = true;
         this.modalType = 'success';

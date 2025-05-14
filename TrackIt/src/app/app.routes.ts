@@ -11,6 +11,7 @@ import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard'; // IMPORTÁLJUK AZ ADMIN GUARDOT
 import { ChatComponent } from './components/chat/chat.component';
+
 import { HaviPlannerComponent } from './components/havi-planner/havi-planner.component';
 import { HaviPlannerKezeloComponent } from './components/havi-planner-kezelo/havi-planner-kezelo.component';
 import { FeedComponent } from './components/feed/feed.component';

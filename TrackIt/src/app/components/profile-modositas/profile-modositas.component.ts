@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { take } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
- 
+
 @Component({
   selector: 'app-profile-modositas',
   standalone: true,
@@ -35,7 +35,6 @@ export class ProfileModositasComponent {
   errorMessage: string = '';
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
-
   minDate: string = '';
 
   selectedFile: File | null = null;
@@ -48,6 +47,15 @@ export class ProfileModositasComponent {
     private http: HttpClient
   ) {
     this.setMinDate();
+  }
+
+  ngOnInit(): void {
+    this.auth.user$.subscribe((user) => {
+      if (user) {
+        this.user.id = user.id;
+        this.fetchUserProfilePicture(this.user.id);
+      }
+    });
   }
 
   private setMinDate() {
@@ -66,71 +74,56 @@ export class ProfileModositasComponent {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
   }
 
-  ngOnInit(): void {
-    this.auth.user$.subscribe((user) => {
-        if (user) {
-            this.user.id = user.id;
-            this.fetchUserProfilePicture();
-        }
-    });
-}
-
-fetchUserProfilePicture(): void {
+  fetchUserProfilePicture(userid: any): void {
     const token = localStorage.getItem('trackit');
     if (!token) {
-        console.error('No valid token found!');
-        return;
+      console.error('No valid token found!');
+      return;
     }
+    console.log(userid)
+    console.log(token)
 
     this.http
-        .get<{ imageUrl: string | null }>('http://localhost:3000/users/profile-picture', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        .subscribe({
-            next: (response) => {
-                this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
-            },
-            error: (error) => {
-                console.error('Error fetching profile picture:', error);
-                this.imagePreviewUrl = '/assets/images/profileKep.png';
-            },
-        });
-}
+      .get<{ imageUrl: string | null }>(`http://localhost:3000/users/profile-picture/${userid}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .subscribe({
+        next: (response) => {
+          this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
+        },
+        error: (error) => {
+          console.error('Error fetching profile picture:', error);
+          this.imagePreviewUrl = '/assets/images/profileKep.png';
+        },
+      });
+  }
 
   onFileSelectedAndUpload(event: Event) {
     const input = event.target as HTMLInputElement;
-  
+
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedFile = file;
-  
+
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreviewUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
-  
+
       const formData = new FormData();
-  
-      if (this.selectedFile) {
-        formData.append('picture', this.selectedFile, this.selectedFile.name);
-      }
-  
+      formData.append('picture', file, file.name);
+
       const token = localStorage.getItem('trackit');
       if (!token) {
-        console.error('Nincs érvényes token!');
         alert('Nincs bejelentkezve! Kérem jelentkezzen be!');
         return;
       }
-  
+
       this.http.post<any>(`http://localhost:3000/users/add-picture`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       }).subscribe({
-        next: (response) => {
+        next: () => {
           this.modalVisible = true;
           this.modalType = 'success';
           this.modalMessage = 'Profilkép sikeresen beállítva/frissítve!';
@@ -147,32 +140,26 @@ fetchUserProfilePicture(): void {
       console.error('Nem választottál ki fájlt a feltöltéshez.');
     }
   }
-  
+
   updateUserPicture() {
     if (!this.selectedFile) {
-      console.error('Nincs kiválasztott fájl frissítéshez.');
       alert('Kérlek, válassz egy képet frissítéshez!');
       return;
     }
-  
+
     const token = localStorage.getItem('trackit');
     if (!token) {
-      console.error('Nincs érvényes token!');
       alert('Nincs bejelentkezve! Kérem jelentkezzen be!');
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('picture', this.selectedFile, this.selectedFile.name);
-  
+
     this.http.put<any>(`http://localhost:3000/users/${this.user.id}/picture`, formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
-      next: (response) => {
-        console.log('Kép sikeresen frissítve:', response);
-  
+      next: () => {
         this.modalVisible = true;
         this.modalType = 'success';
         this.modalMessage = 'Profilkép sikeresen frissítve!';
@@ -212,8 +199,6 @@ fetchUserProfilePicture(): void {
         if (this.user.id) {
           this.api.updateUserData(this.user.id, this.user).subscribe({
             next: (res: any) => {
-              console.log(res.message);
-
               this.modalVisible = true;
               this.modalType = 'success';
               this.modalMessage = 'Felhasználó sikeresen frissítve!';
@@ -227,20 +212,16 @@ fetchUserProfilePicture(): void {
               }
 
               this.errorMessage = '';
-
               this.user.name = '';
               this.user.email = '';
               this.user.password = '';
               this.user.confirm = '';
             },
             error: (error: any) => {
-              console.log('Hiba történt:', error);
-
               this.modalVisible = true;
               this.modalType = 'error';
               this.modalMessage = error.error.message || 'Hiba történt az adatok frissítése során.';
-              this.invalidFields = error.error.invalid || "";
-
+              this.invalidFields = error.error.invalid || [];
               this.errorMessage = error.error.message || 'Hiba történt az adatok frissítése során.';
             }
           });
@@ -269,12 +250,9 @@ fetchUserProfilePicture(): void {
             this.modalMessage = res.message || 'Emlékeztető sikeresen beállítva!';
             this.invalidFields = [];
             this.autoCloseModal();
-
             this.user.reminderAt = '';
           },
           error: (error: any) => {
-            console.error('Hiba történt az emlékeztető beállításakor:', error);
-
             this.modalVisible = true;
             this.modalType = 'error';
             this.modalMessage = error.error.message || 'Hiba történt az emlékeztető mentése során.';

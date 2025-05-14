@@ -13,121 +13,33 @@
               (click)="setActiveTab('sajat_kihivasok')"
             >Saját kihívások</button>
           </li>
+          <li class="nav-item" role="presentation">
+            <button 
+            class="nav-link active" 
+            [class.active]="activeTab === 'folyamatbanLevo_kihivasok'"
+            (click)="setActiveTab('folyamatbanLevo_kihivasok')"
+          >Folyamatban lévő kihívások</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button 
+            class="nav-link active" 
+            [class.active]="activeTab === 'publikus_kihivasok'"
+            (click)="setActiveTab('publikus_kihivasok')"
+          >Publikus kihívások</button>
+        </li>
       </ul>
   </div>
   
   <div class="tab-content" id="myTabContent">
       <div class="tab-pane show active" [class.d-none]="activeTab !== 'sajat_kihivasok'" id="sajat_kihivasok-tab-pane" role="tabpanel" aria-labelledby="sajat_kihivasok-tab" tabindex="0">
-        <div class="row">
-            <div class="foBox">
-                <h1>Saját kihívás létrehozása</h1>
-                <div class="alBox">
-                  <form (ngSubmit)="onSubmit()" class="challengeBox">
-                    <div class="mb-3">
-                        <label class="cim" for="challengeName">Kihívás neve</label>
-                        <input type="text" class="form-control challengeInput" id="challengeName" name="challengeName" placeholder="Írd le a kihívás nevét ..." required [(ngModel)]="user_challenges.challengeName">
-                      </div>
-                      <div class="mb-3">
-                        <label class="cim" for="challengeDescription">Kihívás leírása</label>
-                        <textarea class="form-control" placeholder="Írj egy rövid leírást a kihívásról ..." id="challengeDescription" name="challengeDescription" required [(ngModel)]="user_challenges.challengeDescription"></textarea>
-                      </div>
-                      <div class="form-check form-switch form-check-reverse mb-3">
-                        <input class="form-check-input" type="checkbox" id="status" name="status" [checked]="status === 1"(change)="onStatusChange($event)" required [(ngModel)]="user_challenges.status"/> 
-                        <label class="form-check-label" for="status">Publikus kihívás</label>
-                      </div>
-                      <div class="row">
-                        <div class="mb-3">
-                            <label class="cim" for="createdAt">Kihívás kezdete</label>
-                            <input type="date" class="form-control challengeInput" id="createdAt" name="createdAt" placeholder="Kihívás kezdete" required [(ngModel)]="user_challenges.createdAt" [min]="minDate">
-                        </div>
-                        <div class="mb-3">
-                            <label class="cim" for="finalDate">Kihívás vége</label>
-                            <input type="date" class="form-control challengeInput" id="finalDate" name="finalDate" placeholder="Kihívás vége" required [(ngModel)]="user_challenges.finalDate" [min]="minDate">
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="mb-3">
-                          <label class="cim" for="finalDate">Rang pont</label>
-                            <input type="number" class="form-control challengeInput" id="rewardPoints" name="rewardPoints" placeholder="Írj egy rangpont mennyiséget ..." required [(ngModel)]="user_challenges.rewardPoints">
-                          </div>
-                          <div class="mb-3">
-                            <label class="cim" for="badgeId">Jelvények</label>
-                            <mat-form-field appearance="fill" class="badge-select">
-                              <mat-label>Válassz egy jelvényt</mat-label>
-                              <mat-select required [(ngModel)]="user_challenges.badgeId" name="badgeId">
-                                <mat-option *ngFor="let badge of badges" [value]="badge.id">
-                                  <div class="badge-option">
-                                    <img [src]="badge.imageUrl" />
-                                    <span>{{ badge.filename | slice: 0:-4 }}</span>
-                                  </div>
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>                            
-                          </div>
-                      </div>
-                      <div class="mb-3">
-                        <button type="submit" class="letrehozas">Létrehozás</button>
-                      </div>
-                  </form>
-                  <ng-container *ngIf="user_challenges.id; else noChallenge">
-                    <form (ngSubmit)="onFriendSubmit()" class="friendBox">
-                      <div class="row">
-                        <div class="mb-3">
-                          <label class="cim">Barátok hozzáadása a kihíváshoz</label>
-                          <mat-form-field appearance="fill" class="friend-select">
-                            <mat-label>Barátaim</mat-label>
-                            <mat-select [(value)]="selectedFriendIds" multiple>
-                              <mat-option *ngFor="let friend_request of acceptedFriendRequests" [value]="friend_request.senderId.toString()">
-                                <div class="friend-option">
-                                  <span class="circle-image">
-                                    <img id="profile" [src]="imagePreviewUrl" />
-                                  </span>
-                                  <span class="username">{{ senderNames[friend_request.senderId] || 'Ismeretlen felhasználó' }}</span>
-                                </div>
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <button type="button" class="add-button" (click)="addSelectedFriends()">Hozzáadás</button>
-                        </div>
-                      </div>
-                      <label class="cim">Barátok lista</label>
-                      <div class="barat_box mb-3">
-                        <div class="barat_content">
-                          <ng-container *ngIf="addedFriends.length > 0; else noFriends">
-                            <ng-container *ngFor="let friend_requests of addedFriends">
-                              <p class="barat_text">
-                                <span class="circle-image">
-                                  <img id="profile" [src]="friend_requests.imageUrl" />
-                                </span>
-                                <span class="username">{{ friend_requests.name }}</span>
-                                <input type="text" class="form-control" id="activeChallenge" name="activeChallenge" required [(ngModel)]="friend_requests.activeChallenge"[disabled]="!!friend_requests.activeChallenge"/>
-                                <button type="button" class="del" (click)="openPopup('remove', friend_requests.id)">Eltávolítás</button>
-                              </p>
-                            </ng-container>
-                          </ng-container>
-                        </div>
-                      </div>
-                      <button type="submit" class="mentes">Mentés</button>
-                      <ng-template #noFriends>
-                        <h5 class="NO_DATA">A kihíváshoz még nincs barát hozzáadva!</h5>
-                      </ng-template>
-                    </form>
-                  </ng-container>
-                  <ng-template #noChallenge>
-                    <h5 class="NO_DATA">Hozz létre egy kihívást először!</h5>
-                  </ng-template>
-                </div>
-            </div>
-        </div>
+          <app-sajat-kihivas></app-sajat-kihivas>
       </div>
-      <div class="popup-container" *ngIf="showPopup">
-        <div class="popup">
-          <p>{{ popupMessage }}</p>
-          <button class="confirm-button" (click)="confirmAction()">Igen</button>
-          <button class="cancel-button" (click)="closePopup()">Mégse</button>
-        </div>
-      </div>
+      <div class="tab-pane show active" [class.d-none]="activeTab !== 'folyamatbanLevo_kihivasok'" id="folyamatbanLevo_kihivasok-tab-pane" role="tabpanel" aria-labelledby="folyamatbanLevo_kihivasok-tab" tabindex="0">
+        <app-folyamatban-levo-kihivas></app-folyamatban-levo-kihivas>
+    </div>
+    <div class="tab-pane show active" [class.d-none]="activeTab !== 'publikus_kihivasok'" id="publikus_kihivasok-tab-pane" role="tabpanel" aria-labelledby="publikus_kihivasok-tab" tabindex="0">
+        <app-publikus-kihivasok></app-publikus-kihivasok>
+    </div>
   </div>
   
   <app-alert-modal 

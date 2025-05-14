@@ -78,6 +78,20 @@ export class ApiService {
     );
   }
 
+   getFollowers(): Observable<{ followers: User[], count: number, message?: string }> {
+  return this.http.get<{ followers: User[], count: number, message?: string }>(
+    `${this.server}/friends/followers`,
+    this.tokenHeader()
+  ).pipe(
+    catchError(error => {
+      console.error('Error fetching followers:', error);
+      return of({ followers: [], count: 0, message: 'Error occurred while fetching followers' });
+    })
+  );
+}
+
+
+
   getChallenges(): Observable<{ challenges: any[], count: number, message?: string }> {
     return this.http.get<{ challenges: any[], count: number, message?: string }>(
       `${this.server}/challenges`,
@@ -162,6 +176,7 @@ export class ApiService {
     );
   }
 
+
   setReminder(id: string, data: { reminderAt: any }): Observable<any> {
     return this.http.post<any>(`${this.server}/users/reminder/${id}`, data, this.tokenHeader()).pipe(
       catchError(error => {
@@ -181,6 +196,10 @@ export class ApiService {
 
   readUserChallenges(table: string, userId: string): Observable<any> {
     return this.http.get(`${this.server}/${table}/challenges/${userId}`, this.tokenHeader());
+  }
+
+  readChallengeParticipants(table: string, secondaryId: string): Observable<any> {
+    return this.http.get(`${this.server}/${table}/${secondaryId}`, this.tokenHeader());
   }
 
   readFriendRequests(table: string, userId: string): Observable<any> {
@@ -210,7 +229,7 @@ export class ApiService {
         return of({ message: 'Update failed' });
       })
     );
-  }  
+  }
 
   updateTaskStatus(taskId: string, newStatus: string): Observable<any> {
     const body = { status: newStatus };
@@ -284,6 +303,7 @@ export class ApiService {
 }
 
 
+
  createEvent(data: { title: string; description: string; startTime: string; endTime: string; color: string; userId: string;}): Observable<any> {
   return this.http.post<any>(`${this.server}/events`, data, this.tokenHeader()).pipe(
     catchError(error => {
@@ -340,6 +360,7 @@ deleteEvent(id: string): Observable<any> {
 }
 
 
+
  // Poszt létrehozása
  createPost(postData: { title: string; body: string, status: string}): Observable<any> {
   return this.http.post<any>(`${this.server}/posts`, postData, this.tokenHeader()).pipe(
@@ -369,6 +390,7 @@ deletePost(postId: string): Observable<any> {
       return of({ message: 'Poszt törlése sikertelen' });
     })
   );
+
 }
 
 addHabitTrackingRecord(data: {
@@ -448,6 +470,7 @@ deleteHabit(habitId: string): Observable<any> {
 }
 
 
+
 updateHabit(habitId: string, completed: boolean): Observable<any> {
   const token = localStorage.getItem('trackit');
   
@@ -470,6 +493,116 @@ updateHabit(habitId: string, completed: boolean): Observable<any> {
 
 
 
+ createEvent(data: { title: string; description: string; startTime: string; endTime: string; color: string; userId: string;}): Observable<any> {
+  return this.http.post<any>(`${this.server}/events`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Event creation failed', error);
+      return of({ message: 'Event creation failed' });
+    })
+  );
+}
+
+getEvents(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.server}/events`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching events:', error);
+      return of([]);
+    })
+  );
+}
+
+getEventById(id: string): Observable<any> {
+  return this.http.get<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching event:', error);
+      return of(null);
+    })
+  );
+}
+
+getEventByUserId(userId: string): Observable<any> {
+  return this.http.get<any>(`${this.server}/events/user/${userId}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching events for user:', error);
+      return of(null);
+    })
+  );
+}
+
+
+updateEvent(id: string, data: { title?: string; description?: string; startTime?: string; endTime?: string; color?: string }): Observable<any> {
+  return this.http.put<any>(`${this.server}/events/${id}`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error updating event:', error);
+      return of({ message: 'Event update failed' });
+    })
+  );
+}
+
+
+deleteEvent(id: string): Observable<any> {
+  return this.http.delete<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error deleting event:', error);
+      return of({ message: 'Event deletion failed' });
+    })
+  );
+}
+
+// Kommentek lekérdezése egy poszthoz
+  getCommentsByPost(postId: string): Observable<any> {
+    return this.http.get<any>(`${this.server}/comments/post/${postId}`, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a kommentek lekérésekor:', error);
+        return of({ comments: [], message: 'Hiba történt a kommentek lekérésekor' });
+      })
+    );
+  }
+
+  // Új komment létrehozása
+  createComment(postId: string, commentData: { text: string, parentId?: string|null }): Observable<any> {
+    return this.http.post<any>(`${this.server}/comments/${postId}`, commentData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a komment létrehozásakor:', error);
+        return of({ message: 'Komment létrehozása sikertelen' });
+      })
+    );
+  }
+
+  // Komment frissítése
+  updateComment(commentId: string, commentData: { text: string }): Observable<any> {
+    return this.http.put<any>(`${this.server}/comments/${commentId}`, commentData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a komment frissítésekor:', error);
+        return of({ message: 'Komment frissítése sikertelen' });
+      })
+    );
+  }
+
+  // Komment törlése
+  deleteComment(commentId: string): Observable<any> {
+    return this.http.delete<any>(`${this.server}/comments/${commentId}`, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a komment törlésékor:', error);
+        return of({ message: 'Komment törlése sikertelen' });
+      })
+    );
+  }
+ // Barátkérés küldése
+  sendFriendRequest(receiverId: string): Observable<any> {
+    return this.http.post<any>(`${this.server}/friends/send-friendrequest`, { receiverId }, this.tokenHeader()).pipe(
+      catchError(error => {
+
+        console.error(error);
+        return of({ message: 'Barátkérés küldése sikertelen' });
+      })
+    );
+  }
+
 
 
 }
+
+
+
+

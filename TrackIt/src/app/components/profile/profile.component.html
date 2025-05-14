@@ -12,36 +12,36 @@
 <div class="col-12 col-xs-12 col-sm-12 col-md-10 col-lg-12">
     <ul class="nav nav-tabs">
         <li class="nav-item" role="presentation">
-            <button 
-            class="nav-link active" 
+            <button
+            class="nav-link active"
             [class.active]="activeTab === 'statisztika'"
             (click)="setActiveTab('statisztika')"
           >Statisztika</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button 
-            class="nav-link" 
+            <button
+            class="nav-link"
             [class.active]="activeTab === 'jelveny'"
             (click)="setActiveTab('jelveny')"
           >Jelvények</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button 
-            class="nav-link" 
+            <button
+            class="nav-link"
             [class.active]="activeTab === 'barat'"
             (click)="setActiveTab('barat')"
-          >Barátok</button>
+          >Követések</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button 
-        class="nav-link" 
+            <button
+        class="nav-link"
         [class.active]="activeTab === 'bejegyzes'"
         (click)="setActiveTab('bejegyzes')"
       >Bejegyzéseim</button>
         </li>
         <li class="nav-item-tab" role="presentation">
-            <button 
-        class="nav-link" 
+            <button
+        class="nav-link"
         [class.active]="activeTab === 'profile'"
         (click)="setActiveTab('profile')"
       >Profil módosítása</button>
@@ -66,7 +66,8 @@
 
 
     <div class="tab-pane" [class.d-none]="activeTab !== 'bejegyzes'" id="bejegyzes-tab-pane" role="tabpanel" aria-labelledby="bejegyzes-tab" tabindex="0">
-      <app-profile-bejegyzes></app-profile-bejegyzes>
+      <app-profile-bejegyzes [onlyOwnPosts]="true" [readOnly]="true"></app-profile-bejegyzes>
+
     </div>
 
 
@@ -75,9 +76,9 @@
     </div>
 </div>
 
-<app-alert-modal 
-  [visible]="modalVisible" 
-  [type]="modalType" 
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
   [message]="modalMessage"
   (close)="modalVisible = false">
 </app-alert-modal>

@@ -1,16 +1,9 @@
-import { 
-    Entity, 
-    PrimaryGeneratedColumn, 
-    Column, 
-    CreateDateColumn, 
-    ManyToOne, 
-    JoinColumn 
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { Pictures } from "./Picture";
 import { Users } from "./User";
+import { Comments } from "./Comment";  // Komment entitás importálása
 
 export enum PostStatus {
-    
     PUBLISHED = "published",
     ARCHIVED = "archived"
 }
@@ -26,16 +19,16 @@ export class Posts {
     @Column({ type: "text" })
     body: string;
 
-    @ManyToOne(() => Users, (user) => user.posts, {eager: true})
+    @ManyToOne(() => Users, (user) => user.posts, { eager: true })
     @JoinColumn({ name: "userId" })
     user: Users;
 
     @Column({ type: "varchar", length: 40, nullable: true })
     userId: string;
 
-    @Column({ 
-        type: "enum", 
-        enum: PostStatus, 
+    @Column({
+        type: "enum",
+        enum: PostStatus,
         default: PostStatus.PUBLISHED
     })
     status: PostStatus;
@@ -49,4 +42,8 @@ export class Posts {
 
     @Column({ type: "varchar", length: 40, nullable: true })
     pictureId: string;
+
+@OneToMany(() => Comments, (comment) => comment.post)
+comments: Comments[];  // A `Comments` entitás nevét kell használni, nem `Comment`
+
 }

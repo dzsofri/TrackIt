@@ -10,8 +10,7 @@
     <!-- Kapcsolatok listája -->
     <div class="contact" *ngFor="let contact of contacts" (click)="selectContact(contact)">
       <!-- Kapcsolat profilképe -->
-      <img [src]="'assets/images/profileKep.png'" alt="{{ contact.name }}" (error)="onImageError($event)" />
-
+     <img alt="Profile Picture" class="avatar" [src]="contact.profileImageUrl || '/assets/images/profileKep.png'" />
       <div class="info">
         <!-- Kapcsolat neve -->
         <div class="name">{{ contact.name }}</div>
@@ -22,11 +21,10 @@
         </div>
       </div>
 
-      <!-- Nem olvasott üzenet jelzése -->
-      <span class="dot" *ngIf="contact.unread"></span>
+
 
       <!-- Online/offline státusz színes pont -->
-      <span class="status-dot" [ngClass]="isUserOnline(contact.id) ? 'online' : 'offline'"></span>
+
     </div>
   </div>
 
@@ -34,10 +32,11 @@
   <div class="chat-window" *ngIf="selectedContact">
     <div class="chat-header">
       <div>
+
         <!-- Kiválasztott kapcsolat neve -->
         <h4>{{ selectedContact.name }}</h4>
         <!-- Kiválasztott kapcsolat utolsó elérhetősége -->
-        <small>Utoljára elérhető 30 perce</small>
+        <small>{{ selectedContact.email }}</small>
       </div>
     </div>
 

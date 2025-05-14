@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12 col-sm-12 col-md-6 mb-4">
-    <h3>Barátok kezelése</h3>
+    <h3>Követők kezelése</h3>
     <div class="barat_box1">
       <div class="barat_content1">
         <ng-container *ngIf="friend_requests.length > 0; else noFriends">
@@ -8,7 +8,7 @@
             <ng-container *ngFor="let friend_request of friend_requests">
               <p *ngIf="friend_request.status === 'accepted'" class="barat_text">
                 <span class="circle-image">
-                  <img id="profile" [src]="imagePreviewUrl"/>
+                  <img id="profile" [src]="friend_request.imageUrl || '/assets/images/profileKep.png'" />
                 </span>
                 <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
                 <button class="del1" (click)="openPopup('delete', friend_request.id)">Törlés</button>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <ng-template #noFriends>
-      <h5 class="NO_DATA">Még nincs ismerősöd!</h5>
+      <h5 class="NO_DATA">Még nincs követőd!</h5>
     </ng-template>
   </div>
 
@@ -32,7 +32,7 @@
             <ng-container *ngFor="let friend_request of friend_requests">
               <p *ngIf="friend_request.status === 'pending'" class="barat_text">
                 <span class="circle-image">
-                  <img id="profile2" [src]="imagePreviewUrl"/>
+                  <img id="profile" [src]="friend_request.imageUrl || '/assets/images/profileKep.png'" />
                 </span>
                 <span class="username">{{friend_request.sender?.name || 'Ismeretlen felhasználó'}}</span>
                 <span class="buttons">
@@ -50,6 +50,7 @@
     </ng-template>
   </div>
 
+  <!-- Popup ablak -->
   <div class="popup-container" *ngIf="showPopup">
     <div class="popup">
       <p>{{ popupMessage }}</p>

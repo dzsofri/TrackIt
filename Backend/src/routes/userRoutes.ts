@@ -337,7 +337,6 @@ router.patch('/:id', tokencheck, async (req: any, res: any) => {
     });
 });
 
-
 router.post('/reminder/:id', tokencheck, async (req: any, res: any) => {
     const { reminderAt } = req.body;
     const userId = req.params.id;
@@ -460,46 +459,56 @@ router.put("/users/:id/picture", tokencheck, upload.single("picture"), async (re
     }
 });
   
-router.get("/profile-picture", tokencheck, async (req: any, res: any) => {
+router.get("/profile-picture/:userId", tokencheck, async (req: any, res: any) => {
     try {
-      const userId = req.user.id;
-  
-      if (!userId) {
-        return res.status(401).json({ message: "Unauthorized: User ID missing in token." });
-      }
-  
-      const userRepository = AppDataSource.getRepository(Users);
-      const user = await userRepository.findOne({
-        where: { id: userId },
-        relations: ["picture"],
-      });
-  
-      if (!user) {
-        return res.status(404).json({ message: "User not found." });
-      }
-  
-      const imageUrl = user.picture?.filename
-        ? `http://localhost:3000/uploads/${user.picture.filename}`
-        : null;
-  
-      return res.status(200).json({
-        imageUrl,
-        picture: user.picture
-          ? {
-              id: user.picture.id,
-              filename: user.picture.filename,
-              path: user.picture.path,
-            }
-          : null,
-      });
+        // Extract userId from the URL parameter
+        const { userId } = req.params;
+
+        // Validate userId format
+        if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+            return res.status(400).json({ message: "User ID is required and must be a valid string." });
+        }
+
+        // Get the repository for Users and fetch the user along with their picture
+        const userRepository = AppDataSource.getRepository(Users);
+        const user = await userRepository.findOne({
+            where: { id: userId },
+            relations: ["picture"],  // Ensure the 'picture' relation is set in the User entity
+        });
+
+        // If user is not found, return a 404 error
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Construct the image URL dynamically based on environment
+        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';  // Use environment variable for base URL
+        const imageUrl = user.picture?.filename
+            ? `${baseUrl}/uploads/${user.picture.filename}`  // Dynamically construct the image URL
+            : null;
+
+        // Return the image URL and picture details if available
+        return res.status(200).json({
+            imageUrl,
+            picture: user.picture
+                ? {
+                      id: user.picture.id,
+                      filename: user.picture.filename,
+                      path: user.picture.path,
+                  }
+                : null,  // If no picture, return null for the picture object
+        });
     } catch (error) {
-      console.error("Error fetching profile picture:", error);
-      return res.status(500).json({ message: "Server error." });
+        // Log and return a 500 error if an exception occurs
+        console.error("Error fetching profile picture:", error);
+        return res.status(500).json({ message: "Server error." });
     }
 });
 
 
-// Frissíti a felhasználó státuszát (online/offline)
+
+
+
 router.patch("/status", tokencheck, async (req: any, res: any) => {
     const { status } = req.body;
 

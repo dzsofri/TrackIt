@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatMessage } from '../../interfaces/chatMessage';
 import { User } from '../../interfaces/user';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-chat',
@@ -29,12 +30,15 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   private shouldScroll = false;
   isDarkMode = false;
   onlineUsers: { userId: string, status: string }[] = []; // Online felhasználók státusza
+  imagePreviewUrl: string | null = null;
+
 
   constructor(
     private socketService: SocketService,
     private authService: AuthService,
     private apiService: ApiService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient,
   ) {
     this.socketService.userStatus$.subscribe(status => this.onlineUsers = status);
   }
@@ -49,7 +53,28 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   ngAfterViewChecked(): void {
     this.scrollToBottomIfNeeded();
   }
+  fetchUserProfilePicture(userid: string, post: any): void {
+    const token = localStorage.getItem('trackit');
+    if (!token) {
+      console.error('No valid token found!');
+      return;
+    }
 
+    this.http
+      .get<{ imageUrl: string | null }>(`http://localhost:3000/users/profile-picture/${userid}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .subscribe({
+        next: (response) => {
+          const imageUrl = response.imageUrl || '/assets/images/profileKep.png';
+            post.profileImageUrl = imageUrl;
+        },
+        error: (error) => {
+          console.error('Error fetching profile picture:', error);
+            post.profileImageUrl = '/assets/images/profileKep.png'; // Default fallback image for posts
+        },
+      });
+  }
   // Inicializálja az aktuális felhasználót
   private initializeCurrentUser(): void {
     const user = this.authService.loggedUser();
@@ -61,14 +86,21 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   // Betölti a felhasználók listáját
-  private loadContacts(): void {
-    this.apiService.getUsers().subscribe(response => {
-      this.contacts = response.users.filter((u: any) => u.id !== this.currentUserId);
-      if (this.contacts.length > 0) {
-        this.selectContact(this.contacts[0]);
-      }
+private loadContacts(): void {
+  this.apiService.getUsers().subscribe(response => {
+    this.contacts = response.users.filter((u: any) => u.id !== this.currentUserId);
+
+    // Fetch képek minden felhasználóhoz
+    this.contacts.forEach((contact: any) => {
+      this.fetchUserProfilePicture(contact.id, contact);
     });
-  }
+
+    if (this.contacts.length > 0) {
+      this.selectContact(this.contacts[0]);
+    }
+  });
+}
+
 
   // Belép a privát szobába a socketen
   private joinPrivateRoom(): void {

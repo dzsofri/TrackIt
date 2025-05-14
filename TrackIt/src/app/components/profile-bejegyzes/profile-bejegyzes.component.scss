@@ -1,51 +1,71 @@
-.feed-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding: 2rem;
-  gap: 0.5rem;
-  background: transparent;
+.feed-bg {
+  background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+  min-height: 100vh;
+  padding-top: 2rem;
 }
 
 .feed-wrapper {
-  background: #f0f0f0;
+  background: #ffffff;
   padding: 2rem;
-  max-width: 1000px;
+  max-width: 960px;
   margin: 0 auto;
   border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-
-.post,
-.post-with-image {
-  background-color: #ffffff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  max-width: 100%;
-  width: 100%;
-  text-align: left; /* Align all text to the left */
-  min-height: 600px;
-  position: relative;
-  z-index: 1;
+.feed-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  overflow: hidden;
+  gap: 1.5rem;
+  width: 100%;
 }
 
-/* Shadow effect behind the posts */
-.feed-container::before {
-  content: "";
+.no-posts {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+}
+
+/* Időbélyegző elhelyezése a poszt jobb felső sarkában */
+.post-timestamp {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.05);
-  z-index: -1;
+  top: 1.5rem;         /* Felső távolság a poszt tetejétől */
+  right: 3.5rem;         /* Jobb oldali távolság */
+  font-size: 0.875rem; /* Kisebb betűméret */
+  color: #888;         /* Halvány szürke szín */
+  font-style: italic;  /* Dőlt betűstílus */
+  z-index: 1;          /* A többi elem ne takarja el */
+}
+
+/* Responszív dizájn (mobil eszközökre) */
+@media (max-width: 768px) {
+  .post-timestamp {
+    font-size: 0.75rem;  /* Kisebb betűméret mobilon */
+    top: 1rem;           /* A távolság csökkentése */
+    right: 1rem;         /* A jobb távolság csökkentése */
+  }
+}
+
+.post {
+  background: #ffffff;
   border-radius: 1rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+}
+
+.post:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .avatar {
@@ -53,75 +73,46 @@
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #ddd; /* Szebb vékony keret, vagy el is hagyhatod */
-}
-
-
-/* Avatar and author name positioning */
-.post-author {
-  display: flex;
-  align-items: center; /* Kép és név függőlegesen középre igazítása */
-  gap: 0.75rem; /* Kép és név közötti távolság */
-  margin-bottom: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  width: fit-content;
+  border: 2px solid #ccc;
 }
 
 .author-name {
   font-weight: 600;
   font-size: 1rem;
-  color: #333;
-  white-space: nowrap; /* Ne törjön le a név */
+  color: #222;
 }
 
-/* Image wrapper */
-.post-image-wrapper {
-  margin-top: 1rem; /* Kisebb margó az image és a szöveg között */
-  order: 1; /* Ensure the image is below the avatar and text */
-}
-
-.post-with-image img {
-  display: block;
-  margin: 0 auto 1.5rem auto;
+.post-image-wrapper img {
   width: 100%;
-  max-width: 500px;
-  height: auto;
-  object-fit: contain;
+  max-height: 400px;
+  object-fit: cover;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-.post-title h3 {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 1rem;
-}
-
-.post-body p {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.post-status {
-  font-size: 1rem;
-  color: #999;
+  margin: 1rem 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .no-image-text {
-  color: #bbb;
+  color: #aaa;
   font-style: italic;
   margin-bottom: 1.5rem;
 }
 
-/* Menu positioning */
+.post-title h3 {
+  font-size: 1.75rem;
+  color: #343a40;
+  margin-bottom: 0.75rem;
+}
+
+.post-body p {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
 .post-menu {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 2;
+  top: 1rem;
+  right: 1rem;
 }
 
 .menu-btn {
@@ -129,84 +120,202 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #333;
-  transition: color 0.3s;
+  color: #444;
+  transition: color 0.2s ease;
 }
 
 .menu-btn:hover {
-  color: #007BFF;
+  color: #4CAF50;
 }
 
-/* Menu container */
 .menu-options {
   position: absolute;
-  top: 30px;
+  top: 2.5rem;
   right: 0;
-  background-color: #ffffff;
+  background: white;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  padding: 0.5rem;
-  width: 120px;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s, visibility 0s linear 0.2s;
+  min-width: 140px;
+  z-index: 10;
 }
 
-.post-menu:hover .menu-options {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.2s;
-}
-
-/* Menu buttons */
 .menu-options button {
-  background: #f1f1f1;
+  background: none;
   border: none;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   text-align: left;
-  cursor: pointer;
   font-size: 1rem;
   color: #333;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-  transition: background-color 0.3s, transform 0.2s;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.menu-options button:last-child {
-  margin-bottom: 0;
-}
-
-/* Hover effect */
 .menu-options button:hover {
-  background-color: #007BFF;
-  color: #fff;
-  transform: scale(1.05);
-}
-
-/* Active state */
-.menu-options button:active {
-  transform: scale(1);
-}
-
-/* Delete button */
-.menu-options button.delete {
-  background-color: #ff4d4d;
+  background-color: #4CAF50;
   color: white;
 }
 
-.menu-options button.delete:hover {
-  background-color: #ff3333;
-}
-
-/* Edit button */
-.menu-options button.edit {
+.menu-options .edit {
   background-color: #ffc107;
   color: white;
 }
 
-.menu-options button.edit:hover {
+.menu-options .edit:hover {
   background-color: #e0a800;
+}
+
+.menu-options .delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.menu-options .delete:hover {
+  background-color: #c82333;
+}
+
+/* Animációk */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .post-title h3 {
+    font-size: 1.5rem;
+  }
+
+  .post-body p {
+    font-size: 1rem;
+  }
+
+  .post {
+    padding: 1.5rem;
+  }
+
+  .menu-options {
+    min-width: 120px;
+  }
+
+
+
+
+}
+.friend-request button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  margin-top: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.friend-request button:hover {
+  background-color: #0056b3;
+}
+
+.post-comments {
+  margin-top: 1rem;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+
+  .avatar{
+    width: 3rem;
+  height: 3rem;
+ margin-right: 1rem;
+  }
+}
+
+.comment {
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #4CAF50;
+}
+
+.comment-text {
+  font-size: 0.95rem;
+  margin: 0.2rem 0;
+}
+
+.replies {
+  margin-left: 1.5rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid #eee;
+  margin-top: 0.5rem;
+}
+
+.reply-btn {
+  background: none;
+  color: #4CAF50;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.comment-form,
+.reply-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  align-items: center;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.reply-input {
+  font-size: 0.85rem;
+}
+
+.comment-submit {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.comment-submit.small {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.8rem;
+}
+
+.comment-submit:hover {
+  background-color: #4CAF50;
+}
+.reply-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.cancel-btn {
+  background: none;
+  border: none;
+  color: #888; // halvány szürke
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #555;
+  }
 }
