@@ -210,8 +210,8 @@ export class SajatKihivasComponent {
   }
 
   onSubmit(): void {
-    if (!this.user_challenges.badgeId) {
-      this.modalMessage = 'Kérjük, válassz egy jelvényt!';
+    if (!this.user_challenges.badgeId || !this.user_challenges.challengeName || !this.user_challenges.challengeDescription || !this.user_challenges.createdAt || !this.user_challenges.finalDate || !this.user_challenges.rewardPoints) {
+      this.modalMessage = 'Minden mezőt tölts ki!';
       this.modalType = 'warning';
       this.modalVisible = true;
       return;
