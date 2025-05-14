@@ -102,4 +102,26 @@ router.put("/:habitId/status", tokencheck, async (req: any, res: any) => {
 });
 
 
+// DELETE /habits/:habitId - szokás törlése
+router.delete("/:habitId", tokencheck, async (req: any, res: any) => {
+  try {
+    const { habitId } = req.params;
+
+    const habitRepo = AppDataSource.getRepository(Habits);
+    const habit = await habitRepo.findOne({ where: { id: habitId } });
+
+    if (!habit) {
+      return res.status(404).json({ message: "Szokás nem található." });
+    }
+
+    await habitRepo.remove(habit);
+
+    return res.status(200).json({ message: "Szokás sikeresen törölve!" });
+  } catch (error) {
+    console.error("Hiba a szokás törlésekor:", error);
+    return res.status(500).json({ message: "Szerverhiba történt a szokás törlése során." });
+  }
+});
+
+
 export default router;

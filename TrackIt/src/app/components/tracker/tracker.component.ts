@@ -265,6 +265,31 @@ loadHabitChart(): void {
   });
 }
 
+deleteHabit(): void {
+  if (!this.selectedHabit) return;
+
+  if (confirm('Biztosan törölni szeretnéd ezt a szokást?')) {
+    this.api.deleteHabit(this.selectedHabit.id).subscribe({
+      next: (response) => {
+        if (response.message === 'Szokás sikeresen törölve!') {
+          this.habitList = this.habitList.filter(h => h.id !== this.selectedHabit?.id);
+          this.selectedHabit = null;
+          this.modalMessage = 'Szokás törölve!';
+          this.modalType = 'success';
+          this.modalVisible = true;
+          this.loadHabitChart();
+        }
+      },
+      error: () => {
+        this.modalMessage = 'Hiba történt a törlés során.';
+        this.modalType = 'error';
+        this.modalVisible = true;
+      }
+    });
+  }
+}
+
+
 
   setActiveTab(tab: string) {
     this.activeTab = tab;

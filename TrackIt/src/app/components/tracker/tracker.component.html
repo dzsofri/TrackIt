@@ -32,6 +32,15 @@
 
     <button *ngIf="selectedHabit && selectedHabit.status !== 'active'" (click)="activateHabit()">Aktiválás</button>
     <button (click)="isPopupOpen = true">Új szokás létrehozása</button>
+    
+<!-- ÚJ: Törlés gomb -->
+<button 
+  *ngIf="selectedHabit" 
+  (click)="deleteHabit()" 
+  style="background-color: #c0392b;">
+  Szokás törlése
+</button>
+
   </div>
 
   <!-- Diagram közvetlen flex gyerekként -->

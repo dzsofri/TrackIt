@@ -438,6 +438,14 @@ updateHabitStatus(payload: { habitName: string, status: string, userId: string, 
   return this.http.put<any>(`${baseUrl}/habits/${payload.habitId}/status`, payload, { headers });
 }
 
+deleteHabit(habitId: string): Observable<any> {
+  return this.http.delete(`${this.server}/habits/${habitId}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a szokás törlésekor:', error);
+      return of({ message: 'Szokás törlése sikertelen' });
+    })
+  );
+}
 
 
 
