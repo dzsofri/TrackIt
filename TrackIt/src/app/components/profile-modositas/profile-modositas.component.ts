@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'; 
+import { Component } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
@@ -53,7 +53,7 @@ export class ProfileModositasComponent {
     this.auth.user$.subscribe((user) => {
       if (user) {
         this.user.id = user.id;
-        this.fetchUserProfilePicture();
+        this.fetchUserProfilePicture(this.user.id);
       }
     });
   }
@@ -74,15 +74,17 @@ export class ProfileModositasComponent {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
   }
 
-  fetchUserProfilePicture(): void {
+  fetchUserProfilePicture(userid: any): void {
     const token = localStorage.getItem('trackit');
     if (!token) {
       console.error('No valid token found!');
       return;
     }
+    console.log(userid)
+    console.log(token)
 
     this.http
-      .get<{ imageUrl: string | null }>('http://localhost:3000/users/profile-picture', {
+      .get<{ imageUrl: string | null }>(`http://localhost:3000/users/profile-picture/${userid}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .subscribe({

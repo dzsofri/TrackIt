@@ -80,7 +80,7 @@ router.post("/send-friendrequest", tokencheck, async (req: any, res: any) => {
         await AppDataSource.getRepository(FriendRequests).save(friendRequest);
         res.status(201).json({ message: "A barátkérés sikeresen elküldve!" });
     } catch (error) {
-        res.status(500).json({ error: "Hiba történt a barátkérés küldése közben." });
+        res.status(500).json({ error: "Hiba történt a barátkérés küldése közben." + senderId });
     }
 });
 
@@ -124,10 +124,7 @@ router.delete("/friendrequests/:id", tokencheck, async (req: any, res: any) => {
             where: { id }
         });
  
-        if (friendRequest.receiverId !== userId) {
-            return res.status(403).json({ error: "Csak a címzett utasíthatja el a barátkérést." });
-        }
- 
+     
         await AppDataSource.getRepository(FriendRequests).remove(friendRequest);
  
         res.json({ message: "A barátkérés elutasítva és törölve lett!" });

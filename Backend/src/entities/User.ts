@@ -10,6 +10,7 @@ import { Feedbacks } from "./Feedback";
 import { Habits } from "./Habit";
 import { Chat } from "./Chat";
 import { Events } from "./Event";
+import { Comments } from "./Comment";
 
 
 export enum UserRole {
@@ -98,7 +99,9 @@ export class Users {
     @OneToMany(() => Chat, (chat) => chat.receiver, { onDelete: "CASCADE" })
     receivedMessages: Chat[]; // A felhasználó által fogadott üzenetek
 
-
+    @OneToMany(() => Comments, (comment) => comment.user, { onDelete: "CASCADE" })
+    comments: Comments[];
+    
     @OneToMany(() => Events, (event) => event.user, { onDelete: "CASCADE" })
     events: Events[];
 

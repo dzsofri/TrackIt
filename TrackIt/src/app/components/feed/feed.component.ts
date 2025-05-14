@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { ProfileBejegyzesComponent } from '../profile-bejegyzes/profile-bejegyzes.component';
@@ -24,6 +24,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit {
+    @ViewChild(ProfileBejegyzesComponent) profileComponent!: ProfileBejegyzesComponent;
   posts: any[] = [];
 
   constructor(
@@ -117,6 +118,10 @@ export class FeedComponent implements OnInit {
     this.modalVisible = false;
     this.reminderService.clearReminder();
   }
+onPostSubmitted() {
+  this.loadPosts();
+  this.profileComponent?.loadAllPosts?.(); // Csak ha a metódus létezik
+}
 
   // === 💬 POSZT SZERKESZTÉS LOGIKA ===
 
@@ -135,5 +140,6 @@ export class FeedComponent implements OnInit {
     if (index !== -1) {
       this.posts[index] = updatedPost;
     }
+      this.loadPosts();
   }
 }
