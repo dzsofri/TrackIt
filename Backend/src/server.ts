@@ -18,10 +18,14 @@ import userStatisticsRoutes from "./routes/userStatisticsRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import postRoutes from "./routes/postRoutes";
 import challengeRoutes from "./routes/challengeRoutes";
-import chatRoutes from "./routes/chatRoutes";
+
+import chatRoutes from "./routes/chatRoutes"; // import chatRoutes
+import eventRoutes from "./routes/eventRoutes";
 
 // Entitások
 import { Badges } from "./entities/Badges";
+import habitRoutes from "./routes/habitRoutes";
+
 
 dotenv.config();
 
@@ -96,6 +100,10 @@ app.use("/posts", postRoutes);
 app.use("/challenges", challengeRoutes);
 app.use("/chat", chatRoutes);
 
+app.use("/events", eventRoutes);
+
+app.use("/habits", habitRoutes);
+
 // ========= MySQL kapcsolat =========
 const db = mysql.createConnection({
     host: process.env.DBHOST,
@@ -127,6 +135,7 @@ async function seedPictures() {
         await pictureRepo.save(newPicture);
     }
 }
+
 
 // ========= App indítása =========
 const PORT = process.env.PORT || 3000;

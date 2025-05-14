@@ -177,6 +177,7 @@ router.put("/:id", tokencheck, upload.single("picture"), async (req: any, res: a
 
 
 
+
 router.delete("/:id", tokencheck, async (req: any, res: any) => {
     try {
         const { id } = req.params;
@@ -207,7 +208,6 @@ router.delete("/:id", tokencheck, async (req: any, res: any) => {
         return res.status(500).json({ message: "Hiba történt a poszt törlésénél." });
     }
 });
-
 
   
 

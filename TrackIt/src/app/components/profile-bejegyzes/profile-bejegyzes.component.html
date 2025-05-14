@@ -53,6 +53,16 @@
         </div>
       </div>
       
+      <!-- A ProfileBejegyzesComponent sablonjában: -->
+<app-edit-post-modal
+  [post]="selectedPost"
+  [showModal]="showEditModal"
+  (close)="cancelEdit()"
+  (save)="saveEditedPost($event)">
+</app-edit-post-modal>
+
+
+
     </div>
   </div>
 </div>

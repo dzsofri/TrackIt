@@ -55,25 +55,43 @@ updateUserStatus(newStatus: string): void {
   }
 
   onSubmit() {
-
-
     this.api.registration(this.user).subscribe({
       next: (res: any) => {
-        console.log(res.message);
-        if (res.token) {
-          this.auth.login(res.token);  // Csak a tokent adjuk át az AuthService-nek
-          this.router.navigateByUrl('/profile');
+        console.log('Teljes válasz:', res);
+        console.log('Token:', res.token);
+        console.log('UserId:', res.user?.id); // <<< MÓDOSÍTVA
+      
+        if (res.token && res.user?.id) {
+          const userId = res.user.id;
+      
+          this.auth.login(res.token);
+      
+          const defaultTrackers = [
+            { habitName: 'Vízfogyasztás', targetValue: 2000, currentValue: 0, frequency: 'daily', userId },
+            { habitName: 'Edzés', targetValue: 30, currentValue: 0, frequency: 'daily', userId },
+            { habitName: 'Alvás', targetValue: 8, currentValue: 0, frequency: 'daily', userId }
+          ];
+      
+          defaultTrackers.forEach(tracker => {
+            this.api.createHabit(tracker).subscribe(result => {
+              console.log(`${tracker.habitName} létrehozva:`, result);
+            });
+          });
+      
+          this.updateUserStatus("online");
+          this.errorMessage = '';
+          this.router.navigateByUrl('/welcome');
         } else {
-          console.error('HIBA: A token hiányzik a válaszból');
+          console.error('HIBA: A token vagy userId hiányzik a válaszból');
+          this.errorMessage = 'A regisztrációs folyamat során hiba történt. Kérem próbálja újra.';
         }
-        this.errorMessage = ''; // Töröljük a hibát a sikeres regisztráció után
-        this.router.navigateByUrl('/welcome');
-        this.updateUserStatus("online");
       },
       error: (error: any) => {
+        // Regisztrációs hiba kezelése
         console.log('Hiba történt:', error);
         this.errorMessage = error.message || 'Hiba történt a regisztráció során.';
       }
     });
   }
+  
 }

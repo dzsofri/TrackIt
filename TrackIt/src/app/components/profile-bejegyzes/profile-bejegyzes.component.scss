@@ -49,33 +49,32 @@
 }
 
 .avatar {
-  width: 64px !important;
-  height: 64px !important;
-  border-radius: 50% !important;
-  border: 3px solid red; /* teszt keret */
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd; /* Szebb vékony keret, vagy el is hagyhatod */
 }
 
 
 /* Avatar and author name positioning */
 .post-author {
   display: flex;
-  flex-direction: column;
-  align-items: center; /* Center align the avatar and name */
-  gap: 0.25rem; /* Csökkentsd a gap-t, hogy kisebb legyen a távolság */
-  z-index: 2;
-  max-width: 220px;
-  position: relative; 
+  align-items: center; /* Kép és név függőlegesen középre igazítása */
+  gap: 0.75rem; /* Kép és név közötti távolság */
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
   background: rgba(255, 255, 255, 0.9);
-  padding: 0.75rem; /* Csökkentett padding, hogy kisebb legyen az avataros rész */
-  border-radius: 2rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin-bottom: 1rem; /* Csökkentett margin, hogy közelebb kerüljön a posthoz */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: fit-content;
 }
 
 .author-name {
   font-weight: 600;
-  color: #333;
   font-size: 1rem;
+  color: #333;
+  white-space: nowrap; /* Ne törjön le a név */
 }
 
 /* Image wrapper */
