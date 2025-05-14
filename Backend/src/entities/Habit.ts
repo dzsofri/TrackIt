@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne } from "typeorm";
 import { Users } from "./User";
-import { HabitTrackings } from "./HabitTracking";
 
 @Entity()
 export class Habits {
@@ -15,20 +14,29 @@ export class Habits {
     habitName: string;
 
     @Column({ type: "varchar", length: 50, nullable: true })
+    dailyTarget: string;
+
+    @Column({ type: "varchar", length: 50, nullable: true })
     targetValue: string;
 
     @Column({ type: "varchar", length: 50, nullable: true })
     currentValue: string;
 
-    @Column({ type: "varchar", length: 50, nullable: true })
-    frequency: string;
-
     @Column({ type: "varchar", length: 20, default: 'inactive' })
-    status: string; // <<< ÚJ MEZŐ
+    status: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+    @Column({ type: "date", nullable: true })
+    startDate: Date;
 
-    @OneToMany(() => HabitTrackings, (habitTrack) => habitTrack.habit)
-    habitTrackings: HabitTrackings[];
+    // Új mező a checkbox állapotának tárolására
+    @Column({ type: "boolean", default: false })
+    completed: boolean;
+
+    // Új mező a mértékegység tárolására
+    @Column({ type: "varchar", length: 50, nullable: true })
+    unit: string;  // Mértékegység (pl. liter, kilogramm, perc, stb.)
+
+    // Új mező a gomb állapotának tárolására (letiltott vagy nem)
+    @Column({ type: "boolean", default: false })
+    isButtonDisabled: boolean; // A gomb letiltásához
 }

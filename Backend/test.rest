@@ -5,8 +5,10 @@ POST http://localhost:{{PORT}}/users/login
 Content-Type: application/json
 
 {
-  "email": "beretizsofia@turr.hu",
-  "password": "Nyuszika310"
+
+  "email": "koni@gmail.com",
+  "password": "20060120Koni"
+
 }
 
 
@@ -285,3 +287,18 @@ Content-Type: application/json
 ###  Esemény törlése
 DELETE http://localhost:{{PORT}}/events/f956d247-9be7-4951-b216-95b50743a741
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhLTJjZGMtNDQ4Ni1iODc1LTllNzQ5NjY4YjdkZiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NDY5ODEwMiwiZXhwIjoxNzQ0Nzg0NTAyfQ.ik-RSIPY8LuIH0uRrAV0LlEOY8x6euyzoLVyjJRaLus
+
+
+
+
+### habit checkbox check
+
+PUT http://localhost:{{PORT}}/habits/completed/19
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI2ZmRmNzY4LTBiMmYtNGY4Yi1hNzYzLTM4M2EzMDhkNTM0YyIsImVtYWlsIjoia29uaUBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJuYW1lIjoia29uaSIsImlhdCI6MTc0NzIyMjUwOCwiZXhwIjoxNzQ3MzA4OTA4fQ.XTDbLjsmOSu6JkDODiRq-LRg6dg1FwIPUdGnyheHoR0
+Content-Type: application/json
+
+{
+ "completed": 1
+ 
+}
+

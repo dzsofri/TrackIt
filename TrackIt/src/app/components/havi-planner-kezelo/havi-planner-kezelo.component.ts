@@ -8,6 +8,7 @@ import { ApiService } from '../../services/api.service';
 import { ColorPicker, ColorPickerModule } from 'primeng/colorpicker';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 
+
 @Component({
   selector: 'app-havi-planner-kezelo',
   standalone: true,
@@ -16,6 +17,7 @@ import { AlertModalComponent } from '../alert-modal/alert-modal.component';
   styleUrls: ['./havi-planner-kezelo.component.scss'],
   providers: [DatePipe]
 })
+
 export class HaviPlannerKezeloComponent implements OnInit {
   modalVisible = false;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
@@ -249,12 +251,14 @@ onAddNewEvent(): void {
     );
   }
 
+
   filterFutureEvents(): void {
     const now = new Date();
     this.filteredEvents = this.eventss.filter(event =>
       new Date(event.startTime) > now
     );
   }
+
 
   resetFilters(): void {
     this.searchQuery = '';

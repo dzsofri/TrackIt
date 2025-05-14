@@ -13,6 +13,7 @@ import { Events } from "./Event";
 import { Comments } from "./Comment";
 
 
+
 export enum UserRole {
     ADMIN = "admin",
     USER = "user"
@@ -101,7 +102,7 @@ export class Users {
 
     @OneToMany(() => Comments, (comment) => comment.user, { onDelete: "CASCADE" })
     comments: Comments[];
-    
+
     @OneToMany(() => Events, (event) => event.user, { onDelete: "CASCADE" })
     events: Events[];
 

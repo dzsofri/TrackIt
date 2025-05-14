@@ -181,6 +181,7 @@
   }
 
   button {
+
     background: none;
     border: none;
     cursor: pointer;
@@ -207,6 +208,7 @@
   @media (max-width: 600px) {
     font-size: 0.75rem;
     gap: 2px; // További finomhangolás a kis kijelzők számára
+
   }
 }
 
@@ -220,6 +222,7 @@
 
   &:hover {
     transform: scale(1.05);
+
   }
 
   &.inactive {
@@ -316,6 +319,7 @@
     max-height: 18px;
   }
 
+
   &:hover {
     background-color: #f0f0f0;
   }
@@ -329,18 +333,21 @@
   gap: 1rem;
   align-items: center;
 
+
   .legend-item {
     display: flex;
     align-items: center;
     gap: 6px;
-
+    
     .dot {
       width: 10px;
       height: 10px;
+
       border-radius: 50%;
     }
   }
 }
+
 
 .event-list-view {
   display: flex;
@@ -415,4 +422,5 @@
     font-size: 0.85rem;
     padding: 0.5rem 1rem;
   }
+
 }

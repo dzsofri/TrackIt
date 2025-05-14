@@ -82,21 +82,14 @@ $border-radius: 10px;
 
 // ---------------------------
 // Eseménylista
+
 // ---------------------------
 .event-list-view {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  overflow-y: auto;
-  max-height: 95vh;
-  padding-right: 0.5rem;
-  max-width: 60%;
 
-  @media (max-width: 1279) {
-   margin-left: 5rem !important;
-  }
 }
 
 .event-item {
@@ -130,6 +123,7 @@ $border-radius: 10px;
   width: 100%;
   gap: 1rem;
   flex-wrap: wrap;
+
 }
 
 .event-info {
@@ -175,6 +169,7 @@ $border-radius: 10px;
 
 // ---------------------------
 // Oldalsáv
+
 // ---------------------------
 .search-sidebar {
   position: fixed;
@@ -223,7 +218,6 @@ $border-radius: 10px;
   }
 }
 
-
 .search-results {
   display: flex;
   flex-direction: column;
@@ -231,6 +225,7 @@ $border-radius: 10px;
   padding-top: 1rem;
   overflow-y: auto;
   max-height: 80vh;
+
 
   .result-item {
     background-color: $light-bg;
@@ -241,6 +236,7 @@ $border-radius: 10px;
     cursor: pointer;
     width: 90%;
 
+
     &:hover {
       background-color: $hover-blue;
       transform: scale(1.03);
@@ -249,6 +245,7 @@ $border-radius: 10px;
 }
 
 // ---------------------------
+
 // Bal panel
 // ---------------------------
 .left-panel {
@@ -323,6 +320,7 @@ $border-radius: 10px;
 }
 
 // ---------------------------
+
 // Gombok
 // ---------------------------
 .simple-button {

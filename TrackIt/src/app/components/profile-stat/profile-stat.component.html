@@ -43,7 +43,7 @@
       <div class="teljesitmeny_box3">
           <div class="teljesitmeny_content3" *ngIf="habits.length > 0; else noHabits">
             <div class="teljesitmeny_grid">
-              <p *ngFor="let habit of habits" class="jelveny_item" class="teljesitmeny_text">{{habit.habitName}}: <b class="folyamat"> Heti {{habit.frequency}} alkalom</b></p>
+              <p *ngFor="let habit of habits" class="jelveny_item" class="teljesitmeny_text">{{habit.habitName}}: <b class="folyamat"> Heti {{habit.currentValue}} alkalom</b></p>
             </div>
           </div>
       </div>

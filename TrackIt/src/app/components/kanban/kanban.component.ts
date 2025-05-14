@@ -39,13 +39,13 @@ export class KanbanComponent implements OnInit {
   popupMessage: string | null = null;
   showPopup: boolean = false;
   popupTimeout: any;
-
-
   modalVisible = false;
-  isModalVisible = false;
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
   invalidFields: string[] = [];
+  isModalVisible = false;
+  modalButtons: { label: string, action: () => void, class?: string }[] = [];
+
 
 
   private tokenName = environment.tokenName;
@@ -112,52 +112,53 @@ export class KanbanComponent implements OnInit {
     return { id: '', title: '', description: '', dueDate: '', priority: 'Közepes', status: 'todo' };
   }
 
-  addTask() {
-    if (!this.newTask.title.trim() || !this.newTask.dueDate) {
-      console.warn();
-
-      // Modal beállítása sikeres bejelentkezéshez
-      this.modalMessage = 'A cím és a határidő megadása kötelező!'
-      this.modalType = 'error';
-      this.isModalVisible = true;
-      return;
-    }
-
-    const taskToSend: Task = {
-      id: '',
-      title: this.newTask.title.trim(),
-      description: this.newTask.description.trim() || "",
-      dueDate: this.newTask.dueDate,
-      priority: this.newTask.priority || "Közepes",
-      status: this.newTask.status || "todo" // Kezdetben a "todo" oszlopban lesz
-    };
-
-    this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend, this.tokenHeader())
-      .subscribe({
-        next: (response) => {
-          console.log("Feladat sikeresen mentve:", response);
-
-          // **Helyesen hozzáadjuk a task-ot a Kanban táblához**
-          this.columns[0].tasks.push({
-            id: response.task.id,
-            title: response.task.title,
-            description: response.task.description || "Nincs leírás",
-            dueDate: response.task.dueDate || "Nincs határidő",
-            priority: response.task.priority || "Közepes",
-            status: 'todo'
-          });
-
-          // **Számláló frissítése**
-          this.updateTaskCount();
-
-          // **Űrlap ürítése új feladat után**
-          this.newTask = this.createEmptyTask();
-        },
-        error: (error) => {
-          console.error("Hiba történt a mentés során:", error);
-        }
-      });
+addTask() {
+  if (!this.newTask.title.trim() || !this.newTask.dueDate) {
+    this.modalMessage = 'A cím és a határidő megadása kötelező!';
+    this.modalType = 'error';
+    this.isModalVisible = true;
+    return;
   }
+
+  const taskToSend: Task = {
+    id: '',
+    title: this.newTask.title.trim(),
+    description: this.newTask.description.trim() || "",
+    dueDate: this.newTask.dueDate,
+    priority: this.newTask.priority || "Közepes",
+    status: this.newTask.status || "todo"
+  };
+
+  this.http.post<{ message: string, task: Task }>("http://localhost:3000/tasks", taskToSend, this.tokenHeader())
+    .subscribe({
+      next: (response) => {
+        console.log("Feladat sikeresen mentve:", response);
+
+        this.columns[0].tasks.push({
+          id: response.task.id,
+          title: response.task.title,
+          description: response.task.description || "Nincs leírás",
+          dueDate: response.task.dueDate || "Nincs határidő",
+          priority: response.task.priority || "Közepes",
+          status: 'todo'
+        });
+
+        this.updateTaskCount();
+        this.newTask = this.createEmptyTask();
+
+        // Opcionálisan: sikeres mentés modal
+        this.modalMessage = 'Feladat sikeresen hozzáadva!';
+        this.modalType = 'success';
+        this.isModalVisible = true;
+      },
+      error: (error) => {
+        console.error("Hiba történt a mentés során:", error);
+        this.modalMessage = 'Hiba történt a feladat mentése során. Kérlek, próbáld újra!';
+        this.modalType = 'error';
+        this.isModalVisible = true;
+      }
+    });
+}
 
   // Feladat áthelyezés
   onDrop(event: DragEvent, targetColumn: Column) {
@@ -275,6 +276,11 @@ export class KanbanComponent implements OnInit {
   editTask(task: Task) {
     this.selectedTask = { ...task }; // Másolat készítése
   }
+
+    onModalClose() {
+    this.modalVisible = false;
+  }
+
 
   onTaskUpdated(updatedFields: Partial<Task>) {
     const column = this.columns.find(col => col.tasks.some(t => t.id === updatedFields.id));
