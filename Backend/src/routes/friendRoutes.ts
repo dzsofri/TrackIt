@@ -171,7 +171,7 @@ router.get("/friend-picture", tokencheck, async (req: any, res: any) => {
       const friendRequestsRepository = AppDataSource.getRepository(FriendRequests);
 
       const friendRequests = await friendRequestsRepository.find({
-          where: { receiverId: userId, status: 'accepted' },
+          where: { receiverId: userId },
       });
 
       if (!friendRequests || friendRequests.length === 0) {
