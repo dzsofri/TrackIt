@@ -54,9 +54,10 @@ updateUserStatus(newStatus: string): void {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
   }
 
-private getRandomIntRounded(min: number, max: number): number {
-  return Math.round(Math.random() * (max - min) + min);
+private getRandomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
 
   onSubmit() {
     this.api.registration(this.user).subscribe({
@@ -73,33 +74,37 @@ private getRandomIntRounded(min: number, max: number): number {
           const defaultTrackers = [
           {
             habitName: 'Vízfogyasztás',
-            targetValue: this.getRandomIntRounded(1500, 3000),
+            dailyTarget: this.getRandomInt(1500, 3000),
+            targetValue: this.getRandomInt(7, 30),
             currentValue: 0,
-            frequency: 'daily',
             userId
           },
           {
             habitName: 'Edzés',
-            targetValue: this.getRandomIntRounded(15, 60), // perc
+            dailyTarget: this.getRandomInt(30, 100),
+            targetValue: this.getRandomInt(7, 30),
             currentValue: 0,
-            frequency: 'daily',
             userId
           },
           {
             habitName: 'Alvás',
-            targetValue: this.getRandomIntRounded(6, 9), // óra
+            dailyTarget: this.getRandomInt(5, 12),
+            targetValue: this.getRandomInt(7, 30),
             currentValue: 0,
-            frequency: 'daily',
             userId
           }
         ];
       
           defaultTrackers.forEach(tracker => {
-            this.api.createHabit(tracker).subscribe(result => {
-              console.log(`${tracker.habitName} létrehozva:`, result);
-
-            });
-          });
+    this.api.createHabit(tracker).subscribe({
+      next: (res) => {
+        console.log(`${tracker.habitName} létrehozva:`, res);
+      },
+      error: (err) => {
+        console.error('Hiba a szokás létrehozásakor:', err);
+      }
+    });
+  });
       
           this.updateUserStatus("online");
           this.errorMessage = '';

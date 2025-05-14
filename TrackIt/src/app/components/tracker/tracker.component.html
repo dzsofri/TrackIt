@@ -1,80 +1,53 @@
 <h1 class="page-title">Szokáskövető</h1>
 
 <div class="page-layout">
+  <!-- Tracker form -->
   <div class="tracker-form">
     <label for="habit">Válassz trackert:</label>
-  <select [(ngModel)]="selectedHabit" (change)="onHabitChange()">
-  <option *ngFor="let habit of habitList" [ngValue]="habit">{{ habit.habitName }}</option>
-</select>
-
+    <select [(ngModel)]="selectedHabit">
+      <option *ngFor="let habit of habitList" [ngValue]="habit">{{ habit.habitName }}</option>
+    </select>
 
     <label>
-  <input type="checkbox" [(ngModel)]="completed" [disabled]="selectedHabit?.status !== 'active'" />
-  Teljesítetted a napi célt?
-</label>
+      <input type="checkbox" [(ngModel)]="completed" />
+      Teljesítetted a napi célt?
+    </label>
 
-<label for="value">Érték: Mennyit kell teljesítened naponta DailyTarget</label>
-<input type="number" [(ngModel)]="value" placeholder="Pl. 2.5" [disabled]="selectedHabit?.status !== 'active'" />
+    <label for="value">Napi teljesítendő érték</label>
+    <input type="number" disabled />
 
-<label for="unit">Mértékegység:</label>
-<select [(ngModel)]="unit" [disabled]="selectedHabit?.status !== 'active'">
-  <option *ngFor="let u of units" [value]="u">{{ u }}</option>
-</select>
+    <label for="unit">Mértékegység:</label>
+    <select disabled>
+      <option *ngFor="let u of units" [value]="u">{{ u }}</option>
+    </select>
 
-<label for="startDate">Kezdődátum:</label>
-<input type="date" [(ngModel)]="startDate" [disabled]="selectedHabit?.status !== 'active'" />
+    <label for="startDate">Kezdődátum:</label>
+    <input type="date" disabled />
 
-<label for="interval">Napok száma: Target Value</label>
-<input type="number" [(ngModel)]="intervalDays" placeholder="Pl. 7" [disabled]="selectedHabit?.status !== 'active'" />
+    <label for="interval">Szokás hossza (nap)</label>
+    <input type="number" disabled />
 
-<label for="interval">Teljesített napok száma: Current Value</label>
-<input type="number" [(ngModel)]="intervalDays" placeholder="Pl. 7" [disabled]="selectedHabit?.status !== 'active'" />
+    <label for="completedDays">Teljesített napok</label>
+    <input type="number" disabled />
 
-
-<!-- Submit gomb is legyen tiltva -->
-<button (click)="submit()" [disabled]="selectedHabit?.status !== 'active'">Felvétel</button>
     <button *ngIf="selectedHabit && selectedHabit.status !== 'active'" (click)="activateHabit()">Aktiválás</button>
     <button (click)="isPopupOpen = true">Új szokás létrehozása</button>
-
-
   </div>
 
-  <div class="calendar">
-    <div class="header">
-      <button (click)="prevMonth()">
-        <img src="./assets/icons/left_arrow.png" alt="előző">
-      </button>
-      <h2>{{ months[currentMonth] }} {{ currentYear }}</h2>
-      <button (click)="nextMonth()">
-        <img src="./assets/icons/right_arrow.png" alt="következő">
-      </button>
-    </div>
-
-    <div class="weekdays">
-      <div *ngFor="let day of weekdays">{{ day }}</div>
-    </div>
-
-    <div class="days">
-      <div *ngFor="let day of calendarDays"
-           class="day"
-           [class.inactive]="day.inactive"
-           (click)="showDayDetails(day)"
-           (touchstart)="onTouchStart($event, day)"
-           (touchend)="onTouchEnd($event, day)">
-        <span>{{ day.date }}</span>
-
-        <!-- Dots for events -->
-        <div class="dots">
-          <div *ngFor="let dot of day.dots"
-               class="dot"
-               [ngStyle]="{ 'background-color': dot.color }"
-               [title]="dot.title"></div>
+  <!-- Diagram közvetlen flex gyerekként -->
+  <div class="chart-wrapper">
+    <div class="card mt-2">
+      <div class="card-body">
+        <h5 class="card-title mb-0">Visszajelzések</h5>
+        <div class="chart-container">
+          <canvas id="habitChart"></canvas>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Pop-up komponens -->
 <app-newhabit
   *ngIf="isPopupOpen"
   [userId]="user.id"
@@ -82,4 +55,3 @@
   (habitCreated)="handleNewHabit($event)"
   (close)="closeNewHabitModal()">
 </app-newhabit>
-

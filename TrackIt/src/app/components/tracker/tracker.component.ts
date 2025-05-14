@@ -6,11 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from '../../services/message.service';
 import { HttpClient } from '@angular/common/http';
-
 import { CustomtrackerComponent } from '../customtracker/customtracker.component';
-
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { NewhabitComponent } from '../newhabit/newhabit.component';
+import { Chart } from 'chart.js';
 
 interface CalendarEvent {
   id?: string;
@@ -20,11 +19,8 @@ interface CalendarEvent {
   endTime: Date;
   color?: string;
   selected?: boolean;
-  days?: number[]; // <-- Added days property
+  days?: number[];
 }
-
-let successCount = 0;  // változtasd `const`-ot `let`-re
-let errorCount = 0;    // változtasd `const`-ot `let`-re
 
 @Component({
   selector: 'app-tracker',
@@ -42,49 +38,33 @@ export class TrackerComponent {
     private http: HttpClient
   ) {}
 
-
-  
-  completed: boolean = false;
+  completed = false;
   value: number | null = null;
-  unit: string = 'liter';
-  units: string[] = ['liter', 'mililiter', 'óra', 'perc', 'méter', 'kilométer'];
-  date: string = new Date().toISOString().split('T')[0];
+  unit = 'liter';
+  units = ['liter', 'mililiter', 'óra', 'perc', 'méter', 'kilométer'];
+  date = new Date().toISOString().split('T')[0];
   currentYear = new Date().getFullYear();
   currentMonth = new Date().getMonth();
   weekdays = ['H', 'K', 'Sz', 'Cs', 'P', 'Sz', 'V'];
   months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'];
   calendarDays: any[] = [];
   events: CalendarEvent[] = [];
-  touchStartX: number = 0;
-  startDate: string = new Date().toISOString().split('T')[0];
-  intervalDays: number = 1;
- isPopupOpen: boolean = false; // Hozzáadva az állapot a modális ablakhoz
-
-
-
-  id: string = '';
+  touchStartX = 0;
+  startDate = new Date().toISOString().split('T')[0];
+  intervalDays = 1;
+  isPopupOpen = false;
+  id = '';
   user: any;
   userNames: { [key: string]: string } = {};
-  imagePreviewUrl: string = '/assets/images/profileKep.png';
-
-  activeTab: string = 'watertracker';
+  imagePreviewUrl = '/assets/images/profileKep.png';
+  activeTab = 'watertracker';
   modalVisible = false;
   modalType: 'error' | 'success' | 'warning' | 'info' = 'info';
   modalMessage = '';
-
-  habitList: { id: string, habitName: string }[] = [];
-
+  habitList: { id: string, habitName: string, status: string, targetValue?: number, currentValue?: number }[] = [];
   selectedHabit: { id: string, habitName: string, status: string } | null = null;
+  habitChart: Chart | undefined;
 
-openNewHabitModal() {
-    this.isPopupOpen = true;
-  }
-
-  closeNewHabitModal() {
-    this.isPopupOpen = false;
-  }
-
-  
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.params['id'];
     this.auth.user$.subscribe(user => {
@@ -97,7 +77,7 @@ openNewHabitModal() {
         this.generateCalendar();
       }
     });
-  } 
+  }
 
   fetchUser(): void {
     this.api.getLoggedUser('users', this.id).subscribe({
@@ -107,288 +87,272 @@ openNewHabitModal() {
           this.userNames[this.user.id] = this.user.name ?? 'Ismeretlen felhasználó';
         }
       },
-      error: (err) => {
-        console.error('Error fetching user data:', err);
-      }
+      error: (err) => console.error('Error fetching user data:', err)
     });
   }
 
   fetchUserProfilePicture(): void {
     const token = localStorage.getItem('trackit');
-    if (!token) {
-      console.error('No valid token found!');
-      return;
-    }
+    if (!token) return;
 
     this.http.get<{ imageUrl: string | null }>('http://localhost:3000/users/profile-picture', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     }).subscribe({
-      next: (response) => {
-        this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png';
-      },
-      error: (error) => {
-        console.error('Error fetching profile picture:', error);
-        this.imagePreviewUrl = '/assets/images/profileKep.png';
-      },
+      next: (response) => this.imagePreviewUrl = response.imageUrl || '/assets/images/profileKep.png',
+      error: () => this.imagePreviewUrl = '/assets/images/profileKep.png',
     });
   }
-
- fetchHabits(): void {
+fetchHabits(): void {
   const token = localStorage.getItem('trackit');
-  if (!token) {
-    console.error('Nincs érvényes token!');
-    return;
-  }
+  if (!token) return;
 
   this.api.getHabitsForUser(this.id, token).subscribe({
     next: (res: any[]) => {
-      console.log(res)
-      // Itt most az objektumokat tároljuk
+      // Módosítás a habitList osztályszintű változóra
       this.habitList = res.map(habit => ({
         id: habit.id,
         habitName: habit.habitName,
-        status: habit.status // hozzáadjuk a státuszt is
+        status: habit.status,
+        targetValue: habit.targetValue,
+        currentValue: habit.currentValue 
       }));
-
+      console.log(this.habitList); // Ezt módosítani kell, hogy a helyes listát logolja
+      this.loadHabitChart(); // A grafikon frissítése
     },
-    error: (err) => {
-      console.error('Hiba a szokások betöltésekor:', err); // Itt nézd meg a konzolon a teljes hibát
-    }
+    error: (err) => console.error('Hiba a szokások betöltésekor:', err)
   });
 }
 
+  openNewHabitModal() { this.isPopupOpen = true; }
+  closeNewHabitModal() { this.isPopupOpen = false; }
+
+  onHabitChange(): void {
+    const selectedHabitData = this.habitList.find(habit => habit.id === this.selectedHabit?.id);
+    if (!selectedHabitData) console.error('A kiválasztott szokás nem található!');
+  }
+
+  submit(): void {
+    if (!this.selectedHabit || this.value === null || !this.startDate || this.intervalDays <= 0) {
+      this.modalMessage = 'Kérlek, tölts ki minden mezőt!';
+      this.modalType = 'warning';
+      this.modalVisible = true;
+      return;
+    }
+
+    const start = new Date(this.startDate);
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (let i = 0; i < this.intervalDays; i++) {
+      const currentDate = new Date(start);
+      currentDate.setDate(start.getDate() + i);
+
+      this.api.addHabitTrackingRecord({
+        habitId: this.selectedHabit.id,
+        achieved: this.completed,
+        value: this.value,
+        date: currentDate.toISOString().split('T')[0],
+      }).subscribe({
+        next: () => {
+          successCount++;
+          if (successCount + errorCount === this.intervalDays) {
+            this.modalMessage = `Sikeresen elmentve ${successCount} napra!`;
+            this.modalType = 'success';
+            this.modalVisible = true;
+          }
+        },
+        error: () => {
+          errorCount++;
+          if (successCount + errorCount === this.intervalDays) {
+            this.modalMessage = `Mentés során ${errorCount} hiba történt.`;
+            this.modalType = 'error';
+            this.modalVisible = true;
+          }
+        }
+      });
+    }
+  }
+
+  handleNewHabit(event: { habit: any }): void {
+    this.api.createHabit(event.habit).subscribe({
+      next: (res) => {
+        this.habitList.push(res.habit);
+        this.modalMessage = 'Szokás sikeresen létrehozva!';
+        this.modalType = 'success';
+        this.modalVisible = true;
+        this.loadHabitChart();
+      },
+      error: () => {
+        this.modalMessage = 'Hiba történt a szokás létrehozásakor.';
+        this.modalType = 'error';
+        this.modalVisible = true;
+      }
+    });
+  }
+
+  activateHabit(): void {
+    if (!this.selectedHabit) return;
+
+    const token = localStorage.getItem('trackit');
+    if (!token) return;
+
+    const payload = {
+      habitId: this.selectedHabit.id,
+      habitName: this.selectedHabit.habitName,
+      status: 'active',
+      userId: this.id
+    };
+
+    this.api.updateHabitStatus(payload).subscribe({
+      next: () => {
+        this.modalMessage = 'A tracker sikeresen aktiválva lett!';
+        this.modalType = 'success';
+        this.modalVisible = true;
+        this.selectedHabit!.status = 'active';
+      },
+      error: () => {
+        this.modalMessage = 'Hiba történt a státusz frissítése közben.';
+        this.modalType = 'error';
+        this.modalVisible = true;
+      }
+    });
+  }
+
+loadHabitChart(): void {
+  const canvas = document.getElementById('habitChart') as HTMLCanvasElement;
+  const ctx = canvas?.getContext('2d');
+  if (!ctx) return;
+
+  if (this.habitChart) {
+    this.habitChart.destroy();
+  }
+
+  const habitNames = this.habitList.map(h => h.habitName);
+  const currentValues = this.habitList.map(h => h.currentValue ?? 0);
+
+  this.habitChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: habitNames,
+      datasets: [{
+        label: 'Aktuális érték',
+        data: currentValues,
+        backgroundColor: '#4e6151'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Érték'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Szokás'
+          }
+        }
+      }
+    }
+  });
+}
 
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
   }
 
-onHabitChange(): void {
-  // Kiválasztott habit keresése a habitList-ben
-  const selectedHabitData = this.habitList.find(habit => habit.id === this.selectedHabit?.id);
-
-
-  if (selectedHabitData) {
-    console.log('Kiválasztott tracker:', selectedHabitData);
-    // Itt folytathatod a kiválasztott habit adatainak használatát
-  } else {
-    console.error('A kiválasztott szokás nem található!');
-  }
-}
-
-
-  submit(): void {
-  if (!this.selectedHabit) {
-    console.error('Nincs kiválasztott szokás!');
-    return;
-  }
-
-  // ✅ Validációs blokk
-  if (this.value === null || !this.startDate || this.intervalDays <= 0) {
-    this.modalMessage = 'Kérlek, tölts ki minden mezőt!';
-    this.modalType = 'warning';
-    this.modalVisible = true;
-    return;
-  }
-
-  const start = new Date(this.startDate);
-  let successCount = 0;  // Használj `let`-et, nem `const`-ot
-  let errorCount = 0;    // Használj `let`-et, nem `const`-ot
-
-  // Generáljuk a szükséges napi bejegyzéseket
-  for (let i = 0; i < this.intervalDays; i++) {
-    const currentDate = new Date(start);
-    currentDate.setDate(start.getDate() + i);
-
-    // Közvetlenül az objektumot generáljuk és küldjük el a megfelelő mezőkkel
-    this.api.addHabitTrackingRecord({
-  habitId: this.selectedHabit.id,
-  achieved: this.completed,
-  value: this.value,
-  date: currentDate.toISOString().split('T')[0],
-}).subscribe({
-  next: (res) => {
-    successCount++;
-    console.log('Sikeres mentés:', res);
-    if (successCount + errorCount === this.intervalDays) {
-      this.modalMessage = `Sikeresen elmentve ${successCount} napra!`;
-      this.modalType = 'success';
-      this.modalVisible = true;
-    }
-  },
-  error: (err) => {
-    errorCount++;
-    console.error('Hiba történt a mentéskor:', err);
-    if (successCount + errorCount === this.intervalDays) {
-      this.modalMessage = `Mentés során ${errorCount} hiba történt.`;
-      this.modalType = 'error';
-      this.modalVisible = true;
-    }
-  }
-});
-  }
-}
-
-
-
-
-
-
-handleNewHabit(event: { habit: any }): void {
-  this.api.createHabit(event.habit).subscribe({
-    next: (res) => {
-      this.habitList.push(res.habit);
-      // opcionálisan ide jöhet visszajelzés vagy modal megjelenítése
-    },
-    error: () => {
-      // ide jöhet hiba visszajelzés
-    }
-  });
-}
-
-
-
-activateHabit(): void {
-  if (!this.selectedHabit) {
-    console.error('Nincs kiválasztva szokás!');
-    return;
-  }
-
-  const token = localStorage.getItem('trackit');
-  if (!token) {
-    console.error('Nincs érvényes token!');
-    return;
-  }
-
-  const payload = {
-    habitId: this.selectedHabit.id,
-    habitName: this.selectedHabit.habitName,
-    status: 'active',
-    userId: this.id
-  };
-
-  this.api.updateHabitStatus(payload).subscribe({
-    next: (response) => {
-      console.log('Tracker státusz sikeresen frissítve:', response);
-      this.modalMessage = 'A tracker sikeresen aktiválva lett!';
-      this.modalType = 'success';
-      this.modalVisible = true;
-
-      // Frissítsük a selectedHabit státuszát
-      this.selectedHabit!.status = 'active';
-    },
-    error: (err) => {
-      console.error('Hiba a tracker státusz frissítésekor:', err);
-      this.modalMessage = 'Hiba történt a státusz frissítése közben.';
-      this.modalType = 'error';
-      this.modalVisible = true;
-    }
-  });
-}
-
-
-
   showDayDetails(day: any): void {
-  console.log('Showing details for', day);
-  // Implement your logic here
-}
-
-
-generateCalendar() {
-  this.calendarDays = this.createCalendarDays();
-}
-
-createCalendarDays() {
-  const firstDayOfMonth = new Date(this.currentYear, this.currentMonth, 1);
-  const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
-  const startDay = (firstDayOfMonth.getDay() + 6) % 7;
-  const calendarDays = [];
-
-  const prevMonthDays = new Date(this.currentYear, this.currentMonth, 0).getDate();
-  for (let i = startDay - 1; i >= 0; i--) {
-    calendarDays.push({ date: prevMonthDays - i, inactive: true, dots: [] });
+    console.log('Showing details for', day);
   }
 
-  for (let i = 1; i <= daysInMonth; i++) {
-    calendarDays.push({ date: i, dots: this.getEventDots(i) });
+  generateCalendar() {
+    this.calendarDays = this.createCalendarDays();
   }
 
-  while (calendarDays.length < 42) {
-    calendarDays.push({ date: calendarDays.length - daysInMonth - startDay + 1, inactive: true, dots: [] });
+  createCalendarDays() {
+    const firstDayOfMonth = new Date(this.currentYear, this.currentMonth, 1);
+    const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+    const startDay = (firstDayOfMonth.getDay() + 6) % 7;
+    const calendarDays = [];
+    const prevMonthDays = new Date(this.currentYear, this.currentMonth, 0).getDate();
+
+    for (let i = startDay - 1; i >= 0; i--) {
+      calendarDays.push({ date: prevMonthDays - i, inactive: true, dots: [] });
+    }
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      calendarDays.push({ date: i, dots: this.getEventDots(i) });
+    }
+
+    while (calendarDays.length < 42) {
+      calendarDays.push({ date: calendarDays.length - daysInMonth - startDay + 1, inactive: true, dots: [] });
+    }
+
+    return calendarDays;
   }
 
-  return calendarDays;
-}
-
-getEventDots(day: number) {
-  const currentDate = new Date(this.currentYear, this.currentMonth, day);
-  currentDate.setHours(0, 0, 0, 0);
-
-  return this.events
-    .filter(event => {
-      const eventStart = new Date(event.startTime);
-      const eventEnd = new Date(event.endTime);
-      eventStart.setHours(0, 0, 0, 0);
-      eventEnd.setHours(0, 0, 0, 0);
-      return eventStart <= currentDate && currentDate <= eventEnd;
-    })
-    .map(event => {
-      const start = new Date(event.startTime);
-      const end = new Date(event.endTime);
-      start.setHours(0, 0, 0, 0);
-      end.setHours(0, 0, 0, 0);
-
-      return {
+  getEventDots(day: number) {
+    const currentDate = new Date(this.currentYear, this.currentMonth, day);
+    currentDate.setHours(0, 0, 0, 0);
+    return this.events
+      .filter(event => {
+        const eventStart = new Date(event.startTime);
+        const eventEnd = new Date(event.endTime);
+        eventStart.setHours(0, 0, 0, 0);
+        eventEnd.setHours(0, 0, 0, 0);
+        return eventStart <= currentDate && currentDate <= eventEnd;
+      })
+      .map(event => ({
         title: event.title,
         color: event.color ?? 'deepskyblue',
-        isStart: start.getTime() === currentDate.getTime(),
-        isEnd: end.getTime() === currentDate.getTime()
-      };
-    });
-}
+        isStart: new Date(event.startTime).getTime() === currentDate.getTime(),
+        isEnd: new Date(event.endTime).getTime() === currentDate.getTime()
+      }));
+  }
 
-prevMonth() {
-  this.changeMonth(-1);
-  this.generateCalendar();
-}
+  prevMonth() {
+    this.changeMonth(-1);
+    this.generateCalendar();
+  }
 
-nextMonth() {
-  this.changeMonth(1);
-  this.generateCalendar();
-}
+  nextMonth() {
+    this.changeMonth(1);
+    this.generateCalendar();
+  }
 
-changeMonth(direction: number) {
-  if (this.currentMonth === 0 && direction === -1) {
-    this.currentMonth = 11;
-    this.currentYear--;
-  } else if (this.currentMonth === 11 && direction === 1) {
-    this.currentMonth = 0;
-    this.currentYear++;
-  } else {
-    this.currentMonth += direction;
+  changeMonth(direction: number) {
+    if (this.currentMonth === 0 && direction === -1) {
+      this.currentMonth = 11;
+      this.currentYear--;
+    } else if (this.currentMonth === 11 && direction === 1) {
+      this.currentMonth = 0;
+      this.currentYear++;
+    } else {
+      this.currentMonth += direction;
+    }
+  }
+
+  onTouchStart(event: TouchEvent, day: any) {
+    this.touchStartX = event.touches[0].clientX;
+  }
+
+  onTouchEnd(event: TouchEvent, day: any) {
+    const touchEndX = event.changedTouches[0].clientX;
+    if (this.touchStartX - touchEndX > 50) {
+      this.deleteEventFromDay(day);
+    }
+  }
+
+  deleteEventFromDay(day: any) {
+    // optional: implement deletion
   }
 }
-
-// Swipe delete helpers (optional)
-onTouchStart(event: TouchEvent, day: any) {
-  this.touchStartX = event.touches[0].clientX;
-}
-
-onTouchEnd(event: TouchEvent, day: any) {
-  const touchEndX = event.changedTouches[0].clientX;
-  if (this.touchStartX - touchEndX > 50) {
-    this.deleteEventFromDay(day);
-  }
-}
-
-deleteEventFromDay(day: any) {
-  // optional: handle deletion logic here
-}
-
-
-
-
-};
-

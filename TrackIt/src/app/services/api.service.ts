@@ -389,16 +389,20 @@ addHabitTrackingRecord(data: {
 
 createHabit(habitData: {
   habitName: string;
+  dailyTarget: number;
   targetValue: number;
   currentValue: number;
-  frequency: string;
   userId: string;
 }): Observable<any> {
-  return this.http.post<any>(`${this.server}/api/habits`, habitData, this.tokenHeader()).pipe(
+  return this.http.post<any>(`${this.server}/habits`, habitData, this.tokenHeader()).pipe(
     catchError(error => {
-      console.error('Hiba a szokás létrehozásakor:', error);
-      return of({ message: 'Szokás létrehozása sikertelen' });
-    })
+  console.error('Hiba a szokás létrehozásakor:', error);
+  if (error.error && error.error.message) {
+    console.error('API hibaüzenet:', error.error.message);
+  }
+  return of({ message: 'Szokás létrehozása sikertelen' });
+})
+
   );
 }
 
