@@ -77,6 +77,20 @@ export class ApiService {
     );
   }
 
+   getFollowers(): Observable<{ followers: User[], count: number, message?: string }> {
+  return this.http.get<{ followers: User[], count: number, message?: string }>(
+    `${this.server}/friends/followers`,
+    this.tokenHeader()
+  ).pipe(
+    catchError(error => {
+      console.error('Error fetching followers:', error);
+      return of({ followers: [], count: 0, message: 'Error occurred while fetching followers' });
+    })
+  );
+}
+
+
+
   getChallenges(): Observable<{ challenges: any[], count: number, message?: string }> {
     return this.http.get<{ challenges: any[], count: number, message?: string }>(
       `${this.server}/challenges`,

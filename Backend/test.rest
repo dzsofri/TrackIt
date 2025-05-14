@@ -11,11 +11,12 @@ Content-Type: application/json
 
 
 ### Felhasználók listázása
-GET http://localhost:{{PORT}}/users
+GET http://localhost:{{PORT}}/friends/followers
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMwMzM5MzdhLWIzNjctNDllYi1hYTAwLWQ3MDZmNTU1YjRlZSIsImVtYWlsIjoiYmVyZXRpenNvZmlhQHR1cnIuaHUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJjc3VybWkiLCJpYXQiOjE3NDcyMzk1ODUsImV4cCI6MTc0NzMyNTk4NX0.xS4DTyhnuc7_fbCZFw0jpQjNzqUmtYIj3p32OLFTDMM
 
 ### Egy felhasználó lekérdezése ID alapján
 GET http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
-Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzenRAZXhhbXBsZS5jb20iLCJpYXQiOjE3Mzg2MDk3MjIsImV4cCI6MTczODYxMzMyMn0.5EdWDe46fSRLHz17DgqD-1c-AxXePO3jBztNvKTncyU"
+
 ### Felhasználó frissítése ID alapján
 PUT http://localhost:{{PORT}}/users/3bae486c-7ff3-4d47-bcc2-cd6b6bd08584
 Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTg2MzIyNywiZXhwIjoxNzQxOTQ5NjI3fQ.e2D2ORegVAs3tNSMgMaMl-D0VMgQT1V5na9bj5YouVk"

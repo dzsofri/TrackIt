@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <div class="post-menu" *ngIf="post.userId === currentUser.id && !readOnly">
+        <div class="post-menu" *ngIf="post.userId === currentUser.id">
           <button class="menu-btn" (click)="toggleMenu(post)">&#8226;&#8226;&#8226;</button>
           <div *ngIf="post.showMenu" class="menu-options animate-fade">
             <button class="edit" (click)="editPost(post)">Edit</button>
