@@ -10,6 +10,7 @@ import { User } from '../interfaces/user';
   providedIn: 'root'
 })
 export class ApiService {
+
   constructor(private http: HttpClient) { }
 
   private tokenName = environment.tokenName;
@@ -303,6 +304,63 @@ export class ApiService {
 
 
 
+ createEvent(data: { title: string; description: string; startTime: string; endTime: string; color: string; userId: string;}): Observable<any> {
+  return this.http.post<any>(`${this.server}/events`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Event creation failed', error);
+      return of({ message: 'Event creation failed' });
+    })
+  );
+}
+
+getEvents(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.server}/events`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching events:', error);
+      return of([]);
+    })
+  );
+}
+
+getEventById(id: string): Observable<any> {
+  return this.http.get<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching event:', error);
+      return of(null);
+    })
+  );
+}
+
+getEventByUserId(userId: string): Observable<any> {
+  return this.http.get<any>(`${this.server}/events/user/${userId}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error fetching events for user:', error);
+      return of(null);
+    })
+  );
+}
+
+
+updateEvent(id: string, data: { title?: string; description?: string; startTime?: string; endTime?: string }): Observable<any> {
+  return this.http.put<any>(`${this.server}/events/${id}`, data, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error updating event:', error);
+      return of({ message: 'Event update failed' });
+    })
+  );
+}
+
+deleteEvent(id: string): Observable<any> {
+  return this.http.delete<any>(`${this.server}/events/${id}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Error deleting event:', error);
+      return of({ message: 'Event deletion failed' });
+    })
+  );
+}
+
+
+
  // Poszt létrehozása
  createPost(postData: { title: string; body: string, status: string}): Observable<any> {
   return this.http.post<any>(`${this.server}/posts`, postData, this.tokenHeader()).pipe(
@@ -336,12 +394,12 @@ deletePost(postId: string): Observable<any> {
 }
 
 addHabitTrackingRecord(data: {
-  date: string,
-  achieved: boolean,
-  value: number,
-  habitId: string
+  habitId: string;
+  value: number;
+  achieved: boolean;
+  date: string;
 }): Observable<any> {
-  return this.http.post<any>(`${this.server}/habit_tracker`, data, this.tokenHeader()).pipe(
+  return this.http.post<any>(`${this.server}/habits/${data.habitId}/habit_trackings`, data, this.tokenHeader()).pipe(
     catchError(error => {
       console.error('Hiba a szokás mentésekor:', error);
       return of({ message: 'Szokás mentése sikertelen' });
@@ -349,20 +407,90 @@ addHabitTrackingRecord(data: {
   );
 }
 
+
+
 createHabit(habitData: {
   habitName: string;
+  dailyTarget: number;
   targetValue: number;
   currentValue: number;
-  frequency: string;
   userId: string;
 }): Observable<any> {
   return this.http.post<any>(`${this.server}/habits`, habitData, this.tokenHeader()).pipe(
     catchError(error => {
-      console.error('Hiba a szokás létrehozásakor:', error);
-      return of({ message: 'Szokás létrehozása sikertelen' });
+  console.error('Hiba a szokás létrehozásakor:', error);
+  if (error.error && error.error.message) {
+    console.error('API hibaüzenet:', error.error.message);
+  }
+  return of({ message: 'Szokás létrehozása sikertelen' });
+})
+
+  );
+}
+
+
+
+getHabitsForUser(userId: string, token: string) {
+  return this.http.get<any[]>(`http://localhost:3000/habits/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
+
+
+
+// Habit status (active, inactive)
+updateHabitStatus(payload: { habitName: string, status: string, userId: string, habitId?: string }): Observable<any> {
+  const baseUrl = 'http://localhost:3000'; // A backend API URL-je
+  const token = localStorage.getItem('trackit');
+  
+  // Ha nincs token, kérj bejelentkezést
+  if (!token) {
+    console.error('Nincs érvényes token!');
+    // Visszaadunk egy Observable-t hibaüzenettel
+    return of({ message: 'Nincs érvényes token!' });
+  }
+
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.put<any>(`${baseUrl}/habits/${payload.habitId}/status`, payload, { headers });
+}
+
+deleteHabit(habitId: string): Observable<any> {
+  return this.http.delete(`${this.server}/habits/${habitId}`, this.tokenHeader()).pipe(
+    catchError(error => {
+      console.error('Hiba a szokás törlésekor:', error);
+      return of({ message: 'Szokás törlése sikertelen' });
     })
   );
 }
+
+
+
+updateHabit(habitId: string, completed: boolean): Observable<any> {
+  const token = localStorage.getItem('trackit');
+  
+  if (!token) {
+    return new Observable(observer => {
+      observer.error("Token not found");
+    });
+  }
+
+  // Convert the 'completed' boolean value to number (0 or 1)
+  const currentValue = completed ? 1 : 0;
+
+  // Send the request with the currentValue as number
+  return this.http.put<any>(`${this.server}/habits/completed/${habitId}`, { currentValue }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
+
+
 
 
  createEvent(data: { title: string; description: string; startTime: string; endTime: string; color: string; userId: string;}): Observable<any> {
@@ -474,6 +602,7 @@ deleteEvent(id: string): Observable<any> {
 
 
 }
+
 
 
 

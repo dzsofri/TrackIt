@@ -7,7 +7,9 @@ import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { DayDetailsModalComponent } from '../day-details-modal/day-details-modal.component';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+
 import { CalendarEvent } from '../../interfaces/CalendarEvent';
+
 
 
 
@@ -58,13 +60,16 @@ export class HaviPlannerComponent {
   dayDetailsVisible = false;
   selectedDay: any = null;
   loading = true;
+
   touchStartX = 0;
+
 
   constructor(private apiService: ApiService, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.initializeUser();
   }
+
 
 allSelected: boolean = false;
 
@@ -75,6 +80,7 @@ toggleSelectAll() {
 updateSelectAllState() {
   this.allSelected = this.eventss.every(event => event.selected);
 }
+
 
 
   private initializeUser() {
@@ -88,18 +94,22 @@ updateSelectAllState() {
     }
 
     this.apiService.getEventByUserId(this.userId).subscribe(events => {
+
       this.events = events;
       this.eventss = events
         .filter((event: CalendarEvent) => event && event.startTime && event.endTime)
         .map((event: CalendarEvent) => ({
           ...event,
+
           startTime: new Date(event.startTime),
           endTime: new Date(event.endTime),
           color: event.color ?? '#000000',
           selected: false
         }));
+
       this.generateCalendar();
     });
+
 
 
   }
@@ -110,6 +120,7 @@ updateSelectAllState() {
   }
 
   createCalendarDays() {
+
     const firstDay = new Date(this.currentYear, this.currentMonth, 1);
     const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
     const startDay = (firstDay.getDay() + 6) % 7;
@@ -151,6 +162,7 @@ updateSelectAllState() {
       }));return this.events
       .filter(event => {
         if (!event?.startTime || !event?.endTime) return false;
+
         const start = new Date(event.startTime);
         const end = new Date(event.endTime);
         start.setHours(0, 0, 0, 0);
@@ -163,6 +175,7 @@ updateSelectAllState() {
         isStart: new Date(event.startTime).toDateString() === currentDate.toDateString(),
         isEnd: new Date(event.endTime).toDateString() === currentDate.toDateString()
       }));
+
 
   }
 
@@ -193,9 +206,11 @@ updateSelectAllState() {
         }
       }
 
+
       if (!placed) {
         rows.push([{ ...event, days }]);
       }
+
     }
 
     return rows;
@@ -330,6 +345,7 @@ updateSelectAllState() {
       return;
     }
 
+
     const start = this.formatTimeToString(this.newEvent.startTime); // String formátum
     const end = this.formatTimeToString(this.newEvent.endTime); // String formátum
     if (new Date(start) > new Date(end)) {
@@ -338,6 +354,7 @@ updateSelectAllState() {
       this.modalVisible = true;
       return;
     }
+
 
     if (this.editingEvent?.id) {
       this.updateEvent(start, end);
@@ -376,6 +393,7 @@ updateSelectAllState() {
         this.modalVisible = true;
       }
     });
+
   }
 
   createEvent(startTime: string, endTime: string) {
@@ -408,6 +426,7 @@ updateSelectAllState() {
         } else {
           // Ha nem sikerült, akkor hibaüzenetet jelenítesz meg
           this.modalMessage = 'Szerverhiba: nem sikerült az eseményt elmenteni.';
+
           this.modalType = 'error';
           this.modalVisible = true;
         }
@@ -418,6 +437,42 @@ updateSelectAllState() {
         this.modalVisible = true;
       }
     });
+
+  }
+
+  updateEvent(startTime: string, endTime: string) {
+    this.apiService.updateEvent(this.editingEvent!.id!, {
+      title: this.newEvent.title,
+      description: this.newEvent.description,
+      startTime,
+      endTime
+    }).subscribe({
+      next: (response) => {
+        this.modalMessage = 'Esemény sikeresen frissítve.';
+        this.modalType = 'success';
+        this.modalVisible = true;
+        this.updateEventInList(response);
+        this.resetNewEventForm();
+      },
+      error: () => {
+        this.modalMessage = 'Nem sikerült frissíteni az eseményt.';
+        this.modalType = 'error';
+        this.modalVisible = true;
+      }
+    });
+  }
+
+  updateEventInList(updatedEvent: CalendarEvent) {
+    const index = this.events.findIndex(e => e.id === updatedEvent.id);
+    if (index !== -1) {
+      this.events[index] = updatedEvent;
+    }
+
+    const listIndex = this.eventss.findIndex(e => e.id === updatedEvent.id);
+    if (listIndex !== -1) {
+      this.eventss[listIndex] = { ...updatedEvent, selected: false };
+    }
+
 
   }
 
@@ -438,6 +493,7 @@ updateSelectAllState() {
 
     const listIndex = this.eventss.findIndex(e => e.id === updatedEvent.id);
     if (listIndex !== -1) this.eventss[listIndex] = { ...updatedEvent, selected: false };
+
 
     this.generateCalendar();
   }
@@ -481,4 +537,5 @@ updateSelectAllState() {
       console.log('Szerkesztés:', this.selectedEvents[0]);
     }
   }
+
 }

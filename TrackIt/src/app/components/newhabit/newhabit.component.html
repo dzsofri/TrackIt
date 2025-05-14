@@ -1,0 +1,48 @@
+<div class="popup-overlay">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h2 class="post-title">Új szokás létrehozása</h2>
+      <button class="close-btn" (click)="closePopup()">✕</button>
+    </div>
+
+    <label>Szokás neve:</label>
+    <input
+      type="text"
+      [(ngModel)]="newHabitName"
+      placeholder="Pl. Futás"
+      class="post-input"
+    />
+
+    <label>Napi teljesítendő érték</label>
+    <input 
+      type="number"
+      [(ngModel)]="dailyTarget" 
+      placeholder="Pl. 10"
+      class="post-input"
+    />
+
+    <label>Mértékegység:</label>
+    <select [(ngModel)]="selectedUnit" class="post-input">
+      <option *ngFor="let u of units" [value]="u">{{ u }}</option>
+    </select>
+
+    <label>Kezdődátum:</label>
+    <input type="date" [(ngModel)]="startDate" class="post-input" />
+
+    <label>Szokás hossza (nap)</label>
+    <input 
+      type="number"
+      [(ngModel)]="targetValue" 
+      placeholder="Pl. 30"
+      class="post-input"
+    />
+
+    <button
+      class="post-button"
+      (click)="createHabit()"
+      [disabled]="!newHabitName || !dailyTarget || !selectedUnit || !startDate || !targetValue"
+    >
+      Szokás létrehozása
+    </button>
+  </div>
+</div>

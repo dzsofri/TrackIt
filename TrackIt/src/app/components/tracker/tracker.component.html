@@ -1,96 +1,85 @@
-<div class="mt-3 mb-5">
-  <header>
-    <div class="circle-image">
-      <img [src]="imagePreviewUrl"/>
+<h1 class="page-title">Szokáskövető</h1>
+
+<div class="page-layout">
+  <!-- Tracker form -->
+  <div class="tracker-form">
+    <label for="habit">Válassz trackert:</label>
+  <select [(ngModel)]="selectedHabit" (ngModelChange)="onHabitChange()">
+      <option *ngFor="let habit of habitList" [ngValue]="habit">{{ habit.habitName }}</option>
+    </select>
+
+<label>
+<input 
+  type="checkbox" 
+  [checked]="completed" 
+  [(ngModel)]="completed" 
+  (change)="onCheckboxChange()" 
+  [title]="selectedHabit?.completedToday === today ? 'Ezt a szokást ma már bejelölted' : ''" />
+
+
+
+  Teljesítetted a napi célt?
+</label>
+
+
+
+
+    <label for="value">Napi teljesítendő érték</label>
+    <input type="number"[value]="selectedHabit?.dailyTarget" disabled />
+
+    <label for="unit">Mértékegység:</label>
+    <select disabled>
+      <option *ngFor="let u of units" [value]="u">{{ u }}</option>
+    </select>
+
+    <label for="startDate">Kezdődátum:</label>
+    <input type="date"[value]="selectedHabit?.startDate" disabled />
+
+    <label for="interval">Szokás hossza (nap)</label>
+    <input type="number" [value]="selectedHabit?.targetValue" disabled />
+
+    <p *ngIf="selectedHabit" class="highlighted-text">
+      Teljesített: {{ selectedHabit.currentValue }} / {{ selectedHabit.targetValue }} nap
+    </p>
+
+    <button *ngIf="selectedHabit && selectedHabit.status !== 'active'" (click)="activateHabit()">Aktiválás</button>
+    <button (click)="isPopupOpen = true">Új szokás létrehozása</button>
+    
+    <!-- ÚJ: Törlés gomb -->
+    <button *ngIf="selectedHabit" style="background-color: #c0392b;">
+      Szokás törlése
+    </button>
+
+  </div>
+
+  <!-- Diagram közvetlen flex gyerekként -->
+  <div class="chart-wrapper">
+    <div class="card mt-2">
+      <div class="card-body">
+        <h5 class="card-title mb-0">Statisztika</h5>
+        <div class="chart-container">
+       <canvas id="habitChart" width="400" height="300"></canvas>
+
+        </div>
+      </div>
     </div>
-    <ng-container *ngIf="user && user.id && userNames[user.id]">
-      <h1>{{ userNames[user.id] || 'Ismeretlen felhasználó' }}</h1>
-    </ng-container>
-  </header>
-</div>
-
-<div class="col-12 col-xs-12 col-sm-12 col-md-10 col-lg-12">
-    <ul class="nav nav-tabs">
-        <li class="nav-item" role="presentation">
-            <button 
-              class="nav-link" 
-              [class.active]="activeTab === 'watertracker'"
-              (click)="setActiveTab('watertracker')"
-            >
-              Vízkövető
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button 
-              class="nav-link" 
-              [class.active]="activeTab === 'gymtracker'"
-              (click)="setActiveTab('gymtracker')"
-            >
-              Edzéskövető
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button 
-              class="nav-link" 
-              [class.active]="activeTab === 'sleeptracker'"
-              (click)="setActiveTab('sleeptracker')"
-            >
-              Alváskövető
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button 
-              class="nav-link" 
-              [class.active]="activeTab === 'customtracker'"
-              (click)="setActiveTab('customtracker')"
-            >
-              Egyéni tracker létrehozó
-            </button>
-        </li>
-    </ul>
-</div>
-
-<div class="tab-content" id="myTabContent">
-  <div 
-    class="tab-pane show active" 
-    *ngIf="activeTab === 'watertracker'" 
-    id="watertracker-tab-pane" 
-    role="tabpanel" 
-    tabindex="0">
-    <app-watertracker></app-watertracker>
-  </div>
-
-  <div 
-    class="tab-pane show active" 
-    *ngIf="activeTab === 'gymtracker'" 
-    id="gymtracker-tab-pane" 
-    role="tabpanel" 
-    tabindex="0">
-    <app-gymtracker></app-gymtracker>
-  </div>
-
-  <div 
-    class="tab-pane show active" 
-    *ngIf="activeTab === 'sleeptracker'" 
-    id="sleeptracker-tab-pane" 
-    role="tabpanel" 
-    tabindex="0">
-    <app-sleeptracker></app-sleeptracker>
-  </div>
-
-  <div 
-    class="tab-pane show active" 
-    *ngIf="activeTab === 'customtracker'" 
-    id="customtracker-tab-pane" 
-    role="tabpanel" 
-    tabindex="0">
-    <app-customtracker></app-customtracker>
   </div>
 </div>
 
-<app-alert-modal 
-  [visible]="modalVisible" 
-  [type]="modalType" 
+<!-- Pop-up komponens -->
+<app-newhabit
+  *ngIf="isPopupOpen"
+  [userId]="user.id"
+  [units]="units"
+  (habitCreated)="handleNewHabit($event)"
+  (close)="closeNewHabitModal()">
+</app-newhabit>
+
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
   [message]="modalMessage"
-  (close)="modalVisible = false">
+  [invalidFields]="invalidFields"
+  [buttons]="modalButtons"
+  (close)="onModalClose()">
 </app-alert-modal>

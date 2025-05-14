@@ -4,7 +4,6 @@ import { Feedbacks } from "./entities/Feedback";
 import { Follows } from "./entities/Follow";
 import { FriendRequests } from "./entities/FriendRequest";
 import { Habits } from "./entities/Habit";
-import { HabitTrackings } from "./entities/HabitTracking";
 import { Posts } from "./entities/Post";
 import { Tasks } from "./entities/Task";
 import { Pictures } from "./entities/Picture";
@@ -28,7 +27,6 @@ export const AppDataSource = new DataSource({
   synchronize: true, 
   logging: false, 
   entities: [Feedbacks, Follows, FriendRequests, Habits, HabitTrackings, Pictures, Posts, Tasks, Users, UserChallenges, UserStatistics, FeedbackQuestions, Chat, Events, Badges, Comments], 
-
   migrations: [],
   subscribers: [],
 });

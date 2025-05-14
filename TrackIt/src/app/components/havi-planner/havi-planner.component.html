@@ -38,6 +38,7 @@
       <button class="simple-button" (click)="toggleSelectMode()">
         {{ selectMode ? 'Kijelölés bezárása' : 'Kijelölés mód' }}
       </button>
+
       <!-- Csak kijelölési módban látszódik -->
 <button class="simple-button" *ngIf="selectMode" (click)="toggleSelectAll()">
   {{ allSelected ? 'Összes kijelölés törlése' : 'Összes kijelölése' }}
@@ -47,6 +48,7 @@
 <button class="simple-button danger" *ngIf="selectMode" (click)="deleteSelectedEvents()">
   Kijelölt események törlése
 </button>
+
 
 
       <div *ngFor="let event of eventss" class="event-item">
@@ -104,7 +106,6 @@
         <div *ngIf="day.label" class="label">{{ day.label }}</div>
       </div>
     </div>
-
 
   </div>
 

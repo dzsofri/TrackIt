@@ -71,12 +71,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { label: 'Havi planner', icon: '/assets/icons/planner_logo.png' }
   },
-  {
-    path: 'haviplannerideiglenes',
-    component: HaviPlannerKezeloComponent,
-    canActivate: [AuthGuard],
-    data: { label: 'Havi planner atvezeto', icon: '/assets/icons/planner_logo.png' }
-  },
+
 
 
   
@@ -90,7 +85,7 @@ export const routes: Routes = [
     path: 'challenge',
     component: ChallengeComponent,
     canActivate: [AuthGuard],
-    data: { label: 'Kihívások', icon: '/assets/icons/feed_logo.png' }
+    data: { label: 'Kihívások', icon: '/assets/icons/challenge.png' }
   },
   {
     path: 'tracker', // <<< ÚJ TRACKER ROUTE

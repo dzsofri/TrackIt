@@ -54,6 +54,11 @@ updateUserStatus(newStatus: string): void {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
   }
 
+private getRandomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
   onSubmit() {
     this.api.registration(this.user).subscribe({
       next: (res: any) => {
@@ -67,16 +72,39 @@ updateUserStatus(newStatus: string): void {
           this.auth.login(res.token);
       
           const defaultTrackers = [
-            { habitName: 'Vízfogyasztás', targetValue: 2000, currentValue: 0, frequency: 'daily', userId },
-            { habitName: 'Edzés', targetValue: 30, currentValue: 0, frequency: 'daily', userId },
-            { habitName: 'Alvás', targetValue: 8, currentValue: 0, frequency: 'daily', userId }
-          ];
+          {
+            habitName: 'Vízfogyasztás',
+            dailyTarget: this.getRandomInt(1500, 3000),
+            targetValue: this.getRandomInt(7, 30),
+            currentValue: 0,
+            userId
+          },
+          {
+            habitName: 'Edzés',
+            dailyTarget: this.getRandomInt(30, 100),
+            targetValue: this.getRandomInt(7, 30),
+            currentValue: 0,
+            userId
+          },
+          {
+            habitName: 'Alvás',
+            dailyTarget: this.getRandomInt(5, 12),
+            targetValue: this.getRandomInt(7, 30),
+            currentValue: 0,
+            userId
+          }
+        ];
       
           defaultTrackers.forEach(tracker => {
-            this.api.createHabit(tracker).subscribe(result => {
-              console.log(`${tracker.habitName} létrehozva:`, result);
-            });
-          });
+    this.api.createHabit(tracker).subscribe({
+      next: (res) => {
+        console.log(`${tracker.habitName} létrehozva:`, res);
+      },
+      error: (err) => {
+        console.error('Hiba a szokás létrehozásakor:', err);
+      }
+    });
+  });
       
           this.updateUserStatus("online");
           this.errorMessage = '';

@@ -78,14 +78,11 @@
   
 </div>
 
-<app-alert-modal 
-  [visible]="isModalVisible" 
-  [type]="'warning'"
-  [message]="'Biztosan folytatni szeretnéd?'"
-  [invalidFields]="['Név', 'Email cím']"
-  [buttons]="[
-    { label: 'Igen', action: confirmTaskMove, class: 'cancel-btn' },
-    { label: 'Nem', action: cancelTaskMove, class: 'confirm-btn' }
-  ]"
-  (close)="modalVisible = false">
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
+  [message]="modalMessage"
+  [invalidFields]="invalidFields"
+  [buttons]="modalButtons"
+  (close)="onModalClose()">
 </app-alert-modal>
