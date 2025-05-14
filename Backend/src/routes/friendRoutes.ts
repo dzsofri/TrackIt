@@ -80,7 +80,7 @@ router.post("/send-friendrequest", tokencheck, async (req: any, res: any) => {
         await AppDataSource.getRepository(FriendRequests).save(friendRequest);
         res.status(201).json({ message: "A barátkérés sikeresen elküldve!" });
     } catch (error) {
-        res.status(500).json({ error: "Hiba történt a barátkérés küldése közben." });
+        res.status(500).json({ error: "Hiba történt a barátkérés küldése közben." + senderId });
     }
 });
 
@@ -124,10 +124,7 @@ router.delete("/friendrequests/:id", tokencheck, async (req: any, res: any) => {
             where: { id }
         });
  
-        if (friendRequest.receiverId !== userId) {
-            return res.status(403).json({ error: "Csak a címzett utasíthatja el a barátkérést." });
-        }
- 
+     
         await AppDataSource.getRepository(FriendRequests).remove(friendRequest);
  
         res.json({ message: "A barátkérés elutasítva és törölve lett!" });
@@ -162,76 +159,105 @@ router.get("/friendrequests/:receiverId", tokencheck, async (req, res) => {
 
 router.get("/friend-picture", tokencheck, async (req: any, res: any) => {
   try {
-      const userId = req.user.id;
+    const userId = req.user.id;
 
-      if (!userId) {
-          return res.status(401).json({ message: "Unauthorized: User ID missing in token." });
-      }
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized: User ID missing in token." });
+    }
 
-      const friendRequestsRepository = AppDataSource.getRepository(FriendRequests);
+    const friendRequestsRepository = AppDataSource.getRepository(FriendRequests);
+
+    const friendRequests = await friendRequestsRepository
+      .createQueryBuilder("friendRequest")
+      .where(
+        new Brackets((qb) => {
+          qb.where("friendRequest.senderId = :userId", { userId })
+            .orWhere("friendRequest.receiverId = :userId", { userId });
+        })
+      )
+      .andWhere("friendRequest.status = :status", { status: "accepted" })
+      .getMany();
+
+    if (!friendRequests || friendRequests.length === 0) {
+      return res.status(404).json({ message: "No accepted friends found." });
+    }
+
+
+    const userRepository = AppDataSource.getRepository(Users);
 
       const friendRequests = await friendRequestsRepository.find({
           where: { receiverId: userId },
       });
 
-      if (!friendRequests || friendRequests.length === 0) {
-          return res.status(404).json({ message: "No accepted friend requests found." });
-      }
+    const friendDetails = await Promise.all(
+      friendRequests.map(async (friendRequest) => {
+        const friendId =
+          friendRequest.senderId === userId
+            ? friendRequest.receiverId
+            : friendRequest.senderId;
 
-      const userRepository = AppDataSource.getRepository(Users);
-
-      const friendDetails = await Promise.all(
-          friendRequests.map(async (friendRequest) => {
-              const senderUser = await userRepository.findOne({
-                  where: { id: friendRequest.senderId },
-                  relations: ["picture"],
-              });
-
-              if (!senderUser) {
-                  return null;
-              }
-
-              return {
-                  senderId: senderUser.id,
-                  name: senderUser.name,
-                  imageUrl: senderUser.picture?.filename
-                      ? `http://localhost:3000/uploads/${senderUser.picture.filename}`
-                      : null,
-              };
-          })
-      );
-
-      const filteredFriendDetails = friendDetails.filter((detail) => detail !== null);
-
-      if (filteredFriendDetails.length === 0) {
-          return res.status(404).json({ message: "No sender user details found." });
-      }
-
-      return res.status(200).json(filteredFriendDetails);
-  } catch (error) {
-      console.error("Error fetching friends' profile pictures:", error);
-      return res.status(500).json({ message: "Server error." });
-  }
-}); 
-
-// Követők lekérése
-router.get("/followers", tokencheck, async (req: any, res: any) => {
-    const userId = req.user.id;
-
-    try {
-        const followers = await AppDataSource.getRepository(Follows).find({
-            where: { followedUser: { id: userId } }, // A bejelentkezett felhasználó követői
-            relations: ["followingUser"]
+        const friendUser = await userRepository.findOne({
+          where: { id: friendId },
+          relations: ["picture"],
         });
 
-        const followerNames = followers.map(follow => follow.followerUser.name); // Feltételezve, hogy a felhasználói entitásnak van 'name' mezője
+        if (!friendUser) return null;
 
-        res.json({ followers: followerNames });
+        return {
+          senderId: friendUser.id,
+          name: friendUser.name,
+          imageUrl: friendUser.picture?.filename
+            ? `http://localhost:3000/uploads/${friendUser.picture.filename}`
+            : null,
+        };
+      })
+    );
 
-    } catch (error) {
-        res.status(500).json({ error: "Hiba történt a követők lekérése közben." });
+    const filteredFriendDetails = friendDetails.filter(Boolean);
+
+    if (filteredFriendDetails.length === 0) {
+      return res.status(404).json({ message: "No valid friend user details found." });
     }
+
+    return res.status(200).json(filteredFriendDetails);
+  } catch (error) {
+    console.error("Error fetching friends' profile pictures:", error);
+    return res.status(500).json({ message: "Server error." });
+  }
 });
+ 
+
+// Követők lekérése
+// Követők lekérése
+router.get("/followers", tokencheck, async (req: any, res: any) => {
+  const userId = req.user.id;
+
+  try {
+    const followers = await AppDataSource.getRepository(Follows).find({
+      where: { followedUser: { id: userId } }, // Akik engem követnek
+      relations: ["followerUser"] // Hozzákapcsolt követők betöltése
+    });
+
+    // Szűrés: csak azok a rekordok, ahol van érvényes followerUser
+    const validFollowers = followers.filter(follow => follow.followerUser !== null);
+
+    // Mappolás a megfelelő mezőkre
+    const followerList = validFollowers.map(follow => ({
+      id: follow.followerUser.id,
+      name: follow.followerUser.name,
+      email: follow.followerUser.email,
+      pictureId: follow.followerUser.pictureId
+    }));
+
+    res.json({ followers: followerList, count: followerList.length });
+
+  } catch (error) {
+    console.error("Hiba a követők lekérésekor:", error);
+    res.status(500).json({ error: "Hiba történt a követők lekérése közben." });
+  }
+});
+
+
 
 // Követők számának lekérése
 router.get("/followers/count", tokencheck, async (req: any, res: any) => {

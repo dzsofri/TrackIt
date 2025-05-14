@@ -15,9 +15,13 @@ import userRoutes, { uploadsMiddleware } from "./routes/userRoutes";
 import feedbackRoutes from "./routes/feedbackRoutes";
 import friendRoutes from "./routes/friendRoutes";
 import userStatisticsRoutes from "./routes/userStatisticsRoutes";
-import taskRoutes from "./routes/taskRoutes";
+
 import postRoutes from "./routes/postRoutes";
 import challengeRoutes from "./routes/challengeRoutes";
+import commentRoutes from "./routes/commentRoutes";  // Assuming your comment routes are in this file
+
+// Correctly use commentRoutes
+
 
 import chatRoutes from "./routes/chatRoutes"; // import chatRoutes
 import eventRoutes from "./routes/eventRoutes";
@@ -25,7 +29,7 @@ import eventRoutes from "./routes/eventRoutes";
 // Entitások
 import { Badges } from "./entities/Badges";
 import habitRoutes from "./routes/habitRoutes";
-
+import taskRoutes from "./routes/taskRoutes";
 
 dotenv.config();
 
@@ -99,7 +103,7 @@ app.use("/user_statistics", userStatisticsRoutes);
 app.use("/posts", postRoutes);
 app.use("/challenges", challengeRoutes);
 app.use("/chat", chatRoutes);
-
+app.use("/comments", commentRoutes);
 app.use("/events", eventRoutes);
 
 app.use("/habits", habitRoutes);

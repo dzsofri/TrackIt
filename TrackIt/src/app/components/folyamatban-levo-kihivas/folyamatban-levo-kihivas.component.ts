@@ -62,7 +62,7 @@ export class FolyamatbanLevoKihivasComponent implements OnInit {
   modalType: 'success' | 'error' | 'warning' | 'info' = 'info';
   modalMessage = '';
   invalidFields: string[] = [];
-  
+
   badges: { [key: string]: Badge } = {};
 
   user: User = {
@@ -113,12 +113,12 @@ export class FolyamatbanLevoKihivasComponent implements OnInit {
     this.api.readUserChallenges('user_statistics', this.id).subscribe({
       next: (res: any) => {
         const challenges = res?.user_challenges ?? res;
-  
+
         if (!Array.isArray(challenges)) {
           console.warn('No challenges found or challenges are not in expected format');
           return;
         }
-  
+
         const secondaryIds = [...new Set(challenges.map((c: any) => c.secondaryId))];
         if (secondaryIds.length === 0) {
           console.warn('No secondaryIds found.');
@@ -128,7 +128,7 @@ export class FolyamatbanLevoKihivasComponent implements OnInit {
         const requests = secondaryIds.map(id =>
           this.api.readChallengeParticipants('challenges', id)
         );
-  
+
         forkJoin(requests).subscribe({
         next: (responses: any[]) => {
           responses.forEach((res: any) => {
@@ -146,7 +146,7 @@ export class FolyamatbanLevoKihivasComponent implements OnInit {
       }
     });
   }
-  
+
   get challengeIds(): string[] {
     return Object.keys(this.challengeFriendsMap);
   }
@@ -212,7 +212,7 @@ export class FolyamatbanLevoKihivasComponent implements OnInit {
         })
         .subscribe({
             next: (response) => {
-                challenge.imagePreviewUrl = response.imageUrl ?? undefined; 
+                challenge.imagePreviewUrl = response.imageUrl ?? undefined;
             },
             error: (error) => {
                 console.error('Error fetching badge:', error);
@@ -253,7 +253,7 @@ export class FolyamatbanLevoKihivasComponent implements OnInit {
               this.modalMessage = 'Ismeretlen válasz érkezett a szervertől.';
               this.modalType = 'warning';
           }
-  
+
           this.modalVisible = true;
           this.Challenge();
           this.closePopup();

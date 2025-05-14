@@ -77,6 +77,20 @@ export class ApiService {
     );
   }
 
+   getFollowers(): Observable<{ followers: User[], count: number, message?: string }> {
+  return this.http.get<{ followers: User[], count: number, message?: string }>(
+    `${this.server}/friends/followers`,
+    this.tokenHeader()
+  ).pipe(
+    catchError(error => {
+      console.error('Error fetching followers:', error);
+      return of({ followers: [], count: 0, message: 'Error occurred while fetching followers' });
+    })
+  );
+}
+
+
+
   getChallenges(): Observable<{ challenges: any[], count: number, message?: string }> {
     return this.http.get<{ challenges: any[], count: number, message?: string }>(
       `${this.server}/challenges`,
@@ -406,6 +420,57 @@ deleteEvent(id: string): Observable<any> {
     })
   );
 }
+
+// Kommentek lekérdezése egy poszthoz
+  getCommentsByPost(postId: string): Observable<any> {
+    return this.http.get<any>(`${this.server}/comments/post/${postId}`, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a kommentek lekérésekor:', error);
+        return of({ comments: [], message: 'Hiba történt a kommentek lekérésekor' });
+      })
+    );
+  }
+
+  // Új komment létrehozása
+  createComment(postId: string, commentData: { text: string, parentId?: string|null }): Observable<any> {
+    return this.http.post<any>(`${this.server}/comments/${postId}`, commentData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a komment létrehozásakor:', error);
+        return of({ message: 'Komment létrehozása sikertelen' });
+      })
+    );
+  }
+
+  // Komment frissítése
+  updateComment(commentId: string, commentData: { text: string }): Observable<any> {
+    return this.http.put<any>(`${this.server}/comments/${commentId}`, commentData, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a komment frissítésekor:', error);
+        return of({ message: 'Komment frissítése sikertelen' });
+      })
+    );
+  }
+
+  // Komment törlése
+  deleteComment(commentId: string): Observable<any> {
+    return this.http.delete<any>(`${this.server}/comments/${commentId}`, this.tokenHeader()).pipe(
+      catchError(error => {
+        console.error('Hiba a komment törlésékor:', error);
+        return of({ message: 'Komment törlése sikertelen' });
+      })
+    );
+  }
+ // Barátkérés küldése
+  sendFriendRequest(receiverId: string): Observable<any> {
+    return this.http.post<any>(`${this.server}/friends/send-friendrequest`, { receiverId }, this.tokenHeader()).pipe(
+      catchError(error => {
+
+        console.error(error);
+        return of({ message: 'Barátkérés küldése sikertelen' });
+      })
+    );
+  }
+
 
 
 }

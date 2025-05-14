@@ -5,17 +5,18 @@ POST http://localhost:{{PORT}}/users/login
 Content-Type: application/json
 
 {
-  "email": "beretizsofia310@gmail.com",
+  "email": "beretizsofia@turr.hu",
   "password": "Nyuszika310"
 }
 
 
 ### Felhasználók listázása
-GET http://localhost:{{PORT}}/users
+GET http://localhost:{{PORT}}/friends/followers
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMwMzM5MzdhLWIzNjctNDllYi1hYTAwLWQ3MDZmNTU1YjRlZSIsImVtYWlsIjoiYmVyZXRpenNvZmlhQHR1cnIuaHUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJjc3VybWkiLCJpYXQiOjE3NDcyMzk1ODUsImV4cCI6MTc0NzMyNTk4NX0.xS4DTyhnuc7_fbCZFw0jpQjNzqUmtYIj3p32OLFTDMM
 
 ### Egy felhasználó lekérdezése ID alapján
 GET http://localhost:{{PORT}}/users/ca5dbaf3-5a94-46a2-a7e3-183dde078b58
-Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzenRAZXhhbXBsZS5jb20iLCJpYXQiOjE3Mzg2MDk3MjIsImV4cCI6MTczODYxMzMyMn0.5EdWDe46fSRLHz17DgqD-1c-AxXePO3jBztNvKTncyU"
+
 ### Felhasználó frissítése ID alapján
 PUT http://localhost:{{PORT}}/users/3bae486c-7ff3-4d47-bcc2-cd6b6bd08584
 Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTg2MzIyNywiZXhwIjoxNzQxOTQ5NjI3fQ.e2D2ORegVAs3tNSMgMaMl-D0VMgQT1V5na9bj5YouVk"
@@ -81,8 +82,7 @@ Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlNTU1MzRhL
 
 ### lekérdezések listázása (tokennel)
 GET http://localhost:{{PORT}}/feedbacks/data/1
-Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmMzcwMzc5LTcxNjAtNDkzYi1iNTE3LWY2YzllYzRhZjEzMiIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTg1Njg3MSwiZXhwIjoxNzQxOTQzMjcxfQ.KCH3wsTkYFKr6K3DEalRMGljdmtfT2jfduj5bB_HK1o
-
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzMWUyYjYzLTE5ZmUtNDY2Zi04YjkzLWMzZjBiMWM4OTZlNyIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NzE3Nzg3OCwiZXhwIjoxNzQ3MjY0Mjc4fQ.8h6ggg2zNiFwkLTzY4OzgRUYxz01WmwA9HiNGU5ZEY0
 
 ### posztok listázása (tokennel)
 GET http://localhost:{{PORT}}/posts/by-month?month=3
@@ -121,11 +121,11 @@ Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjL
 
 ### Barátkérés küldése
 POST http://localhost:3000/friends/send-friendrequest
-Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMwMzM5MzdhLWIzNjctNDllYi1hYTAwLWQ3MDZmNTU1YjRlZSIsImVtYWlsIjoiYmVyZXRpenNvZmlhQHR1cnIuaHUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJjc3VybWkiLCJpYXQiOjE3NDcyMTg2NDYsImV4cCI6MTc0NzMwNTA0Nn0.n4JPH2zByZKBAETrwXzINOgIgNKhxmBBF4bSSHUcYK0
 Content-Type: application/json
 
 {
-    "receiverId": "d52808cf-dff3-4ae4-9045-c9c22952cb9f"
+    "receiverId": "79fe910d-4bc5-4369-ba21-b75ad5e07114"
 }
 
 ### Barátkérés elfogadása
@@ -134,12 +134,12 @@ Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjL
 
 
 ### Barátkérés elutasítása
-POST http://localhost:3000/friends/friendrequests/reject/3
-Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+DELETE  http://localhost:3000/friends/friendrequests/4
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMwMzM5MzdhLWIzNjctNDllYi1hYTAwLWQ3MDZmNTU1YjRlZSIsImVtYWlsIjoiYmVyZXRpenNvZmlhQHR1cnIuaHUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJjc3VybWkiLCJpYXQiOjE3NDcyMzEyNDQsImV4cCI6MTc0NzMxNzY0NH0.3uT9j8wnSRszovReWaP9fUC9lQNhzd1AQdS-vWxV3po
 
 ### Barátkérések lekérése
-GET http://localhost:3000/friends/friendrequests
-Authorization: Bearear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiYWU0ODZjLTdmZjMtNGQ0Ny1iY2MyLWNkNmI2YmQwODU4NCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsImlhdCI6MTc0MTI1NjMwOSwiZXhwIjoxNzQxMzQyNzA5fQ.r-bGtL54QTD0box2VQnWj1NAiQ5_LcGYZi7Bddmghps
+GET http://localhost:3000/friends/friendrequests/79fe910d-4bc5-4369-ba21-b75ad5e07114
+Authorization: Berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMwMzM5MzdhLWIzNjctNDllYi1hYTAwLWQ3MDZmNTU1YjRlZSIsImVtYWlsIjoiYmVyZXRpenNvZmlhQHR1cnIuaHUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJjc3VybWkiLCJpYXQiOjE3NDcyMzEyNDQsImV4cCI6MTc0NzMxNzY0NH0.3uT9j8wnSRszovReWaP9fUC9lQNhzd1AQdS-vWxV3po
 
 ### Követők lekérése
 GET http://localhost:3000/friends/followers
@@ -157,10 +157,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxNzZiOWJmL
 
 GET http://localhost:{{PORT}}/tasks
 
+### Összes poszt lekérése
 
+GET http://localhost:{{PORT}}/posts/all
+
+### Összes poszt lekérése
+
+GET http://localhost:{{PORT}}/users/profile-picture/431e2b63-19fe-466f-8b93-c3f0b1c896e7
+Authorization: berear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzMWUyYjYzLTE5ZmUtNDY2Zi04YjkzLWMzZjBiMWM4OTZlNyIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NzE3Nzg3OCwiZXhwIjoxNzQ3MjY0Mjc4fQ.8h6ggg2zNiFwkLTzY4OzgRUYxz01WmwA9HiNGU5ZEY0
 ### Feladat létrehozása
 POST http://localhost:{{PORT}}/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFiYzg4ZTA2LTM3ZjgtNDM1MC05N2JmLWI5ZTE0MDE1MDAxZSIsImVtYWlsIjoic29tb2Rpa29ucmFkQGdtYWlsLmNvbSIsImlhdCI6MTc0Mjc0MzcyNCwiZXhwIjoxNzQyODMwMTI0fQ.tOSeA8EWiyeRPM-ENMxKroCIJhMwHFiuLD-30w9eKr0
+Authorization: Bearer 
 Content-Type: application/json
 
 {
@@ -169,6 +176,38 @@ Content-Type: application/json
     "priority": "Alacsony",
     "dueDate": "2025-03-22"
 }
+
+### comment létrehozása postId alapján
+
+POST http://localhost:{{PORT}}//6b513a1f-48b7-406d-a194-ac2386ea6d7f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5ZmU5MTBkLTRiYzUtNDM2OS1iYTIxLWI3NWFkNWUwNzExNCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NzIwNzgzNiwiZXhwIjoxNzQ3Mjk0MjM2fQ.Vm-sbmsurWnYQHYRqo6TnTue69PDVjz7-yn0nkIOEIM 
+Content-Type: application/json
+
+{
+    "text": "Ez egy teszt komment."
+
+}
+
+### comment módosítása commentId alapján
+
+PUT  http://localhost:{{PORT}}/comments/bd17cadb-6867-4fd8-97fc-1be10952d13a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMwMzM5MzdhLWIzNjctNDllYi1hYTAwLWQ3MDZmNTU1YjRlZSIsImVtYWlsIjoiYmVyZXRpenNvZmlhQHR1cnIuaHUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJjc3VybWkiLCJpYXQiOjE3NDcyMTAxNTgsImV4cCI6MTc0NzI5NjU1OH0.oerN4Vf4-1LiLll364vdm0v4ICJ9aahpoCfZQAdMxdw
+Content-Type: application/json
+
+{
+    "text": "Ez egy teszt komment."
+
+}
+
+### comment lekérdezése postId alapján
+GET http://localhost:{{PORT}}/comments/post/6b513a1f-48b7-406d-a194-ac2386ea6d7f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc5ZmU5MTBkLTRiYzUtNDM2OS1iYTIxLWI3NWFkNWUwNzExNCIsImVtYWlsIjoiYmVyZXRpenNvZmlhMzEwQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwibmFtZSI6IkJlcsOpdGkgWnPDs2ZpYSIsImlhdCI6MTc0NzIwNzgzNiwiZXhwIjoxNzQ3Mjk0MjM2fQ.Vm-sbmsurWnYQHYRqo6TnTue69PDVjz7-yn0nkIOEIM 
+Content-Type: application/json
+
+### comment törlése postId alapján
+DELETE  http://localhost:{{PORT}}/comments/dcf1a001-bcfe-44bd-a76c-bdd5eef410bf
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMwMzM5MzdhLWIzNjctNDllYi1hYTAwLWQ3MDZmNTU1YjRlZSIsImVtYWlsIjoiYmVyZXRpenNvZmlhQHR1cnIuaHUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJjc3VybWkiLCJpYXQiOjE3NDcyMTAxNTgsImV4cCI6MTc0NzI5NjU1OH0.oerN4Vf4-1LiLll364vdm0v4ICJ9aahpoCfZQAdMxdw
+Content-Type: application/json
 
 ### Poszt létrehozás
 
