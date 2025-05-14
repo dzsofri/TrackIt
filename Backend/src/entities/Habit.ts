@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, ManyToOne } from "typeorm";
 import { Users } from "./User";
-
 
 @Entity()
 export class Habits {
@@ -24,9 +23,16 @@ export class Habits {
     currentValue: string;
 
     @Column({ type: "varchar", length: 20, default: 'inactive' })
-    status: string; // <<< ÚJ MEZŐ
+    status: string;
 
     @CreateDateColumn()
     createdAt: Date;
 
+    // Új mező a checkbox állapotának tárolására
+    @Column({ type: "boolean", default: false })
+    completed: boolean;
+
+    // Új mező a mértékegység tárolására
+    @Column({ type: "varchar", length: 50, nullable: true })
+    unit: string;  // Mértékegység (pl. liter, kilogramm, perc, stb.)
 }

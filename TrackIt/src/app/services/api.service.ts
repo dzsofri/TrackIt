@@ -448,6 +448,28 @@ deleteHabit(habitId: string): Observable<any> {
 }
 
 
+updateHabit(habitId: string, completed: boolean): Observable<any> {
+  const token = localStorage.getItem('trackit');
+  
+  if (!token) {
+    return new Observable(observer => {
+      observer.error("Token not found");
+    });
+  }
+
+  // Convert the 'completed' boolean value to number (0 or 1)
+  const currentValue = completed ? 1 : 0;
+
+  // Send the request with the currentValue as number
+  return this.http.put<any>(`${this.server}/habits/completed/${habitId}`, { currentValue }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
+
+
+
+
 
 
 }

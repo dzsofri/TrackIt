@@ -3,7 +3,6 @@ import { AppDataSource } from "../data-source";
 import { Habits } from "../entities/Habit";
 import { tokencheck } from "../utiles/tokenUtils";
 import { Users } from "../entities/User";  // Importáld a Users entitást
-import { createGzip } from "zlib";
 
 const router = Router();
 
@@ -19,7 +18,7 @@ router.get("/:userId", tokencheck, async (req: any, res: any) => {
     const habitRepo = AppDataSource.getRepository(Habits);
     const habits = await habitRepo.find({
       where: { user: { id: userId } },
-      select: ["id", "habitName", "status", "targetValue", "currentValue", "dailyTarget"],
+      select: ["id", "habitName", "status", "targetValue", "currentValue", "dailyTarget", "completed", "createdAt", "unit"], // Added unit field
       order: { createdAt: "DESC" }
     });
 
@@ -31,14 +30,12 @@ router.get("/:userId", tokencheck, async (req: any, res: any) => {
 });
 
 // POST /habits - új szokás létrehozása
-// routes/habits.ts
-
 router.post("/", tokencheck, async (req: any, res: any) => {
   try {
-    const { habitName, userId, dailyTarget, targetValue, currentValue } = req.body;
+    const { habitName, userId, dailyTarget, targetValue, currentValue, unit, createdAt } = req.body;
 
-    if (!habitName || !userId || dailyTarget === undefined || targetValue === undefined || currentValue === undefined) {
-      return res.status(400).json({ message: "A habitName, userId, dailyTarget, targetValue és currentValue megadása kötelező." });
+    if (!habitName || !userId || dailyTarget === undefined || targetValue === undefined || currentValue === undefined || unit === undefined) {
+      return res.status(400).json({ message: "A habitName, userId, dailyTarget, targetValue, unit és currentValue megadása kötelező." });
     }
 
     const habitRepo = AppDataSource.getRepository(Habits);
@@ -56,6 +53,11 @@ router.post("/", tokencheck, async (req: any, res: any) => {
     habit.dailyTarget = dailyTarget;
     habit.targetValue = targetValue;
     habit.currentValue = currentValue;
+    habit.status = "inactive";  // Alapértelmezett státusz
+    habit.createdAt = createdAt; 
+    habit.completed = false; // Létrehozás dátuma
+    habit.unit = unit;  // Mértékegység beállítása
+  
     habit.user = user;  // A teljes User entitást rendeld hozzá a habit.user-hez
 
     await habitRepo.save(habit);
@@ -70,15 +72,15 @@ router.post("/", tokencheck, async (req: any, res: any) => {
   }
 });
 
-
-// PUT /habits/:habitId/status - szokás státuszának frissítése
-router.put("/:habitId/status", tokencheck, async (req: any, res: any) => {
+// PUT /habits/:habitId - szokás napi teljesítésének frissítése
+// PUT /habits/:habitId - szokás napi teljesítésének frissítése
+router.put("/:habitId", tokencheck, async (req: any, res: any) => {
   try {
     const { habitId } = req.params;
-    const { status } = req.body;
+    const { currentValue, completed } = req.body;  // Frissítjük a napi aktuális értéket és a completed státuszt
 
-    if (!status || (status !== 'active' && status !== 'inactive')) {
-      return res.status(400).json({ message: "A státusznak 'active' vagy 'inactive' értéknek kell lennie." });
+    if (currentValue === undefined || currentValue < 0) {
+      return res.status(400).json({ message: "Érvénytelen 'currentValue'." });
     }
 
     const habitRepo = AppDataSource.getRepository(Habits);
@@ -88,24 +90,25 @@ router.put("/:habitId/status", tokencheck, async (req: any, res: any) => {
       return res.status(404).json({ message: "Szokás nem található." });
     }
 
-    habit.status = status;
     await habitRepo.save(habit);
 
     return res.status(200).json({
-      message: "Szokás státusza sikeresen frissítve!",
-      habit: habit,
+      message: "Szokás napi teljesítése frissítve!",
+      habit,
     });
   } catch (error) {
-    console.error("Hiba a szokás státuszának frissítésekor:", error);
-    return res.status(500).json({ message: "Szerverhiba történt a státusz frissítése közben." });
+    console.error("Hiba a szokás napi teljesítésének frissítésekor:", error);
+    return res.status(500).json({ message: "Szerverhiba történt a szokás napi teljesítésének frissítésekor." });
   }
 });
 
 
-// DELETE /habits/:habitId - szokás törlése
-router.delete("/:habitId", tokencheck, async (req: any, res: any) => {
+// PUT /habits/:habitId/completed - szokás "completed" mező frissítése
+// PUT /habits/:habitId/completed - szokás "completed" mező frissítése
+router.put("/completed/:habitId", tokencheck, async (req:any, res:any) => {
   try {
     const { habitId } = req.params;
+    const { completed } = req.body;
 
     const habitRepo = AppDataSource.getRepository(Habits);
     const habit = await habitRepo.findOne({ where: { id: habitId } });
@@ -114,12 +117,20 @@ router.delete("/:habitId", tokencheck, async (req: any, res: any) => {
       return res.status(404).json({ message: "Szokás nem található." });
     }
 
-    await habitRepo.remove(habit);
+    habit.completed = completed;
 
-    return res.status(200).json({ message: "Szokás sikeresen törölve!" });
+    // Ha completed true, akkor beállítjuk a currentValue-t, ha false, akkor 0-ra
+    habit.currentValue = completed ? habit.targetValue : "0";
+
+    await habitRepo.save(habit);
+
+    return res.status(200).json({
+      message: "Szokás 'completed' mezője frissítve.",
+      habit,
+    });
   } catch (error) {
-    console.error("Hiba a szokás törlésekor:", error);
-    return res.status(500).json({ message: "Szerverhiba történt a szokás törlése során." });
+    console.error("Hiba a 'completed' mező frissítésekor:", error);
+    return res.status(500).json({ message: "Szerverhiba a frissítés során." });
   }
 });
 

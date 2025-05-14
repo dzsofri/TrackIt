@@ -8,13 +8,18 @@
       <option *ngFor="let habit of habitList" [ngValue]="habit">{{ habit.habitName }}</option>
     </select>
 
-    <label>
-      <input type="checkbox" [(ngModel)]="completed" />
-      Teljesítetted a napi célt?
-    </label>
+<label>
+  <input 
+    type="checkbox" 
+    [checked]="completed" 
+    [(ngModel)]="completed" 
+    (change)="onCheckboxChange()" />
+  Teljesítetted a napi célt?
+</label>
+
 
     <label for="value">Napi teljesítendő érték</label>
-    <input type="number" disabled />
+    <input type="number"[value]="selectedHabit?.dailyTarget" disabled />
 
     <label for="unit">Mértékegység:</label>
     <select disabled>
@@ -22,24 +27,22 @@
     </select>
 
     <label for="startDate">Kezdődátum:</label>
-    <input type="date" disabled />
+    <input type="date"[value]="selectedHabit?.createdAt" disabled />
 
     <label for="interval">Szokás hossza (nap)</label>
-    <input type="number" disabled />
+    <input type="number" [value]="selectedHabit?.targetValue" disabled />
 
-    <label for="completedDays">Teljesített napok</label>
-    <input type="number" disabled />
+    <p *ngIf="selectedHabit" class="highlighted-text">
+      Teljesített: {{ selectedHabit.currentValue }} / {{ selectedHabit.targetValue }} nap
+    </p>
 
     <button *ngIf="selectedHabit && selectedHabit.status !== 'active'" (click)="activateHabit()">Aktiválás</button>
     <button (click)="isPopupOpen = true">Új szokás létrehozása</button>
     
-<!-- ÚJ: Törlés gomb -->
-<button 
-  *ngIf="selectedHabit" 
-  (click)="deleteHabit()" 
-  style="background-color: #c0392b;">
-  Szokás törlése
-</button>
+    <!-- ÚJ: Törlés gomb -->
+    <button *ngIf="selectedHabit" style="background-color: #c0392b;">
+      Szokás törlése
+    </button>
 
   </div>
 
@@ -47,7 +50,7 @@
   <div class="chart-wrapper">
     <div class="card mt-2">
       <div class="card-body">
-        <h5 class="card-title mb-0">Visszajelzések</h5>
+        <h5 class="card-title mb-0">Statisztika</h5>
         <div class="chart-container">
           <canvas id="habitChart"></canvas>
         </div>
@@ -64,3 +67,12 @@
   (habitCreated)="handleNewHabit($event)"
   (close)="closeNewHabitModal()">
 </app-newhabit>
+
+<app-alert-modal
+  [visible]="modalVisible"
+  [type]="modalType"
+  [message]="modalMessage"
+  [invalidFields]="invalidFields"
+  [buttons]="modalButtons"
+  (close)="onModalClose()">
+</app-alert-modal>

@@ -12,14 +12,14 @@
   gap: 30px;
   padding: 20px;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: stretch; /* a gyerekek azonos magasságúak lesznek */
 }
 
 .tracker-form {
   flex: 0 0 400px; /* fix szélesség */
+  bottom: 200px;
   max-width: 100%;
-  margin: 30px 0;
-  padding: 20px;
+  padding: 20px 20px;
   background-color: #f5f5f7;
   border-radius: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -235,3 +235,13 @@ h1 {
   justify-content: center;
 }
 
+.highlighted-text {
+  font-size: 1.2em;         /* Kicsit nagyobb betűméret */
+  font-weight: bold;        /* Félkövér betűk */
+  color: #627966;           /* Zöld szín */
+  background-color: #ffffff; /* Fehér háttér */
+  padding: 5px 10px;        /* Párnázás, hogy ne legyen szoros */
+  border-radius: 5px;       /* Lekerekített sarkok */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Árnyék hozzáadása */
+  border: 1px solid #627966; /* Korrekt border beállítás: 1px vastagság, szilárd vonal, zöld szín */
+}
