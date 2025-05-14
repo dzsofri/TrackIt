@@ -177,7 +177,6 @@ router.post("/fromPublic", async (req: any, res: any) => {
             challengeName,
             challengeDescription,
             status,
-            completedAt,
             createdAt,
             finalDate,
             rewardPoints,
@@ -198,12 +197,11 @@ router.post("/fromPublic", async (req: any, res: any) => {
         user_challenges.userId = userId;
         user_challenges.challengeName = challengeName;
         user_challenges.challengeDescription = challengeDescription;
-        user_challenges.status = status;
+        user_challenges.status = 1;
         user_challenges.createdAt = createdAt;
         user_challenges.finalDate = finalDate;
         user_challenges.rewardPoints = rewardPoints;
         user_challenges.badgeId = badgeId;
-        user_challenges.completedAt = completedAt;
         user_challenges.durationDays = durationDays;
         user_challenges.progressPercentage = 0;
         user_challenges.completedAt = null;
@@ -232,6 +230,10 @@ router.get("/all-badges", async (req: any, res: any) => {
             imageUrl: `http://localhost:3000/uploads/${badge.filename}`,
         }));
 
+        if (!badges) {
+            return res.status(404).json({ message: "Badges not found." });
+        }
+
         return res.status(200).json({ badges: formattedBadges });
     } catch (error) {
         console.error("Error fetching badges:", error);
@@ -254,7 +256,7 @@ router.get("/badge", tokencheck, async (req: any, res: any) => {
         });
 
         if (!challenge) {
-            return res.status(404).json({ message: "Challenge not found." });
+            return res.status(404).json({ message: "Badges not found." });
         }
 
         const imageUrl = challenge.picture?.filename
